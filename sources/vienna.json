@@ -1,0 +1,24 @@
+{
+"link"        : "WCANLAGEOGD.csv",          
+"converter"   : "csv",                 
+"parameters"  : {                        
+    "auto_parse"  : true,
+    "columns"     : true,
+    "charset"     : "utf8"
+},
+"mappings"    : {
+    "Id"          : "row['FID']",
+    "Name"        : "'Vienna public WC'",
+    "Address"     : "row['STRASSE'] + ', Bezirk ' + row['BEZIRK'] + ', Vienna, Austria'",
+    "Latitude"    : "Number(row['SHAPE'].slice(8+row['SHAPE'].slice(7).indexOf(' ')).replace(')',''))",
+    "Longitude"   : "Number(row['SHAPE'].slice(7,7+row['SHAPE'].slice(7).indexOf(' ')))",
+    "Accessible"  : "row['KATEGORIE'].includes('Behindertenkabine')"
+},
+"properties"  : {                        
+    "language"    : "German",
+    "license"     : "CC",
+    "publisher"   : "Stadt Wien",
+    "coverage"    : "Wien, Österreich",
+    "country"     : "au"
+}
+}

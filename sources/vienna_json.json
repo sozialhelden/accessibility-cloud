@@ -1,0 +1,18 @@
+{
+    "link": "wc-data-wien.json",
+    "link": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json",
+    "converter": "json",
+    "template": "vienna",
+    "parameters": {
+        "path": ["features"]
+    },
+    "mappings": {
+        "Id": "row.id",
+        "Name": "'Vienna public WC'",
+        "Address": "row.properties['STRASSE'] + ', Bezirk ' + row.properties['BEZIRK'] + ', Vienna, Austria'",
+        "Latitude": "row.geometry.coordinates[1]",
+        "Longitude": "row.geometry.coordinates[0]",
+        "Accessible": "row.properties['KATEGORIE'].includes('Behindertenkabine')"
+    }
+
+}
