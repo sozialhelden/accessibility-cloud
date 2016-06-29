@@ -35,17 +35,10 @@ var json = module.exports = function (source_name, sample_only) {
         return this.input_data[this.array_counter++];
     }
 
-    converter.emitter.on('ready', () => {
-        console.log('Finish');
-        converter.storeResult(sample_only);
-    });
     return converter;
 }
 
 
-if (require.main === module) {
-    var sd = process.argv[2];
-    var so = process.argv[3] !== undefined;
-    //log.info("Starting JSON converter with source " + sd + " Sample only: " + so);
-    json(sd, so).run(so);
-}
+if (require.main === module) 
+    console.log('Use run.js for invokation!');
+

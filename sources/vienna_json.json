@@ -1,6 +1,7 @@
 {
     "link": "wc-data-wien.json",
     "link": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json",
+    "refresh": 1,
     "converter": "json",
     "template": "vienna",
     "parameters": {
@@ -14,5 +15,4 @@
         "Longitude": "row.geometry.coordinates[0]",
         "Accessible": "row.properties['KATEGORIE'].includes('Behindertenkabine')"
     }
-
 }

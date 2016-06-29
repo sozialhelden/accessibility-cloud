@@ -1,0 +1,7 @@
+{
+  "data_directory": "data/",
+  "source_directory": "sources/",
+  "output_directory": "output/",
+  "log_directory": "logs/",
+  "sample_count": 5
+}

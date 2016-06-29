@@ -14,7 +14,8 @@
     "Longitude"   : "Number(row['SHAPE'].slice(7,7+row['SHAPE'].slice(7).indexOf(' ')))",
     "Accessible"  : "row['KATEGORIE'].includes('Behindertenkabine')"
 },
-"properties"  : {                        
+"properties"  : {              
+    "name"        : "Toiletten in Wien",
     "language"    : "German",
     "license"     : "CC",
     "publisher"   : "Stadt Wien",

@@ -1,7 +1,7 @@
 # Source descriptions
 
 This folder contains json files that describe certain data sources. The sources can refer to either a URL or a static file in the data folder.
-The folder for data files is described in the settings.json file.
+The folder for data files is described in the settings.json file. The name of a source is determined from the file-name, but without any path and .json ending.
 
 A source json could look like this:
 ```
@@ -28,6 +28,19 @@ properties: {                        // Properties specific to the whole set (to
     coverage    : "Wien, Österreich",
     country     : "au"
 }
+}
+```
+
+An additional refresh parameter tells the manager to download / convert the source again after X hours. Default is 0, off.
+
+## Templating
+A template property in the root of the object can be used to refer to other sources as a baseline. The properties of the other source (and their eventual template) 
+will be the baseline and evry property present in the current source will be added or overwritten. Example:
+```
+{
+    link: "...",
+    template: "vienna",     // Will load vienna.json from source directory 
+    ...
 }
 ```
 

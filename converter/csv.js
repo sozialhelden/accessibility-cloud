@@ -17,46 +17,35 @@ function( {
 
 var fs = require('fs');
 var Converter = require('./converter.js');
-var csv_parser = require('csv-parse/lib/sync');
+var csv_parser = require('csv-parse');
+var assert = require('assert');
 
 var csv = module.exports = function(source_description, sample_only) {
     if (sample_only === undefined)
         sample_only = false;
     
-    // GLOBAL FOR DEBUGGING
-    var converter = new Converter('csv', source_description)//, sample_only);
+    var converter = new Converter('csv', source_description); // Create standard interface...    
     
-    converter.interprete = function() {
-        try {
-            // TODO: use async parser
-            this.parsed = csv_parser(this.input_data, this.source_description.parameters);
-            assert(Array.isArray(this.parsed), 'CSV result is no array')
+    converter.interprete = function() {     // ... and patch it.
+        csv_parser(this.input_data, this.source_description.parameters, (err, result)=>{
+            if (err || !Array.isArray(result)) {
+                this.logger.error('CSV Interprete failed: ' + err?err:"Result no array?");
+                this.emitter.emit('error', err);
+                return;
+            }
             this.csv_row = 0;
-            setImmediate(()=>{this.emitter.emit('interpreteFinish')});  // Makes sync call async    
-        } catch(err) {
-            this.logger.error('CSV Interprete failed: ' + err);
-            this.emitter.emit('error', err);
-        }
-    }
+            this.emitter.emit('interpreteFinish');
+        });
+    };
     
     converter.provideRow = function() {
         if (this.csv_row >= this.parsed.length)
             return false;
         return this.parsed[this.csv_row++];
     }
-    
-    converter.emitter.on('ready', () => {
-        converter.logger.info('Finished successfully');
-        converter.storeResult(sample_only);
-    });
     return converter;
 }
 
 
-if (require.main === module) {
-    var sd = process.argv[2];
-    var so = process.argv[3] !== undefined;
-    console.log("Starting CSV converter with source " + sd + " Sample only: " + so);
-    csv(sd,so).run(so); // we don't care for errors here, they will be logged anyway
-    
-}
+if (require.main === module) 
+    console.log('Use run.js for invocation!');

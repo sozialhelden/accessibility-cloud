@@ -25,7 +25,7 @@ var C = module.exports = function (converter_name, source_name) {
         transports: [
           new (winston.transports.Console)(),
           new (winston.transports.File)({ 
-              filename: '../' + this.log_file, // rel to current?
+              filename: this.log_file, // rel to current?
               handleExceptions: true,
               humanReadableUnhandledException: true })
         ]
@@ -100,20 +100,22 @@ C.prototype.provideData = function () {
     }
 }
 
-// OVERWRITE: Called once before provideRow calls. Gives converter a chance to create an own / internal representation of the data.
+// OVERWRITE: (ASYNC function) Called once before provideRow calls. Gives converter a chance to create an own / internal representation of the data.
 // Meant to be overwritten by individual converter.
+// Let everybody know you're done by firing 'interpreteFinish' on the emitter or 'error', 'message...' 
 C.prototype.interprete = function () {
-    this.logger.warn('Default empty Converter.interprete called ' + this.converter_name);
-    setImmediate(()=>{this.emitter.emit('interpreteFinish')});  // Truly async
+    this.logger.warn('Default empty Converter.interprete called from ' + this.converter_name);
+    setImmediate(()=>{this.emitter.emit('interpreteFinish')});  // Truly asyncs
+    // Alternative: Let it fail here
+    // this.emitter.emit('error', 'interprete interface called.');
 }
 
-// OVERWRITE: This is called until it returns false. 
+// OVERWRITE: (SYNCHRONOUS function) This is called until it returns false. 
 // Must return an object with all data keys, so no async calls within. This will become the row object for transforms.
 // If no more data is available, return false.
 C.prototype.provideRow = function () {
-    this.logger.error('Default empty Converter.provideRow called. ' + this.converter_name);
+    this.logger.error('Default empty Converter.provideRow called from ' + this.converter_name);
     throw "up";
-    return false;
 }
 
 // Provides result / samples by transferring whatever comes out of provideRow into format specified by mapping.
@@ -167,10 +169,10 @@ C.prototype.run = function (sampleOnly) {
 C.prototype.storeResult = function () {
     if (!this.result)
         return false;
-    fs.writeFileSync(this.output_file, JSON.stringify(this.result));
+    fs.writeFileSync(settings.output_directory + this.output_file, JSON.stringify(this.result));
     if (!this.sample)
         return true;
-    fs.writeFileSync(this.output_file.replace("out", "sample"), JSON.stringify(this.sample, null, 2)); // pretty-printed sample
+    fs.writeFileSync(settings.output_directory + this.output_file.replace("out", "sample"), JSON.stringify(this.sample, null, 2)); // pretty-printed sample
     return true;
 }
 
@@ -193,6 +195,7 @@ C.GetSettings = function() {
                 log_directory       : "logs/",
                 sample_count        : 5
             }
+            fs.writeFileSync('settings.json', JSON.stringify(settings,null,2));
         }
         
     }
@@ -214,14 +217,14 @@ C.GetSourceDescription = function(name) {
     if (source_description.template) {
         // @TODO: Protect!
         var source_template = C.GetSourceDescription(source_description.template);
-        // we have the template object and overwrite / add everything from the original description.
+        // we have the template object and overwrite / add everything to the original description.
         source_description = extend(true, source_template, source_description);
     }
     return source_description
 }
 
 // ------------------------- HELPERS -------------------------------------------------------
-
+// Always a handy tool to merge / copy objects
 // jQuery's extend. Attribution: https://github.com/jquery/jquery/blob/master/src/core.js
 function extend() {
     var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {},
