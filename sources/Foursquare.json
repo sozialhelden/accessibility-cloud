@@ -1,0 +1,26 @@
+{
+"link"        : "Foursquare_WheelMap_Venues_5.26.16.csv",          
+"converter"   : "csv",                 
+"parameters"  : {                        
+    "auto_parse"  : true,
+    "delimiter"   : ";",
+    "columns"     : true,
+    "charset"     : "binary"
+},
+"mappings"    : {
+    "Id"          : "row['venueid']",
+    "Name"        : "row['venuename']",
+    "Address"     : "row['address'] + ', ' + row['state'] + ', ' + row['zip']",
+    "Latitude"    : "Number(row['lat'])",
+    "Longitude"   : "Number(row['long'])",
+    "Accessible"  : "row['wheelchair_accessibility'] == 'Yes'"
+},
+"properties"  : {              
+    "name"        : "FourSquare Data Collection",
+    "language"    : "English",
+    "license"     : "CC",
+    "publisher"   : "FourSquare",
+    "coverage"    : "USA",
+    "country"     : "us"
+}
+}

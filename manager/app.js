@@ -65,10 +65,12 @@ manager.refresh();
 manager.run_all();
 
 function winston_query(filename, past_hr, callback) {
+    try {
     var w = new (winston.Logger)({
             transports: [ new (winston.transports.File)({ 
                 filename: filename
             })]});
+    
     var options = {
         from: new Date - past_hr * 60 * 60 * 1000,
         until: new Date,
@@ -77,12 +79,17 @@ function winston_query(filename, past_hr, callback) {
         order: 'desc',
     };
     w.query(options, callback);
+    } catch(err) {
+        setImmediate(()=>{
+            callback(err, {})
+        })
+    }
 }
 
 function winston_query_html(filename, past_hr, callback) {
     winston_query(filename,past_hr, function(err, result) {
         var html = '<div style="font-family:monospace">';
-        if (err) {
+        if (err || !result || !result.file) {
             html = "Error retrieving log " + err + "</div>";
             callback(html);
             return;
@@ -115,13 +122,13 @@ router.get('/', function(req, res, next) {
     }
     ok_send.n_calls = Object.keys(manager.status).length + 1; // each source log + 1 manager log
     winston_query_html('M-logs.log', 24 * 10, function(log_html){
-        ok_send('<h2>Manager log</h2>' + log_html);
+        ok_send('<h2>Manager log (Total data-entries: ' + Object.keys(manager.grand_result).length + ', from ' + Object.keys(manager.status).length + ' sources)</h2>' + log_html);
     });
     for (var name in manager.status) {
      //   (()=>{  // need scope for callback to have proper name (xname)
             let xname = name;
             winston_query_html(manager.status[name].last_log_file, 24 * 10 * 100, function(log_html){
-                ok_send('<h2>Converter log for ' + name + '</h2>' + log_html);
+                ok_send('<h2>Last converter log for ' + xname + ' (' + new Date(manager.status[xname].last_run).toLocaleString() + ')</h2>' + log_html);
             })
     //    })();
     }
@@ -133,6 +140,11 @@ router.get('/invoke', function(req, res, next) {
         manager.run_all();
     else
         manger.run_single_source(s);
+    res.send("<pre>" + OK + "</pre>");
+});
+
+router.get('/refresh', function(req, res, next) {
+    manager.refresh();
     res.send("<pre>" + OK + "</pre>");
 });
 

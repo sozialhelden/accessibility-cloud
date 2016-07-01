@@ -12,7 +12,15 @@ var fs = require('fs');
 var EE = require('events'); // EventEmitter
 var request = require('request');
 var winston = require('winston');
+var crypto = require('crypto');
+
 var log = winston;
+
+
+// Simple MD5 string->hex function
+function md5(input) {
+    return crypto.createHash('MD5').update(input).digest('hex');
+}
 
 // The Converter constructor
 var C = module.exports = function (converter_name, source_name) {
@@ -22,18 +30,22 @@ var C = module.exports = function (converter_name, source_name) {
     this.log_file = C.GetSettings().log_directory + source_name + "_" + converter_name  + "_" + (new Date()).toISOString() + ".log";
     this.logger = new (winston.Logger)({
         exitOnError: false,
+        handleExceptions: true,
+        humanReadableUnhandledException: true,
         transports: [
           new (winston.transports.Console)(),
           new (winston.transports.File)({ 
               filename: this.log_file, // rel to current?
               handleExceptions: true,
-              humanReadableUnhandledException: true })
+              humanReadableUnhandledException: true,
+              exitOnError : false
+            })
         ]
     });
     this.emitter = new EE();
     this.emitter.emittend = this;
     try {
-    this.source_description = C.GetSourceDescription(source_name);
+        this.source_description = C.GetSourceDescription(source_name);
     } catch(e) {
         this.logger.error('Failed to obtain source description for ' + source_name);
         setImmediate(()=>{this.emitter.emit('error', 'Problem with opening source. See log.')});
@@ -46,6 +58,7 @@ var C = module.exports = function (converter_name, source_name) {
     // compile mappings
     // TODO: use node's VM sandbox to isolate script
     var mapping = {};
+    
     for (var key in this.source_description.mappings) {
         try {
             mapping[key] = eval('(row)=>' + this.source_description.mappings[key].replace('{','')); // replace for minimum secruity
@@ -133,6 +146,8 @@ C.prototype.transfer = function (sampleOnly) {
         for (key in mapping) {
             set[key] = mapping[key](row);
         }
+        if (!set.Id)
+            set.Id = md5(JSON.stringify(set));
         this.result.push(set);
         if (count < C.GetSettings().sample_count)
             this.sample.push(set);
@@ -197,14 +212,13 @@ C.GetSettings = function() {
             }
             fs.writeFileSync('settings.json', JSON.stringify(settings,null,2));
         }
-        
     }
     return settings;
 }
 
 C.GetSourceList = function() {
     return fs.readdirSync(C.GetSettings().source_directory).
-                filter(e=>e.endsWith('json')).
+                filter(e=>e.endsWith('json') && !e.startsWith('_')).
                 map(e=>e.replace('.json',''));
 }
 
@@ -213,7 +227,8 @@ C.GetSourceList = function() {
 C.GetSourceDescription = function(name) {
     if (!C.GetSourceList().find(e=>e==name))
         return {not_found : name};
-    var source_description = JSON.parse(fs.readFileSync(C.GetSettings().source_directory + name + '.json', 'utf8'));
+    var stripComments = require('strip-json-comments');
+    var source_description = JSON.parse(stripComments(fs.readFileSync(C.GetSettings().source_directory + name + '.json', 'utf8')));
     if (source_description.template) {
         // @TODO: Protect!
         var source_template = C.GetSourceDescription(source_description.template);

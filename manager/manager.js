@@ -48,14 +48,22 @@ M.prototype.refresh = function() {
                 running                 : false
             };
             Object.defineProperty(this.status[name], 'timer', {enumerable: false, writable: true}); // prevents JSON.stringify to store
-        }    
+        }
     this.status.save();
+    this.n_entries = Object.keys(this.status).length;
 }
 
 M.prototype.run_single_source = function(source_name) {
     assert(this.status[source_name], 'Not managing source ' + source_name);
     var status = this.status[source_name];
-    var source = status.source = Converter.GetSourceDescription(source_name);
+    try {
+        var source = status.source = Converter.GetSourceDescription(source_name);
+    } catch(err) {
+        log.error('Source ' + source_name + ' contains errors: ' + err);
+        delete status[source_name];
+        this.status.save();
+        return;        
+    }
     if (source.not_found) {
         log.error('Source or a template vanished: ' + source.not_found);
         delete status[source_name];

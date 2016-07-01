@@ -1,0 +1,69 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    color: #675C5C; 
+    font-family: sourcesanspro-light, sans-serif;
+    font-size:16px;
+    height:100%;
+    width:100%;
+    background-color: #EEEEEE;
+}
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+label,
+.no-text-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+label {
+    font-weight: normal;    // override bootstrap
+}
+
+a {
+    color: #32A0E6;
+    text-decoration: none;
+    cursor: pointer;
+}
+a * {
+    cursor: pointer !important;   
+}
+
+a:hover {
+    color: #32A0E6-hover;
+    text-decoration: none;
+    //cursor: pointer;
+}
+
+input.input.search {
+    /* Rectangle 2: */
+    background: rgba(255,255,255,0.40);
+    // box-shadow: inset 0px -1px 0px 0px rgba(0,0,0,0.17);
+    font-size: 20px;
+    font-family: sourcesanspro-light;
+    padding:5px;
+    border:1px solid rgba(0,0,0,0);
+    border-bottom: 1px solid #c8c8c8;
+    outline: none;    
+    transition: 1s all;
+}
+
+input.input.search:focus {
+    border:1px solid #32A0E6;
+    transition: 1s all;
+}
+
+.content .input.area {
+    display: flex;
+    align-items:flex-end;
+    flex-direction:column;
+}

@@ -34,6 +34,7 @@ var csv = module.exports = function(source_description, sample_only) {
                 return;
             }
             this.csv_row = 0;
+            this.parsed = result;
             this.emitter.emit('interpreteFinish');
         });
     };
