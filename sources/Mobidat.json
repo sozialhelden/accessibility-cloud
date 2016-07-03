@@ -47,7 +47,7 @@ All options are optional.
 "mappings"    : {
     "Id"          : "row['mobidat-ID']",
     "Name"        : "row['Art'] + ' ' + row['Name']",
-    "Address"     : "row['Strasse'] + ' ' + row['Hausnummer'] + ', ' + row['PLZ'] + ' ' + row['Ort']",
+    "Address"     : "row['Strasse'] + ' ' + row['Hausnummer'] + ', ' + row['Plz'] + ' ' + row['Ort']",
     "Latitude"    : "Number(row['Breitengrad'])",
     "Longitude"   : "Number(row['Längengrad'])",
     "Accessible"  : "row['Rollstuhlgerecht'] == 'ja'"

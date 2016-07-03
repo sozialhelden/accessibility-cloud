@@ -10,9 +10,14 @@ if (require.main === module) {
 
 var fs = require('fs');
 var EE = require('events'); // EventEmitter
-var request = require('request');
+var request = require('request');   // download stuff
 var winston = require('winston');
-var crypto = require('crypto');
+var crypto = require('crypto');     // for md5
+
+// These two most likely work only with debian derivates (ubuntu etc). and are needed to correctly detect & convert charsets.
+var convert_encoding = require('encoding').convert;
+var detect_encoding = require('detect-character-encoding');
+
 
 var log = winston;
 
@@ -90,7 +95,17 @@ C.prototype.provideData = function () {
             .on('end', ()=>{
                 this.logger.profile("Download complete ");
                 try {
-                    this.input_data = this.stream_buffer.getContentsAsString(this.source_description.parameters.charset);
+                    let dl_buffer = this.stream_buffer.getContents();
+                    if (!dl_buffer)
+                        throw new Error('Empty download');
+                    if (!this.source_description.parameters.charset || this.source_description.parameters.charset === 'auto') {
+                        let encoding = detect_encoding(dl_buffer);
+                        this.logger.info('Detected encoding ' + encoding.encoding + ' with a confidence of ' + encoding.confidence + '%.');
+                        this.input_data = convert_encoding(dl_buffer, 'UTF-8', encoding.encoding).utf8Slice();
+                    } else {
+                        this.input_data = convert_encoding(dl_buffer, 'UTF-8', this.source_description.parameters.charset).utf8Slice();
+                        // OPTIONAL not using ICU encodings and just assume utf8: this.input_data = this.stream_buffer.getContentsAsString('utf8');
+                    }
                     this.emitter.emit('provideDataFinish');
                 } catch(err) {
                     this.logger.error('Something bad happened after download: ' + err);
@@ -100,14 +115,28 @@ C.prototype.provideData = function () {
             .pipe(this.stream_buffer);
     } else {
         // Use fs to read file
-        this.input_data = fs.readFile(C.GetSettings().data_directory + this.source_description.link, this.source_description.parameters.charset, 
+        fs.readFile(C.GetSettings().data_directory + this.source_description.link, 'raw', 
             (err, content)=>{
                 if (err) {
                     this.logger.error('Could not read static file ' + this.source_description.link);
                     this.emitter.emit('error','No input file');
                 } else {
-                    this.input_data = content;
-                    this.emitter.emit('provideDataFinish');
+                    try {
+                        this.logger.profile("Charset conversion to UTF-8");
+                        if (!this.source_description.parameters.charset || this.source_description.parameters.charset === 'auto') {
+                            let encoding = detect_encoding(content);
+                            this.logger.info('Detected encoding ' + encoding.encoding + ' with a confidence of ' + encoding.confidence + '%.');
+                            this.input_data = convert_encoding(content, 'UTF-8', encoding.encoding).utf8Slice();
+                        } else {
+                            this.input_data = convert_encoding(content, 'UTF-8', this.source_description.parameters.charset).utf8Slice();
+                            // OPTIONAL not using ICU encodings and just assume utf8: this.input_data = content.utf8Slice();
+                        }
+                        this.logger.profile("Charset conversion to UTF-8");
+                        this.emitter.emit('provideDataFinish');
+                    } catch(err) {
+                        this.logger.error('Could not convert encoding for ' + this.source_description.link);
+                        this.emitter.emit('error',err);
+                    }
                 }
             });
     }

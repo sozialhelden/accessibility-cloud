@@ -1,11 +1,11 @@
 {
-"link"        : "Foursquare_WheelMap_Venues_5.26.16.csv",          
+"link"        : "FourSquare-utf8.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        
     "auto_parse"  : true,
     "delimiter"   : ";",
     "columns"     : true,
-    "charset"     : "binary"
+    "charset"     : "utf8"
 },
 "mappings"    : {
     "Id"          : "row['venueid']",

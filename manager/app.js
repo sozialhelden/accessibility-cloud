@@ -140,12 +140,12 @@ router.get('/invoke', function(req, res, next) {
         manager.run_all();
     else
         manger.run_single_source(s);
-    res.send("<pre>" + OK + "</pre>");
+    res.send("<pre>OK</pre>");
 });
 
 router.get('/refresh', function(req, res, next) {
     manager.refresh();
-    res.send("<pre>" + OK + "</pre>");
+    res.send("<pre>OK</pre>");
 });
 
 

@@ -13,7 +13,7 @@
     "Address"     : "row['CODEPOSTAL'] + ' ' + row['ADRESSE'] + ', ' + row['REGION'] + ', ' + row['VILLE'] + ', ' + row['DEPARTEMENT']",
 //    "Latitude"    : 
 //    "Longitude"   : 
-    "Accessible"  : "row['HANDICAPS'].includes('moteur')"
+    "Accessible"  : "row['HANDICAPS'].toString().includes('moteur')"
 },
 "properties"  : {              
     "name"        : "Tourist attractions in France",

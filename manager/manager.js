@@ -27,7 +27,19 @@ var M = module.exports = function(status_file) {
         fs.writeFile(status_file, JSON.stringify(this), 'utf8', (err)=>{/* don't care */});
     }});    // Same as this.status.save = function()... but hides from iterator and makes it untouchable
     this.grand_result = {}; // will contain all entries.
+    this._n = 0;    // triggers write global
 }
+
+M.prototype.writeGlobal = function() {
+    log.profile("Converting all sources");
+    log.profile("Writing result.json");
+    let out_str = "{\n";
+    for (let key in this.grand_result) 
+        out_str += '"' + key + '" : ' + JSON.stringify(this.grand_result[key]) + ',\n';
+    out_str += "}\n";
+    fs.writeFileSync("result.json", out_str);
+    log.profile("Writing result.json");
+};
 
 M.prototype.refresh = function() {
     // Check current sources
@@ -75,6 +87,7 @@ M.prototype.run_single_source = function(source_name) {
         converter.emitter.emit('error', 'Timeout.');
     }, 1000 * 60 * 10); // consider failed after 10min
     status.last_run = new Date();
+    this._n++;
     converter.emitter.on('error', (err)=>{
         clearTimeout(timeout);
         status.last_unsuccessful_run = new Date();
@@ -82,6 +95,9 @@ M.prototype.run_single_source = function(source_name) {
         status.last_failed_log_file = converter.log_file;
         status.running = false;
         this.status.save();
+        if (--this._n === 0) // last one finishing
+            this.writeGlobal();
+
     });
     
     converter.emitter.on('ready', ()=>{
@@ -95,8 +111,10 @@ M.prototype.run_single_source = function(source_name) {
         // Fill result
         for (var entry of converter.result) 
             this.grand_result[entry.Id] = [entry.Accessible, entry.Name, entry.Address, entry.Longitude, entry.Latitude, source_name];
-        
-    });
+
+        if (--this._n === 0) // last one finishing
+            this.writeGlobal();
+    }); 
     status.running = true;
     log.info('Running ' + source_name + ', log file: ' + converter.log_file);
 
@@ -111,6 +129,7 @@ M.prototype.run_single_source = function(source_name) {
 }
 
 M.prototype.run_all = function() {
+    log.profile("Converting all sources");
     for (var name in this.status) 
         this.run_single_source(name);
 }
