@@ -115,7 +115,7 @@ C.prototype.provideData = function () {
             .pipe(this.stream_buffer);
     } else {
         // Use fs to read file
-        fs.readFile(C.GetSettings().data_directory + this.source_description.link, 'raw', 
+        fs.readFile(C.GetSettings().data_directory + this.source_description.link,  
             (err, content)=>{
                 if (err) {
                     this.logger.error('Could not read static file ' + this.source_description.link);

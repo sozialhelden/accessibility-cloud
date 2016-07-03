@@ -5,7 +5,7 @@
     "auto_parse"  : true,
     "columns"     : true,
     "delimiter"   : ";",
-    "charset"     : "binary" // means latin-1
+    "charset"     : "auto" // means latin-1
 },
 "mappings"    : {
     "Id"          : "row['REFERENCE']",
