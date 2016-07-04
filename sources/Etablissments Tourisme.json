@@ -2,10 +2,8 @@
 "link"        : "Etablissements_Tourisme_et_handicap_juin_2016.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        
-    "auto_parse"  : true,
     "columns"     : true,
     "delimiter"   : ";",
-    "charset"     : "auto" // means latin-1
 },
 "mappings"    : {
     "Id"          : "row['REFERENCE']",

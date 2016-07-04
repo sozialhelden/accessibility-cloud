@@ -11,8 +11,8 @@
 //    "Id"          : "row['FID']",
     "Name"        : "row['Name']",
     "Address"     : "row['Straße'] + ' ' + row['Hausnummer'] + ', ' + row['PLZ'] + ' ' + row['Stadt'] + ', ' + row['Land']",
-    "Latitude"    : "Number(row['lat'])",
-    "Longitude"   : "Number(row['lon'])",
+    "Latitude"    : "Number(row['lat'].replace(',','.'))",
+    "Longitude"   : "Number(row['lon'].replace(',','.'))",
     "Accessible"  : "row['Rollstuhl-Toilette (ja/nein)?'].includes('ja')"
 },
 "properties"  : {              

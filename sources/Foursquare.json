@@ -1,18 +1,18 @@
 {
-"link"        : "FourSquare-utf8.csv",          
+"link"        : "Foursquare_WheelMap_Venues_5.26.16.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        
-    "auto_parse"  : true,
     "delimiter"   : ";",
     "columns"     : true,
-    "charset"     : "utf8"
 },
 "mappings"    : {
     "Id"          : "row['venueid']",
     "Name"        : "row['venuename']",
     "Address"     : "row['address'] + ', ' + row['state'] + ', ' + row['zip']",
-    "Latitude"    : "Number(row['lat'])",
-    "Longitude"   : "Number(row['long'])",
+    // Ill-formatted source puts dots in the numbers, but original dot is lost, so this conversion only works if lat/lon have 2 digits in front
+    // Lon has of course 2 to 3 digits in the U.S.... -120..-90 TODO: include if > -50 then *10
+    "Latitude"    : "Number(row['lat'].replace(/\\./g,'')) / Math.pow(10,Math.floor(Math.log10(Math.abs(Number(row['lat'].replace(/\\./g,''))))-1))",
+    "Longitude"   : "Number(row['long'].replace(/\\./g,'')) / Math.pow(10,Math.floor(Math.log10(Math.abs(Number(row['long'].replace(/\\./g,''))))-1))",
     "Accessible"  : "row['wheelchair_accessibility'] == 'Yes'"
 },
 "properties"  : {              

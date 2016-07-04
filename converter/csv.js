@@ -42,7 +42,9 @@ var csv = module.exports = function(source_description, sample_only) {
     converter.provideRow = function() {
         if (this.csv_row >= this.parsed.length)
             return false;
-        return this.parsed[this.csv_row++];
+        let current = this.parsed[this.csv_row++];
+        //console.log(current);
+        return current;
     }
     return converter;
 }
