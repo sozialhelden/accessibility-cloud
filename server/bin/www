@@ -7,12 +7,12 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-
+var C = require('./converter/converter.js');
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(C.GetSettings().server_port || '4000');
 app.set('port', port);
 
 /**

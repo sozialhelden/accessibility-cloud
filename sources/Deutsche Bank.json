@@ -2,7 +2,7 @@
 "link"        : "140516_DB_Standorte_barrierefreier Zugang.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        
-    "columns"     : true,
+    "columns"     : true
 },
 "mappings"    : {
 //    "Id"          : "???", None from file... Auto-generate

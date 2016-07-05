@@ -3,7 +3,7 @@
 "converter"   : "csv",                 
 "parameters"  : {                        
     "delimiter"   : ";",
-    "columns"     : true,
+    "columns"     : true
 },
 "mappings"    : {
     "Id"          : "row['venueid']",

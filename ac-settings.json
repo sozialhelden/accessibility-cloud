@@ -1,0 +1,11 @@
+// This file will be looked up first in /etc/ac-settings.json and if not found in calling directory.
+{
+  "server_port"          : 4000,                       // The port for the web server
+  "manager_port"         : 3000,                       // The port for the manager server (only binds to localhost)
+  "root_directory"       : "/home/snk/ac-prototype",   // will be prepended to all other directories, leave empty to provide other directories with full path 
+  "data_directory"       : "data/",                    // where input data files are
+  "source_directory"     : "sources/",                 // where source descriptions are
+  "output_directory"     : "output/",                  // where all outputs go, including result.json
+  "log_directory"        : "logs/",                    // where all logs go
+  "sample_count"         : 5                           // how many entries go in sample
+}

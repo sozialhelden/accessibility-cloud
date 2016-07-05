@@ -226,22 +226,30 @@ C.GetSettings = function() {
     if (settings)
         return settings;
     try {
-        settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+        settings = JSON.parse(fs.readFileSync('/etc/ac-settings.json', 'utf8'));
     } catch(err) {
         try {
-            settings = JSON.parse(fs.readFileSync('converter/settings.json', 'utf8'));
+            settings = JSON.parse(fs.readFileSync('ac-settings.json', 'utf8'));
         } catch(err2) { // DEFAULTS
             log.warn('No settings.json, using defaults');
             settings = {
+                server_port         : 4000,
+                manager_port        : 3000,
+                root_directory      : "",
                 data_directory      : "data/",
                 source_directory    : "sources/",
                 output_directory    : "output/",
                 log_directory       : "logs/",
                 sample_count        : 5
             }
-            fs.writeFileSync('settings.json', JSON.stringify(settings,null,2));
+            fs.writeFileSync('ac-settings.json', JSON.stringify(settings,null,2));
         }
     }
+    settings.data_directory = settings.root_directory + settings.data_directory;
+    settings.log_directory = settings.root_directory + settings.log_directory;
+    settings.source_directory = settings.root_directory + settings.source_directory;
+    settings.output_directory = settings.root_directory + settings.output_directory;
+    
     return settings;
 }
 

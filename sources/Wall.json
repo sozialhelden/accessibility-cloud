@@ -2,10 +2,8 @@
 "link"        : "poichecker-data-Wall.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        
-    "auto_parse"  : true,
     "delimiter"   : ";",
-    "columns"     : true,
-    "charset"     : "utf8"
+    "columns"     : true
 },
 "mappings"    : {
 //    "Id"          : "row['FID']",

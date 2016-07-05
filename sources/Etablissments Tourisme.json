@@ -3,7 +3,7 @@
 "converter"   : "csv",                 
 "parameters"  : {                        
     "columns"     : true,
-    "delimiter"   : ";",
+    "delimiter"   : ";"
 },
 "mappings"    : {
     "Id"          : "row['REFERENCE']",
