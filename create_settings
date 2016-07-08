@@ -1,0 +1,4 @@
+#!/usr/bin/node
+s=require('./converter/converter').GetSettings();
+console.log('Please run (as root) mv ac-settings.json /etc/');
+

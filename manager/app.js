@@ -121,7 +121,7 @@ router.get('/', function(req, res, next) {
             res.send(html);
     }
     ok_send.n_calls = Object.keys(manager.status).length + 1; // each source log + 1 manager log
-    winston_query_html('M-logs.log', 24 * 10, function(log_html){
+    winston_query_html(manager.settings.log_directory + 'M-logs.log', 24 * 10, function(log_html){
         ok_send('<h2>Manager log (Total data-entries: ' + Object.keys(manager.grand_result).length + ', from ' + Object.keys(manager.status).length + ' sources)</h2>' + log_html);
     });
     for (var name in manager.status) {

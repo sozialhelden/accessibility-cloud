@@ -237,7 +237,7 @@ C.GetSettings = function() {
             settings = {
                 server_port         : 4000,
                 manager_port        : 3000,
-                root_directory      : "",
+                root_directory      : require('path').dirname(__dirname + "../"),
                 data_directory      : "data/",
                 source_directory    : "sources/",
                 output_directory    : "output/",

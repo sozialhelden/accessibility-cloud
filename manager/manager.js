@@ -29,6 +29,7 @@ var M = module.exports = function(status_file) {
     }});    // Same as this.status.save = function()... but hides from iterator and makes it untouchable
     this.grand_result = {}; // will contain all entries.
     this._n = 0;    // triggers write global
+    this.settings = settings;
 }
 
 M.prototype.writeGlobal = function() {
