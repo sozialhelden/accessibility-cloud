@@ -172,9 +172,10 @@ C.prototype.transfer = function (sampleOnly) {
         var set = {
             original: row
         };
-        for (key in mapping) {
+        // This is where the magic happens
+        for (key in mapping) 
             set[key] = mapping[key](row);
-        }
+        
         if (!set.Id)
             set.Id = md5(JSON.stringify(set));
         this.result.push(set);
@@ -230,8 +231,9 @@ C.GetSettings = function() {
     } catch(err) {
         try {
             settings = JSON.parse(fs.readFileSync('ac-settings.json', 'utf8'));
+            log.warn('Local settings file found, please move file to /etc/ac-settings.json ')
         } catch(err2) { // DEFAULTS
-            log.warn('No settings.json, using defaults');
+            log.warn('No ac-settings.json found, using defaults and writing ./ac-settings.json');
             settings = {
                 server_port         : 4000,
                 manager_port        : 3000,
@@ -245,6 +247,8 @@ C.GetSettings = function() {
             fs.writeFileSync('ac-settings.json', JSON.stringify(settings,null,2));
         }
     }
+    if (!settings.root_directory.endsWith('/'))
+        settings.root_directory += '/';
     settings.data_directory = settings.root_directory + settings.data_directory;
     settings.log_directory = settings.root_directory + settings.log_directory;
     settings.source_directory = settings.root_directory + settings.source_directory;
@@ -265,9 +269,11 @@ C.GetSourceDescription = function(name) {
     if (!C.GetSourceList().find(e=>e==name))
         return {not_found : name};
     var stripComments = require('strip-json-comments');
-    var source_description = JSON.parse(stripComments(fs.readFileSync(C.GetSettings().source_directory + name + '.json', 'utf8')));
+    var source_description = JSON.parse(
+                             stripComments(
+                                 fs.readFileSync(
+                                     C.GetSettings().source_directory + name + '.json', 'utf8')));
     if (source_description.template) {
-        // @TODO: Protect!
         var source_template = C.GetSourceDescription(source_description.template);
         // we have the template object and overwrite / add everything to the original description.
         source_description = extend(true, source_template, source_description);
