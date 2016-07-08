@@ -1,9 +1,10 @@
 
-var Converter = require('../converter/converter.js');
+var Converter = require('../converter/converter');
+var settings = Converter.GetSettings();
 var fs = require('fs');
 var log = require('winston');
 log.add(log.transports.File, {
-    filename: 'M-logs.log',
+    filename: settings.log_directory + 'M-logs.log',
     handleExceptions: true,
     humanReadableUnhandledException: true,
     exitOnError: false
@@ -16,7 +17,7 @@ assert = require('assert');
 
 var M = module.exports = function(status_file) {
     if (!status_file)
-        status_file = 'status.json';
+        status_file = settings.output_directory + 'status.json';
     try {
         this.status = JSON.parse(fs.readFileSync(status_file, 'utf8'), JSON.dateParser );
     } catch(err) {
@@ -37,7 +38,7 @@ M.prototype.writeGlobal = function() {
     for (let key in this.grand_result) 
         out_str += '"' + key + '" : ' + JSON.stringify(this.grand_result[key]) + ',\n';
     out_str += "}\n";
-    fs.writeFileSync("result.json", out_str);
+    fs.writeFileSync(settings.output_directory + "result.json", out_str);
     log.profile("Writing result.json");
 };
 
@@ -82,7 +83,15 @@ M.prototype.run_single_source = function(source_name) {
         status.save();
         return;
     }
-    var converter = require('../converter/' + source.converter + '.js')(source_name);
+    try {
+        var converter = require('../converter/' + source.converter)(source_name);
+    } catch(err) {
+        log.error('Source ' + source_name + ' contains errors: ' + err);
+        log.error('Problems loading source.converter = ' + source.converter);
+        delete status[source_name];
+        this.status.save();
+        return;                
+    }
     var timeout = setTimeout(()=>{
         converter.emitter.emit('error', 'Timeout.');
     }, 1000 * 60 * 10); // consider failed after 10min

@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var settings = require('../converter/converter').GetSettings();
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
 
@@ -73,7 +73,7 @@ n_countries = 0;
 function read_status() {
     let fs = require('fs');
     try {
-        var status = JSON.parse(fs.readFileSync('status.json'));
+        var status = JSON.parse(fs.readFileSync(settings.output_directory + 'status.json'));
     } catch(err) {
         console.log('No status from manage (yet), retrying in 30min');
         return;
