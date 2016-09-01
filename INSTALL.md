@@ -79,6 +79,11 @@ If you get an error like `Error: Module version mismatch. Expected 48, got 46.`,
 
     sudo npm rebuild
     
+## Using nodemon for autorefresh during development
+
+This package is already installed. You can now start the server with...
+
+    nodemon server/bin/www 
 
 
 

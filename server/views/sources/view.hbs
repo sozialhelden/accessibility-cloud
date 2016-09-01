@@ -2,4 +2,30 @@
 
 <h1>{{source_status.source.properties.name}}</h1>
 
-{{source_id}}
+
+<div id="mapid" 
+	long_min={{source_status.bounding_box.long_min}}
+	long_max={{source_status.bounding_box.long_max}}
+	lat_min={{source_status.bounding_box.lat_min}}
+	lat_max={{source_status.bounding_box.lat_max}}
+	source_id='{{source_status.source_id}}'
+	></div>
+
+<h2>Sample Data</h2>
+
+<h3>Converted</h3>
+<ul>
+	<li>Name: {{toJSON source_status.sample.1.Name}}</li>
+	<li>Address: {{toJSON source_status.sample.1.Address}}</li>
+	<li>Latitude: {{toJSON source_status.sample.1.Latitude}}</li>
+	<li>Longitude: {{toJSON source_status.sample.1.Longitude}}</li>
+</ul>
+
+<h3>Original Data</h3>
+<pre>
+{{toJSON source_status.sample.1.original}}
+</pre>
+
+{{#each source_status.data_sets}}
+	{{toJSON this}}
+{{/each}}
