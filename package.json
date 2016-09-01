@@ -23,5 +23,8 @@
     "stream-buffers": "^3.0.0",
     "strip-json-comments": "^2.0.1",
     "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2"
   }
 }
