@@ -50,28 +50,19 @@ router.get('/sources/:source_id', function(req, res, next)
 
   res.render('sources/view', 
     { 
-      bla: ["red", "green", "blue"],
       source_id: source_id,
       source_status: _sources[source_id]
     });
 });
 
 router.get('/sources', function(req, res, next) {
-  console.log(_sources);
   res.render('sources/index', 
     { 
-      bla: ["red", "green", "blue"],
       sources: _sources
     });
 });
 
 
-router.get('/test', function(req, res, next) {
-  res.render('test', 
-    { 
-      bla: ["red", "green", "blue"]
-    });
-});
 
 // error handlers
 // development error handler
