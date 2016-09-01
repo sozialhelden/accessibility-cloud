@@ -1,3 +1,4 @@
+// Setup Node dependencies
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,10 +9,11 @@ var settings = require('../converter/converter').GetSettings();
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
 
+// Start express Web-Server
 var app = express();
 var router = express.Router();
 
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -32,13 +34,44 @@ app.use(function(req, res, next) {
 });
 
 
-// Routes
-/* GET home page. */
+//--- Routes -------------------------------------------
 router.get('/', function(req, res, next) {
-  res.render('index', {n_countries: n_countries, n_entries: n_entries, n_sources: Object.keys(manager_status).length });
-//  res.render('index', { title: 'Express' });
+  res.render('startpage', 
+    {
+      country_count: _countries_count, 
+      place_count: _place_count, 
+      source_count: Object.keys(_sources).length 
+    });
 });
 
+router.get('/sources/:source_id', function(req, res, next) 
+{
+  let source_id = req.params.source_id;
+
+  res.render('sources/view', 
+    { 
+      bla: ["red", "green", "blue"],
+      source_id: source_id,
+      source_status: _sources[source_id]
+    });
+});
+
+router.get('/sources', function(req, res, next) {
+  console.log(_sources);
+  res.render('sources/index', 
+    { 
+      bla: ["red", "green", "blue"],
+      sources: _sources
+    });
+});
+
+
+router.get('/test', function(req, res, next) {
+  res.render('test', 
+    { 
+      bla: ["red", "green", "blue"]
+    });
+});
 
 // error handlers
 // development error handler
@@ -66,31 +99,41 @@ app.use(function(err, req, res, next) {
 //------------------ SERVER LOGIC --------------------------
 // check every 30min the status.json from manager
 // supposed to be a global var!
-manager_status = {};
-n_entries = 0;
-n_countries = 0;
+_sources = {};
+_place_count = 0;
+_countries_count = 0;
 
 function read_status() {
     let fs = require('fs');
+
+    // Try parsing latest status-object
     try {
         var status = JSON.parse(fs.readFileSync(settings.output_directory + 'status.json'));
-    } catch(err) {
+    } 
+    catch(err) {
         console.log('No status from manage (yet), retrying in 30min');
         return;
     }
-    manager_status = status;
-    // Calc entries
-    n_entries = 0;
+    _sources = status;
+
+    // Count number of entries...
+    _place_count = 0;
+
     let country_set = {};
-    for (let source_name in status) {
+    for (let source_id in _sources) {
         try {
-        n_entries += status[source_name].data_sets.reverse()[0];
-        country_set[status[source_name].source.properties.country] = true;
-        } catch(e) {console.log(e)}; // if something goes south in here we don't care
+          a_source = _sources[source_id];          
+          a_source.source_id = source_id;    // useful for generating links 
+          _place_count += a_source.data_sets.reverse()[0];
+          country_set[a_source.source.properties.country] = true;          
+        } 
+        catch(e) {console.log(e);
+      }; 
     }
-    n_countries = Object.keys(country_set).length;
+    _countries_count = Object.keys(country_set).length;
 }
 
+// Refresh status every half hour
 read_status();
 setInterval(read_status, 30 * 60 * 1000)
 
