@@ -36,41 +36,42 @@ Source-Json-Format
 2. Select a title for the source
 3. remove special characters from the filename
 4. check the source url
-  - paste it into a browser and check if download works
-  - 
+  - paste it into a browser and check if download works  
 
-{
-	"coverage": {
-		"country": "us",		
-		"region": "nc",
-	},
-	"data": "https://dl.dropboxusercontent.com/u/5503063/accessibility-cloud-data/US/Foursquare_WheelMap_Venues_5.26.16.csv",
-	"contributor" : {
-		"name": "Foursquare",
-		"logo-url":"",
-		"contributor-level":"featured",
-		"url":"http://",
-	},
-	"license": {
-		"contact-email": "holger.dieterich@sozialhelden.de",
-		"comment":"this is an internal test data set",
-	    "url": "",
-	    "requires-share-alike": false
-	},
+        {
+            "coverage": {
+                "country": "us",        
+                "region": "nc",
+            },
+            "data": "https://dl.dropboxusercontent.com/u/5503063/accessibility-cloud-data/US/Foursquare_WheelMap_Venues_5.26.16.csv",
+            "contributor" : {
+                "name": "Foursquare",
+                "logo-url":"",
+                "contributor-level":"featured",
+                "url":"http://",
+            },
+            "license": {
+                "contact-email": "holger.dieterich@sozialhelden.de",
+                "comment":"this is an internal test data set",
+                "url": "",
+                "requires-share-alike": false
+            },
+        
+            "type": "csv",
+            "year": "2016",
+        
+            "conversion": {
+                "converter": "csv2accsv",
+                "parameters": {
+                   "separator": ";",
+                   "lon": "LONG", 
+                   "lat": "LAT",    // ...  und viele mappings mehr
+                   "street": ["HAUSNRZAHL1", "HAUSNRBUCHSTABE1"],
+                 },
+            }
+        }
+    
 
-	"type": "csv",
-	"year": "2016",
-
-	"conversion": {
-		"converter": "csv2accsv",
-		"parameters": {
-		   "separator": ";",
-		   "lon": "LONG", 
-		   "lat": "LAT",    // ...  und viele mappings mehr
-		   "street": ["HAUSNRZAHL1", "HAUSNRBUCHSTABE1"],
-		 },
-	}
-}
 
 
 Attributes

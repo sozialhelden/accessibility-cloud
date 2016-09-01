@@ -12,6 +12,7 @@
     "express": "~4.13.4",
     "hbs": "~4.0.0",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "csv-parse": "~1.1.7"
   }
 }
