@@ -1,6 +1,7 @@
 // Setup Node dependencies
 var express = require('express');
 var exphbs  = require('express-handlebars');
+var expressLess = require('express-less');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -27,6 +28,10 @@ var router = express.Router();
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
+console.log(">>>DIR_NAME" + __dirname);
+
+app.use('/less-css', expressLess(__dirname + '/less'));
+
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -34,6 +39,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(router);
+
 
 
 // catch 404 and forward to error handler
