@@ -1,3 +1,5 @@
+'use strict';
+
 // Setup Node dependencies
 var express = require('express');
 var exphbs  = require('express-handlebars');
@@ -52,44 +54,44 @@ app.use(function(req, res, next) {
 
 //--- Routes --------------------------------------------------------------
 router.get('/', function(req, res, next) {
-    res.render('startpage', 
+    res.render('startpage',
         {
-            country_count: _countries_count, 
-            place_count: _place_count, 
-            source_count: Object.keys(_sources).length 
+            country_count: _countries_count,
+            place_count: _place_count,
+            source_count: Object.keys(_sources).length
         });
 });
 
-router.get('/sources/:source_id', function(req, res, next) 
+router.get('/sources/:source_id', function(req, res, next)
 {
     let source_id = req.params.source_id;
 
-    res.render('sources/view', 
-        { 
+    res.render('sources/view',
+        {
             source_id: source_id,
             source_status: _sources[source_id]
         });
 });
 
 
-router.get('/sources/:source_id', function(req, res, next) 
+router.get('/sources/:source_id', function(req, res, next)
 {
     let source_id = req.params.source_id;
-    res.render( 'sources/view', 
-                { 
+    res.render( 'sources/view',
+                {
                     source_id: source_id,
                     source_status: _sources[source_id]
                 });
 });
 
 
-router.get('/sources/:source_id/places', function(req, res, next) 
+router.get('/sources/:source_id/places', function(req, res, next)
 {
     let matching_places = [['accessible', 'name', 'address', 'lat', 'long', 'source']];
     let source_column_index = 5;
     let source_id = req.params.source_id;
     let MAX_PLACE_COUNT  = 1000;
-    
+
     for( var id in _all_places) {
         var p = _all_places[id];
 
@@ -109,8 +111,8 @@ router.get('/sources/:source_id/places', function(req, res, next)
 
 
 router.get('/sources', function(req, res, next) {
-    res.render('sources/index', 
-    { 
+    res.render('sources/index',
+    {
         sources: _sources
     });
 });
@@ -141,13 +143,13 @@ app.use(function(err, req, res, next) {
 //------------------ SERVER LOGIC --------------------------
 // check every 30min the status.json from manager
 // supposed to be a global var!
-_sources = {};
-_place_count = 0;
-_countries_count = 0;
-_all_places = {};
+let _sources = {};
+let _place_count = 0;
+let _countries_count = 0;
+let _all_places = {};
 
 
-function readData() 
+function readData()
 {
     readStatus();
     readResult();
@@ -160,7 +162,7 @@ function readResult()
 
     try {
         var result = JSON.parse(fs.readFileSync(settings.output_directory + 'result.json'));
-    } 
+    }
     catch(err) {
         console.log('No results from manager (yet), retrying in 30min\n' + err);
         return;
@@ -170,14 +172,14 @@ function readResult()
 }
 
 
-function readStatus() 
+function readStatus()
 {
     let fs = require('fs');
 
     // Try parsing latest status-object
     try {
             var status = JSON.parse(fs.readFileSync(settings.output_directory + 'status.json'));
-    } 
+    }
     catch(err) {
         console.log('No status from manager (yet), retrying in 30min');
         return;
@@ -190,23 +192,23 @@ function readStatus()
     let country_set = {};
     for (let source_id in _sources) {
         try {
-            a_source = _sources[source_id];          
-            a_source.source_id = source_id;    // useful for generating links 
+            const a_source = _sources[source_id];
+            a_source.source_id = source_id;    // useful for generating links
 
             recomputeSource(a_source);
 
             _place_count += a_source.data_sets.reverse()[0];
-            country_set[a_source.source.properties.country] = true;          
-        } 
+            country_set[a_source.source.properties.country] = true;
+        }
         catch(e) {
-            console.log(e); 
-        }; 
+            console.log(e);
+        };
     }
     _countries_count = Object.keys(country_set).length;
 }
 
 
-function recomputeSource(source) 
+function recomputeSource(source)
 {
     // Compute bounding box
     source.bounding_box = {

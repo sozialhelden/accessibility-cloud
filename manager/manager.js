@@ -1,3 +1,4 @@
+'use strict';
 
 var Converter = require('../converter/converter');
 var settings = Converter.GetSettings();
@@ -12,8 +13,9 @@ log.add(log.transports.File, {
   });
 log.info("M Started");
 //log.handleExceptions(new winston.transports.File({ filename: 'M-exceptions.log' }))
+// log.add(log.transports.Console);
 
-assert = require('assert');
+const assert = require('assert');
 
 var M = module.exports = function(status_file) {
     if (!status_file)
@@ -36,7 +38,7 @@ M.prototype.writeGlobal = function() {
     log.profile("Converting all sources");
     log.profile("Writing result.json");
     let out_str = "{\n";
-    for (let key in this.grand_result) 
+    for (let key in this.grand_result)
         out_str += '"' + key + '" : ' + JSON.stringify(this.grand_result[key]) + ',\n';
     out_str += "}\n";
     fs.writeFileSync(settings.output_directory + "result.json", out_str);
@@ -56,7 +58,7 @@ M.prototype.refresh = function() {
                 last_unsuccessful_run   : null, // ...
                 data_sets               : [],   // number of retrieved data sets including history
                 last_log_file           : null, // log file of last run (successful or not)
-                last_failed_log_file    : null, // log file of last unsuccessful run 
+                last_failed_log_file    : null, // log file of last unsuccessful run
                 sample                  : null, // the sample obj of converter
                 timer                   : null, // the timer object if scheduled
                 running                 : false
@@ -76,7 +78,7 @@ M.prototype.run_single_source = function(source_name) {
         log.error('Source ' + source_name + ' contains errors: ' + err);
         delete status[source_name];
         this.status.save();
-        return;        
+        return;
     }
     if (source.not_found) {
         log.error('Source or a template vanished: ' + source.not_found);
@@ -91,7 +93,7 @@ M.prototype.run_single_source = function(source_name) {
         log.error('Problems loading source.converter = ' + source.converter);
         delete status[source_name];
         this.status.save();
-        return;                
+        return;
     }
     var timeout = setTimeout(()=>{
         converter.emitter.emit('error', 'Timeout.');
@@ -109,7 +111,7 @@ M.prototype.run_single_source = function(source_name) {
             this.writeGlobal();
 
     });
-    
+
     converter.emitter.on('ready', ()=>{
         clearTimeout(timeout);
         status.last_successful_run = new Date();
@@ -119,12 +121,12 @@ M.prototype.run_single_source = function(source_name) {
         status.running = false;
         this.status.save();
         // Fill result
-        for (var entry of converter.result) 
+        for (var entry of converter.result)
             this.grand_result[entry.Id] = [entry.Accessible, entry.Name, entry.Address, entry.Longitude, entry.Latitude, source_name];
 
         if (--this._n === 0) // last one finishing
             this.writeGlobal();
-    }); 
+    });
     status.running = true;
     log.info('Running ' + source_name + ', log file: ' + converter.log_file);
 
@@ -140,11 +142,11 @@ M.prototype.run_single_source = function(source_name) {
 
 M.prototype.run_all = function() {
     log.profile("Converting all sources");
-    for (var name in this.status) 
+    for (var name in this.status)
         this.run_single_source(name);
 }
 
-// Teach JSON how to convert its own date from string back to Date() obj 
+// Teach JSON how to convert its own date from string back to Date() obj
 JSON.dateParser = function (key, value) {
     if (typeof value === 'string') {
         var regISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
@@ -153,5 +155,3 @@ JSON.dateParser = function (key, value) {
     }
     return value;
 };
-
-

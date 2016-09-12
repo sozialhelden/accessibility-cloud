@@ -1,3 +1,5 @@
+'use strict';
+
 // Generated code by express-generator (default server setup)
 var express = require('express');
 var path = require('path');
@@ -21,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(router);    
+app.use(router);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -57,7 +59,7 @@ app.use(function(err, req, res, next) {
 // ---------------------- Custom Routes ----------------------------------------------------------
 // -----------------------------------------------------------------------------------------------
 
-var winston = require('winston'); // To query log files
+const winston = require('winston'); // To query log files
 
 var Manager = require('./manager.js');
 var manager = new Manager();
@@ -67,10 +69,10 @@ manager.run_all();
 function winston_query(filename, past_hr, callback) {
     try {
     var w = new (winston.Logger)({
-            transports: [ new (winston.transports.File)({ 
+            transports: [ new (winston.transports.File)({
                 filename: filename
             })]});
-    
+
     var options = {
         from: new Date - past_hr * 60 * 60 * 1000,
         until: new Date,
@@ -132,7 +134,7 @@ router.get('/', function(req, res, next) {
             })
     //    })();
     }
-        
+
 });
 router.get('/invoke', function(req, res, next) {
     var s = req.query.name ? req.query.name : "all";
@@ -147,5 +149,3 @@ router.get('/refresh', function(req, res, next) {
     manager.refresh();
     res.send("<pre>OK</pre>");
 });
-
-

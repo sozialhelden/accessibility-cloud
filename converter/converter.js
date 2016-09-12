@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 This file provides the Converter class, managing a lot standardized stuff that individual converters need. Also writes the output.
 Not callable.
@@ -39,7 +41,7 @@ var C = module.exports = function (converter_name, source_name) {
         humanReadableUnhandledException: true,
         transports: [
           new (winston.transports.Console)(),
-          new (winston.transports.File)({ 
+          new (winston.transports.File)({
               filename: this.log_file, // rel to current?
               handleExceptions: true,
               humanReadableUnhandledException: true,
@@ -63,17 +65,17 @@ var C = module.exports = function (converter_name, source_name) {
     // compile mappings
     // TODO: use node's VM sandbox to isolate script
     var mapping = {};
-    
+
     for (var key in this.source_description.mappings) {
         try {
             mapping[key] = eval('(row)=>' + this.source_description.mappings[key].replace('{','')); // replace for minimum secruity
         } catch(err) {
-            this.logger.error("Illegal script for " + key + ": " + this.source_description.mappings[key] + "\n" + err);        
+            this.logger.error("Illegal script for " + key + ": " + this.source_description.mappings[key] + "\n" + err);
             setImmediate(()=>{this.emitter.emit('error', 'Problem compiling mappings. See log.')})
         }
     }
     this.source_description.mappings = mapping; // replace the JS string with compiled functions
-    
+
 }
 
 C.prototype.provideData = function () {
@@ -115,7 +117,7 @@ C.prototype.provideData = function () {
             .pipe(this.stream_buffer);
     } else {
         // Use fs to read file
-        fs.readFile(C.GetSettings().data_directory + this.source_description.link,  
+        fs.readFile(C.GetSettings().data_directory + this.source_description.link,
             (err, content)=>{
                 if (err) {
                     this.logger.error('Could not read static file ' + this.source_description.link);
@@ -144,7 +146,7 @@ C.prototype.provideData = function () {
 
 // OVERWRITE: (ASYNC function) Called once before provideRow calls. Gives converter a chance to create an own / internal representation of the data.
 // Meant to be overwritten by individual converter.
-// Let everybody know you're done by firing 'interpreteFinish' on the emitter or 'error', 'message...' 
+// Let everybody know you're done by firing 'interpreteFinish' on the emitter or 'error', 'message...'
 C.prototype.interprete = function () {
     this.logger.warn('Default empty Converter.interprete called from ' + this.converter_name);
     setImmediate(()=>{this.emitter.emit('interpreteFinish')});  // Truly asyncs
@@ -152,7 +154,7 @@ C.prototype.interprete = function () {
     // this.emitter.emit('error', 'interprete interface called.');
 }
 
-// OVERWRITE: (SYNCHRONOUS function) This is called until it returns false. 
+// OVERWRITE: (SYNCHRONOUS function) This is called until it returns false.
 // Must return an object with all data keys, so no async calls within. This will become the row object for transforms.
 // If no more data is available, return false.
 C.prototype.provideRow = function () {
@@ -173,9 +175,9 @@ C.prototype.transfer = function (sampleOnly) {
             original: row
         };
         // This is where the magic happens
-        for (key in mapping) 
+        for (const key in mapping)
             set[key] = mapping[key](row);
-        
+
         if (!set.Id)
             set.Id = md5(JSON.stringify(set));
         this.result.push(set);
@@ -203,7 +205,7 @@ C.prototype.run = function (sampleOnly) {
         try {
             this.transfer(sampleOnly); // sync call
         } catch(err) {
-            this.logger.error('Transfer error: ' + err);
+            this.logger.error('Transfer error: ' + err, err.stack);
             this.emitter.emit('error', 'Transfer error, see log.');
         }
         this.logger.profile('Transfer');
@@ -253,7 +255,7 @@ C.GetSettings = function() {
     settings.log_directory = settings.root_directory + settings.log_directory;
     settings.source_directory = settings.root_directory + settings.source_directory;
     settings.output_directory = settings.root_directory + settings.output_directory;
-    
+
     return settings;
 }
 
