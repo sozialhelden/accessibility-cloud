@@ -1,9 +1,10 @@
 {
+    "id":"vienna-public-toilets-json",
     "link": "wc-data-wien.json",
-    "link": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json",
+    "link-additional": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json",
     "refresh": 1,
     "converter": "json",
-    "template": "vienna",
+    "template": "vienna-public-toilets-csv",
     "parameters": {
         "path": ["features"]
     },

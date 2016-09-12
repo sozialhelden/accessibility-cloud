@@ -1,4 +1,5 @@
 {
+    "id":"germany-rostock-toilets",
 "link"        : "https://geo.sv.rostock.de/download/opendata/toiletten/toiletten.csv",          
 "converter"   : "csv",          
 "parameters"  : {                        

@@ -1,4 +1,5 @@
 {
+    "id":"valencia-parking",
     "link"        : "http://mapas.valencia.es/lanzadera/opendata/aparcaminusvalidos/CSV",          
     "converter"   : "csv", 
     "parameters"  : {                        

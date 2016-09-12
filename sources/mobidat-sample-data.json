@@ -1,4 +1,5 @@
 {
+    "id":"mobidat-sample-data",
 "link"        : "20140520 Mobidat.csv",          
 "converter"   : "csv", 
 "parameters"  : {                        

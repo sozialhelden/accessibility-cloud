@@ -1,4 +1,5 @@
 {
+"id":"foursquare-test-export",
 "link"        : "Foursquare_WheelMap_Venues_5.26.16.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        

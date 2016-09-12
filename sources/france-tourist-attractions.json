@@ -1,4 +1,5 @@
 {
+    "id":"france-tourist-attractions",
 "link"        : "Etablissements_Tourisme_et_handicap_juin_2016.csv",          
 "converter"   : "csv",                 
 "parameters"  : {                        

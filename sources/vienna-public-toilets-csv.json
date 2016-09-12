@@ -1,0 +1,24 @@
+{
+    "id":"vienna-public-toilets-csv",
+    "link"        : "WCANLAGEOGD.csv",          
+    "converter"   : "csv",                 
+    "parameters"  : {                        
+        "columns"     : true
+    },
+    "mappings"    : {
+        "Id"          : "row['FID']",
+        "Name"        : "'Vienna public WC'",
+        "Address"     : "row['STRASSE'] + ', Bezirk ' + row['BEZIRK'] + ', Vienna, Austria'",
+        "Longitude"   : "Number(row['SHAPE'].slice(8+row['SHAPE'].slice(7).indexOf(' ')).replace(')',''))",
+        "Latitude"    : "Number(row['SHAPE'].slice(7,7+row['SHAPE'].slice(7).indexOf(' ')))",
+        "Accessible"  : "row['KATEGORIE'].includes('Behindertenkabine')"
+    },
+    "properties"  : {              
+        "name"        : "Toiletten in Wien",
+        "language"    : "German",
+        "license"     : "CC",
+        "publisher"   : "Stadt Wien",
+        "coverage"    : "Wien, Österreich",
+        "country"     : "au"
+    }
+}
