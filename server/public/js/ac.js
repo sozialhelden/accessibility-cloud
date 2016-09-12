@@ -37,8 +37,9 @@ $( document ).ready(function() {
             iconAnchor:   [3, 3], 
         });
 
-        $.getJSON( "/sources/" + source_id + "/places", function( data ) 
-        {
+        const placeDataUrl= "/sources/" + source_id + "/places";
+        const request = $.getJSON( placeDataUrl, function( data ) 
+        {            
             var items = [];
 
             $.each( data, function( key, val ) {
@@ -53,8 +54,9 @@ $( document ).ready(function() {
                 L.marker([lat, long], {
                     icon: accessible ? greenIcon : redIcon
                 }).addTo(map).bindPopup(name);
-
             });
+        }).fail((xhr, textStatus, errorThrown) => {
+            console.error("Loading source places failed.", textStatus, errorThrown, xhr);
         });
     }
 });

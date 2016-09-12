@@ -30,8 +30,6 @@ var router = express.Router();
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-console.log(">>>DIR_NAME" + __dirname);
-
 app.use('/less-css', expressLess(__dirname + '/less'));
 
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -146,7 +144,7 @@ app.use(function(err, req, res, next) {
 let _sources = {};
 let _place_count = 0;
 let _countries_count = 0;
-let _all_places = {};
+let _all_places = {};   //
 
 
 function readData()
@@ -164,11 +162,11 @@ function readResult()
         var result = JSON.parse(fs.readFileSync(settings.output_directory + 'result.json'));
     }
     catch(err) {
-        console.log('No results from manager (yet), retrying in 30min\n' + err);
+        console.error('No results from manager (yet), retrying in 30min\n', err, err.stack);
         return;
     }
     _all_places = result;
-    console.log("number of places:" + _all_places.length);
+    console.log("Read result.json with number of places:" + _all_places.length);
 }
 
 

@@ -38,8 +38,13 @@ M.prototype.writeGlobal = function() {
     log.profile("Converting all sources");
     log.profile("Writing result.json");
     let out_str = "{\n";
-    for (let key in this.grand_result)
-        out_str += '"' + key + '" : ' + JSON.stringify(this.grand_result[key]) + ',\n';
+
+    let delimiter = '';
+    for (let key in this.grand_result) {
+        out_str +=  delimiter +  '"' + key + '" : ' + JSON.stringify(this.grand_result[key]);
+        delimiter= ',\n';
+    }
+
     out_str += "}\n";
     fs.writeFileSync(settings.output_directory + "result.json", out_str);
     log.profile("Writing result.json");
