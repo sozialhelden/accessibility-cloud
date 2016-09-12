@@ -8,7 +8,7 @@ This repository is a collection of references to accessibility data sources.  Th
 
 ## Contributing accessibility data sources
 
-TDB.
+TBD.
 
 - More details in [CONTRIBUTING.md](CONTRIBUTING.md).
 
