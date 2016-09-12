@@ -9,8 +9,8 @@
     "mappings"    : {
         "Name"        : "row['Name']",
         "Address"     : "row['Straße'] + ' ' + row['Hausnummer'] + ', ' + row['PLZ'] + ' ' + row['Stadt'] + ', ' + row['Land']",
-        "Latitude"    : "Number(row['lat'].replace(',','.'))",
-        "Longitude"   : "Number(row['lon'].replace(',','.'))",
+        "Latitude"    : "Number(row['lon'].replace(',','.'))",
+        "Longitude"   : "Number(row['lat'].replace(',','.'))",
         "Accessible"  : "row['Rollstuhl-Toilette (ja/nein)?'].includes('ja')"
     },
     "properties"  : {              

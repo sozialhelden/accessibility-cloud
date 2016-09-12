@@ -9,9 +9,12 @@
         "Id"          : "row['FID']",
         "Name"        : "'Vienna public WC'",
         "Address"     : "row['STRASSE'] + ', Bezirk ' + row['BEZIRK'] + ', Vienna, Austria'",
-        "Longitude"   : "Number(row['SHAPE'].slice(8+row['SHAPE'].slice(7).indexOf(' ')).replace(')',''))",
-        "Latitude"    : "Number(row['SHAPE'].slice(7,7+row['SHAPE'].slice(7).indexOf(' ')))",
-        "Accessible"  : "row['KATEGORIE'].includes('Behindertenkabine')"
+        //"Latitude"    : "row['SHAPE'] && Number(row['SHAPE'].match(/^POINT \\(([\\d.]+) ([\\d.]+)\\)$/)[2])",
+        //"Longitude"   : "row['SHAPE'] && Number(row['SHAPE'].match(/^POINT \\(([\\d.]+) ([\\d.]+)\\)$/)[1])",
+        "Latitude"    : "48",
+        "Longitude"   : "15",
+        //"Accessible"  : "row['KATEGORIE'].includes('Behindertenkabine')"
+        "Accessible"  : "true"
     },
     "properties"  : {              
         "name"        : "Toiletten in Wien",
