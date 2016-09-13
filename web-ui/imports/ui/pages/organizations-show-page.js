@@ -3,26 +3,26 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Organizations } from '../../api/organizations/organizations.js';
 
-import { organizationRenderHold } from '../launch-screen.js';
+//import { organizationRenderHold } from '../launch-screen.js';
 import './organizations-show-page.html';
 
 // Components used inside the template
-import './app-not-found.js';
+//import './app-not-found.js';
 // import '../components/organizations-show.js';
 
 Template.Organizations_show_page.onCreated(function organizationsShowPageOnCreated() {
-  this.getOrganizationsId = () => FlowRouter.getParam('_id');
+  this.getOrganizationId = () => FlowRouter.getParam('_id');
 
   this.autorun(() => {
-    this.subscribe('todos.inOrganizations', this.getOrganizationsId());
+    this.subscribe('organizations.public');
   });
 });
 
-Template.Organizations_show_page.onRendered(function organizationsShowPageOnRendered() {
+Template.Organizations_show_page.onRendered(function organizationsShowPageOnRendered() {  
   this.autorun(() => {
-    if (this.subscriptionsReady()) {
-      organizationRenderHold.release();
-    }
+    //if (this.subscriptionsReady()) {
+      //organizationRenderHold.release();
+    //}
   });
 });
 
@@ -30,9 +30,13 @@ Template.Organizations_show_page.helpers({
   // We use #each on an array of one item so that the "organization" template is
   // removed and a new copy is added when changing organizations, which is
   // important for animation purposes.
+  organization() {    
+    const organizationId = Template.instance().getOrganizationId();
+    return Organizations.findOne(organizationId);
+  },
   listIdArray() {
     const instance = Template.instance();
-    const organizationId = instance.getOrganizationsId();
+    const organizationId = instance.getOrganizationId();
     // return Organizations.findOne(organizationId) ? [organizationId] : [];
   },
   organizationArgs(organizationId) {

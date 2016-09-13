@@ -12,7 +12,6 @@ import '../../ui/pages/app-not-found.js';
 import '../../ui/accounts/accounts-templates.js';
 
 FlowRouter.route('/organizations/:_id', {
-  //name: 'Organizations.show',
   name: 'Organizations.show',
   action() {
     BlazeLayout.render('App_body', { main: 'Organizations_show_page' });

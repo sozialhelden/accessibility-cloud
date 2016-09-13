@@ -16,12 +16,8 @@ Template.Organizations_list_page.onRendered(function organizationsShowPageOnRend
 });
 
 Template.Organizations_list_page.helpers({
-  // We use #each on an array of one item so that the "list" template is
-  // removed and a new copy is added when changing lists, which is
-  // important for animation purposes.
   organizations() {
     return Organizations.find({});
   },
-
 });
 

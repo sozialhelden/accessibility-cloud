@@ -1,10 +1,9 @@
 <template name="Organizations_show_page">
-	DEBUG: Organizations_show_page
-  {{#if organizationIdArray}}
-    {{#each organizationId in organizationIdArray}}
-      {{> Lists_show (organizationArgs organizationId)}}
-    {{/each}}
-  {{else}}
-    {{> App_notFound}}
-  {{/if}}
+  <a href='/organizations'>Organizations</a>
+  
+  {{#with organization}}
+    <h2>{{name}}</h2>
+    <pre>{{_id}}</pre>
+  {{/with}}
+
 </template>

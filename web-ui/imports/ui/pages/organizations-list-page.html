@@ -3,14 +3,7 @@
   
   <ol>
     {{#each organizations}}
-      <li>{{name}}</li>
+      <li><a href='/organizations/{{_id}}'>{{name}}</a></li>
     {{/each}}
   </ol>
-
-  {{#if organizationIdArray}}
-    {{#each organizationId in organizationIdArray}}
-      {{> Lists_show (organizationArgs organizationId)}}
-    {{/each}}
-  {{else}}
-  {{/if}}
 </template>
