@@ -1,0 +1,27 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "globals": {
+    "Package": false,
+    "d3": false,
+    "FB": false,
+    "mf": false
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "quotes": [2, "single"],
+    "eol-last": [0],
+    "no-mixed-requires": [0],
+    "no-underscore-dangle": [0],
+    "new-cap": [2, {
+        "capIsNewExceptions": [
+            "Match", "Any", "Object", "ObjectIncluding", "OneOf", "Optional", "Where", "With", "Fiber", "SafeString"
+        ]
+    }],
+    "no-alert": [0],
+    "no-console": [0]
+  }
+}
