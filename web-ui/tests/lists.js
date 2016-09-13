@@ -3,20 +3,20 @@
 /* globals browser assert */
 
 const countLists = () => {
-  browser.waitForVisible('.list-todo', 5000);
-  const elements = browser.elements('.list-todo');
+  browser.waitForVisible('.organizations', 5000);
+  const elements = browser.elements('.organizations');
   return elements.value.length;
 };
 
-describe('list ui', () => {
+describe('organization ui', () => {
   beforeEach(() => {
     browser.url('http://localhost:3100');
   });
 
-  it('can create a list', () => {
+  it('can create a organization', () => {
     const initialCount = countLists();
 
-    browser.click('.js-new-list');
+    browser.click('.js-new-organization');
 
     assert.equal(countLists(), initialCount + 1);
   });

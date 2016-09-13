@@ -3,13 +3,12 @@ import './app-body.html';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict';
-// import { Lists } from '../../api/lists/lists.js';
 import { Template } from 'meteor/templating';
+import { Organizations } from '../../api/organizations/organizations.js';
 import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { TAPi18n } from 'meteor/tap:i18n';
 
-// import { insert } from '../../api/lists/methods.js';
+import { insert } from '../../api/organizations/methods.js';
 
 import '../components/loading.js';
 
@@ -116,17 +115,13 @@ Template.App_body.events({
     }
   },
 
-  'click .js-new-list'() {
-    // const listId = insert.call((err) => {
-    //   if (err) {
-    //     // At this point, we have already redirected to the new list page, but
-    //     // for some reason the list didn't get created. This should almost never
-    //     // happen, but it's good to handle it anyway.
-    //     FlowRouter.go('App.home');
-    //     alert(TAPi18n.__('Could not create list.')); // eslint-disable-line no-alert
-    //   }
-    // });
-    //
-    // FlowRouter.go('Lists.show', { _id: listId });
+  'click .js-new-organization'() {
+    const _id = insertOrganization.call((err) => {
+      if(err) {
+        FlowRouter.go('App.home');
+        alert(`Could not create organization. ${err.reason}`);        
+      }
+    });
+    FlowRouter.go('Organizations.show', { _id });
   },
 });
