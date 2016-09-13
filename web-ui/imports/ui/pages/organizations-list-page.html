@@ -1,0 +1,16 @@
+<template name="Organizations_list_page">
+  <h2>Organizations</h2>
+  
+  <ol>
+    {{#each organizations}}
+      <li>{{name}}</li>
+    {{/each}}
+  </ol>
+
+  {{#if organizationIdArray}}
+    {{#each organizationId in organizationIdArray}}
+      {{> Lists_show (organizationArgs organizationId)}}
+    {{/each}}
+  {{else}}
+  {{/if}}
+</template>
