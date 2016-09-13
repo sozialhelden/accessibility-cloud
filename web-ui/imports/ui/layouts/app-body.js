@@ -116,8 +116,8 @@ Template.App_body.events({
   },
 
   'click .js-new-organization'() {
-    const _id = insertOrganization.call((err) => {
-      if(err) {
+    const _id = insert.call((err) => {
+      if (err) {
         FlowRouter.go('App.home');
         alert(`Could not create organization. ${err.reason}`);        
       }
