@@ -1,4 +1,4 @@
-import './app-layout.html';
+import './app-layout-with-header.html';
 
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -8,10 +8,6 @@ import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
  
 import '../components/loading.js';
-
-Template.registerHelper( 'testFunction', ( a1) => {
-  return 'Translated:' + a1;
-});
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
 
@@ -27,7 +23,7 @@ Meteor.startup(() => {
   }, CONNECTION_ISSUE_TIMEOUT);
 });
 
-Template.app_layout.onCreated(function appBodyOnCreated() {
+Template.app_layout_with_header.onCreated(function appBodyOnCreated() {
   this.subscribe('lists.public');
   this.subscribe('lists.private');
 
@@ -38,7 +34,7 @@ Template.app_layout.onCreated(function appBodyOnCreated() {
   });
 });
 
-Template.app_layout.helpers({
+Template.app_layout_with_header.helpers({
   menuOpen() {
     const instance = Template.instance();
     return instance.state.get('menuOpen') && 'menu-open';
@@ -83,7 +79,7 @@ Template.app_layout.helpers({
   },
 });
 
-Template.app_layout.events({
+Template.app_layout_with_header.events({
   'click .js-menu'(event, instance) {
     instance.state.set('menuOpen', !instance.state.get('menuOpen'));
   },

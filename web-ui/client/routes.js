@@ -14,13 +14,13 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 FlowRouter.route('/', {
   action() {
-    BlazeLayout.render('app_layout', { main: 'home2' });
+    BlazeLayout.render('app_layout_with_header', { main: 'home2', header_navigation_list: 'home_header_navigation' });
   },
 });
 
 FlowRouter.route('/post/:slug', {
   action() {
-    BlazeLayout.render('app_layout', { main: 'post' });
+    BlazeLayout.render('app_layout_with_header', { main: 'post' });
   },
 });
 
