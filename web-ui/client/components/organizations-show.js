@@ -10,15 +10,15 @@ import './organizations-show.html';
 // Component used in the template
 // import './todos-item.js';
 
-import {
-  updateName,
-  makePublic,
-  makePrivate,
-  remove,
-} from '../../api/organizations/methods.js';
+// import {
+//   updateName,
+//   makePublic,
+//   makePrivate,
+//   remove,
+// } from '../../api/organizations/methods.js';
 
 
-import { displayError } from '../lib/errors.js';
+// import { displayError } from '../lib/errors.js';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';

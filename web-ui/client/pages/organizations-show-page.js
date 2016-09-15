@@ -1,10 +1,9 @@
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { Organizations } from '../../api/organizations/organizations.js';
+// import { Organizations } from '../../api/organizations/organizations.js';
 
-//import { organizationRenderHold } from '../launch-screen.js';
-import './organizations-show-page.html';
+// import './organizations-show-page.html';
 
 // Components used inside the template
 //import './app-not-found.js';

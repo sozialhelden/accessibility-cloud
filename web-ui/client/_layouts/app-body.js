@@ -4,12 +4,12 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
-import { Organizations } from '../../api/organizations/organizations.js';
 import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { insert } from '../../api/organizations/methods.js';
-
+// import { Organizations } from '../../api/organizations/organizations.js';
+// import { insert } from '../../api/organizations/methods.js';
+ 
 import '../components/loading.js';
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;

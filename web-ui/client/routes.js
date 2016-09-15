@@ -2,14 +2,14 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import to load these templates
-import '../../ui/layouts/app-body.js';
-import '../../ui/pages/root-redirector.js';
-import '../../ui/pages/organizations-show-page.js';
-import '../../ui/pages/organizations-list-page.js';
-import '../../ui/pages/app-not-found.js';
+// import '../../ui/layouts/app-body.js';
+// import '../../ui/pages/root-redirector.js';
+// import '../../ui/pages/organizations-show-page.js';
+// import '../../ui/pages/organizations-list-page.js';
+// import '../../ui/pages/app-not-found.js';
 
 // Import to override accounts templates
-import '../../ui/accounts/accounts-templates.js';
+// import '../../ui/accounts/accounts-templates.js';
 
 FlowRouter.route('/organizations/:_id', {
   name: 'Organizations.show',
