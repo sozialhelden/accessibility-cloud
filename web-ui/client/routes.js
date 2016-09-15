@@ -11,6 +11,19 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // Import to override accounts templates
 // import '../../ui/accounts/accounts-templates.js';
 
+
+FlowRouter.route('/', {
+  action() {
+    BlazeLayout.render('app_layout', { main: 'home2' });
+  },
+});
+
+FlowRouter.route('/post/:slug', {
+  action() {
+    BlazeLayout.render('app_layout', { main: 'post' });
+  },
+});
+
 FlowRouter.route('/organizations/:_id', {
   name: 'Organizations.show',
   action() {
@@ -33,12 +46,12 @@ FlowRouter.route('/lists/:_id', {
   },
 });
 
-FlowRouter.route('/', {
-  name: 'App.home',
-  action() {
-    BlazeLayout.render('App_body', { main: 'app_rootRedirector' });
-  },
-});
+// FlowRouter.route('/', {
+//   name: 'App.home',
+//   action() {
+//     BlazeLayout.render('App_body', { main: 'app_rootRedirector' });
+//   },
+// });
 
 // the App_notFound template is used for unknown routes and missing lists
 FlowRouter.notFound = {
