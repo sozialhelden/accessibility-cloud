@@ -10,13 +10,15 @@ Template.page_dashboard.onCreated(function() {
   });
 });
 
-Template.page_dashboard.helpers({
+const helpers = {
   post() {
     return Organizations.findOne({ slug: FlowRouter.getParam('slug') });
   },
   organizations() {
-    //return [{name:"bla"}, {name:"bladf"}];
-    const orgCursor= Organizations.find({});
+    const orgCursor = Organizations.find({});
     return orgCursor;
   },
-});
+};
+
+Template.page_dashboard.helpers(helpers);
+Template.dashboard_header_navigation.helpers(helpers);

@@ -2,8 +2,9 @@
   <li>
     {{#if organizations}}
       <select id='orga-list'>
-        <option>asdf</option>
-        <option>asdf</option>
+        {{#each organizations}}
+          <option>{{name}}</option>
+        {{/each}}
       </select>
     {{else}}
       New Organization
