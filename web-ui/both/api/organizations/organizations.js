@@ -27,11 +27,20 @@ class OrganizationsCollection extends Mongo.Collection {
 export const Organizations = new OrganizationsCollection('Organizations');
 
 // Deny all client-side updates since we will be using methods to manage this collection
-Organizations.deny({
+// Organizations.deny({
+//   insert() { return true; },
+//   update() { return true; },
+//   remove() { return true; },
+// });
+
+
+// FIXME: WARNING, these need to be fixed
+Organizations.allow({
   insert() { return true; },
   update() { return true; },
   remove() { return true; },
 });
+
 
 Organizations.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },

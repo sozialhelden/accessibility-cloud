@@ -1,5 +1,5 @@
 <template name="App_body">
-  {{#HammerTouchArea gestureMap=templateGestures}}
+  
     <div id="container" class="{{menuOpen}} {{cordova}}">
       <section id="menu">
         {{#if currentUser}}
@@ -63,14 +63,11 @@
       <div class="content-overlay"></div>
 
       <div id="content-container">
-        {{#momentum plugin="fade"}}
           {{#if Template.subscriptionsReady}}
             {{> Template.dynamic template=main}}
           {{else}}
             {{> App_loading}}
           {{/if}}
-        {{/momentum}}
       </div>
     </div>
-  {{/HammerTouchArea}}
 </template>
