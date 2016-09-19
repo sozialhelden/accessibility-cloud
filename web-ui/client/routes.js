@@ -12,46 +12,45 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // import '../../ui/accounts/accounts-templates.js';
 
 
+/*
+Planned routes are...
+
+/welcome
+/help
+/signup
+/signin
+/manage/addOrga
+/manage/_orgaId
+/manage/_orgaId/addOrga
+/manage/_orgaId/_sourceId
+/manage/_orgaId/_sourceId/imports/_importId
+/manage/_orgaId/_sourceId/format
+/manage/_orgaId/_sourceId/edit
+/browse/_orgaId/
+/browse/_orgaId/_sourceId/
+
+*/
+
 FlowRouter.route('/', {
   action() {
-    BlazeLayout.render('app_layout_with_header', { main: 'home2', header_navigation_list: 'home_header_navigation' });
+    BlazeLayout.render('app_layout_with_header', { main: 'page_home', header_navigation_list: 'home_header_navigation' });
   },
 });
 
-FlowRouter.route('/post/:slug', {
-  action() {
-    BlazeLayout.render('app_layout_with_header', { main: 'post' });
-  },
-});
-
-FlowRouter.route('/organizations/:_id', {
-  name: 'Organizations.show',
-  action() {
-    BlazeLayout.render('App_body', { main: 'Organizations_show_page' });
-  },
-});
-
-FlowRouter.route('/organizations', {
-  //name: 'Organizations.show',
+// ---- Organizations ------------------------------
+FlowRouter.route('/orgas', {
   name: 'organizations.list',
   action() {    
-    BlazeLayout.render('App_body', { main: 'Organizations_list_page' });
+    BlazeLayout.render('app_layout_with_header', { main: 'page_home', header_navigation_list: 'home_header_navigation' });
   },
 });
 
-FlowRouter.route('/lists/:_id', {
-  name: 'Lists.show',
+FlowRouter.route('/orgas/:_id', {
+  name: 'Organizations.show',
   action() {
-    BlazeLayout.render('App_body', { main: 'Lists_show_page' });
+    BlazeLayout.render('app_layout_with_header', { main: 'page_orgas_show', header_navigation_list: 'page_orgas_show_header_navigation' });
   },
 });
-
-// FlowRouter.route('/', {
-//   name: 'App.home',
-//   action() {
-//     BlazeLayout.render('App_body', { main: 'app_rootRedirector' });
-//   },
-// });
 
 // the App_notFound template is used for unknown routes and missing lists
 FlowRouter.notFound = {
