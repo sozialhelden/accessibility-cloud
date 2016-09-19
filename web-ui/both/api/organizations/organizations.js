@@ -3,28 +3,28 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/factory';
 
-class OrganizationsCollection extends Mongo.Collection {
-  insert(organization, callback) {
-    const ourOrganization = organization;
-    if (!ourOrganization.name) {
-      let nextLetter = 'A';
-      ourOrganization.name = `Organization ${nextLetter}`;
+// class OrganizationsCollection extends Mongo.Collection {
+//   insert(organization, callback) {
+//     const ourOrganization = organization;
+//     if (!ourOrganization.name) {
+//       let nextLetter = 'A';
+//       ourOrganization.name = `Organization ${nextLetter}`;
 
-      while (!!this.findOne({ name: ourOrganization.name })) {
-        // not going to be too smart here, can go past Z
-        nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-        ourOrganization.name = `Organization ${nextLetter}`;
-      }
-    }
+//       while (!!this.findOne({ name: ourOrganization.name })) {
+//         // not going to be too smart here, can go past Z
+//         nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
+//         ourOrganization.name = `Organization ${nextLetter}`;
+//       }
+//     }
 
-    return super.insert(ourOrganization, callback);
-  }
-  remove(selector, callback) {
-    return super.remove(selector, callback);
-  }
-}
+//     return super.insert(ourOrganization, callback);
+//   }
+//   remove(selector, callback) {
+//     return super.remove(selector, callback);
+//   }
+// }
 
-export const Organizations = new OrganizationsCollection('Organizations');
+export const Organizations = new Mongo.Collection('Organizations');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 // Organizations.deny({
@@ -43,7 +43,7 @@ Organizations.allow({
 
 
 Organizations.schema = new SimpleSchema({
-  _id: { type: String, regEx: SimpleSchema.RegEx.Id },
+  // _id: { type: String, regEx: SimpleSchema.RegEx.Id },
   name: { type: String },
   //userId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
 });

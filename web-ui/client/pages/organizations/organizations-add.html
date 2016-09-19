@@ -11,16 +11,9 @@
 
 <template name="page_orgas_add">
   <div class='block'>
-    <h1>Organization</h1>
-<!--     {{#autoForm id='orgas.add'}}
-      {{#each afFieldNames}}
-        {{> afQuickField name=this.name options=afOptionsFromSchema}}
-      {{/each}}
-    {{/autoForm}}
- -->
-<!--   {{> quickForm collection='Organizations' id="insertOrgaForm" type="insert"}}
- -->
-  {{#autoForm schema=organizationsFormSchema id="insertOrgaForm" type="method" meteormethod="organizationsInsert"}}
+    <h1>Create Organization</h1>
+
+  {{#autoForm  collection='Organizations' id="insertOrgaForm" type="insert"}}
     {{> afQuickField name='name'}}
     <button type="submit" class="btn btn-primary">Insert</button>
   {{/autoForm}}

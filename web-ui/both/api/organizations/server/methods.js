@@ -6,9 +6,9 @@ import { _ } from 'meteor/underscore';
 
 import { Organizations } from '../organizations.js';
 
-const ORGANIZATION_ID_ONLY = new SimpleSchema({
-  organizationId: Organizations.simpleSchema().schema('_id'),
-}).validator({ clean: true, filter: false });
+// const ORGANIZATION_ID_ONLY = new SimpleSchema({
+//   organizationId: Organizations.simpleSchema().schema('_id'),
+// }).validator({ clean: true, filter: false });
 
 export const insert = new ValidatedMethod({
   name: 'organizations.insert',
@@ -29,7 +29,7 @@ Meteor.methods({
 export const updateName = new ValidatedMethod({
   name: 'organizations.updateName',
   validate: new SimpleSchema({
-    organizationId: Organizations.simpleSchema().schema('_id'),
+    // organizationId: Organizations.simpleSchema().schema('_id'),
     newName: Organizations.simpleSchema().schema('name'),
   }).validator({ clean: true, filter: false }),
   run({ organizationId, newName }) {
@@ -48,7 +48,7 @@ export const updateName = new ValidatedMethod({
 
 export const remove = new ValidatedMethod({
   name: 'organizations.remove',
-  validate: ORGANIZATION_ID_ONLY,
+  validate: new SimpleSchema({}).validator(), // ORGANIZATION_ID_ONLY,
   run({ organizationId }) {
     const organization = Organizations.findOne(organizationId);
 
