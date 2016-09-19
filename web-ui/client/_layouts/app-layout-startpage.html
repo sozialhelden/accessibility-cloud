@@ -1,0 +1,42 @@
+<template name="app_layout_start_page">
+  <header class='main-header'>
+    <div class='account-options'>
+      {{#if currentUser}}
+        <div class="btns-group-vertical ">
+          <a href="#" class="js-user-menu btn-secondary">
+            {{#if userMenuOpen}}
+              <span class="icon-arrow-up"></span>
+              {{else}}
+              <span class="icon-arrow-down"></span>
+            {{/if}}
+
+            {{emailLocalPart}}
+          </a>
+          {{#if userMenuOpen}}
+            <div class='user menu'>
+              <a class="js-logout btn-secondary">Logout</a>
+            </div>
+          {{/if}}
+        </div>
+      {{else}}
+        <div class="btns-group">
+          <a href="{{pathFor 'signin'}}" class="btn-secondary">{{_ 'Sign In'}}</a>
+          <a href="{{pathFor 'join'}}" class="btn-secondary">{{_ 'Join'}}</a>
+        </div>
+      {{/if}}
+    </div>
+
+    <ul class='page-sections'>
+      <li><a href='.'>Manage</a></li>
+      <li><a href='.'>Learn</a></li>
+    </ul>
+    <h1>
+      <ul class='main-navigation'>
+        {{> Template.dynamic template=header_navigation_list}}
+      </ul>
+    </h1>
+  </header>
+
+  {{> Template.dynamic template=main}}
+
+</template>

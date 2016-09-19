@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
@@ -16,6 +17,8 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 Planned routes are...
 
 /welcome
+/browse/_orgaId/
+/browse/_orgaId/_sourceId/
 /help
 /signup
 /signin
@@ -26,29 +29,37 @@ Planned routes are...
 /manage/_orgaId/_sourceId/imports/_importId
 /manage/_orgaId/_sourceId/format
 /manage/_orgaId/_sourceId/edit
-/browse/_orgaId/
-/browse/_orgaId/_sourceId/
 
 */
 
 FlowRouter.route('/', {
   action() {
-    BlazeLayout.render('app_layout_with_header', { main: 'page_home', header_navigation_list: 'home_header_navigation' });
+    if (Meteor.user()) {
+      BlazeLayout.render('app_layout_with_header', {
+        main: 'page_home',
+        header_navigation_list: 'home_header_navigation' });
+    } else {
+      BlazeLayout.render('app_layout_start_page', { main: 'page_start' });
+    }
   },
 });
 
 // ---- Organizations ------------------------------
 FlowRouter.route('/orgas', {
   name: 'organizations.list',
-  action() {    
-    BlazeLayout.render('app_layout_with_header', { main: 'page_home', header_navigation_list: 'home_header_navigation' });
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'page_home',
+      header_navigation_list: 'home_header_navigation' });
   },
 });
 
 FlowRouter.route('/orgas/:_id', {
   name: 'Organizations.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', { main: 'page_orgas_show', header_navigation_list: 'page_orgas_show_header_navigation' });
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'page_orgas_show',
+      header_navigation_list: 'page_orgas_show_header_navigation' });
   },
 });
 
