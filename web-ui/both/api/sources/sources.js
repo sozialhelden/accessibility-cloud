@@ -22,30 +22,80 @@ Sources.allow({
 
 
 Sources.schema = new SimpleSchema({
-  name: { type: String },
   organizationId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-    autoform: {
-      type: 'hidden',
-    },
+  },
+  licenseId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  languageId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  name: { type: String },
+  primaryRegion: { type: String },
+  description: { type: String },
+  originWebsite: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Url,
   },
 });
 
 Sources.attachSchema(Sources.schema);
 
 Sources.publicFields = {
+  organizationId: 1,
+  licenseId: 1,
   name: 1,
+  primaryRegion: 1,
+  description: 1,
+  originWebsite: 1,
 };
 
-Factory.define('source', Sources, {});
-
+Factory.define('source', Sources, {
+  organizationId: () => Factory.get('organization'),
+  licenseId: () => Factory.get('license'),
+  languageId: () => Factory.get('language'),
+  name: 'Toilets in Vienna',
+  primaryRegion: 'Vienna, Austria',
+  description: 'All public toilets in vienna (JSON)',
+  originWebsite: 'http://data.wien.gv.at',
+  streamChain: [
+    {
+      type: 'httpDownload',
+      parameters: {
+        sourceUrl: 'http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json',
+      },
+    },
+    {
+      type: 'convertCharacterSet',
+      parameters: {
+        from: 'iso-8895-1',
+        to: 'utf-8',
+      },
+    },
+    {
+      type: 'parseJSON',
+      parameters: {
+        mappings: {
+          _id: 'row.id',
+          geometry: 'row.geometry',
+          properties: 'row.properties',
+          address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
+          isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
+        },
+      },
+    },
+  ],
+});
 
 Sources.helpers({
   // Used by methods-validation
   editableBy(userId) {
+    // FIXME: allow editing only for members and admins of source
     return false; // test to valid denial
-    //return true || userId;  // FIXME: allow editing only for members and admins of source
   },
   getOrganization() {
     return Organizations.findOne(this.organizationId);

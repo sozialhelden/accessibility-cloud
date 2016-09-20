@@ -3,27 +3,6 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Factory } from 'meteor/factory';
 import { Sources } from '/both/api/sources/sources';
 
-// class OrganizationsCollection extends Mongo.Collection {
-//   insert(organization, callback) {
-//     const ourOrganization = organization;
-//     if (!ourOrganization.name) {
-//       let nextLetter = 'A';
-//       ourOrganization.name = `Organization ${nextLetter}`;
-
-//       while (!!this.findOne({ name: ourOrganization.name })) {
-//         // not going to be too smart here, can go past Z
-//         nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-//         ourOrganization.name = `Organization ${nextLetter}`;
-//       }
-//     }
-
-//     return super.insert(ourOrganization, callback);
-//   }
-//   remove(selector, callback) {
-//     return super.remove(selector, callback);
-//   }
-// }
-
 export const Organizations = new Mongo.Collection('Organizations');
 
 // Deny all client-side updates since we will be using methods to manage this collection
@@ -57,7 +36,9 @@ Organizations.publicFields = {
   name: 1,
 };
 
-Factory.define('organization', Organizations, {});
+Factory.define('organization', Organizations, {
+  name: 'ACME GmbH',
+});
 
 Organizations.helpers({
   editableBy(userId) {
