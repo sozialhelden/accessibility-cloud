@@ -9,7 +9,7 @@
 
 <template name="organizations_show_page">
   <div class='page content block'>
-    <h2>Sources</h2>
+    <h2>{{_ "Your sources"}}</h2>
     <ul class='with-blocks'>
       {{#each organization.getSources}}
         <li class='list block'>
@@ -17,11 +17,11 @@
         </li>
       {{/each}}
     </ul>
-    <a href='/manage/organizations/{{organization._id}}/sources/create'>Add Source</a>
+    <a href='/manage/organizations/{{organization._id}}/sources/create'>{{_ "Add another Source"}}</a>
   </div>
 
   <div class='page content block'>
-    <h2>Apps</h2>
+    <h2>{{_ "Your Apps"}}</h2>
     TbD
   </div>
 
