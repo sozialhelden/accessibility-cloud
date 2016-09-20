@@ -1,9 +1,5 @@
 <template name="organizations_show_header">
   <li>
-    Organisation
-  </li>
-  <li>/</li>
-  <li>
     {{#with organization}}
       {{name}}
     {{/with}}
@@ -13,7 +9,12 @@
 
 <template name="organizations_show_page">
   <div class='block'>
-    <h1>Organization</h1>
     <a href='/manage/organizations/{{organization._id}}/sources/create'>Add Source</a>
-</div>
+    <h2>Sources</h2>
+    <ul>
+      {{#each organization.getSources}}
+        <li><a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a></li>
+      {{/each}}
+    </ul>
+  </div>
 </template>

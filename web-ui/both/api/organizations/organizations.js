@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/factory';
+import { Sources } from '/both/api/sources/sources';
 
 // class OrganizationsCollection extends Mongo.Collection {
 //   insert(organization, callback) {
@@ -63,8 +63,7 @@ Organizations.helpers({
   editableBy(userId) {
     return true || userId;  // FIXME: allow editing only for members and admins of organization
   },
-  members() {
-    // return Meteor.users.find({ organizationId: this._id }, { sort: { createdAt: -1 } });
-    return Meteor.users.find({}, { sort: { createdAt: -1 } });
+  getSources() {
+    return Sources.find({ organizationId: this._id });
   },
 });

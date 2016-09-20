@@ -5,6 +5,7 @@ import { Organizations } from '/both/api/organizations/organizations.js';
 Template.organizations_show_page.onCreated(function created() {
   this.autorun(() => {
     this.subscribe('organizations.public');
+    this.subscribe('sources.public');
   });
 });
 
