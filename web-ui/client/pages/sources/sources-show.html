@@ -1,0 +1,24 @@
+<template name="sources_show_header">
+  <li>
+    Source
+  </li>
+  <li>/</li>
+  <li>
+    {{#with source.getOrganization}}
+      {{name}}
+    {{/with}}
+  </li>
+  <li>/</li>
+  <li>
+    {{#with source}}
+      {{name}}
+    {{/with}}
+  </li>
+</template>
+
+
+<template name="sources_show_page">
+  <div class='block'>
+    <h1>Source</h1>
+  </div>
+</template>

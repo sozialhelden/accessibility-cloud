@@ -127,7 +127,6 @@ manageRoutes.route('/organizations/:_id', {
   },
 });
 
-
 manageRoutes.route('/organizations/:_id/sources', {
   name: 'manage.organizations.sources.list',
   action() {
@@ -148,8 +147,17 @@ manageRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
-// === NOT FOUND ===================================
+manageRoutes.route('/sources/:_id', {
+  name: 'manage.sources.show',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+    });
+  },
+});
 
+// === NOT FOUND ===================================
 
 // the App_notFound template is used for unknown routes and missing lists
 FlowRouter.notFound = {

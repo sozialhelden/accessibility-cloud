@@ -13,8 +13,9 @@
   <div class='block'>
     <h1>Add Source</h1>
 
-  {{#autoForm  collection='Sources' id="insertSourceForm" type="insert"}}
+  {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
     {{> afQuickField name='name'}}
+    {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
     <button type="submit" class="btn btn-primary">Insert</button>
   {{/autoForm}}
 </div>

@@ -29,10 +29,9 @@ Template.sources_create_page.helpers(_helpers);
 
 AutoForm.addHooks('insertSourceForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('source.show', { _id });
+    FlowRouter.go('manage.sources.show', { _id });
 
     this.event.preventDefault();
     return false;
   },
 });
-

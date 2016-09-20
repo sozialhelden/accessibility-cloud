@@ -1,9 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/factory';
-
-
+import { Organizations } from '/both/api/organizations/organizations';
 
 export const Sources = new Mongo.Collection('Sources');
 
@@ -25,7 +23,13 @@ Sources.allow({
 
 Sources.schema = new SimpleSchema({
   name: { type: String },
-  organizationId: { type: String, regEx: SimpleSchema.RegEx.Id }
+  organizationId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    autoform: {
+      type: 'hidden',
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -42,5 +46,8 @@ Sources.helpers({
   editableBy(userId) {
     return false; // test to valid denial
     //return true || userId;  // FIXME: allow editing only for members and admins of source
+  },
+  getOrganization() {
+    return Organizations.findOne(this.organizationId);
   },
 });

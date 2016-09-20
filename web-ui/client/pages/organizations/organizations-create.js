@@ -21,10 +21,9 @@ Template.organizations_create_page.helpers({
 
 AutoForm.addHooks('insertOrganizationForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('organizations.show', { _id });
+    FlowRouter.go('manage.organizations.show', { _id });
 
     this.event.preventDefault();
     return false;
   },
 });
-
