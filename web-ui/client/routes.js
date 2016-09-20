@@ -55,6 +55,7 @@ function redirectIfLoggedIn (ctx, redirect) {
 
 
 FlowRouter.route('/', {
+  name: 'manage.dashboard',
   action() {
     if (Meteor.userId()) {
       BlazeLayout.render('app_layout_with_header', {

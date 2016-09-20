@@ -1,6 +1,7 @@
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Organizations } from '/both/api/organizations/organizations.js';
+import { Sources } from '/both/api/sources/sources.js';
 
 Template.organizations_show_page.onCreated(function created() {
   this.autorun(() => {

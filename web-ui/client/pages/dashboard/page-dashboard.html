@@ -1,51 +1,50 @@
 <template name="dashboard_header_navigation">
-  <li>
-    {{#if organizations}}
-      <select id='orga-list'>
-        {{#each organizations}}
-          <option>{{name}}</option>
-        {{/each}}
-      </select>
-    {{else}}
-      New Organization
-    {{/if}}
-  </li>
+  <li>{{_ "Home"}}</li>
 </template>
 
 <template name="page_dashboard">
-  <div class='block'>
-    Move to header:
-    <h1>(HOME)</h1>
-    <h2>Organizations:</h2>
-    <ol>
-      {{#each organizations}}
-        <li><a href='{{pathFor "organizations.show" _id=_id}}'>{{name}}</a></li>
-      {{/each}}
-    </ol>
-    <a href='{{pathFor "organizations.create"}}'>Add Organization</a>
+  <div class='page content block'>
+    
+  <h2>Your Organizations</h2>
+    {{#if organizations}}
+      <ul class='with-blocks'>
+        {{#each organizations}}
+          <li class='list item block'>
+            <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <span class='placeholder'>{{_ "No data-sources yet."}}</span> 
+    {{/if}}
+    <a href='{{pathFor "manage.organizations.create"}}'>{{_ "Add another Organization"}}</a>
   </div>
-  <div class='content-parts'>
-    <div class='data-sources part'>
-      <h3>Share your data</h3>
-      <div class='wrapper'>
-        <div class='data-sources list'>
-          <span class='placeholder'>No data-sources yet.</span> 
-          <div class='wrapper'>
-            <div class='button cta'>Add datasource</div>
-          </div>
-        </div>
+  
+  <div class='page content block'>
+    <h2>Share your data</h2>
+      {{#if sources}}
+        <ul class='with-blocks'>
+          {{#each sources}}
+            <li class='list item block'>
+              <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <span class='placeholder'>No data-sources yet.</span> 
+      {{/if}}
+        <!-- ADDING A DATA_SOURCE IS ONLY POSSIBLE FROM AN ORGANIZATION -->
+<!--           <div class='wrapper'>
+        <a class='button cta' href='{{pathFor "manage..create"}}'>Add Organization</a>
+        <div class='button cta'>Add datasource</div>
       </div>
-    </div>
-    <div class='data-apps part'>
-      <h3>Access data</h3>
-      <div class='wrapper'>
-        <div class='data-apps list'>
-          <span class='placeholder'>No apps.</span>
-          <div class='wrapper'>
-            <div class='button cta'>Register app</div>
-          </div>
-        </div>
-      </div>
+-->
+  </div>
+  <div class='page content block'>
+    <h2>Access data</h2>
+    <span class='placeholder'>No apps.</span>
+    <div class='wrapper'>
+      <div class='button cta'>Register app</div>
     </div>
   </div>
 </template>
