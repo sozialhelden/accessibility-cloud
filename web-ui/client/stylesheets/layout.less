@@ -55,7 +55,7 @@
     font-family: 'sourcesanspro-light';
     font-weight: normal;
     font-size: 50px;
-    color: #A23533;
+    //color: #A23533;
     letter-spacing: 0px;
     line-height: 90%;
     padding-bottom: 0.2em;
@@ -109,22 +109,32 @@ div.actions.area {
 }
 
 .actions.area .pannel header {
-    color: #A23533;
+    //color: #A23533;
     font-family: sourcesanspro-semibold;
     text-transform: uppercase;
     padding-bottom: 5px;
 }
 
 a.call-to-action.button {
-    background-color: #A23533;
-    color:white;
-    text-transform: uppercase;
-    line-height: 40px;
     width:100%;
-    font-size: 20px;
+// font-size: 20px;
     text-align: center;
     display: block;
-    margin-bottom: 10px;
+// margin-bottom: 10px;
+
+  display: inline-block;
+  padding: 0 18px;
+  color: white;
+  font-size: 18px;
+  font-family: 'sourcesanspro-regular';
+  line-height: 48px;
+  text-transform: uppercase;
+  background-color: #1FABD9; //@color-primary
+  cursor: pointer;
+
+  &:hover {
+    background-color: #29A3CB;
+  } 
 }
 
 h2 {
