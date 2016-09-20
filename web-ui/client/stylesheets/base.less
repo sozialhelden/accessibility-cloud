@@ -12,14 +12,8 @@ html, button, input, textarea, select {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  .type-regular;
-  color: @color-full;
-  font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
-}
-
 // Default type layout
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, span {
   .type-regular;
   margin: 0;
   padding: 0;
@@ -80,13 +74,14 @@ em {
 
 
 body {
-    -webkit-font-smoothing: antialiased;
-    color: #675C5C; 
-    font-family: sourcesanspro-light, sans-serif;
-    font-size:16px;
     height:100%;
     width:100%;
-    background-color: #EEEEEE;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; // Firefox font render fix on OSX
+    color: @color-grey1;
+    .type-regular;
+    font-size: 16px; //this sets the baseline so we can use multiples of 4 & (r)ems
+    background-color: @color-grey5;
 }
 
 * {
@@ -111,7 +106,8 @@ label {
 }
 
 a {
-    color: #32A0E6;
+    color: @color-primary;
+    font-family: 'sourcesanspro-regular';
     text-decoration: none;
     cursor: pointer;
 }
@@ -125,6 +121,22 @@ a:hover {
     //cursor: pointer;
 }
 
+.button.cta {
+  display: inline-block;
+  padding: 0 18px;
+  color: white;
+  font-size: 18px;
+  font-family: 'sourcesanspro-regular';
+  line-height: 48px;
+  text-transform: uppercase;
+  background-color: #1FABD9; //@color-primary
+  cursor: pointer;
+
+  &:hover {
+    background-color: #29A3CB;
+  }
+}
+
 input.input.search {
     /* Rectangle 2: */
     background: rgba(255,255,255,0.40);
@@ -136,11 +148,11 @@ input.input.search {
     border-bottom: 1px solid #c8c8c8;
     outline: none;    
     transition: 1s all;
-}
 
-input.input.search:focus {
-    border:1px solid #32A0E6;
-    transition: 1s all;
+  &:focus {
+      border:1px solid #32A0E6;
+      transition: 1s all;
+  }
 }
 
 .content .input.area {
