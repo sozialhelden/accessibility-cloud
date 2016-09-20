@@ -1,8 +1,9 @@
 <template name="sources_show_header_sub">
   <div class='sub-pages'>
-    <a href='' class='{{activeIfRouteNameIs "manage.sources.show"}}'>Imports</a>
-    <a href='' class='{{activeIfRouteNameIs "manage.sources.show.format"}}'>Mappings</a>
-    <a href='' class='{{activeIfRouteNameIs "manage.sources.show.setings"}}'>Settings</a>
-    <a href='' class='{{activeIfRouteNameIs "manage.sources.show.access"}}'>Access</a>
+    <a href='{{pathFor "manage.sources.show" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show"}}'>Imports</a>
+    <a href='{{pathFor "manage.sources.show.format" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show.format"}}'>Format</a>
+    <a href='{{pathFor "manage.sources.show.settings" _id=source._id}}' 
+    	class='{{activeIfRouteNameIs "manage.sources.show.settings"}}'>Settings</a>
+    <a href='{{pathFor "manage.sources.show.access" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show.access"}}'>Access</a>
   </div>
 </template>

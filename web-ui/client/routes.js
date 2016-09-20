@@ -147,11 +147,46 @@ manageRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
+
 manageRoutes.route('/sources/:_id', {
   name: 'manage.sources.show',
   action() {
     BlazeLayout.render('app_layout_with_header', {
       main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/sources/:_id/format', {
+  name: 'manage.sources.show.format',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_show_format_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/sources/:_id/settings', {
+  name: 'manage.sources.show.settings',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_show_settings_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+
+manageRoutes.route('/sources/:_id/access', {
+  name: 'manage.sources.show.access',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_show_access_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
     });
