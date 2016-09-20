@@ -4,3 +4,4 @@ logs
 M-logs.log
 status.json
 ac-settings.json
+**/npm-debug.log

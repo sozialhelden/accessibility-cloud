@@ -1,4 +1,4 @@
-<!-- <template name="page_orgas_show_header_navigation">
+<!-- <template name="organizations_show_page_header_navigation">
   <li>
     Organisation
   </li>
@@ -9,11 +9,11 @@
   </li>
 </template> -->
 
-<template name="page_orgas_add">
+<template name="organizations_create_page">
   <div class='block'>
     <h1>Create Organization</h1>
 
-  {{#autoForm  collection='Organizations' id="insertOrgaForm" type="insert"}}
+  {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
     {{> afQuickField name='name'}}
     <button type="submit" class="btn btn-primary">Insert</button>
   {{/autoForm}}

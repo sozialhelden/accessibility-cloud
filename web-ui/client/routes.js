@@ -77,7 +77,7 @@ FlowRouter.route('/orgas/add', {
   name: 'organizations.add',
   action() {
     BlazeLayout.render('app_layout_with_header', {
-      main: 'page_orgas_add',
+      main: 'organizations_create_page',
       // header_navigation_list: 'home_header_navigation',
     });
   },
@@ -88,8 +88,8 @@ FlowRouter.route('/orgas/:_id', {
   name: 'Organizations.show',
   action() {
     BlazeLayout.render('app_layout_with_header', {
-      main: 'page_orgas_show',
-      header_navigation_list: 'page_orgas_show_header_navigation' });
+      main: 'organizations_show_page',
+      header_navigation_list: 'organizations_show_page_header_navigation' });
   },
 });
 
