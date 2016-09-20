@@ -36,10 +36,6 @@ Organizations.publicFields = {
   name: 1,
 };
 
-Factory.define('organization', Organizations, {
-  name: 'ACME GmbH',
-});
-
 Organizations.helpers({
   editableBy(userId) {
     return true || userId;  // FIXME: allow editing only for members and admins of organization

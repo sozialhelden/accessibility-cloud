@@ -1,6 +1,5 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Factory } from 'meteor/factory';
 import { isAdmin } from '/both/lib/is-admin';
 
 export const Languages = new Mongo.Collection('Languages');
@@ -22,11 +21,6 @@ Languages.publicFields = {
   name: 1,
   languageCode: 1,
 };
-
-Factory.define('language', Languages, {
-  name: 'Deutsch',
-  languageCode: 'de',
-});
 
 Languages.helpers({
   editableBy: isAdmin,
