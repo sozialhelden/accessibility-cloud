@@ -13,17 +13,27 @@
 </template>
 
 <template name="page_dashboard">
-
   <div class='block'>
-  askldfjaöl sdfjsa
-    <h1>HOME</h1>
+    Move to header:
+    <h1>(HOME)</h1>
     <h2>Organizations:</h2>
     <ol>
       {{#each organizations}}
         <li><a href='{{pathFor "organizations.show" _id=_id}}'>{{name}}</a></li>
       {{/each}}
     </ol>
-
     <a href='{{pathFor "organizations.create"}}'>Add Organization</a>
+  </div>
+  <div class='content-parts'>
+    <div class='data-sources'>
+      <h3>Share your data</h3>
+      <span class='placeholder'>No data-sources yet.</span>
+      <div class='button cta'>Add datasource</div>
+    </div>
+    <div class='data-apps'>
+      <h3>Access data</h3>
+      <span class='placeholder'>No apps.</span>
+      <div class='button cta'>Register app</div>
+    </div>
   </div>
 </template>
