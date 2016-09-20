@@ -2,6 +2,7 @@
   <li>
     {{#with source.getOrganization}}
       <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+      {{name}}
     {{/with}}
   </li>
   <li>
@@ -12,8 +13,7 @@
 </template>
 
 
+
 <template name="sources_show_page">
-  <div class='block'>
-    <h1>Source</h1>
-  </div>
+
 </template>

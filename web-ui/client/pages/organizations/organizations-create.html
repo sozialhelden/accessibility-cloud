@@ -8,12 +8,12 @@
 </template>
 
 <template name="organizations_create_page">
+  
+    <!-- <h1>Create Organization</h1> -->
   <div class='block'>
-    <h1>Create Organization</h1>
-
-  {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
-    {{> afQuickField name='name'}}
-    <button type="submit" class="btn btn-primary">Insert</button>
-  {{/autoForm}}
-</div>
+    {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
+      {{> afQuickField name='name'}}
+      <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+  </div>
 </template>
