@@ -26,21 +26,48 @@ header.main-header {
     li {
       list-style: none;
       display: inline-block;
-      margin-right: 10px;      
+      margin-right: 10px;
     }
   }
 
-  .main-navigation {
-    font-size:40px;
-    font-weight: lighter;
+  ul.main-navigation {
+    li {
+      list-style: none;
+      display: inline-block;
 
-    &:after {
-      content:'/';
-      opacity: 0.5;
-    }   
-    &:last-child:after {
-      content:'';
-      opacity: 0.5;
-    }   
+      font-size:40px;
+      font-weight: lighter;
+
+      &:after {
+        content:'/';
+        opacity: 0.5;
+      }
+      &:last-child {
+        font-weight: bold;
+
+        &:after {
+          content:'';
+          opacity: 0.5;
+        }
+      }
+
+      a {
+        font-family:'sourcesanspro-light';
+
+        &:hover {
+          color:red;
+        }
+      }
+    }
+  }
+}
+
+header.main-header .sub-header {
+  padding-top:10px;
+  a{
+    margin-right:2em;
+  }
+  a.active {
+    font-weight: bold;
   }
 }

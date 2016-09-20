@@ -8,13 +8,21 @@
 
 
 <template name="organizations_show_page">
-  <div class='block'>
-    <a href='/manage/organizations/{{organization._id}}/sources/create'>Add Source</a>
+  <div class='page content block'>
     <h2>Sources</h2>
-    <ul>
+    <ul class='with-blocks'>
       {{#each organization.getSources}}
-        <li><a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a></li>
+        <li class='list block'>
+          <a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a>
+        </li>
       {{/each}}
     </ul>
+    <a href='/manage/organizations/{{organization._id}}/sources/create'>Add Source</a>
   </div>
+
+  <div class='page content block'>
+    <h2>Apps</h2>
+    TbD
+  </div>
+
 </template>

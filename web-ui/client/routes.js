@@ -153,6 +153,7 @@ manageRoutes.route('/sources/:_id', {
     BlazeLayout.render('app_layout_with_header', {
       main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
     });
   },
 });
