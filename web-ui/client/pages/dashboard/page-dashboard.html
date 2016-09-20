@@ -18,10 +18,10 @@
     <h2>Organizations:</h2>
     <ol>
       {{#each organizations}}
-        <li><a href='/orgas/{{this._id}}'>{{this.name}}</a></li>
+        <li><a href='{{pathFor "organizations.show" _id=_id}}'>{{name}}</a></li>
       {{/each}}
     </ol>
 
-    <a href='/orgas/add'>Add Organization</a>
+    <a href='{{pathFor "organizations.create"}}'>Add Organization</a>
   </div>
 </template>

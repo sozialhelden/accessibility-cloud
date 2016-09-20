@@ -83,7 +83,7 @@ FlowRouter.route('/organizations/:_id', {
   },
 });
 
-// ========= MANGE =======================================================
+// ========= MANAGE =======================================================
 
 const manageRoutes = FlowRouter.group({
   name: 'manage',
@@ -123,6 +123,26 @@ manageRoutes.route('/organizations/:_id', {
   },
 });
 
+
+manageRoutes.route('/organizations/:_id/sources', {
+  name: 'manage.organizations.sources.list',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'organizations_show_page',
+      header_navigation_list: 'organizations_show_header',
+    });
+  },
+});
+
+manageRoutes.route('/organizations/:_id/sources/create', {
+  name: 'manage.organizations.sources.create',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_create_page',
+      header_navigation_list: 'sources_create_header',
+    });
+  },
+});
 
 // === NOT FOUND ===================================
 

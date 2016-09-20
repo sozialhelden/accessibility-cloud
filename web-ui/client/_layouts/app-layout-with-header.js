@@ -119,6 +119,6 @@ Template.app_layout_with_header.events({
         alert(`Could not create organization. ${err.reason}`);        
       }
     });
-    FlowRouter.go('Organizations.show', { _id });
+    FlowRouter.go('organizations.show', { _id });
   },
 });

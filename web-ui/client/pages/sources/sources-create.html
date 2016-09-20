@@ -1,0 +1,21 @@
+<template name="sources_create_header">
+  <li>
+    {{#with organization}}
+      {{name}}
+    {{/with}}
+  </li>
+  <li>
+  	Add Source
+  </li>
+</template>
+
+<template name="sources_create_page">
+  <div class='block'>
+    <h1>Add Source</h1>
+
+  {{#autoForm  collection='Sources' id="insertSourceForm" type="insert"}}
+    {{> afQuickField name='name'}}
+    <button type="submit" class="btn btn-primary">Insert</button>
+  {{/autoForm}}
+</div>
+</template>

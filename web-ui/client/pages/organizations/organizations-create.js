@@ -12,7 +12,6 @@ Template.organizations_create_page.onCreated(function created() {
 });
 
 
-
 Template.organizations_create_page.helpers({
   organizationsFormSchema() {
     return Organizations.schema;
@@ -22,7 +21,7 @@ Template.organizations_create_page.helpers({
 
 AutoForm.addHooks('insertOrganizationForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('Organizations.show', { _id });
+    FlowRouter.go('organizations.show', { _id });
 
     this.event.preventDefault();
     return false;
