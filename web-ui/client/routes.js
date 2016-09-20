@@ -17,7 +17,9 @@ Planned routes are...
 /manage/organizations/create
 /manage/organizations/_orgaId_    <- includes link to delete
 /manage/organizations/_orgaId_/edit
+
 /manage/organizations/_orgaId/sources/create
+
 /manage/sources/_sourceId
 
 /manage/sources/_sourceId/format
@@ -62,9 +64,8 @@ FlowRouter.route('/', {
   },
 });
 
-
 // ---- Organizations ------------------------------
-FlowRouter.route('/orgas', {
+FlowRouter.route('/organizations', {
   name: 'organizations.list',
   action() {
     BlazeLayout.render('app_layout_with_header', {
@@ -73,8 +74,37 @@ FlowRouter.route('/orgas', {
   },
 });
 
-FlowRouter.route('/orgas/add', {
-  name: 'organizations.add',
+FlowRouter.route('/organizations/:_id', {
+  name: 'organizations.show',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'organizations_show_page',
+      header_navigation_list: 'organizations_show_page_header_navigation' });
+  },
+});
+
+// ========= MANGE =======================================================
+
+const manageRoutes = FlowRouter.group({
+  name: 'manage',
+  prefix: '/manage',
+  triggersEnter: [
+    checkLoggedIn,
+  ],
+});
+
+manageRoutes.route('/organizations', {
+  name: 'manage.organizations.list',
+
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'organizations_list_page',
+      header_navigation_list: 'home_header_navigation' });
+  },
+});
+
+manageRoutes.route('/organizations/create', {
+  name: 'manage.organizations.create',
   action() {
     BlazeLayout.render('app_layout_with_header', {
       main: 'organizations_create_page',
@@ -83,15 +113,19 @@ FlowRouter.route('/orgas/add', {
   },
 });
 
-
-FlowRouter.route('/orgas/:_id', {
-  name: 'Organizations.show',
+manageRoutes.route('/organizations/:_id', {
+  name: 'manage.organizations.show',
   action() {
     BlazeLayout.render('app_layout_with_header', {
       main: 'organizations_show_page',
-      header_navigation_list: 'organizations_show_page_header_navigation' });
+      header_navigation_list: 'organizations_show_header',
+    });
   },
 });
+
+
+// === NOT FOUND ===================================
+
 
 // the App_notFound template is used for unknown routes and missing lists
 FlowRouter.notFound = {

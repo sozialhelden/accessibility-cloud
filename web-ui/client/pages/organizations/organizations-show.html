@@ -1,10 +1,10 @@
-<template name="organizations_show_page_header_navigation">
+<template name="organizations_show_header">
   <li>
     Organisation
   </li>
   <li>/</li>
   <li>
-    {{#with orga}}
+    {{#with organization}}
       {{name}}
     {{/with}}
   </li>
@@ -14,5 +14,6 @@
 <template name="organizations_show_page">
   <div class='block'>
     <h1>Organization</h1>
+    <a href='/manage/organizations/{{organization._id}}/sources/create'>Add Source</a>
 </div>
 </template>

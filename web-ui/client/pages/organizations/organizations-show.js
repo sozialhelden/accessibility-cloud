@@ -8,15 +8,15 @@ Template.organizations_show_page.onCreated(function created() {
   });
 });
 
-Template.organizations_show_page_header_navigation.helpers({
-  orga() {
+Template.organizations_show_header.helpers({
+  organization() {
     const orga = Organizations.findOne({ _id: FlowRouter.getParam('_id') });
     return orga;
   },
 });
 
 Template.organizations_show_page.helpers({
-  orga() {
+  organization() {
     const orga = Organizations.findOne({ _id: FlowRouter.getParam('_id') });
     return orga;
   },

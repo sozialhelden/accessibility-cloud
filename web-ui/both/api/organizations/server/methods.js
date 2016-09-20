@@ -19,12 +19,13 @@ export const insert = new ValidatedMethod({
   },
 });
 
+/*
 Meteor.methods({
   'organizationsInsert': function(doc) {
-    // console.log(">>> DEBUG organizationsInsert()");
     this.unblock();
   },
 });
+*/
 
 export const updateName = new ValidatedMethod({
   name: 'organizations.updateName',
