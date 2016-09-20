@@ -123,19 +123,32 @@ manageRoutes.route('/organizations/:_id', {
     BlazeLayout.render('app_layout_with_header', {
       main: 'organizations_show_page',
       header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
     });
   },
 });
 
-manageRoutes.route('/organizations/:_id/sources', {
-  name: 'manage.organizations.sources.list',
+manageRoutes.route('/organizations/:_id/settings', {
+  name: 'manage.organizations.show.settings',
   action() {
     BlazeLayout.render('app_layout_with_header', {
-      main: 'organizations_show_page',
+      main: 'organizations_show_settings_page',
       header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
     });
   },
 });
+
+
+// manageRoutes.route('/organizations/:_id/sources', {
+//   name: 'manage.organizations.sources.list',
+//   action() {
+//     BlazeLayout.render('app_layout_with_header', {
+//       main: 'organizations_show_page',
+//       header_navigation_list: 'organizations_show_header',
+//     });
+//   },
+// });
 
 manageRoutes.route('/organizations/:_id/sources/create', {
   name: 'manage.organizations.sources.create',

@@ -1,0 +1,6 @@
+<template name="organizations_show_header_sub">
+  <div class='sub-pages'>
+    <a href='{{pathFor "manage.organizations.show" _id=organization._id}}' class='{{activeIfRouteNameIs "manage.organizations.show"}}'>Organization overview</a>
+    <a href='{{pathFor "manage.organizations.show.settings" _id=organization._id}}' class='{{activeIfRouteNameIs "manage.organizations.show.settings"}}'>Settings</a>
+  </div>
+</template>
