@@ -4,72 +4,72 @@
       <div id='mapid'>
       </div>
       <div class='header'>
-
         <ul class='page-sections'>
           <li><a href='.'>Manage</a></li>
           <li><a href='.'>Learn</a></li>
         </ul>
-        <h1>
+        <div class='input-area'>
+          <input class='search input' placeholder="Placename / Address / Region">
+        </div>
+<!--         <h1>
           <ul class='main-navigation'>
             {{> Template.dynamic template=header_navigation_list}}
           </ul>
+        </h1> -->
+        <h1>
+        accessibility cloud
+          <small>
+            An open Database for everybody
+          </small>
         </h1>
-          <h1>
-          Accessibility Cloud
-            <small>
-              An open Database for everybody
-            </small>
-          </h1>
       </div>
     </div>
     <div class='content'>
-      <div class='input area'>
-        <input class='search input' placeholder="search">
-      </div>
-
-      <div class='claim area'>
-        <h1>Let’s collect more accessible places.</h1>
-        <footer>This blind text will explain in very short form why collecting accessibility data is an awesome idea</footer>
-      </div>
       <div class='area statistics'>
         <a class='number-block' href='/sources'>
           <header>{{source_count}}</header>
           <footer>sources</footer>
+          <div class='wrapper'>
+            <img src='images/sources-symbols.png' alt='sources symbols'>
+          </div>
         </a>
         <a class='number-block' href='.'>
           <header>{{place_count}}</header>
           <footer>places</footer>
+          <div class='wrapper'>
+            <img src='images/access-symbols.png' alt='access symbols'>
+          </div>
         </a>
         <a class='number-block' href='.'>
           <header>{{country_count}}</header>
           <footer>countries</footer>
         </a>
       </div>
-      <div class='actions area'>
-        <div class='pannel'>
-          <a class='call-to-action button' href='..'>
-            Download
+      <div class='claim area'>
+        <h2>Let’s collect more accessible places together.</h2>
+        <footer>This blind text will explain in very short form why collecting accessibility data is an awesome idea</footer>
+      </div>
+      <div class='page content block actions area'>
+        <div class='wrapper'>
+          <a class='call-to-action button big' href='..'>
+            {{_ "Join now"}}
           </a>
-          <header>Using this data</header>
-          This will be a short sentence of how beautiful the data is and what great things  can be achieved with it.
-        </div>
-        <div class='pannel'>
-          <a class='call-to-action button' href='.'>
-            Contribute
-          </a>
-          <header>A small step for you...</header>
-            A small sentence that summarizes the different forms for contribution and how rewarding this small investment will be.
+          <div>
+            <p> {{_ "You already have an account?"}}</p>
+            <a class='link'>{{_"Login"}}</a>
+          </div>
         </div>
       </div>
 
       <div class='partners area'>
-        <h2>Supported by partners like</h2>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-jaccede.png);"></a>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-axsmap.png);"></a>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-jaccede.png);"></a>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-axsmap.png);"></a>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-jaccede.png);"></a>
-        <a class='partner logo' href='.' style="background-image:url(images/partners/logo-axsmap.png);"></a>
+        <h2>{{_ "Supporting partners" }}</h2>
+        <div class="logo-cloud">
+          <a class='partner logo square' href='.' style="background-image:url(images/partners/logo-jaccede.png);"></a>
+          <a class='partner logo square' href='.' style="background-image:url(images/partners/logo-foursquare.png);"></a>
+          <a class='partner logo' href='.' style="background-image:url(images/partners/logo-axsmap.png);"></a>
+          <a class='partner logo' href='.' style="background-image:url(images/partners/logo-wheelmap.png);"></a>
+          <a class='partner logo' href='.' style="background-image:url(images/partners/logo-google.png);"></a>
+        </div>
       </div>
     </div>
   </div>
