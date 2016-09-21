@@ -11,32 +11,34 @@ form {
     width: 26em;
     max-width: 90vv;
 
-    input {
+    input,
+    select,
+    textarea {
       width:100%;
-      border: none;
       border: 1px solid @color-grey091;
-      border-radius: 6px;
-			//font-size: 16px;
-			//color: @color-grey030;
-			.font-s3;
+      .font-s3;
       .type-regular;
       font-size: 18px; 
-      letter-spacing: 0px;
+      padding: 8px;
+      transition: 0.5s;
+    
+      &:focus,
+      &:hover {
+        border: 1px solid @color-primary;
+        transition: 0.5s;    
+      }
+    }
+
+    input {
       padding: 0 8px;
       line-height: @lineheight-forms;
-
+      border-radius: 6px;
+  
       &[type="checkbox"] {
         width: auto;
         margin-right: 10px;
       }
-
-      &:focus {
-        border: 1px solid @color-primary;    
-      }
     }
-
-    // input[type=email],
-    // input[type=password] {}
 
     label {
       margin-top: 3em;
@@ -45,6 +47,11 @@ form {
       .type-regular;
       //line-height: 18px;
       margin-bottom: 0.5em;
+
+      &:focus {
+        color: @color-text;
+        transition: 0.5s;
+      }
     }
 
     span.help-block {
@@ -56,17 +63,19 @@ form {
     }
 
     &.has-error {
-              transition: 0.5s;
+      transition: 0.5s;
+      
       input {
       	border: 1px solid @color-error;
       }
+      
       label {
         //color: @color-error;
       }
     }
   }
 
-  button.btn.primary {
-    margin-top: 2em;
+  button.btn.btn-primary {
+    margin-top: 4em;
   }
 }
