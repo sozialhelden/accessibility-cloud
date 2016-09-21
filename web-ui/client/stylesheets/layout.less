@@ -53,3 +53,21 @@ ul.with-blocks {
   }
 }
 
+.attribute-list {
+  >div {
+    padding:2em;
+    border-bottom:1px solid #eee; // FIXME: please style me
+
+    label {
+      color: #888;
+      display: inline-block;
+      width:150px;
+      text-align: right;
+      margin-right:20px;
+
+      &:after {
+        content:':';
+      }
+    }
+  }
+}

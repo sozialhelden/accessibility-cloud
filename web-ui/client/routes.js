@@ -186,10 +186,10 @@ manageRoutes.route('/licenses/:_id', {
 });
 
 manageRoutes.route('/licenses/:_id/edit', {
-  name: 'manage.licenses.show.edit',
+  name: 'manage.licenses.edit',
   action() {
     BlazeLayout.render('app_layout_with_header', {
-      main: 'licenses_show_settings_page',
+      main: 'licenses_edit_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
     });

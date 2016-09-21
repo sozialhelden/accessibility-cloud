@@ -3,15 +3,45 @@
   {{> licenses_navigation_sidebar}}
   <div class='page content block'>
     {{#with license}}
-    <h2>
-      {{name}}
-      {{#if shorthand}}
-        <span class='mutet'>
-          ({{shorthand}})
-        </span>
-      {{/if}}
-    </h2>
-  
+      <h2>
+        {{name}}
+        {{#if shorthand}}
+          <span class='mutet'>
+            ({{shorthand}})
+          </span>
+        {{/if}}
+      </h2>
+      <a href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
+      <div class='attribute-list'>
+        <div>
+          <label>{{_ "plainTextSummary"}}</label>
+          {{plainTextSummary}}
+        </div>
+        <div>
+          <label>{{_ "Version"}}</label>
+          {{version}}
+        </div>
+        <div>
+          <label>{{_"websiteURL"}}</label>
+          <a href='{{websiteURL}}'>{{websiteURL}}</a>
+        </div>
+        <div>
+          <label>{{_"fullTextURL"}}</label>
+          <a href='{{fullTextURL}}'>{{fullTextURL}}</a>
+        </div>
+        <div>
+          <label>{{_"Considered As"}}</label>
+          <!-- {{consideredAs}} -->
+        </div>
+        <div>
+          <label>{{_"Requires Attribution"}}</label>
+          {{requiresAttribution}}
+        </div>
+        <div>
+          <label>{{_"Requires Share Alike"}}</label>
+          {{requiresShareAlike}}
+        </div>
+      </div>
     {{/with}}
   </div>
 
