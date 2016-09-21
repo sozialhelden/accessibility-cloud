@@ -6,29 +6,34 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 Planned routes are...
 
 /welcome
-/browse/:_orgaId/
-/browse/:_orgaId/:_sourceId/
+/browse/:_id/
+/browse/:_id/:_sourceId/
 
 /browse/sources/
 /browse/sources/:_sourceId/edit
-/browse/organizations/:_orgaId/
-/browse/organizations/:_orgaId/sources ???
+/browse/organizations/:_id/
+/browse/organizations/:_id/sources ???
 
 / <- dashboard
 
 /manage/organizations/create
-/manage/organizations/:_orgaId_    <- includes link to delete
-/manage/organizations/:_orgaId_/edit
+/manage/organizations/:_id    <- includes link to delete
+/manage/organizations/:_id/edit
 
-/manage/organizations/:_orgaId/sources/create
+/manage/organizations/:_id/sources/create
 
 /manage/sources/:_sourceId
 
-/manage/sources/:_sourceId/format
-/manage/sources/:_sourceId/settings
-/manage/sources/:_sourceId/imports/:_importId
-/manage/sources/:_sourceId/imports/:_importId
-/manage/sources/:_sourceId/access
+/manage/sources/:_id/format
+/manage/sources/:_id/settings
+/manage/sources/:_id/imports/:_importId
+/manage/sources/:_id/imports/:_importId
+/manage/sources/:_id/access
+
+/manage/licenses/
+/manage/licenses/:_id
+/manage/licenses/create
+/manage/licenses/:_id/edit
 
 /help
 /signup

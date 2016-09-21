@@ -22,9 +22,7 @@ Organizations.allow({
 
 
 Organizations.schema = new SimpleSchema({
-  // _id: { type: String, regEx: SimpleSchema.RegEx.Id },
   name: { type: String },
-  //userId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
 });
 
 Organizations.attachSchema(Organizations.schema);
