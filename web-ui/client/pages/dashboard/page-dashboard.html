@@ -5,7 +5,7 @@
 <template name="page_dashboard">
   <div class='page content block'>
     
-  <h2>Your Organizations</h2>
+  <h2>{{_ "Your Organizations" }}</h2>
     {{#if organizations}}
       <ul class='with-blocks'>
         {{#each organizations}}
@@ -15,13 +15,13 @@
         {{/each}}
       </ul>
     {{else}}
-      <span class='placeholder'>{{_ "No data-sources yet."}}</span> 
+      <span class='placeholder'>{{_ "You are in no organisation yet." }}</span> 
     {{/if}}
     <a href='{{pathFor "manage.organizations.create"}}'>{{_ "Add another Organization"}}</a>
   </div>
   
   <div class='page content block'>
-    <h2>Share your data</h2>
+    <h2>{{_ "Share your data" }}</h2>
       {{#if sources}}
         <ul class='with-blocks'>
           {{#each sources}}
@@ -31,7 +31,7 @@
           {{/each}}
         </ul>
       {{else}}
-        <span class='placeholder'>No data-sources yet.</span> 
+        <span class='placeholder'>{{_ "No data-sources yet."}}</span> 
       {{/if}}
         <!-- ADDING A DATA_SOURCE IS ONLY POSSIBLE FROM AN ORGANIZATION -->
 <!--           <div class='wrapper'>
@@ -41,11 +41,11 @@
 -->
   </div>
   <div class='page content block'>
-    <h2>Access data</h2>
-    <span class='placeholder'>No apps.</span>
+    <h2>{{_ "Access data"}}</h2>
+    <span class='placeholder'>{{_ "No apps."}}</span>
     <div class='wrapper'>
       <a class='call-to-action button' href='..'>
-        Register app
+        {{_ "Register app"}}
       </a>
     </div>
   </div>
