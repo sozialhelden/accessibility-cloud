@@ -2,17 +2,16 @@
 
 form {
   //padding: @page-padding-top @page-horizontal-padding;
-  padding-top: @page-padding-top;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
   .form-group {
+    margin-top: 2em;
     width: 26em;
     max-width: 90vv;
 
     input {
-      margin-bottom: 3em;
       width:100%;
       border: none;
       border: 1px solid @color-grey091;
@@ -40,6 +39,7 @@ form {
     // input[type=password] {}
 
     label {
+      margin-top: 3em;
       color: @color-grey054;
     	.font-s3;
       .type-regular;
@@ -50,7 +50,7 @@ form {
     span.help-block {
       .font-s3;
       .type-regular;
-      line-height: 4em;
+      line-height: 2em;
       color: @color-error;
       transition: 0.5s;
     }
@@ -61,8 +61,12 @@ form {
       	border: 1px solid @color-error;
       }
       label {
-        color: @color-error;
+        //color: @color-error;
       }
     }
+  }
+
+  button.btn.primary {
+    margin-top: 2em;
   }
 }
