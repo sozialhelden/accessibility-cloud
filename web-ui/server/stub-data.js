@@ -18,14 +18,22 @@ Factory.define('language', Languages, {
   languageCode: 'de',
 });
 
-Factory.define('license', Licenses, {
+
+Factory.define('_license_CC0', Licenses, {
   name: 'Public Domain',
-  text: 'You can freely use this dataset as you like.',
+  shorthand: 'CC0',
+  plainTextSummary: 'The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.',
+  version: '',
+  websiteURL: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  fullTextURL: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' ,
+  consideredAs: 'CC0',
+  requiresAttribution: false,
+  requiresShareAlike: false,
 });
 
 Factory.define('source', Sources, {
   organizationId: Factory.get('organization'),
-  licenseId: Factory.get('license'),
+  licenseId: Factory.get('_license_CC0'),
   languageId: Factory.get('language'),
   name: 'Toilets in Vienna',
   primaryRegion: 'Vienna, Austria',
@@ -133,7 +141,7 @@ Meteor.startup(() => {
   if (Licenses.find().count() > 0) {
     return;
   }
-  const license = Factory.create('license');
+  const license = Factory.create('_license_CC0');
   const language = Factory.create('language');
   const organization = Factory.create('organization');
   const source = Factory.create('source', {
