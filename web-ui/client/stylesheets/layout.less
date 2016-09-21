@@ -1,9 +1,5 @@
 @import './utils.less';
 
-// ac - new layout variables
-@padding-left: 2em; // 5.14em needed when logo is visible
-@padding-top: 2em;  // 4em needed when logo is visible
-
 .sidebar {  // FIXME: please style me
   background-color: white;
   max-width:200px;
@@ -24,8 +20,8 @@
   margin-left: auto;
   margin-right: auto;
 
-  padding:@padding-left @padding-top;
-  border-bottom: 1px solid @color-grey4;
+  padding:@page-horizontal-padding @page-padding-top;
+  border-bottom: 1px solid @color-grey091;
 
   &:last-child {
     border-bottom: none;
@@ -39,7 +35,6 @@ ul.with-blocks {
   li.list.block {
     background-color: white;
     box-shadow: 0 0 4px  rgba(0,0,0, 0.3);
-
 
     a {
       display:block;
