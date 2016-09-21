@@ -15,7 +15,7 @@ export const Sources = new Mongo.Collection('Sources');
 
 // FIXME: WARNING, these need to be fixed
 Sources.allow({
-  insert() { return true; },
+  insert() { return true; }, // FIXME: should be member of organization or admin
   update() { return true; },
   remove() { return true; },
 });
@@ -25,6 +25,14 @@ Sources.schema = new SimpleSchema({
   organizationId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+      afFormGroup: {
+        label: false,
+      },
+    },
   },
   licenseId: {
     type: String,
@@ -36,7 +44,14 @@ Sources.schema = new SimpleSchema({
   },
   name: { type: String },
   primaryRegion: { type: String },
-  description: { type: String },
+  description: {
+    type: String,
+    autoform: {
+      afFieldInput: {
+        rows: 5,
+      },
+    },
+  },
   originWebsite: {
     type: String,
     regEx: SimpleSchema.RegEx.Url,
@@ -58,7 +73,7 @@ Sources.helpers({
   // Used by methods-validation
   editableBy(userId) {
     // FIXME: allow editing only for members and admins of source
-    return false; // test to valid denial
+    return true;
   },
   getOrganization() {
     return Organizations.findOne(this.organizationId);

@@ -10,13 +10,19 @@
 </template>
 
 <template name="sources_create_page">
-  <div class='block'>
+  <div class='page content block'>
     <h1>Add Source</h1>
 
-  {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
-    {{> afQuickField name='name'}}
-    {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-    <button type="submit" class="btn btn-primary">Insert</button>
-  {{/autoForm}}
+    {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
+      {{> afQuickField name='name'}}
+      {{> afQuickField name="licenseId" options=licenses noselect="true"}}
+      {{> afQuickField name='languageId' options=languages}}
+      {{> afQuickField name='primaryRegion'}}
+      {{> afQuickField name='description'}}
+      {{> afQuickField name='originWebsite'}}
+
+      {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+      <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
 </div>
 </template>
