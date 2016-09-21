@@ -1,1 +1,53 @@
 @import './utils.less';
+
+.form-wrapper {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+
+  .field {
+    margin-top: 40px;
+    min-width: 15rem;
+    //max-width:90vw;
+    width:90vw;
+    max-width: 40rem;
+    line-height: @lineheight-forms;
+
+    input {
+      width:100%;
+      border: none;
+      border: 1px solid @color-grey4;
+      border-radius: 6px;
+			//font-size: 16px;
+			//color: @color-grey1;
+			letter-spacing: 0px;
+
+      &[type="checkbox"] {
+        width: auto;
+        margin-right: 10px;
+      }
+
+      &:focus {
+        outline-width: 0;
+        border: 1px solid @color-primary;    
+        margin-bottom:0px;  // prevent artifacts when changing border-width on focus
+      }
+    }
+
+    // input[type=email],
+    // input[type=password] {}
+
+    label {
+    	.font-s1;
+      line-height: 18px;
+      color: @color-grey3;
+      padding-bottom: 0px;
+    }
+
+    &.has-errors {
+      input {
+      	border: 1px solid red;
+      }
+    }
+  }
+}

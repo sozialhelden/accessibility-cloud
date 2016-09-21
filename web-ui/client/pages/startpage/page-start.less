@@ -29,17 +29,14 @@
 			display: inline-block;
 		  padding-top: 15px;
 		  margin-left: 10px;
-			color: @color-grey1;
-		  font-family: 'sourcesanspro-light';
-			font-size: 60px;
-		  line-height: 64px;
+		  .type-light;
+		  .font-l3;
 	
 			small {
 				padding-left: 93px; 
 				display: block;
-			  font-family: 'sourcesanspro-regular';
-				font-size: 14px;
-			  line-height: 18px;
+		  	.type-regular;
+		  	.font-s2;
 			  text-transform: uppercase;
 				letter-spacing: 1px;
 			}
@@ -121,7 +118,7 @@
     text-align:center;
     h2 {
 			.font-l1;
-		  color: @color-grey1;
+	  	.type-light;
       line-height: 90%;
       padding-bottom: 0.2em;
     }
@@ -140,7 +137,7 @@ div.area.statistics {
 
 	a.number-block {
 	  background-color: none;
-	  color: #32A0E6;
+	  color: @color-primary;
 	  flex:1;
 	  margin: 10px;
 	  padding: 0.5em 1em;
@@ -154,8 +151,7 @@ div.area.statistics {
 
 	  header {
 	  	.font-l1;
-	    font-family: 'sourcesanspro-extralight';
-	    font-size:50px;
+	  	.type-light;
 	    line-height: 100%;
 	    padding-bottom: 5px;
 	  }
@@ -202,10 +198,12 @@ div.area.statistics {
 }
 
 .partners.area {
+  min-height: 20em;
   background-color: @color-grey4;
 
   h2 {
 		.font-l1;
+		.type-light;
 	  color: @color-grey1;
     padding-bottom: 20px;
 	  text-align: center;

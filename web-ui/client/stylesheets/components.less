@@ -1,25 +1,22 @@
 @import './utils.less';
 
 a.call-to-action.button {
-  // font-size: 20px;
-  // margin-bottom: 10px;
-  //@color-primary cursor: pointer;
   display: block;
   display: inline-block;
   padding: 0 18px;
-  color: white;
-  font-family: 'sourcesanspro-regular';
-  font-size: 18px;
+  .font-s3;           
+  .type-regular;
   line-height: 48px;
   text-align: center;
   text-transform: uppercase;
+  color: white;
   background-color: @color-primary;
-  //width:@width1;
+  cursor: pointer;
 }
 
 a.call-to-action.button.big {
-  font-family: 'sourcesanspro-light';
-  font-size: 24px;
+  .font-m2;           
+  .type-light;
   line-height: 56px;
   min-width: 7em;
 }
@@ -33,7 +30,8 @@ a.link {
 }
 
 .placeholder {
-  .font-l3;
+  .font-l1;
+  .type-lightitalic;
   text-align: center;
   line-height: 128px;
 }
