@@ -1,19 +1,30 @@
 <template name="Auth_page">
-  <div class="page auth">
-    <nav>
+  <!-- <div class="page auth"> -->
+<!--     <nav>
       <div class="nav-group">
         <a href="#" class="js-menu nav-item">
           <span class="icon-list-unordered"></span>
         </a>
       </div>
     </nav>
-
-    <div class="content-scrollable">
-      <div class="wrapper-auth">
-        {{> atForm}}
-      </div>
+ -->
+<!--     <div class="content-scrollable">
+      <div class="wrapper auth">
+ -->        {{> atForm}}
+      <!-- </div> -->
+  <div class="wrapper">
+    <div class="tips">
+      <h3 class="tip">{{_ "You will make a difference, because…" }}</h3>
+      <ol class="checks">
+        <li>{{_ "Even small changes quickly sum up." }}</li>
+        <li>{{_ "We’re are a friendly and careing community" }}.</li>
+        <li>{{_ "It’s free!" }}</li>
+        <li>{{_ "It’s easy!" }}</li>
+      </ol>
     </div>
   </div>
+<!--     </div>
+  </div> -->
 </template>
 
 <template name="override-atPwdFormBtn">

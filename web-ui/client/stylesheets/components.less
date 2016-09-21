@@ -35,3 +35,46 @@ a.link {
   text-align: center;
   line-height: 128px;
 }
+
+.tips {
+  padding: 20px 40px;
+  border-left: 1px solid @color-grey4;
+
+  h3 {
+    position: relative;
+    padding-left: 2em;
+    .font-m1;
+    .type-light;
+    line-height: 100px;
+
+    &:before {
+      position: absolute;
+      top:-5px;
+      left:-5px;
+      content: '\e827';
+      .font-icons;
+      font-size: 2em;
+      color: @color-grey3;
+    }
+  }
+
+  ol {
+    .font-s3;
+    .type-light;
+
+
+    li {
+      position: relative;
+      padding-left: 2em;
+      line-height: 38px;
+
+      &:before {
+        content: '✓';
+        position: absolute;
+        left: 7px;
+        top: 0;
+        color: @color-grey2;
+      }
+    }
+  }
+}
