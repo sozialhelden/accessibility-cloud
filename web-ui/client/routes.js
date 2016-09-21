@@ -95,6 +95,8 @@ FlowRouter.route('/organizations/:_id', {
 
 // ========= MANAGE =======================================================
 
+// ---- organizations ---------------------
+
 const manageRoutes = FlowRouter.group({
   name: 'manage',
   prefix: '/manage',
@@ -102,6 +104,8 @@ const manageRoutes = FlowRouter.group({
     checkLoggedIn,
   ],
 });
+
+// --- organizations ------------------
 
 manageRoutes.route('/organizations', {
   name: 'manage.organizations.list',
@@ -145,16 +149,55 @@ manageRoutes.route('/organizations/:_id/settings', {
   },
 });
 
+// ---- licenses ----------------------------------------------
 
-// manageRoutes.route('/organizations/:_id/sources', {
-//   name: 'manage.organizations.sources.list',
-//   action() {
-//     BlazeLayout.render('app_layout_with_header', {
-//       main: 'organizations_show_page',
-//       header_navigation_list: 'organizations_show_header',
-//     });
-//   },
-// });
+manageRoutes.route('/organizations/:_id/licenses', {
+  name: 'manage.organizations.show.licenses',
+
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'licenses_list_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/organizations/:_id/licenses/create', {
+  name: 'manage.organizations.licenses.create',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'licenses_create_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/licenses/:_id', {
+  name: 'manage.licenses.show',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'licenses_show_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/licenses/:_id/edit', {
+  name: 'manage.licenses.show.edit',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'licenses_show_settings_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+
+// ---- sources ----------------------------------------------
 
 manageRoutes.route('/organizations/:_id/sources/create', {
   name: 'manage.organizations.sources.create',
@@ -165,7 +208,6 @@ manageRoutes.route('/organizations/:_id/sources/create', {
     });
   },
 });
-
 
 manageRoutes.route('/sources/:_id', {
   name: 'manage.sources.show',

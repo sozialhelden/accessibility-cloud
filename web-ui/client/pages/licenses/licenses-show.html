@@ -1,0 +1,18 @@
+<template name="licenses_show_page">
+
+  {{> licenses_navigation_sidebar}}
+  <div class='page content block'>
+    {{#with license}}
+    <h2>
+      {{name}}
+      {{#if shorthand}}
+        <span class='mutet'>
+          ({{shorthand}})
+        </span>
+      {{/if}}
+    </h2>
+  
+    {{/with}}
+  </div>
+
+</template>

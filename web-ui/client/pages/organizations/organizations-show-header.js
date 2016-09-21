@@ -5,20 +5,13 @@ import { Licenses } from '/both/api/licenses/licenses.js';
 
 import subsManager from '/client/lib/subs-manager';
 
-Template.organizations_show_header_sub.onCreated(() => {
+Template.organizations_show_header.onCreated(() => {
   subsManager.subscribe('organizations.public');
+  subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
 });
 
-
-Template.organizations_show_header_sub.helpers({
-  activeIfRouteNameIs(routeName) {
-    return routeName === FlowRouter._current.route.name ? 'active' : '';
-  },
-  activeIfRouteNameMatches(regex) {
-    const currentRouteName = FlowRouter._current.route.name;
-    return currentRouteName.match(regex) ? 'active' : '';
-  },
+Template.organizations_show_header.helpers({
   organization() {
     if (FlowRouter._current.route.name.startsWith('manage.organizations.show')) {
       const organizationId = FlowRouter.getParam('_id');

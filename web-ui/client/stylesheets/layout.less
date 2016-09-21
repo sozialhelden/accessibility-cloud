@@ -5,6 +5,14 @@
 @padding-top: 2em;  // 4em needed when logo is visible
 
 
+
+.sidebar {  // FIXME: please style me
+  background-color: white;
+  max-width:200px;
+  float:left;
+  padding:1em;
+}
+
 .page.content.block {
   max-width:1200px;
   margin-left: auto;
@@ -16,15 +24,16 @@
   &:last-child {
     border-bottom: none;
   }
+}
 
-  ul.with-blocks {
-    padding-top:0.5em;
-    padding-bottom:1em;
-  }
+ul.with-blocks {
+  padding-top:0.5em;
+  padding-bottom:1em;
 
   li.list.block {
     background-color: white;
     box-shadow: 0 0 4px  rgba(0,0,0, 0.3);
+
 
     a {
       display:block;
@@ -34,6 +43,11 @@
 
     &:hover {
       box-shadow: 0 0 4px  rgba(0,0,0, 0.5);
+    }
+
+    &.active {// FIXME: please style me
+      background-color:#ddd; 
+      border-left:2px solid black;
     }
   }
 }

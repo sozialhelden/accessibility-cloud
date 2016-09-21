@@ -1,0 +1,15 @@
+<template name='licenses_navigation_sidebar'>
+  <div class='sidebar navigation'>
+    <h2>{{_ "Licenses"}}</h2>
+    <ul class='with-blocks'>
+      {{#each licenses}}
+        <li class='list item block {{activeIfCurrentLicense _id}}'>
+          <a href='{{pathFor "manage.licenses.show" _id=_id}}'>
+            <h2>{{name}}</h2>
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    <a href='{{pathFor "manage.organizations.licenses.create" _id= organization._id}}'>{{_ "Add License"}}</a>
+  </div>
+</template>

@@ -1,16 +1,21 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { isAdmin } from '/both/lib/is-admin';
+import { Organizations } from '/both/api/organizations/organizations';
 
 export const Licenses = new Mongo.Collection('Licenses');
 
 Licenses.allow({
-  insert: isAdmin,
+  insert() { return true; }, // FIXME: should be member of organization or admin
   update: isAdmin,
   remove: isAdmin,
 });
 
 Licenses.schema = new SimpleSchema({
+  organizationId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
   name: {
     type: String,
     label: 'Official english title',
@@ -86,6 +91,7 @@ Licenses.schema = new SimpleSchema({
 Licenses.attachSchema(Licenses.schema);
 
 Licenses.publicFields = {
+  organizationId: 1,
   name: 1,
   shorthand: 1,
   plainTextSummary: 1,
@@ -99,4 +105,7 @@ Licenses.publicFields = {
 
 Licenses.helpers({
   editableBy: isAdmin,
+  getOrganization() {
+    return Organizations.findOne(this.organizationId);
+  },
 });
