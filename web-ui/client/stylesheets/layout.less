@@ -1,3 +1,9 @@
+@import './utils.less';
+
+// ac - new layout variables
+@padding-left: 2em; // 5.14em needed when logo is visible
+@padding-top: 2em;  // 4em needed when logo is visible
+
 // Color variables (appears count calculates by raw css)
 @color0: #a23533; // Appears 2 times
 
@@ -5,61 +11,62 @@
 @width1: 100%; // Appears 3 times
 
 
+// .header {
+//   background-size:100%;
+//   background: url(../images/theme/header-background.png) no-repeat left bottom;
+//   padding:1em 1em;
+//   position: relative;
+//   z-index: 10;
 
-
+//   h1 {
+//     background-size: 50px;
+//     background: url(../images/theme/ac-icon-white.png) left center no-repeat;
+//     font-family: 'sourcesanspro-light';
+//     font-size: 37px;
+//     font-weight:normal;
+//     line-height: 70%;
+//     padding-left:70px;
+//     padding-top:10px;
+  
+//     small {
+//       // padding-left: 1em;
+//       display: block;
+//       font-family: 'sourcesanspro-regular';
+//       font-size:12px;
+//       font-weight: normal;
+//     }
+//   }
+// }
 
 .page.content.block {
   max-width:1200px;
   margin-left: auto;
   margin-right: auto;
 
-  padding:2em;
-  border-bottom: 1px solid gray;  // please fix me
-}
+  padding:@padding-left @padding-top;
+  border-bottom: 1px solid @color-grey4;
 
-ul.with-blocks {
-  padding-top:0.5em;
-  padding-bottom:1em;
-}
-
-li.list.block {
-  background-color: white;
-  box-shadow: 0 0 4px  rgba(0,0,0, 0.3);
-
-  a {
-    display:block;
-    padding:10px;
-    margin-bottom:2px;
+  &:last-child {
+    border-bottom: none;
   }
 
-  &:hover {
-    box-shadow: 0 0 4px  rgba(0,0,0, 0.5);
+  ul.with-blocks {
+    padding-top:0.5em;
+    padding-bottom:1em;
   }
-}
 
+  li.list.block {
+    background-color: white;
+    box-shadow: 0 0 4px  rgba(0,0,0, 0.3);
 
-.header {
-  //color:white;
-  background-size:100%;
-  background: url(../images/theme/header-background.png) no-repeat left bottom;
-  padding:1em 1em;
-  position: relative;
-  z-index: 10;
-  h1 {
-    background-size: 50px;
-    background: url(../images/theme/ac-icon-white.png) left center no-repeat;
-    font-family: sourcesanspro-light;
-    font-size: 37px;
-    font-weight:normal;
-    line-height: 70%;
-    padding-left:70px;
-    padding-top:10px;
-    small {
-      // padding-left: 1em;
-      display: block;
-      font-family: sourcesanspro-regular;
-      font-size:12px;
-      font-weight: normal;
+    a {
+      display:block;
+      padding:10px;
+      margin-bottom:2px;
+    }
+
+    &:hover {
+      box-shadow: 0 0 4px  rgba(0,0,0, 0.5);
     }
   }
 }
@@ -149,26 +156,6 @@ div.actions.area {
   }
 }
 
-a.call-to-action.button {
-  &:hover {
-    background-color: #29A3CB;
-  }
-  // font-size: 20px;
-  // margin-bottom: 10px;
-  //@color-primary cursor: pointer;
-  background-color: #1FABD9;
-  color: white;
-  display: block;
-  display: inline-block;
-  font-family: 'sourcesanspro-regular';
-  font-size: 18px;
-  line-height: 48px;
-  padding: 0 18px;
-  text-align: center;
-  text-transform: uppercase;
-  width:@width1;
-}
-
 h2 {
   font-family: sourcesanspro-light;
   font-weight: normal;
@@ -213,4 +200,9 @@ a.partner.logo {
     position: absolute;
     width:@width1;
   }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
 }
