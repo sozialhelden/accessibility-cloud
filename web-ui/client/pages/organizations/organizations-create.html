@@ -8,12 +8,23 @@
 </template>
 
 <template name="organizations_create_page">
-  
-    <!-- <h1>Create Organization</h1> -->
-  <div class='block'>
-    {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
-      {{> afQuickField name='name'}}
-      <button type="submit" class="btn btn-primary">Insert</button>
-    {{/autoForm}}
+  <div class="wrapper with-hints">
+    <div class='page content block fixed-width'>  
+      <h2>{{_ "Please set up your organization:" }}</h2>
+
+      {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
+        {{> afQuickField name='name'}}
+        <button type="submit" class="btn btn-primary">Create</button>
+      {{/autoForm}}
+    </div>
+    <div class="wrapper">
+      <div class="hints">
+        <h3 class="hint">{{_ "You’re not a member of an organization, yet." }}</h3>
+        <ol class="checks">
+          <li>{{_ "You ca register your organization here." }}</li>
+          <li>{{_ "Or: Ask members of an existing organization to invite you." }}</li>
+        </ol>
+      </div>
+    </div>
   </div>
 </template>

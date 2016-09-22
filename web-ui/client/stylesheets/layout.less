@@ -19,12 +19,18 @@
   margin-left: auto;
   margin-right: auto;
 
-  padding:@page-horizontal-padding @page-padding-top;
+  padding: @page-padding-top @page-horizontal-padding;
   border-bottom: 1px solid @color-grey091;
 
   &:last-child {
     border-bottom: none;
   }
+}
+
+.page.content.block.fixed-width {
+  max-width: 30em;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .wrapper {
@@ -34,7 +40,7 @@
 
 .wrapper.with-hints {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 
   // .wrapper {
   //   display: flex;   

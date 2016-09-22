@@ -21,16 +21,25 @@ header.main-header {
   }
 
   a {
-    color: #444;
+    .font-s2;
+    .type-regular;
+    color: @color-text;
+    
+    &:hover {
+      .type-bold;
+    }
   }
 
   ul.page-sections {
     padding-left: @page-horizontal-padding;
 
     li {
-      list-style: none;
       display: inline-block;
       margin-right: 10px;
+      list-style: none;
+      .font-s2;
+      .type-light;
+      text-transform: uppercase;
     }
   }
 
@@ -42,8 +51,7 @@ header.main-header {
       list-style: none;
       .font-l1;
       .type-light;
-      line-height: 1.5em;
-      //padding-top: 0.5em;
+      line-height: 1em;
 
       &:after {
         content:'/';
