@@ -19,72 +19,86 @@ Licenses.schema = new SimpleSchema({
   name: {
     type: String,
     label: 'Official english title',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. Open Special License v1',
+      },
+    },
     max: 1000,
   },
   shorthand: {
     type: String,
-    label: 'Shorthand, e.g. ODbLv1',
+    label: 'Shorthand (optional)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. ODBLv1',
+      },
+    },
+    optional: true,
     max: 1000,
   },
   version: {
     type: String,
-    label: 'Version',
+    label: 'Version (optional)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. v1',
+      },
+    },
     optional: true,
     max: 10,
   },
   websiteURL: {
     type: String,
-    label: 'Link to descriptive website',
+    label: 'Link to descriptive website (optional)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. https://odbl.org/odbl-v1',
+      },
+    },
     regEx: SimpleSchema.RegEx.Url,
     optional: true,
     max: 1000,
   },
   fullTextURL: {
     type: String,
-    label: 'Link to full legal text',
+    label: 'Link to full legal text (optional)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. https://odbl.org/odbl-v1/fulllegal',
+      },
+    },
     regEx: SimpleSchema.RegEx.Url,
     optional: true,
     max: 1000,
   },
   plainTextSummary: {
     type: String,
-    label: 'Plaintext summary',
-    max: 2000,
-    optional: true,
-  },
-  consideredAsCC0: {
-    type: String,
-    label: 'Considered as Public Domain',
-    max: 2000,
-    optional: true,
-  },
-  consideredAsCCA: {
-    type: String,
-    label: 'Considered as Share Alike',
+    label: 'Plaintext summary (optional)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. The ODBL has the following rules...',
+        rows: 10,
+      },
+    },
     max: 2000,
     optional: true,
   },
   consideredAs: {
     type: String,
-    label: 'Considered as',
-    max: 2000,
-    regEx: /^CC0|CCSA|CCA|\?$/,
-    optional: true,
-  },
-  requiresAttribution: {
-    type: Boolean,
-    label: 'Requires Attribution',
-    optional: true,
-  },
-  requiresShareAlike: {
-    type: Boolean,
-    label: 'Requires Share-alike',
-    optional: true,
-  },
-  requiresProhibitsStoring: {
-    type: Boolean,
-    label: 'Prohibits storing',
-    optional: true,
+    label: 'Considered as...',
+    max: 100,
+    autoform: {
+      afFieldInput: {
+        options: [
+          { label: 'undefined', value: '' },
+          { label: 'Public Domain (CC0)', value: 'CC0' },
+          { label: 'Free, with Attribution required (CCA)', value: 'CCA' },
+          { label: 'Share Alike (CCSA)', value: 'CCSA' },
+          { label: 'Restricted ($)', value: 'restricted' },
+        ],
+      },
+    },
   },
 });
 
@@ -94,13 +108,11 @@ Licenses.publicFields = {
   organizationId: 1,
   name: 1,
   shorthand: 1,
-  plainTextSummary: 1,
   version: 1,
+  plainTextSummary: 1,
   websiteURL: 1,
   fullTextURL: 1,
   consideredAs: 1,
-  requiresAttribution: 1,
-  requiresShareAlike: 1,
 };
 
 Licenses.helpers({

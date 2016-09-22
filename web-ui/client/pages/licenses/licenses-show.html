@@ -10,13 +10,13 @@
           <h2>
             {{name}}
             {{#if shorthand}}
-              <span class='mutet'>
+              <span class='muted'>
                 ({{shorthand}})
               </span>
             {{/if}}
           </h2>
           <div>
-            <a href='edit-link {{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
+            <a class='edit-link' href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
           </div>
           <div>
             <label>{{_ "plainTextSummary"}}</label>

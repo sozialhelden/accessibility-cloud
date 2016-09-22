@@ -1,22 +1,22 @@
 <template name="licenses_edit_page">
+  <div class='page content block with-sidebar'>
+    <div class="sidebar-left">
+      {{> licenses_navigation_sidebar}}
+    </div>
 
-  {{> licenses_navigation_sidebar}}
-
-  <div class='page content block'>
-    <h2>{{_ "Edit License"}}</h2>
+    <div class='centered-content '>
+      <h2>{{_ "Edit License"}}</h2>
       {{#autoForm collection='Licenses' doc=license id="updateLicenseForm" type="update"}}
-        {{> afQuickField name='name'}}
-        {{> afQuickField name='shorthand'}}
-        {{> afQuickField name='plainTextSummary'}}
-        {{> afQuickField name='version'}}
-        {{> afQuickField name='websiteURL'}}
-        {{> afQuickField name='fullTextURL'}}
-        {{> afQuickField name='consideredAs'}}
-        {{> afQuickField name='requiresAttribution'}}
-        {{> afQuickField name='requiresShareAlike'}}
+          {{> afQuickField name='name'}}
+          {{> afQuickField name='shorthand'}}
+          {{> afQuickField name='version'}}
+          {{> afQuickField name='plainTextSummary'}}
+          {{> afQuickField name='websiteURL'}}
+          {{> afQuickField name='fullTextURL'}}
+          {{> afQuickField name='consideredAs'}}
 
         <button type="submit" class="btn btn-primary">Update</button>
       {{/autoForm}}
-
+    </div>
   </div>
 </template>

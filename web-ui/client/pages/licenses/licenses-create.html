@@ -7,13 +7,11 @@
         {{#autoForm collection='Licenses' id="insertLicenseForm" type="insert"}}
           {{> afQuickField name='name'}}
           {{> afQuickField name='shorthand'}}
-          {{> afQuickField name='plainTextSummary'}}
           {{> afQuickField name='version'}}
+          {{> afQuickField name='plainTextSummary'}}
           {{> afQuickField name='websiteURL'}}
           {{> afQuickField name='fullTextURL'}}
           {{> afQuickField name='consideredAs'}}
-          {{> afQuickField name='requiresAttribution'}}
-          {{> afQuickField name='requiresShareAlike'}}
 
           {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
           <button type="submit" class="btn btn-primary">Create</button>

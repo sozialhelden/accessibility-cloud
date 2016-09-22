@@ -10,7 +10,7 @@ Planned routes are...
 /browse/:_id/:_sourceId/
 
 /browse/sources/
-/browse/sources/:_sourceId/edit
+/browse/sources/:_id/edit
 /browse/organizations/:_id/
 /browse/organizations/:_id/sources ???
 
@@ -19,11 +19,11 @@ Planned routes are...
 /manage/organizations/create
 /manage/organizations/:_id    <- includes link to delete
 /manage/organizations/:_id/edit
-
 /manage/organizations/:_id/sources/create
+/manage/organizations/:_id/apps/create
+/manage/organizations/:_id/licences/create
 
-/manage/sources/:_sourceId
-
+/manage/sources/:_id
 /manage/sources/:_id/format
 /manage/sources/:_id/settings
 /manage/sources/:_id/imports/:_importId
@@ -31,8 +31,12 @@ Planned routes are...
 
 /manage/licenses/
 /manage/licenses/:_id
-/manage/licenses/create
 /manage/licenses/:_id/edit
+
+/manage/apps/               <-- DO WE REALLY NEED THIS?
+/manage/apps/:_id
+/manage/apps/:_id/edit
+
 
 /help
 /signup
@@ -194,6 +198,53 @@ manageRoutes.route('/licenses/:_id/edit', {
     });
   },
 });
+
+// ---- APPS -------------------------------------------------
+
+manageRoutes.route('/organizations/:_id/apps', {
+  name: 'manage.organizations.show.apps',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'apps_list_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/organizations/:_id/apps/create', {
+  name: 'manage.organizations.apps.create',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'apps_create_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/apps/:_id', {
+  name: 'manage.apps.show',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'apps_show_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/apps/:_id/edit', {
+  name: 'manage.apps.edit',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'apps_edit_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
 
 
 // ---- sources ----------------------------------------------

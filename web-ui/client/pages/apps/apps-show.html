@@ -1,0 +1,30 @@
+<template name="apps_show_page">
+  <div class='page content block'>
+    <div class='centered-content with-sidebar'>
+      <div class="sidebar-left">
+        {{> apps_navigation_sidebar}}
+      </div>
+
+      <div>
+        {{#with app}}
+          <h2>
+            {{name}}
+          </h2>
+          <div>
+            <a class='edit-link' href='{{pathFor "manage.apps.edit" _id=_id}}'>
+              {{_"Edit App"}}
+            </a>
+          </div>
+          <div>
+            {{description}}
+          </div>
+          <div>
+            {{#if websiteURL}}
+              <a href='{{websiteURL}}'>{{websiteURL}}</a>
+            {{/if}}
+          </div>
+        {{/with}}
+      </div>
+    </div>
+  </div>
+</template>

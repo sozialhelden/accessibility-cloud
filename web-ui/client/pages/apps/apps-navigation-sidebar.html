@@ -1,0 +1,14 @@
+<template name='apps_navigation_sidebar'>
+  <div class='sidebar navigation'>
+    <ul class='with-blocks'>
+      {{#each apps}}
+        <li class='sidebar item block {{activeIfCurrentApp _id}}'>
+          <a href='{{pathFor "manage.apps.show" _id=_id}}'>
+            <h3>{{name}}</h3>
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    <a href='{{pathFor "manage.organizations.apps.create" _id= organization._id}}'>{{_ "Add an App"}}</a>
+  </div>
+</template>
