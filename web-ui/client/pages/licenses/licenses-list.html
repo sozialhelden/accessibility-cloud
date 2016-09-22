@@ -1,16 +1,9 @@
 <template name="licenses_list_page">
   <div class='page content block'>  
-    <div class='wrapper block with-hints'>     
+    <div class='wrapper block with-sidebar'>     
       <div class="form-left">
-        <h2>{{_"Please select a license:"}}</h2>
+<!--         <h2>{{_"Please select a license:"}}</h2> -->
         {{> licenses_navigation_sidebar}}
-      </div>
-      <div class="hints-right">
-        <h3 class="hint">{{_ "Here you can manage your licenses:" }}</h3>
-        <ol class="checks">
-          <li>{{_ "You can define custom licenses for data-sources here." }}</li>
-          <li>{{_ "Standard licenses such as CC0 or CC-BY can be used as well." }}</li>
-        </ol>
       </div>
     </div>
   </div>

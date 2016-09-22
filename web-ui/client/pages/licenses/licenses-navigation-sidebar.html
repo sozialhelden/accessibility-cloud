@@ -1,11 +1,11 @@
 <template name='licenses_navigation_sidebar'>
   <div class='sidebar navigation'>
-    <h3>{{_ "Custom licenses"}}</h3>
+    <!-- <h2>{{_ "Custom licenses"}}</h2> -->
     <ul class='with-blocks'>
       {{#each licenses}}
-        <li class='list item block {{activeIfCurrentLicense _id}}'>
+        <li class='sidebar item block {{activeIfCurrentLicense _id}}'>
           <a href='{{pathFor "manage.licenses.show" _id=_id}}'>
-            <h2>{{name}}</h2>
+            <h3>{{name}}</h3>
           </a>
         </li>
       {{/each}}
