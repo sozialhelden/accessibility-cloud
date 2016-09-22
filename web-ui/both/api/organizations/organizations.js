@@ -3,6 +3,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Factory } from 'meteor/factory';
 import { Sources } from '/both/api/sources/sources';
 
+import { countriesOfTheWorld } from '/both/lib/all-countries';
+
 export const Organizations = new Mongo.Collection('Organizations');
 
 // Deny all client-side updates since we will be using methods to manage this collection
@@ -35,6 +37,19 @@ Organizations.schema = new SimpleSchema({
   legaltype: {
     label: 'Legal_type',
     type: String,
+    autoform: {
+      afFieldInput: {
+        // placeholder: 'e.g. Adam-Riese-St. 27',
+        options: [
+          { label: '?', value: 'undefined' },
+          { label: 'Non-Commercial', value: 'non-commercial' },
+          { label: 'Student', value: 'student' },
+          { label: 'GmbH', value: 'gmbh' },
+          { label: 'Inc.', value: 'Inc.' },
+          { label: 'Company', value: 'company' },
+        ],
+      },
+    },
     max: 1000,
   },
   address: {
@@ -82,6 +97,11 @@ Organizations.schema = new SimpleSchema({
     label: 'Country',
     type: String,
     max: 100,
+    autoform: {
+      afFieldInput: {
+        options: countriesOfTheWorld,
+      },      
+    },
   },
   phoneNumber: {
     label: 'Phone number',
