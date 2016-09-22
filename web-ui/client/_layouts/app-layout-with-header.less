@@ -22,7 +22,7 @@ header.main-header {
 
   a {
     .font-s2;
-    .type-regular;
+    .type-light;
     color: @color-text;
     
     &:hover {
@@ -51,14 +51,15 @@ header.main-header {
       list-style: none;
       .font-l1;
       .type-light;
-      line-height: 1em;
+      line-height: 1.4em;
+      letter-spacing: -0.03em;
 
       &:after {
         content:'/';
         opacity: 0.5;
       }
 
-      &:first-child:before {
+      &:first-child:before { // AC-Icon FIX ME: link as home?
         content: " ";
         position: relative;
         display: inline-block;
@@ -72,7 +73,8 @@ header.main-header {
       }
 
       &:last-child {
-        font-weight: bold;
+        .type-regular;
+        //font-weight: bold;
 
         &:after {
           content:'';
@@ -80,10 +82,10 @@ header.main-header {
         }
       }
       a {
-        font-family:'sourcesanspro-light';
+        .type-light;
 
         &:hover {
-          color:red;
+          color: @color-primary;
         }
       }
     }
@@ -91,11 +93,19 @@ header.main-header {
 }
 
 header.main-header .sub-header {
-  padding-top:10px;
+  padding-left: @page-horizontal-padding;
+  //padding-top:10px;
+
   a{
-    margin-right:2em;
+    padding-bottom: 2px;
+    margin-top: -10px;
+    margin-right: 2em;
+    .font-s3;
+    .type-light;
+    color: @color-text;
   }
   a.active {
-    font-weight: bold;
+    .type-bold;
+    border-bottom: 1px solid @color-primary;
   }
 }
