@@ -10,19 +10,28 @@
 </template>
 
 <template name="sources_create_page">
-  <div class='page content block'>
-    <h2>Please enter a name:</h2>
+  <div class="wrapper with-hints">
+    <div class='page content block'>
+      <h2>{{_ "Please define the kind of source:" }}</h2>
 
-    {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
-      {{> afQuickField name='name'}}
-      {{> afQuickField name="licenseId" options=licenses noselect="true"}}
-      {{> afQuickField name='languageId' options=languages}}
-      {{> afQuickField name='primaryRegion'}}
-      {{> afQuickField name='description'}}
-      {{> afQuickField name='originWebsite'}}
-
-      {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-      <button type="submit" class="btn btn-primary">Insert</button>
-    {{/autoForm}}
+      {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
+        {{> afQuickField name='name'}}
+        {{> afQuickField name="licenseId" options=licenses noselect="true"}}
+        {{> afQuickField name='languageId' options=languages}}
+        {{> afQuickField name='primaryRegion'}}
+        {{> afQuickField name='description'}}
+        {{> afQuickField name='originWebsite'}}
+        {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+        <button type="submit" class="btn btn-primary">Insert</button>
+      {{/autoForm}}
+    </div>
+    <div class="wrapper">
+      <div class="hints">
+        <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
+        <ol class="checks">
+          <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>
+        </ol>
+      </div>
+    </div>
   </div>
 </template>

@@ -12,7 +12,6 @@
 }
 
 .content-scrollable.two-columns {
-  display: flex;
 }
 
 .page.content.block {
@@ -24,6 +23,24 @@
   border-bottom: 1px solid @color-grey091;
 
   &:last-child {
+    border-bottom: none;
+  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper.with-hints {
+  display: flex;
+  justify-content: center;
+
+  // .wrapper {
+  //   display: flex;   
+  // }
+
+  .page.content.block {
     border-bottom: none;
   }
 }

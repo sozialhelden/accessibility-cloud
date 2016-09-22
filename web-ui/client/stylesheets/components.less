@@ -2,8 +2,6 @@
 
 a.call-to-action.button,
 button.btn.btn-primary {
-  //display: block;
-  //display: inline-block;
   min-width: 10em;
   margin: 1em 0;
   padding: 0 18px;
@@ -28,10 +26,6 @@ a.call-to-action.button.big {
   min-width: 7em;
 }
 
-// a.call-to-action.button:hover {
-//   background-color: #29A3CB;
-// }
-
 a.link {
   display: inline;
 }
@@ -44,8 +38,11 @@ a.link {
   line-height: 128px;
 }
 
-.tips {
-  padding: 20px 40px;
+.hints {
+  max-height: 26em; // FIX ME: adaptive height would be better
+  margin-top: @page-padding-top;
+  margin-left: @page-horizontal-padding;
+  padding: 0px 40px;
   border-left: 1px solid @color-grey091;
 
   h3 {
@@ -70,11 +67,11 @@ a.link {
     .font-s3;
     .type-light;
 
-
     li {
       position: relative;
       padding-left: 2em;
-      line-height: 38px;
+      padding-bottom: 18px;
+      line-height: 21px;
 
       &:before {
         content: '✓';
