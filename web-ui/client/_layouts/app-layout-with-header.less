@@ -1,4 +1,4 @@
-@import "/client/stylesheets/utils.less";
+  @import "/client/stylesheets/utils.less";
 
 a {
   text-decoration: none;
@@ -12,9 +12,9 @@ a {
 }
 
 header.main-header {
-
-  padding:1em 2em;
+  padding: 0.6em @page-horizontal-padding 0 0;
   background-color: @color-grey091;
+  min-height: 110px;
 
   .account-options {
     float:right;
@@ -25,6 +25,8 @@ header.main-header {
   }
 
   ul.page-sections {
+    padding-left: @page-horizontal-padding;
+
     li {
       list-style: none;
       display: inline-block;
@@ -33,17 +35,34 @@ header.main-header {
   }
 
   ul.main-navigation {
-    li {
-      list-style: none;
-      display: inline-block;
+    padding-left: 0.25em;
 
-      font-size:40px;
-      font-weight: lighter;
+    li {
+      display: inline-block;
+      list-style: none;
+      .font-l1;
+      .type-light;
+      line-height: 1.5em;
+      //padding-top: 0.5em;
 
       &:after {
         content:'/';
         opacity: 0.5;
       }
+
+      &:first-child:before {
+        content: " ";
+        position: relative;
+        display: inline-block;
+        margin-right: -17px;
+        left: -0.1em;
+        top: 5px;  
+        width: 55px;
+        height: 34px;
+        background: url(images/ac-logosmall-dark.png) center center no-repeat;
+        background-size: cover;
+      }
+
       &:last-child {
         font-weight: bold;
 
@@ -52,7 +71,6 @@ header.main-header {
           opacity: 0.5;
         }
       }
-
       a {
         font-family:'sourcesanspro-light';
 
