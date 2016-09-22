@@ -120,18 +120,22 @@ header.main-header {
       }
 
       li.home-link {
+        margin-right: -20px;
 
         a {
           content: " ";
           position: relative;
           display: inline-block;
           margin-right: -17px;
-          left: -0.1em;
+          left: -6px;
           top: 5px;  
           width: 55px;
           height: 34px;
           background: url(images/ac-logosmall-dark.png) center center no-repeat;
           background-size: cover;
+        }
+        &:after {
+          opacity: 0;
         }
       }
     }
