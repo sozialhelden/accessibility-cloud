@@ -42,19 +42,29 @@ Sources.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  name: { type: String },
-  primaryRegion: { type: String },
+  name: { 
+    type: String 
+  },
+  primaryRegion: { 
+    type: String 
+  },
   description: {
     type: String,
     autoform: {
       afFieldInput: {
-        rows: 5,
+        placeholder: "e.g. This source shares information about...",
+        rows: 10,
       },
     },
   },
   originWebsite: {
     type: String,
     regEx: SimpleSchema.RegEx.Url,
+  },
+  isDraft: {
+    type: Boolean,
+    label: 'Only a draft (not listed in publicly)',
+    defaultValue: true,
   },
 });
 
@@ -67,6 +77,7 @@ Sources.publicFields = {
   primaryRegion: 1,
   description: 1,
   originWebsite: 1,
+  isDraft:1,
 };
 
 Sources.helpers({

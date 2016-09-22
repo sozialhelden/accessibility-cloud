@@ -3,8 +3,13 @@
     <h2>{{_ "Your sources"}}</h2>
     <ul class='with-blocks'>
       {{#each organization.getSources}}
-        <li class='list block'>
-          <a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a>
+        <li class='list block {{isDraft}}'>
+          <a href='{{pathFor "manage.sources.show" _id=_id}}'>
+            {{name}}
+            {{#if isDraft}}
+              <span class='muted'>(Draft)</span>
+            {{/if}}
+          </a>
         </li>
       {{/each}}
     </ul>

@@ -20,4 +20,7 @@ Template.organizations_show_page.helpers({
     const orgCursor = Organizations.find({});
     return orgCursor;
   },
+  isDraft() {
+    return this.isDraft ? 'draft' : '';
+  },
 });
