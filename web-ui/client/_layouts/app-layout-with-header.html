@@ -30,14 +30,12 @@
         <li><a href='{{FlowRouter.path "manage.dashboard"}}'>Manage</a></li>
         <li><a href='/'>Learn</a></li>
       </ul>
-      <h1>
-        <ul class='main-navigation'>
-          <li class='home-link'>
-            <a href='/'> </a>
-          </li>
-          {{> Template.dynamic template=header_navigation_list}}
-        </ul>
-      </h1>
+      <ul class='main-navigation'>
+        <li class='home-link'>
+          <a href='/'> </a>
+        </li>
+        {{> Template.dynamic template=header_navigation_list}}
+      </ul>
       <div class='sub-header'>
         {{> Template.dynamic template=header_sub}}
       </div>

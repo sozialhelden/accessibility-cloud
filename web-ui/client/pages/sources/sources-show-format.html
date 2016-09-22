@@ -1,10 +1,18 @@
 <template name="sources_show_format_page">
   <div class='page content block'>
-    <h1>Import-Chain</h1>
-    {{#with source}}
-      {{#each sourceImport.streamInfo}}
-        <div class='code-block'>{{stringify this }}</div>
-      {{/each}}
-    {{/with}}
+    <div class='centered-content'>
+      {{#with source}}
+        <h1>Source definition</h1>
+        <div class='code-block'>{{stringify source}}</div>
+        <h2>Import-Chain</h2>
+        {{#if source.streamInfo}}
+          {{#each source.streamInfo}}
+            <div class='code-block'>{{stringify this }}</div>
+          {{/each}}
+        {{else}}
+          <span class='placeholder'>No Input Stream defiend</span>
+        {{/if}}
+      {{/with}}
+    </div>
   </div>
 </template>
