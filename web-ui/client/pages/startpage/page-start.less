@@ -22,19 +22,14 @@
       right: 0;
       bottom: 0;
       left: 0;
-      //background: inherit;
-      background-color: rgba(255,255,255,0.7);
-      -webkit-filter: grayscale(1); 
-      -webkit-filter: grayscale(100%); 
-      -moz-filter: grayscale(100%);
-      filter: gray; 
-      filter: grayscale(100%);
+      background-color: white;
+      opacity: 0.7;
       z-index: 1000;
     }
   }
 
   .header {
-    max-width: 1200px;
+    max-width: @max-page-width;
     margin-right: auto;
     margin-left: auto;
     position: relative; 
@@ -45,10 +40,14 @@
     //background-color: rgba(255,255,255,0.8);
     z-index: 1000;
 
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
     h1 {
       display: inline-block;
-      width:100%;
-      height:100%;
+      //width:100%;
+      //height:100%;
       padding-top: 15px;
       margin-left: 10px;
       .type-light;
@@ -82,13 +81,13 @@
     }
 
     .input-area {
-      display: block;
-      position: absolute;
-      right: 0em;
-      top: 2em;
-      margin-left: auto;
-      margin-right: 20px;
-      margin-top: 20px;
+      // display: block;
+      position: relative;
+      // right: 0em;
+      // top: 2em;
+      margin-left: 2em;
+      margin-right: 1.7em;
+      margin-top: 1.8em;
 
       &:before {
         position: absolute;
@@ -149,7 +148,11 @@
 }
 
 .area {
+  max-width: @max-page-width;
+  margin-left: auto;
+  margin-right: auto;
   padding:1.5em 2em;
+
   &:last-child {
     border: none;
   }
@@ -225,53 +228,62 @@ div.area.statistics {
 }
 
 .partners.area {
-  min-height: 20em;
+  max-width: 100%;
+  margin: 0; 
   background-color: @color-grey091;
 
-  h2 {
-    .font-l1;
-    .type-light;
-    color: @color-grey030;
-    padding-bottom: 20px;
-    text-align: center;
-  }
-  .logo-cloud {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .wrapper {
+    max-width: @max-page-width;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 20em;
 
-    a.partner.logo {
-      display: inline-block;
-      height:50px;
-      width:200px;     
-      margin-bottom: 10px;
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: contain;
-      position: relative;
-      mix-blend-mode: multiply;
-
-      &:before {  // desaturates logos
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: inherit;
-        -webkit-filter: grayscale(1); 
-        -webkit-filter: grayscale(100%); 
-        -moz-filter: grayscale(100%);
-        filter: gray; 
-        filter: grayscale(100%);
-      }
+    h2 {
+      .font-l1;
+      .type-light;
+      color: @color-grey030;
+      padding-bottom: 20px;
+      text-align: center;
     }
 
-    a.partner.logo.square {
-      margin-left: 20px;
-      margin-right: 20px; 
-      height:72px;
-      width:100px;
+    .logo-cloud {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      a.partner.logo {
+        display: inline-block;
+        height:50px;
+        width:200px;     
+        margin-bottom: 10px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: relative;
+        mix-blend-mode: multiply;
+
+        &:before {  // desaturates logos
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: inherit;
+          -webkit-filter: grayscale(1); 
+          -webkit-filter: grayscale(100%); 
+          -moz-filter: grayscale(100%);
+          filter: gray; 
+          filter: grayscale(100%);
+        }
+      }
+
+      a.partner.logo.square {
+        margin-left: 20px;
+        margin-right: 20px; 
+        height:72px;
+        width:100px;
+      }
     }
   }
 }
