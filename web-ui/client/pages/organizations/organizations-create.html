@@ -12,10 +12,11 @@
     <div class='page content block fixed-width'>  
       <h2>{{_ "Please set up your organization:" }}</h2>
 
-      {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
+      {{> quickForm collection="Organizations"  id="insertOrganizationForm" type="insert"}}
+<!--       {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
         {{> afQuickField name='name'}}
         <button type="submit" class="btn btn-primary">Create</button>
-      {{/autoForm}}
+      {{/autoForm}} -->
     </div>
     <div class="wrapper">
       <div class="hints">

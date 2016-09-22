@@ -42,17 +42,17 @@ Sources.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  name: { 
-    type: String 
+  name: {
+    type: String,
   },
-  primaryRegion: { 
-    type: String 
+  primaryRegion: {
+    type: String,
   },
   description: {
     type: String,
     autoform: {
       afFieldInput: {
-        placeholder: "e.g. This source shares information about...",
+        placeholder: 'e.g. This source shares information about...',
         rows: 10,
       },
     },
@@ -60,6 +60,7 @@ Sources.schema = new SimpleSchema({
   originWebsite: {
     type: String,
     regEx: SimpleSchema.RegEx.Url,
+    optional: true,
   },
   isDraft: {
     type: Boolean,
@@ -77,7 +78,7 @@ Sources.publicFields = {
   primaryRegion: 1,
   description: 1,
   originWebsite: 1,
-  isDraft:1,
+  isDraft: 1,
 };
 
 Sources.helpers({

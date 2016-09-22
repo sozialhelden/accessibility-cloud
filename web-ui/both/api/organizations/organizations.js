@@ -22,7 +22,102 @@ Organizations.allow({
 
 
 Organizations.schema = new SimpleSchema({
-  name: { type: String },
+  name: {
+    label: 'Official english title',
+    type: String,
+    max: 1000,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. xyz123 Inc.',
+      },
+    },
+  },
+  legaltype: {
+    label: 'Legal_type',
+    type: String,
+    max: 1000,
+  },
+  address: {
+    label: 'Address',
+    type: String,
+    max: 1000,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. Adam-Riese-St. 27',
+      },
+    },
+  },
+  addressAdditional: {
+    label: 'Address (Additional)',
+    type: String,
+    max: 1000,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. 1st floor',
+      },
+    },
+  },
+  zipCode: {
+    label: 'ZIP-Code',
+    type: String,
+    max: 1000,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. 12345',
+      },
+    },
+  },
+  city: {
+    label: 'City',
+    type: String,
+    max: 100,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. Berlin',
+      },
+    },
+  },
+  country: {
+    label: 'Country',
+    type: String,
+    max: 100,
+  },
+  phoneNumber: {
+    label: 'Phone number',
+    type: String,
+    max: 100,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. +49-30-123455667',
+      },
+    },
+  },
+  webSite: {
+    label: 'Web-Site',
+    type: String,
+    regEx: SimpleSchema.RegEx.Url,
+    max: 1000,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. https://xyz123.org',
+      },
+    },
+  },
+  description: {
+    label: 'Short description (optiona)',
+    type: String,
+    max: 2000,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. XYZ123 Inc. is a small entity that is often referred to a primary example for...',
+        rows: 5,
+      },
+    },
+  },
 });
 
 Organizations.attachSchema(Organizations.schema);
@@ -32,6 +127,15 @@ Organizations.attachSchema(Organizations.schema);
 // them here to keep them private to the server.
 Organizations.publicFields = {
   name: 1,
+  legaltype: 1,
+  address: 1,
+  addressAdditional: 1,
+  zipCode: 1,
+  city: 1,
+  country: 1,
+  phoneNumber: 1,
+  webSite: 1,
+  description: 1,
 };
 
 Organizations.helpers({
