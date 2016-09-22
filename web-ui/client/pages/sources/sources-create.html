@@ -10,26 +10,27 @@
 </template>
 
 <template name="sources_create_page">
-  <div class="wrapper with-hints">
-    <div class='page content block fixed-width'>
-      <h2>{{_ "Please define the kind of source:" }}</h2>
+  <div class='page content block'>  
+    <div class='wrapper block with-hints'>     
+      <div class="form-left">
+        <h2>{{_ "Please define the kind of source:" }}</h2>
 
-      {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
-        {{> afQuickField name='name'}}
-        {{> afQuickField name="licenseId" options=licenses noselect="true"}}
-        {{> afQuickField name='languageId' options=languages}}
-        {{> afQuickField name='primaryRegion'}}
-        {{> afQuickField name='description'}}
-        {{> afQuickField name='originWebsite'}}
-        {{> afQuickField name='isDraft'}}
-        {{> afQuickField name='tocForSourcesAccepted'}}
+        {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
+          {{> afQuickField name='name'}}
+          {{> afQuickField name="licenseId" options=licenses noselect="true"}}
+          {{> afQuickField name='languageId' options=languages}}
+          {{> afQuickField name='primaryRegion'}}
+          {{> afQuickField name='description'}}
+          {{> afQuickField name='originWebsite'}}
+          {{> afQuickField name='isDraft'}}
+          {{> afQuickField name='tocForSourcesAccepted'}}
 
-        {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-        <button type="submit" class="btn btn-primary">Insert</button>
-      {{/autoForm}}
-    </div>
-    <div class="wrapper">
-      <div class="hints">
+          {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+            <button type="submit" class="btn btn-primary">Insert</button>
+          {{/autoForm}}
+  
+      </div>
+      <div class="hints-right">
         <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
         <ol class="checks">
           <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>

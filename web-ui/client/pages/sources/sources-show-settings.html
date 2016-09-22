@@ -1,19 +1,28 @@
 <template name="sources_show_settings_page">
-  <div class='page content block'>
-    <!-- {{> quickForm collection="Sources" doc=source id="updateSourceForm" type="update"}} -->
-    {{#autoForm collection='Sources' doc=source id="updateSourceForm" type="update"}}
-      {{> afQuickField name='name'}}
-      {{> afQuickField name="licenseId" options=licenses noselect="true"}}
-      {{> afQuickField name='languageId' options=languages  noselect="true"}}
-      {{> afQuickField name='primaryRegion'}}
-      {{> afQuickField name='description'}}
-      {{> afQuickField name='originWebsite'}}
-      {{> afQuickField name='isDraft'}}
-      {{> afQuickField name='tocForSourcesAccepted'}}
+  <div class='page content block'>  
+    <div class='wrapper block with-hints'>     
+      <div class="form-left">
+        <!-- {{> quickForm collection="Sources" doc=source id="updateSourceForm" type="update"}} -->
+        {{#autoForm collection='Sources' doc=source id="updateSourceForm" type="update"}}
+          {{> afQuickField name='name'}}
+          {{> afQuickField name="licenseId" options=licenses noselect="true"}}
+          {{> afQuickField name='languageId' options=languages  noselect="true"}}
+          {{> afQuickField name='primaryRegion'}}
+          {{> afQuickField name='description'}}
+          {{> afQuickField name='originWebsite'}}
+          {{> afQuickField name='isDraft'}}
+          {{> afQuickField name='tocForSourcesAccepted'}}
 
-      {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-
-      <button type="submit" class="btn btn-primary">Update</button>
-    {{/autoForm}}
+          {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+          <button type="submit" class="btn btn-primary">Update</button>
+        {{/autoForm}}
+      </div>
+<!--       <div class="hints-right">
+        <h3 class="hint"></h3>
+        <ol class="checks">
+          <li></li>
+        </ol>
+      </div> -->
+    </div>
   </div>
 </template>

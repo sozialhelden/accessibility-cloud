@@ -1,5 +1,10 @@
 <template name="organizations_show_settings_page">
-  <div class='page content block'>
-    {{> quickForm collection="Organizations" doc=organization id="updateOrganizationForm" type="update"}}
+  <div class='page content block'>  
+    <div class='wrapper block with-hints'>     
+      <div class="form-left">
+        <h2>{{_ "Please set up your organization:" }}</h2>
+        {{> quickForm collection="Organizations" doc=organization id="updateOrganizationForm" type="update"}}
+    	</div>
+    </div>
   </div>
 </template>

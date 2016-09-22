@@ -12,82 +12,123 @@ a {
 }
 
 header.main-header {
-  padding: 0.6em @page-horizontal-padding 0 0;
-  background-color: @color-grey091;
+  width: 100%;
   min-height: 110px;
+  background-color: @color-grey091;
 
-  .account-options {
-    float:right;
-  }
+  .wrapper.header {
+    max-width: @max-page-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.6em @page-horizontal-padding 0 0;
 
-  a {
-    .font-s2;
-    .type-light;
-    color: @color-text;
-    letter-spacing: 0.02em;
-    
-    &:hover {
-      .type-bold;
-      letter-spacing: -0.015em;
-    }
-  }
+    .account-options {
+      padding-right: 0;
+      padding-top: 0;
+      position: relative;
+      float:right;
 
-  ul.page-sections {
-    padding-left: @page-horizontal-padding;
+      a.js-user-menu {
+        display: block;
+        padding-left: 1.5rem;
+        padding-right: 1.2em;
 
-    li {
-      display: inline-block;
-      margin-right: 10px;
-      list-style: none;
-      .font-s2;
-      .type-light;
-      text-transform: uppercase;
-    }
-  }
+        &:before,
+        &:after {
+          position: absolute;
+          top: 0;
+          .font-icons;
+          color: @color-grey054;
 
-  ul.main-navigation {
-    padding-left: 0.25em;
+          &:hover {
+            color: @color-text;
+          }
+        }
 
-    li {
-      display: inline-block;
-      list-style: none;
-      .font-l1;
-      .type-light;
-      line-height: 1.4em;
-      letter-spacing: -0.03em;
-
-      &:after {
-        content:'/';
-        opacity: 0.5;
-      }
-
-      &:first-child:before { // AC-Icon FIX ME: link as home?
-        content: " ";
-        position: relative;
-        display: inline-block;
-        margin-right: -17px;
-        left: -0.1em;
-        top: 5px;  
-        width: 55px;
-        height: 34px;
-        background: url(images/ac-logosmall-dark.png) center center no-repeat;
-        background-size: cover;
-      }
-
-      &:last-child {
-        .type-regular;
-        //font-weight: bold;
+        &:before {
+          //content: 'p';  // user icon
+          left: 19px;
+          font-size: 18px;
+        }
 
         &:after {
-          content:'';
-          opacity: 0.5;
+          content: 'ß';
+          right: 0px;
+          font-size: 16px;
         }
       }
-      a {
-        .type-light;
+    }
 
-        &:hover {
-          color: @color-primary;
+    a {
+      .font-s2;
+      .type-light;
+      color: @color-text;
+      letter-spacing: 0.02em;
+      
+      &:hover {
+        .type-bold;
+        letter-spacing: -0.015em;
+        color: @color-text;
+      }
+    }
+
+    ul.page-sections {
+      padding-left: @page-horizontal-padding;
+
+      li {
+        display: inline-block;
+        margin-right: 10px;
+        list-style: none;
+        .font-s2;
+        .type-light;
+        text-transform: uppercase;
+      }
+    }
+
+    ul.main-navigation {
+      padding-left: 0.25em;
+
+      li {
+        display: inline-block;
+        list-style: none;
+        .font-l1;
+        .type-light;
+        line-height: 1.4em;
+        letter-spacing: -0.03em;
+
+        &:after {
+          content:'/';
+          opacity: 0.5;
+        }
+
+        &:first-child:before { // AC-Icon FIX ME: link as home?
+          content: " ";
+          position: relative;
+          display: inline-block;
+          margin-right: -17px;
+          left: -0.1em;
+          top: 5px;  
+          width: 55px;
+          height: 34px;
+          background: url(images/ac-logosmall-dark.png) center center no-repeat;
+          background-size: cover;
+        }
+
+        &:last-child {
+          .type-regular;
+          //font-weight: bold;
+
+          &:after {
+            content:'';
+            opacity: 0.5;
+          }
+        }
+        a {
+          .type-light;
+
+          &:hover {
+            color: @color-primary;
+          }
         }
       }
     }

@@ -1,24 +1,28 @@
 <template name="organizations_show_page">
-  <div class='page content block'>
-    <h2>{{_ "Your sources"}}</h2>
-    <ul class='with-blocks'>
-      {{#each organization.getSources}}
-        <li class='list block {{isDraft}}'>
-          <a href='{{pathFor "manage.sources.show" _id=_id}}'>
-            {{name}}
-            {{#if isDraft}}
-              <span class='muted'>(Draft)</span>
-            {{/if}}
-          </a>
-        </li>
-      {{/each}}
-    </ul>
-    <a href='/manage/organizations/{{organization._id}}/sources/create'>{{_ "Add another Source"}}</a>
+  <div class='page content block'>  
+    <div class='wrapper block'>
+      <h2>{{_ "Your sources"}}</h2>
+      <ul class='with-blocks'>
+        {{#each organization.getSources}}
+          <li class='list block {{isDraft}}'>
+            <a href='{{pathFor "manage.sources.show" _id=_id}}'>
+              {{name}}
+              {{#if isDraft}}
+                <span class='muted'>(Draft)</span>
+              {{/if}}
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+      <a href='/manage/organizations/{{organization._id}}/sources/create'>{{_ "Add another Source"}}</a>
+    </div>
   </div>
 
   <div class='page content block'>
-    <h2>{{_ "Your Apps"}}</h2>
-    TbD
+    <div class='wrapper block'>
+      <h2>{{_ "Your Apps"}}</h2>
+      TbD
+    </div>
   </div>
 
 </template>

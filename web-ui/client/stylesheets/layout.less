@@ -1,20 +1,44 @@
 @import './utils.less';
 
-.content-scrollable {
-}
+// .content-scrollable {
+// }
 
-.content-scrollable.two-columns {
-}
+// .content-scrollable.two-columns {
+// }
 
 .page.content.block {
-  max-width: @max-page-width;
-  margin-left: auto;
-  margin-right: auto;
-  padding: @page-padding-top @page-horizontal-padding;
+  width: 100%;
   border-bottom: 1px solid @color-grey091;
 
   &:last-child {
     border-bottom: none;
+  }
+
+  .wrapper.block {
+    width: 100%;
+    max-width: @max-page-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding: @page-padding-top @page-horizontal-padding;
+  }
+
+  .wrapper.block.with-hints {
+    display: flex;
+    justify-content: flex-start;
+
+    .form-left {
+    }
+
+    .hints-right {
+      min-width: 16em;
+    }
+  }
+  .wrapper.centered {
+    display: flex;
+    justify-content: center;
+  }
+  .vertical-list {
+    flex-direction: column;
   }
 }
 
@@ -22,24 +46,6 @@
   max-width: 30em;
   margin-left: 0;
   margin-right: 0;
-}
-
-// .wrapper {
-//   display: flex;
-//   justify-content: center;
-// }
-
-.wrapper.with-hints {
-  display: flex;
-  justify-content: flex-start;
-
-  // .wrapper {
-  //   display: flex;   
-  // }
-
-  .page.content.block {
-    border-bottom: none;
-  }
 }
 
 ul.with-blocks {
