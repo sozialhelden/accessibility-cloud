@@ -1,0 +1,10 @@
+<template name="sources_show_format_page">
+  <div class='page content block'>
+    <h1>Import-Chain</h1>
+    {{#with source}}
+      {{#each sourceImport.streamInfo}}
+        <div class='code-block'>{{stringify this }}</div>
+      {{/each}}
+    {{/with}}
+  </div>
+</template>

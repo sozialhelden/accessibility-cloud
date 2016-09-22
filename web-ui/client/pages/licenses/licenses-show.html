@@ -1,7 +1,6 @@
 <template name="licenses_show_page">
-  <div class='page content block'>  
-    <div class='wrapper block with-sidebar'>     
-    
+  <div class='page content block'>
+    <div class='wrapper block with-sidebar'>
       <div class="sidebar-left">
         {{> licenses_navigation_sidebar}}
       </div>
@@ -17,12 +16,12 @@
             {{/if}}
           </h2>
           <div>
-            <a href='edit-link {{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>       
+            <a href='edit-link {{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
           </div>
           <div>
             <label>{{_ "plainTextSummary"}}</label>
             {{plainTextSummary}}
-          </div>      
+          </div>
           <div>
             <label>{{_ "Version"}}</label>
             {{version}}

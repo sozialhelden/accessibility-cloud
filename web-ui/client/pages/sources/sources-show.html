@@ -19,16 +19,10 @@
     {{/each}}
   </div>
 
-  <div class='content'>
-    <h2>{{_ "Import"}}</h2>
-
+  <div class='page content block along-sidebar'>
+    <h2>Results for Import Steps...</h2>
     {{#each sourceImport.streamInfo}}
-      <div>
-        <h3>Import Step</h3>
-        <pre>
-          {{stringify this }}
-        </pre>
-      </div>
+      <div class='code-block'>{{stringify this }}</div>
     {{/each}}
   </div>
 </template>

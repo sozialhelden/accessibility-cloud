@@ -88,6 +88,7 @@ Sources.publicFields = {
   originWebsite: 1,
   isDraft: 1,
   tocForSourcesAccepted: 1,
+  streamChain: 1,
 };
 
 Sources.helpers({
