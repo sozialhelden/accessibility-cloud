@@ -101,19 +101,6 @@ header.main-header {
           opacity: 0.5;
         }
 
-        &:first-child:before { // AC-Icon FIX ME: link as home?
-          content: " ";
-          position: relative;
-          display: inline-block;
-          margin-right: -17px;
-          left: -0.1em;
-          top: 5px;  
-          width: 55px;
-          height: 34px;
-          background: url(images/ac-logosmall-dark.png) center center no-repeat;
-          background-size: cover;
-        }
-
         &:last-child {
           .type-regular;
           //font-weight: bold;
@@ -129,6 +116,22 @@ header.main-header {
           &:hover {
             color: @color-primary;
           }
+        }
+      }
+
+      li.home-link {
+
+        a {
+          content: " ";
+          position: relative;
+          display: inline-block;
+          margin-right: -17px;
+          left: -0.1em;
+          top: 5px;  
+          width: 55px;
+          height: 34px;
+          background: url(images/ac-logosmall-dark.png) center center no-repeat;
+          background-size: cover;
         }
       }
     }
