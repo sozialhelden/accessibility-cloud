@@ -15,7 +15,7 @@ AccountsTemplates.configure({
     },
     title: {
       signIn: TAPi18n.__('Sign In'),
-      signUp: TAPi18n.__('Create your personal Account'),
+      signUp: TAPi18n.__('Create your personal account'),
     },
   },
   defaultTemplate: 'Auth_page',
