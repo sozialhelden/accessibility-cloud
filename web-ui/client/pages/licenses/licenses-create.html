@@ -1,6 +1,6 @@
 <template name="licenses_create_page">
   <div class='page content block'>
-    <h1>Create a new License for this Organization</h1>
+    <h1>Create a custom license for your organization:</h1>
 
     {{#autoForm collection='Licenses' id="insertLicenseForm" type="insert"}}
       {{> afQuickField name='name'}}
@@ -14,9 +14,8 @@
       {{> afQuickField name='requiresShareAlike'}}
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-      <button type="submit" class="btn btn-primary">Insert</button>
+      <button type="submit" class="btn btn-primary">Create</button>
+      <a href='{{pathFor "manage.organizations.show.licenses" _id=organization._id}}'>Cancel</a>
     {{/autoForm}}
-
-    <a href='{{pathFor "manage.organizations.show.licenses" _id=organization._id}}'>Cancel</a>
   </div>
 </template>

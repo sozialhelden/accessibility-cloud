@@ -14,19 +14,41 @@
     height:100%;
     left:0;
     top:0;
+
+    &:before {  // desaturates map
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      //background: inherit;
+      background-color: rgba(255,255,255,0.7);
+      -webkit-filter: grayscale(1); 
+      -webkit-filter: grayscale(100%); 
+      -moz-filter: grayscale(100%);
+      filter: gray; 
+      filter: grayscale(100%);
+      z-index: 1000;
+    }
   }
 
   .header {
-    position: absolute;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative; 
     width:100%;
-    height:100%;
-    left:0;
-    top:0;
-    background-color: rgba(255,255,255,0.8);
+    // height:100%;
+    // left:0;
+    // top:0;
+    //background-color: rgba(255,255,255,0.8);
     z-index: 1000;
 
     h1 {
       display: inline-block;
+      width:100%;
+      height:100%;
       padding-top: 15px;
       margin-left: 10px;
       .type-light;
@@ -79,7 +101,8 @@
 
       input.input.search {
         .font-m1;
-        width: 25vh;
+        //width: 35vh;
+        min-width: 18em; 
         border: 1px solid @color-grey091;
         border-radius: 6px;
         padding:0.6em;
