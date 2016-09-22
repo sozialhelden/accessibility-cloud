@@ -56,6 +56,7 @@ Sources.schema = new SimpleSchema({
         rows: 10,
       },
     },
+    optional: true,
   },
   originWebsite: {
     type: String,
@@ -66,6 +67,10 @@ Sources.schema = new SimpleSchema({
     type: Boolean,
     label: 'Only a draft (not listed in publicly)',
     defaultValue: true,
+  },
+  tocForSourcesAccepted: {
+    type: Boolean,
+    label: 'I have read and agreed to the Terms & Conditions. Esp. that I am the owner of the data or have the right to publish it.',
   },
 });
 
@@ -79,6 +84,7 @@ Sources.publicFields = {
   description: 1,
   originWebsite: 1,
   isDraft: 1,
+  tocForSourcesAccepted: 1,
 };
 
 Sources.helpers({

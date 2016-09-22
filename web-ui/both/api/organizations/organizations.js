@@ -138,6 +138,10 @@ Organizations.schema = new SimpleSchema({
       },
     },
   },
+  tocFororganizationsAccepted: {
+    label: 'I have read and agree to the teams and conditions',
+    type: Boolean,
+  },
 });
 
 Organizations.attachSchema(Organizations.schema);
@@ -156,6 +160,7 @@ Organizations.publicFields = {
   phoneNumber: 1,
   webSite: 1,
   description: 1,
+  tocFororganizationsAccepted: 1,
 };
 
 Organizations.helpers({
