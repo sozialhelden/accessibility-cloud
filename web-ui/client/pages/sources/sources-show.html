@@ -11,8 +11,25 @@
   </li>
 </template>
 
-
-
 <template name="sources_show_page">
+  <div class='sidebar'>
+    <h1>Imports</h1>
+    {{#each sourceImports}}
+      <a href='{{pathFor "manage.sources.show" _id= source._id _importId=_id}}'>{{_id}}</a>
+    {{/each}}
+  </div>
 
+  <div class='content'>
+    <h2>{{_ "Import"}}</h2>
+
+    {{#each sourceImport.streamInfo}}
+      <div>
+        <h3>Import Step</h3>
+        <pre>
+          {{stringify this }}
+        </pre>
+      </div>
+    {{/each}}
+  </div>
 </template>
+

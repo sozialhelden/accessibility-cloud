@@ -47,6 +47,8 @@ Sources.schema = new SimpleSchema({
   },
   primaryRegion: {
     type: String,
+    label: 'Primary Region (optional)',
+    optional: true,
   },
   description: {
     type: String,
@@ -70,7 +72,8 @@ Sources.schema = new SimpleSchema({
   },
   tocForSourcesAccepted: {
     type: Boolean,
-    label: 'I have read and agreed to the Terms & Conditions. Esp. that I am the owner of the data or have the right to publish it.',
+    label: 'I have read and agreed to the Terms & Conditions. '
+         + 'Esp. that I am the owner of the data or have the right to publish it.',
   },
 });
 

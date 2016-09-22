@@ -27,7 +27,6 @@ Planned routes are...
 /manage/sources/:_id/format
 /manage/sources/:_id/settings
 /manage/sources/:_id/imports/:_importId
-/manage/sources/:_id/imports/:_importId
 /manage/sources/:_id/access
 
 /manage/licenses/
@@ -209,7 +208,7 @@ manageRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
-manageRoutes.route('/sources/:_id', {
+manageRoutes.route('/sources/:_id/:_importId?', {
   name: 'manage.sources.show',
   action() {
     BlazeLayout.render('app_layout_with_header', {
@@ -253,6 +252,22 @@ manageRoutes.route('/sources/:_id/access', {
     });
   },
 });
+
+
+
+
+manageRoutes.route('/sources/:_id/access', {
+  name: 'manage.sources.show.access',
+  action() {
+    BlazeLayout.render('app_layout_with_header', {
+      main: 'sources_show_access_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+
 
 // === NOT FOUND ===================================
 
