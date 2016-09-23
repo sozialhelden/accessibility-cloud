@@ -63,7 +63,7 @@
       padding-left: @page-horizontal-padding;
     }
 
-    .sidebar {  // FIXME: please style me
+    .sidebar { 
       float:left;
       width: 26em;
       max-width: 90vv;
@@ -82,10 +82,17 @@
       li.sidebar.item.block {
         margin-top:1px;
 
-        h3 {
-          .font-m1;
-          .type-light;
-          padding-left: @page-horizontal-padding;
+        a {
+
+          h3 {
+            display: block;
+            margin-top: 0;
+            .font-m1;
+            .type-light;
+            padding-left: @page-horizontal-padding;
+
+          }
+
         }
 
         &.active,
@@ -104,13 +111,22 @@
     }
 
     .attribute-list {
+      //border-left: 2px solid white;
+      background-color: white;
+
       h2 {
+        margin-top: 1.6em;
         padding-left: 1em;
       }
 
       div {
         display: flex;
         flex-direction: column;
+        border-bottom: 1px solid @color-grey091;
+
+        &:last-child {
+          border-bottom: none;
+        }
 
         label {
           text-align: left;
