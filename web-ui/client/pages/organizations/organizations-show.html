@@ -1,5 +1,5 @@
 <template name="organizations_show_page">
-  <div class='dashboard widget with-list sources'>
+  <div class='dashboard widget with-list single-widget sources'>
     <h2>{{_ "Your sources"}}</h2>
     <ul class='with-blocks'>
       {{#each organization.getSources}}
@@ -13,7 +13,7 @@
         </li>
       {{/each}}
     </ul>
-    <a href='{{pathFor "manage.organizations.sources.create" _id=organization._id}}'>{{_ "Add another Source"}}</a>
+    <a class='add-entry' href='{{pathFor "manage.organizations.sources.create" _id=organization._id}}'>{{_ "Add another Source"}}</a>
   </div>
 <!--   <div class='page content block'>
     <div class='centered-content'>

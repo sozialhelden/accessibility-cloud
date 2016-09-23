@@ -66,11 +66,15 @@ ul.with-blocks {
 }
 
 .dashboard.widget {
-  width: 28%;
+  min-width: 29%;
   // min-height: 100%/3; 
-  //flex-grow:1; 
-  margin: 0 @page-horizontal-padding/2;
+  flex-grow:1; 
+  margin-right: @page-horizontal-padding;
   border-bottom: 1px solid @color-grey091;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   h2 {
     text-align: center;
@@ -88,8 +92,14 @@ ul.with-blocks {
   }
   a.add-entry {
     text-align: center;
+    padding-bottom: 1em;
     // padding-left: 0.7em;
   }
+}
+
+.dashboard.widget.single-widget {
+  //width: 29%;
+  flex-grow:0;
 }
 
 .dashboard.widget.with-list.organisations,
@@ -166,13 +176,17 @@ ul.with-blocks {
 }
 
 .code-block {
-  background-color: @color-code-area;
-  border:1px solid @color-code-border;
-  white-space: pre;
   padding:4px 4px;
-  border-radius:4px;
   margin-top:0.5em;
   margin-bottom:0.5em;
+  white-space: pre;
+  .type-code;
+  .font-s3;
+  line-height: 1.3em;
+  border-radius:4px;
+  border:1px solid @color-code-border;
+  color: white;
+  background-color: @color-code-area;
 }
 
 .attribute-list {

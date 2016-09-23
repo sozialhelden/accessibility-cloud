@@ -1,16 +1,16 @@
-<template name="sources_show_format_page">
+<template name="sources_show_format_page"> 
 
     <div class='centered-content'>
       {{#with source}}
-        <h1>Source definition</h1>
+        <h3>Source definition</h3>
         <div class='code-block'>{{stringify source}}</div>
-        <h2>Import-Chain</h2>
+        <h4>Import-Chain</h4>
         {{#if source.streamInfo}}
           {{#each source.streamInfo}}
             <div class='code-block'>{{stringify this }}</div>
           {{/each}}
         {{else}}
-          <span class='placeholder'>No Input Stream defiend</span>
+          <span class='placeholder'>No Input Stream defined</span>
         {{/if}}
       {{/with}}
     </div>

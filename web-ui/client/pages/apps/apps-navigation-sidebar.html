@@ -1,10 +1,10 @@
-<template name='apps_navigation_sidebar'>
+<template name='apps_navigation_sidebar'> 
   <div class='sidebar navigation'>
     <ul class='with-blocks'>
       {{#each apps}}
         <li class='item block {{activeIfCurrentApp _id}}'>
           <a href='{{pathFor "manage.apps.show" _id=_id}}'>
-            <h3>{{name}}</h3>
+            {{name}}
           </a>
         </li>
       {{/each}}
