@@ -66,7 +66,7 @@ FlowRouter.route('/', {
   name: 'manage.dashboard',
   action() {
     if (Meteor.userId()) {
-      BlazeLayout.render('app_layout_with_header', {
+      BlazeLayout.render('app_layout_scrollable', {
         main: 'page_dashboard',
         header_navigation_list: 'dashboard_header_navigation' });
     } else {
@@ -81,7 +81,7 @@ FlowRouter.route('/', {
 FlowRouter.route('/organizations', {
   name: 'organizations.list',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'page_orgas_list',
       header_navigation_list: 'home_header_navigation' });
   },
@@ -90,7 +90,7 @@ FlowRouter.route('/organizations', {
 FlowRouter.route('/organizations/:_id', {
   name: 'organizations.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_page',
       header_navigation_list: 'organizations_show_page_header_navigation' });
   },
@@ -114,7 +114,7 @@ manageRoutes.route('/organizations', {
   name: 'manage.organizations.list',
 
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_list_page',
       header_navigation_list: 'home_header_navigation' });
   },
@@ -123,7 +123,7 @@ manageRoutes.route('/organizations', {
 manageRoutes.route('/organizations/create', {
   name: 'manage.organizations.create',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_create_page',
       // header_navigation_list: 'home_header_navigation',
     });
@@ -133,7 +133,7 @@ manageRoutes.route('/organizations/create', {
 manageRoutes.route('/organizations/:_id', {
   name: 'manage.organizations.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -144,7 +144,7 @@ manageRoutes.route('/organizations/:_id', {
 manageRoutes.route('/organizations/:_id/settings', {
   name: 'manage.organizations.show.settings',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_settings_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -158,7 +158,7 @@ manageRoutes.route('/organizations/:_id/licenses', {
   name: 'manage.organizations.show.licenses',
 
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_list_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -169,7 +169,7 @@ manageRoutes.route('/organizations/:_id/licenses', {
 manageRoutes.route('/organizations/:_id/licenses/create', {
   name: 'manage.organizations.licenses.create',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_create_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -180,7 +180,7 @@ manageRoutes.route('/organizations/:_id/licenses/create', {
 manageRoutes.route('/licenses/:_id', {
   name: 'manage.licenses.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_show_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -191,7 +191,7 @@ manageRoutes.route('/licenses/:_id', {
 manageRoutes.route('/licenses/:_id/edit', {
   name: 'manage.licenses.edit',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_edit_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -204,7 +204,7 @@ manageRoutes.route('/licenses/:_id/edit', {
 manageRoutes.route('/organizations/:_id/apps', {
   name: 'manage.organizations.show.apps',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_list_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -215,7 +215,7 @@ manageRoutes.route('/organizations/:_id/apps', {
 manageRoutes.route('/organizations/:_id/apps/create', {
   name: 'manage.organizations.apps.create',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_create_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -226,7 +226,7 @@ manageRoutes.route('/organizations/:_id/apps/create', {
 manageRoutes.route('/apps/:_id', {
   name: 'manage.apps.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_show_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -237,7 +237,7 @@ manageRoutes.route('/apps/:_id', {
 manageRoutes.route('/apps/:_id/edit', {
   name: 'manage.apps.edit',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_edit_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
@@ -252,7 +252,7 @@ manageRoutes.route('/apps/:_id/edit', {
 manageRoutes.route('/organizations/:_id/sources/create', {
   name: 'manage.organizations.sources.create',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_create_page',
       header_navigation_list: 'sources_create_header',
     });
@@ -262,7 +262,7 @@ manageRoutes.route('/organizations/:_id/sources/create', {
 manageRoutes.route('/sources/:_id/format', {
   name: 'manage.sources.show.format',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_format_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -273,7 +273,7 @@ manageRoutes.route('/sources/:_id/format', {
 manageRoutes.route('/sources/:_id/settings', {
   name: 'manage.sources.show.settings',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_settings_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -285,7 +285,7 @@ manageRoutes.route('/sources/:_id/settings', {
 manageRoutes.route('/sources/:_id/access', {
   name: 'manage.sources.show.access',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_access_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -297,7 +297,7 @@ manageRoutes.route('/sources/:_id/access', {
 manageRoutes.route('/sources/:_id/access', {
   name: 'manage.sources.show.access',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_access_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -309,7 +309,7 @@ manageRoutes.route('/sources/:_id/access', {
 manageRoutes.route('/sources/:_id/:_importId?', {
   name: 'manage.sources.show',
   action() {
-    BlazeLayout.render('app_layout_with_header', {
+    BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',

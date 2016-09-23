@@ -1,146 +1,55 @@
 @import './utils.less';
 
-// .content-scrollable {
-// }
-
-// .content-scrollable.two-columns {
-// }
-
-.code-block {
-  background-color: @color-code-area;
-  border:1px solid @color-code-border;
-  white-space: pre;
-  padding:4px 4px;
-  border-radius:4px;
-  margin-top:0.5em;
-  margin-bottom:0.5em;
-}
-
-.page.content.block {
-  width: 100%;
-  border-bottom: 1px solid @color-grey091;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  .centered-content {
+.page-content.centered {
     width: 100%;
     max-width: @max-page-width;
     margin-left: auto;
     margin-right: auto;
     padding: @page-padding-top @page-horizontal-padding;
-  }
+    display:flex;
 
-  .centered-content.with-hints {
-    display: flex;
-    justify-content: flex-start;
+  >div {
+    flex-grow:1;
+    flex-basis:100px; // balance column width
+    margin-left:@page-padding-top;
 
-    .form-left {
-    }
-
-    .hints-right {
-      min-width: 16em;
+    &:first-child {
+      margin-left:0px;
     }
   }
-  .wrapper.centered {
-    display: flex;
-    justify-content: center;
-  }
-  .vertical-list {
-    flex-direction: column;
+
+  .sidebar {
+      width:@sidebar-width;
+      flex-grow:0;
   }
 
-  .centered-content.with-sidebar {
-    padding-left:0;
-    display: flex;
-
-    .sidebar-left {
-      // width: 300px;
-    }
-
-    h2 {
-      padding-left: @page-horizontal-padding;
-    }
-
-    .sidebar { 
-      float:left;
-      width: 26em;
-      max-width: 90vv;
-      margin-top: 2em;
-
-      h2 {
-        .font-s3;
-        .type-bold;
-        color: @color-text;
-      }
-
-      a {
-        padding-left: @page-horizontal-padding;
-      }
-
-      li.sidebar.item.block {
-        margin-top:1px;
-
-        a {
-
-          h3 {
-            display: block;
-            margin-top: 0;
-            .font-m1;
-            .type-light;
-            padding-left: @page-horizontal-padding;
-
-          }
-
-        }
-
-        &.active,
-        &:hover
-         {
-          box-shadow: 0px 0px 1px 0px rgba(55,64,77,0.40), inset 4px 0px 0px 0px #767E8A;
-          background-color: white;
-          h3 {
-            .type-regular;
-          }
-        }
-      }
-      &:last-child {
-        margin-bottom: 1.7em;
-      }
-    }
-
-    .attribute-list {
-      width: 100%;
-      //border-left: 2px solid white;
-      background-color: white;
-
-      h2 {
-        margin-top: 1.6em;
-        padding-left: 1em;
-      }
-
-      div {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 1px solid @color-grey091;
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        label {
-          text-align: left;
-          padding-bottom: 0.5em;
-        }
-
-        a {
-          //flex-grow: 1;
-          display: inline-block;
-        }
-      }
-    }
+  .empty-content {
+    content: ' ';
   }
+}
+
+
+// -------- FIX ME, obsolete ? ---------------
+
+.page.content.block {
+  // width: 100%;
+
+  // &:last-child {
+  //   border-bottom: none;
+  // }
+
+  // .centered-content {
+  //   width: 100%;
+  //   max-width: @max-page-width;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   padding: @page-padding-top @page-horizontal-padding;
+  // }
+}
+
+.page.content.block.dashboard {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .page.content.block.along-sidebar {
@@ -154,46 +63,6 @@
   margin-right: 0;
 }
 
-ul.with-blocks {
-  padding-top:0.5em;
-  padding-bottom:1em;
 
-  li.list.block {
-    background-color: white;
-    box-shadow: 0 0 2px  rgba(0,0,0, 0.3);
 
-    a {
-      display:block;
-      padding:10px;
-      margin-bottom:1px;
-    }
 
-    &:hover {
-      box-shadow: 0 0 4px  rgba(0,0,0, 0.5);
-    }
-
-    &.active {// FIXME: please style me
-      background-color:#ddd; 
-      border-left:2px solid black;
-    }
-  }
-}
-
-.attribute-list {
-  >div {
-    padding:2em;
-    border-bottom:1px solid #eee; // FIXME: please style me
-
-    label {
-      color: #888;
-      display: inline-block;
-      width:150px;
-      text-align: right;
-      margin-right:20px;
-
-      &:after {
-        content:':';
-      }
-    }
-  }
-}

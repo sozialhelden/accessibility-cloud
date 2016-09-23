@@ -1,26 +1,23 @@
 <template name="apps_create_page">
-  <div class='page content block'>  
-    <div class='centered-content with-hints'>     
-      <div class="form-left">
-        <h2>{{_ "Register an app or service of your organization" }}</h2>
-
-        {{#autoForm collection='Apps' id="insertAppForm" type="insert"}}
-          {{> afQuickField name='name'}}
-          {{> afQuickField name='description'}}
-          {{> afQuickField name='website'}}
-          {{> afQuickField name='tocForAppsAccepted'}}
-
-          {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-            <button type="submit" class="btn btn-primary">Insert</button>
-          {{/autoForm}}
   
-      </div>
-      <div class="hints-right">
-        <h3 class="hint">{{_ "Get an Access token" }}</h3>
-        <ol class="checks">
-          <li>{{_ "To access the accessibility cloud API, your need an access-token. This token is restricted to an application." }}</li>
-        </ol>
-      </div>
-    </div>
+  <div class="form block">
+    <h2>{{_ "Register an app or service of your organization" }}</h2>
+
+    {{#autoForm collection='Apps' id="insertAppForm" type="insert"}}
+      {{> afQuickField name='name'}}
+      {{> afQuickField name='description'}}
+      {{> afQuickField name='website'}}
+      {{> afQuickField name='tocForAppsAccepted'}}
+
+      {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+        <button type="submit" class="btn btn-primary">Insert</button>
+      {{/autoForm}}
+
+  </div>
+  <div class="hints">
+    <h3 class="hint">{{_ "Get an Access token" }}</h3>
+    <ol class="checks">
+      <li>{{_ "To access the accessibility cloud API, your need an access-token. This token is restricted to an application." }}</li>
+    </ol>
   </div>
 </template>

@@ -1,53 +1,50 @@
 <template name="licenses_show_page">
-  <div class='page content block'>
-    <div class='centered-content with-sidebar'>
-      <div class="sidebar-left">
-        {{> licenses_navigation_sidebar}}
-      </div>
 
-      <div class='attribute-list'>
-        {{#with license}}
-          <h2>
-            {{name}}
-            {{#if shorthand}}
-              <span class='muted'>
-                ({{shorthand}})
-              </span>
-            {{/if}}
-          </h2>
-          <div>
-            <a class='edit-link' href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
-          </div>
-          <div>
-            <label>{{_ "plainTextSummary"}}</label>
-            {{plainTextSummary}}
-          </div>
-          <div>
-            <label>{{_ "Version"}}</label>
-            {{version}}
-          </div>
-          <div>
-            <label>{{_"websiteURL"}}</label>
-            <a href='{{websiteURL}}'>{{websiteURL}}</a>
-          </div>
-          <div>
-            <label>{{_"fullTextURL"}}</label>
-            <a href='{{fullTextURL}}'>{{fullTextURL}}</a>
-          </div>
-          <div>
-            <label>{{_"Considered As"}}</label>
-            <!-- {{consideredAs}} -->
-          </div>
-          <div>
-            <label>{{_"Requires Attribution"}}</label>
-            {{requiresAttribution}}
-          </div>
-          <div>
-            <label>{{_"Requires Share Alike"}}</label>
-            {{requiresShareAlike}}
-          </div>
-        {{/with}}
+  <div class="sidebar">
+    {{> licenses_navigation_sidebar}}
+  </div>
+
+  <div class='attribute-list'>
+    {{#with license}}
+      <h2>
+        {{name}}
+        {{#if shorthand}}
+          <span class='muted'>
+            ({{shorthand}})
+          </span>
+        {{/if}}
+      </h2>
+      <div>
+        <a class='edit-link' href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
       </div>
-    </div>
+      <div>
+        <label>{{_ "plainTextSummary"}}</label>
+        {{plainTextSummary}}
+      </div>
+      <div>
+        <label>{{_ "Version"}}</label>
+        {{version}}
+      </div>
+      <div>
+        <label>{{_"websiteURL"}}</label>
+        <a href='{{websiteURL}}'>{{websiteURL}}</a>
+      </div>
+      <div>
+        <label>{{_"fullTextURL"}}</label>
+        <a href='{{fullTextURL}}'>{{fullTextURL}}</a>
+      </div>
+      <div>
+        <label>{{_"Considered As"}}</label>
+        <!-- {{consideredAs}} -->
+      </div>
+      <div>
+        <label>{{_"Requires Attribution"}}</label>
+        {{requiresAttribution}}
+      </div>
+      <div>
+        <label>{{_"Requires Share Alike"}}</label>
+        {{requiresShareAlike}}
+      </div>
+    {{/with}}
   </div>
 </template>

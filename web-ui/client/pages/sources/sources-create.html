@@ -10,32 +10,29 @@
 </template>
 
 <template name="sources_create_page">
-  <div class='page content block'>  
-    <div class='centered-content with-hints'>     
-      <div class="form-left">
-        <h2>{{_ "Please define the kind of source:" }}</h2>
 
-        {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
-          {{> afQuickField name='name'}}
-          {{> afQuickField name="licenseId" options=licenses noselect="true"}}
-          {{> afQuickField name='languageId' options=languages}}
-          {{> afQuickField name='primaryRegion'}}
-          {{> afQuickField name='description'}}
-          {{> afQuickField name='originWebsite'}}
-          {{> afQuickField name='isDraft'}}
-          {{> afQuickField name='tocForSourcesAccepted'}}
+  <div class="form-left">
+    <h2>{{_ "Please define the kind of source:" }}</h2>
 
-          {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
-            <button type="submit" class="btn btn-primary">Insert</button>
-          {{/autoForm}}
-  
-      </div>
-      <div class="hints-right">
-        <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
-        <ol class="checks">
-          <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>
-        </ol>
-      </div>
-    </div>
+    {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
+      {{> afQuickField name='name'}}
+      {{> afQuickField name="licenseId" options=licenses noselect="true"}}
+      {{> afQuickField name='languageId' options=languages}}
+      {{> afQuickField name='primaryRegion'}}
+      {{> afQuickField name='description'}}
+      {{> afQuickField name='originWebsite'}}
+      {{> afQuickField name='isDraft'}}
+      {{> afQuickField name='tocForSourcesAccepted'}}
+
+      {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
+        <button type="submit" class="btn btn-primary">Insert</button>
+      {{/autoForm}}
+
+  </div>
+  <div class="hints-right">
+    <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
+    <ol class="checks">
+      <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>
+    </ol>
   </div>
 </template>

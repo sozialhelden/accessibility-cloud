@@ -1,4 +1,4 @@
-import './app-layout-with-header.html';
+import './app-layout-scrollable.html';
 
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -23,7 +23,7 @@ Meteor.startup(() => {
   }, CONNECTION_ISSUE_TIMEOUT);
 });
 
-Template.app_layout_with_header.onCreated(function appBodyOnCreated() {
+Template.app_layout_scrollable.onCreated(function appBodyOnCreated() {
   this.subscribe('lists.public');
   this.subscribe('lists.private');
 
@@ -34,7 +34,7 @@ Template.app_layout_with_header.onCreated(function appBodyOnCreated() {
   });
 });
 
-Template.app_layout_with_header.helpers({
+Template.app_layout_scrollable.helpers({
   menuOpen() {
     const instance = Template.instance();
     return instance.state.get('menuOpen') && 'menu-open';
@@ -79,7 +79,7 @@ Template.app_layout_with_header.helpers({
   },
 });
 
-Template.app_layout_with_header.events({
+Template.app_layout_scrollable.events({
   'click .js-menu'(event, instance) {
     instance.state.set('menuOpen', !instance.state.get('menuOpen'));
   },

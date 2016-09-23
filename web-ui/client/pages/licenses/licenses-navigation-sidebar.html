@@ -3,9 +3,9 @@
     <!-- <h2>{{_ "Custom licenses"}}</h2> -->
     <ul class='with-blocks'>
       {{#each licenses}}
-        <li class='sidebar item block {{activeIfCurrentLicense _id}}'>
+        <li class='item block {{activeIfCurrentLicense _id}}'>
           <a href='{{pathFor "manage.licenses.show" _id=_id}}'>
-            <h3>{{name}}</h3>
+            {{name}}
           </a>
         </li>
       {{/each}}

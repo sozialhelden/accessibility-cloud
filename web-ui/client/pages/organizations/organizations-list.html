@@ -1,14 +1,12 @@
 <template name="organizations_list_page">
-  <div class='page content block'>
-    <div class='centered-content'>
-      <h2>Organizations</h2>
+  <div class='centered-content'>
+    <h2>Organizations</h2>
 
-      <ol>
-        {{#each organizations}}
-          <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
-          <li><a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a></li>
-        {{/each}}
-      </ol>
-    </div>
+    <ol>
+      {{#each organizations}}
+        <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
+        <li><a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a></li>
+      {{/each}}
+    </ol>
   </div>
 </template>

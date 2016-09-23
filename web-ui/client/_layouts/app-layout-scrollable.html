@@ -1,4 +1,4 @@
-<template name="app_layout_with_header">
+<template name="app_layout_scrollable">
   <header class='main-header'>
     <div class='wrapper header'> 
       <div class='account-options'>
@@ -41,7 +41,8 @@
       </div>
     </div>
   </header>
-
-  {{> Template.dynamic template=main}}
+  <div class='page-content centered'>
+    {{> Template.dynamic template=main}}
+  </div>
 
 </template>
