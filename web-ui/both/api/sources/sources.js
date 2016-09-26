@@ -108,10 +108,12 @@ Sources.schema = new SimpleSchema({
   },
   'streamChain.$.parameters': {
     type: Object,
+    blackbox: true,
   },
   'streamChain.$.parameters.mappings': {
     type: Object,
     optional: true,
+    blackbox: true,
   },
 });
 
