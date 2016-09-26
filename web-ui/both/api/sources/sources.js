@@ -95,6 +95,24 @@ Sources.schema = new SimpleSchema({
     label: 'I have read and agreed to the Terms & Conditions. '
          + 'Esp. that I am the owner of the data or have the right to publish it.',
   },
+  streamChain: {
+    type: Array,
+    label: 'Stream chain setup',
+    optional: true,
+  },
+  'streamChain.$': {
+    type: Object,
+  },
+  'streamChain.$.type': {
+    type: String,
+  },
+  'streamChain.$.parameters': {
+    type: Object,
+  },
+  'streamChain.$.parameters.mappings': {
+    type: Object,
+    optional: true,
+  },
 });
 
 Sources.attachSchema(Sources.schema);
