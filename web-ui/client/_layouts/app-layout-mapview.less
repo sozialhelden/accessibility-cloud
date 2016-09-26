@@ -1,0 +1,26 @@
+.full-height {
+  height:100vh;
+  display: flex;
+  flex-direction: column;
+
+  .page-content.full-width {
+    height:100%;
+    display: flex;
+    bottom:0;
+
+    .sidebar {
+      background-color:white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.4);
+      width:200px;
+    }
+
+    .content {
+      flex:1;
+
+      #mapid {
+        height:100%;
+      }
+    }
+  }
+}
+

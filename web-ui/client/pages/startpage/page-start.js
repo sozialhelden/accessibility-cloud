@@ -5,13 +5,13 @@ import { $ } from 'meteor/jquery';
 // import { Organizations } from '../../api/organizations/organizations.js';
 // import './organizations-list-page.html';
 
-Template.page_start.onCreated(function organizationsShowPageOnCreated() {
+Template.page_start.onCreated(function startPageOnCreated() {
   this.autorun(() => {
     this.subscribe('organizations.public');
   });
 });
 
-Template.page_start.onRendered(function organizationsShowPageOnRendered() {
+Template.page_start.onRendered(function startPageOnRendered() {
   this.autorun(() => {
   });
   // el = $('#mapid');

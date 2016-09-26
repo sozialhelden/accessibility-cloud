@@ -247,7 +247,6 @@ manageRoutes.route('/apps/:_id/edit', {
 });
 
 
-
 // ---- sources ----------------------------------------------
 
 manageRoutes.route('/organizations/:_id/sources/create', {
@@ -263,7 +262,7 @@ manageRoutes.route('/organizations/:_id/sources/create', {
 manageRoutes.route('/sources/:_id', {
   name: 'manage.sources.show',
   action() {
-    BlazeLayout.render('app_layout_scrollable', {
+    BlazeLayout.render('app_layout_mapview', {
       main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
