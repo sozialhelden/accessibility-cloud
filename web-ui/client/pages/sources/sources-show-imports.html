@@ -1,17 +1,4 @@
-<template name="sources_show_header">
-  <li>
-    {{#with source.getOrganization}}
-      <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
-    {{/with}}
-  </li>
-  <li>
-    {{#with source}}
-      {{name}}
-    {{/with}}
-  </li>
-</template>
-
-<template name="sources_show_page">
+<template name="sources_show_imports_page">
   <div class='sidebar navigation'>
     <ul class='with-blocks'>
     {{#each sourceImports}}

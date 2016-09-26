@@ -1,6 +1,7 @@
 <template name="sources_show_header_sub">
   <div class='sub-pages'>
-    <a href='{{pathFor "manage.sources.show" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show"}}'>Imports</a>
+    <a href='{{pathFor "manage.sources.show" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show"}}'>Overview</a>
+    <a href='{{pathFor "manage.sources.show.imports" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show.imports"}}'>Imports</a>
     <a href='{{pathFor "manage.sources.show.format" _id=source._id}}' class='{{activeIfRouteNameIs "manage.sources.show.format"}}'>Format</a>
     <a href='{{pathFor "manage.sources.show.settings" _id=source._id}}' 
     	class='{{activeIfRouteNameIs "manage.sources.show.settings"}}'>Settings</a>

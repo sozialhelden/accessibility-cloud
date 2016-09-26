@@ -1,0 +1,12 @@
+<template name="sources_show_header">
+  <li>
+    {{#with source.getOrganization}}
+      <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+    {{/with}}
+  </li>
+  <li>
+    {{#with source}}
+      {{name}}
+    {{/with}}
+  </li>
+</template>

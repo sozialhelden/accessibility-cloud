@@ -24,6 +24,7 @@ Planned routes are...
 /manage/organizations/:_id/licences/create
 
 /manage/sources/:_id
+/manage/sources/:_id/imports
 /manage/sources/:_id/format
 /manage/sources/:_id/settings
 /manage/sources/:_id/imports/:_importId
@@ -259,6 +260,17 @@ manageRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
+manageRoutes.route('/sources/:_id', {
+  name: 'manage.sources.show',
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
 manageRoutes.route('/sources/:_id/format', {
   name: 'manage.sources.show.format',
   action() {
@@ -294,11 +306,11 @@ manageRoutes.route('/sources/:_id/access', {
 });
 
 
-manageRoutes.route('/sources/:_id/access', {
-  name: 'manage.sources.show.access',
+manageRoutes.route('/sources/:_id/imports', {
+  name: 'manage.sources.show.imports',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
-      main: 'sources_show_access_page',
+      main: 'sources_show_imports_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
     });
@@ -306,11 +318,11 @@ manageRoutes.route('/sources/:_id/access', {
 });
 
 
-manageRoutes.route('/sources/:_id/:_importId?', {
-  name: 'manage.sources.show',
+manageRoutes.route('/sources/:_id/imports/:_importId?', {
+  name: 'manage.sources.show.imports',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
-      main: 'sources_show_page',
+      main: 'sources_show_imports_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
     });

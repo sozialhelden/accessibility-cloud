@@ -6,7 +6,7 @@ import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import subsManager from '/client/lib/subs-manager';
 
 
-Template.sources_show_page.onCreated(() => {
+Template.sources_show_imports_page.onCreated(() => {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sourceImports.public');
@@ -23,7 +23,7 @@ Template.sources_show_header.helpers({
 });
 
 
-Template.sources_show_page.helpers({
+Template.sources_show_imports_page.helpers({
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
