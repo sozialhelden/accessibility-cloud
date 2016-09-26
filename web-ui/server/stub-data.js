@@ -9,8 +9,16 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
 
+import { isAdmin } from '/both/lib/is-admin';
+
 Factory.define('organization', Organizations, {
   name: 'ACME GmbH',
+  legaltype: 'gmbh',
+  address: 'Friedrichstr. 123',
+  zipCode: '12345',
+  city: 'Berlin',
+  country: 'DE',
+  tocFororganizationsAccepted: true,
 });
 
 Factory.define('language', Languages, {
@@ -25,7 +33,7 @@ Factory.define('_license_CC0', Licenses, {
   plainTextSummary: 'The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.',
   version: '',
   websiteURL: 'https://creativecommons.org/publicdomain/zero/1.0/',
-  fullTextURL: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' ,
+  fullTextURL: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode',
   consideredAs: 'CC0',
   requiresAttribution: false,
   requiresShareAlike: false,
@@ -39,6 +47,7 @@ Factory.define('source', Sources, {
   primaryRegion: 'Vienna, Austria',
   description: 'All public toilets in vienna (JSON)',
   originWebsite: 'http://data.wien.gv.at',
+  tocForSourcesAccepted: true,
   streamChain: [
     {
       type: 'httpDownload',
@@ -136,14 +145,12 @@ Factory.define('placeImport', PlaceImports, {
   sourceImportId: Factory.get('sourceImport'),
 });
 
-// Create stub data for testing if the DB is empty
-Meteor.startup(() => {
-  if (Licenses.find().count() > 0) {
-    return;
-  }
-  const license = Factory.create('_license_CC0');
+function createStubData() {
   const language = Factory.create('language');
   const organization = Factory.create('organization');
+  const license = Factory.create('_license_CC0', {
+    organizationId: organization._id,
+  });
   const source = Factory.create('source', {
     organizationId: organization._id,
     languageId: language._id,
@@ -154,6 +161,7 @@ Meteor.startup(() => {
   });
   const placeInfo = Factory.create('placeInfo', {
     sourceId: source._id,
+    lastSourceImportId: sourceImport._id,
   });
   const placeImport = Factory.create('placeImport', {
     placeInfoId: placeInfo._id,
@@ -169,4 +177,36 @@ Meteor.startup(() => {
     placeInfo,
     placeImport,
   });
+}
+
+Meteor.methods({
+  createStubData() {
+    if (!this.userId || !isAdmin(this.userId)) {
+      throw new Meteor.Error(403, 'Not authorized');
+    }
+    createStubData();
+  },
+  resetDatabase() {
+    if (!this.userId || !isAdmin(this.userId)) {
+      throw new Meteor.Error(403, 'Not authorized');
+    }
+    const collections = [
+      Languages,
+      Licenses,
+      Organizations,
+      PlaceImports,
+      PlaceInfos,
+      SourceImports,
+      Sources,
+    ];
+
+    collections.forEach(collection => collection.remove({}));
+  },
+});
+
+// Create stub data for testing if the DB is empty
+Meteor.startup(() => {
+  if (Licenses.find().count() === 0) {
+    createStubData();
+  }
 });

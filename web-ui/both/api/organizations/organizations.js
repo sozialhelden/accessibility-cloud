@@ -100,7 +100,7 @@ Organizations.schema = new SimpleSchema({
     autoform: {
       afFieldInput: {
         options: countriesOfTheWorld,
-      },      
+      },
     },
   },
   phoneNumber: {
@@ -127,7 +127,7 @@ Organizations.schema = new SimpleSchema({
     },
   },
   description: {
-    label: 'Short description (optiona)',
+    label: 'Short description (optional)',
     type: String,
     max: 2000,
     optional: true,

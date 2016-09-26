@@ -17,12 +17,14 @@ Factory.define = function(name, collection, properties) {
 
 
 Factory.create = function(name, properties) {
+  console.log('Creating', name, 'from factory...');
   const dataset = Factory.compile(name, properties);
   dataset.createAll();
   return dataset.targetDocCollection.findOne(dataset.targetDocId);
 };
 
 Factory.compile = function(name, properties, options) {
+  console.log('Compiling', name, 'from factory...');
   const dataset = new Factory.Dataset();
   const factory = Factory.get(name);
   dataset.add(factory, properties, _.extend({target: true}, options));
@@ -30,6 +32,7 @@ Factory.compile = function(name, properties, options) {
 };
 
 Factory.build = function(name, properties) {
+  console.log('Building', name, 'from factory...');
   const dataset = Factory.compile(name, properties, {noRelations: true});
   return dataset.getTargetDoc();
 };
