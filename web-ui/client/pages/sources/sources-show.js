@@ -37,7 +37,8 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     if (err) {
       console.log(err);
     } else {
-      L.geoJson(result).addTo(map);
+      const markers = new L.geoJson(result);
+      map.fitBounds(markers.getBounds().pad(0.5));
     }
   });
 });
