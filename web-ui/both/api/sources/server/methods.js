@@ -1,6 +1,22 @@
 import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/underscore';
+import { check } from 'meteor/check';
 
-import { Sources } from '../sources.js';
+import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 
+Meteor.methods({
+  getSomeGeoJSONPoints() {
+    return [
+      { type: 'Feature', geometry: { type: 'Point', coordinates: [-123.137, 49.25044] } },
+      { type: 'Feature', geometry: { type: 'Point', coordinates: [-123.127, 49.25034] } },
+      { type: 'Feature', geometry: { type: 'Point', coordinates: [-123.137, 49.25134] } },
+    ];
+  },
+  getPointsForSource(sourceId) {
+    check(sourceId, String);
+    return _.map(PlaceInfos.find({ sourceId }).fetch(), (pi) => ({
+      type: 'Feature',
+      geometry: pi.loc,
+    }));
+  },
+});

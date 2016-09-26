@@ -14,6 +14,7 @@ autoupdate@1.2.11
 babel-compiler@6.9.1
 babel-runtime@0.1.11
 base64@1.0.9
+bevanhunt:leaflet@2.0.1
 binary-heap@1.0.9
 blaze@2.1.9
 blaze-html-templates@1.0.5

@@ -137,7 +137,7 @@ Factory.define('placeInfo', PlaceInfos, {
     name: 'Hotel Adlon',
     accessible: 0.2,
   },
-  loc: { type: 'Point', coordinates: [-73.97, 40.77] },
+  loc: { type: 'Point', coordinates: [49.25134, -123.137] },
 });
 
 Factory.define('placeImport', PlaceImports, {
