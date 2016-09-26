@@ -1,12 +1,12 @@
-<template name="sources_show_format_page"> 
+<template name="sources_show_format_page">
 
     <div class='centered-content'>
       {{#with source}}
         <h3>Source definition</h3>
         <div class='code-block'>{{stringify source}}</div>
         <h4>Import-Chain</h4>
-        {{#if source.streamInfo}}
-          {{#each source.streamInfo}}
+        {{#if source.streamChain}}
+          {{#each source.streamChain}}
             <div class='code-block'>{{stringify this }}</div>
           {{/each}}
         {{else}}
