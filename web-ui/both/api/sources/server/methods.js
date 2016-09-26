@@ -12,9 +12,10 @@ Meteor.methods({
       { type: 'Feature', geometry: { type: 'Point', coordinates: [-123.137, 49.25134] } },
     ];
   },
-  getPointsForSource(sourceId) {
+  getPointsForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
-    return _.map(PlaceInfos.find({ sourceId }).fetch(), (pi) => ({
+    check(limitCount, Number);
+    return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({
       type: 'Feature',
       geometry: pi.loc,
     }));
