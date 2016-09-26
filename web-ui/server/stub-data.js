@@ -50,74 +50,88 @@ Factory.define('source', Sources, {
   tocForSourcesAccepted: true,
   streamChain: [
     {
-      type: 'httpDownload',
+      type: 'HTTPDownload',
       parameters: {
         sourceUrl: 'http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json',
       },
     },
     {
-      type: 'convertCharacterSet',
+      type: 'ConvertToUTF8',
       parameters: {
-        from: 'iso-8895-1',
-        to: 'utf-8',
+        fromCharSet: 'utf8',
       },
     },
     {
-      type: 'parseJSON',
+      type: 'ParseJSONStream',
+      parameters: {
+        path: 'features.*',
+        length: 'totalFeatures',
+      },
+    },
+    {
+      type: 'TransformData',
       parameters: {
         mappings: {
-          _id: 'row.id',
+          originalId: 'row.id',
           geometry: 'row.geometry',
           properties: 'row.properties',
           address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
           isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
-        },
+        }
       },
+    },
+    {
+      type: 'ConsoleOutput',
+      parameters: {},
+    },
+    {
+      type: 'UpsertPlace',
+      parameters: {},
     },
   ],
 });
 
 Factory.define('sourceImport', SourceImports, {
   sourceId: Factory.get('source'),
-  streamInfo: [
-    {
-      bytesRead: 1000,
-      error: null,
-      request: {
-        url: Factory.get('source').url,
-        method: 'GET',
-        sendTimestamp: +new Date(),
-        headers: {
-          host: '127.0.0.1:8081',
-          connection: 'keep-alive',
-          'cache-control': 'max-age=0',
-          accept: 'application/json',
-          'accept-encoding': 'gzip, deflate, sdch',
-        },
-      },
-      response: {
-        httpVersion: '1.1',
-        statusCode: 200,
-        statusMessage: 'OK',
-        headers: { 'content-length': '123',
-          'content-type': 'text/json',
-          connection: 'keep-alive',
-          host: 'mysite.com',
-          accept: '*/*',
-        },
-        head: '…',
-        tail: '…',
-      },
-    },
-    {
-      bytesRead: 1000,
-      error: null,
-    },
-    {
-      bytesRead: 1000,
-      error: 'Some example error that might have happened during reading the JSON',
-    },
-  ],
+  // streamDebugInfo: [
+  //   {
+  //     bytesRead: 1000,
+  //     error: null,
+  //     request: {
+  //       url: Factory.get('source').url,
+  //       method: 'GET',
+  //       sendTimestamp: +new Date(),
+  //       headers: {
+  //         host: '127.0.0.1:8081',
+  //         connection: 'keep-alive',
+  //         'cache-control': 'max-age=0',
+  //         accept: 'application/json',
+  //         'accept-encoding': 'gzip, deflate, sdch',
+  //       },
+  //     },
+  //     response: {
+  //       httpVersion: '1.1',
+  //       statusCode: 200,
+  //       statusMessage: 'OK',
+  //       headers: { 'content-length': '123',
+  //         'content-type': 'text/json',
+  //         connection: 'keep-alive',
+  //         host: 'mysite.com',
+  //         accept: '*/*',
+  //       },
+  //       head: '…',
+  //       tail: '…',
+  //     },
+  //   },
+  //   {
+  //     bytesRead: 1000,
+  //     error: null,
+  //   },
+  //   {
+  //     bytesRead: 1000,
+  //     error: 'Some example error that might have happened during reading the JSON',
+  //   },
+  // ],
 
   numberOfPlacesAdded: 1,
   numberOfPlacesModified: 2,
@@ -183,13 +197,13 @@ function createStubData() {
 Meteor.methods({
   createStubData() {
     if (!this.userId || !isAdmin(this.userId)) {
-      throw new Meteor.Error(403, 'Not authorized');
+      throw new Meteor.Error(401, 'Not authorized');
     }
     createStubData();
   },
   resetDatabase() {
     if (!this.userId || !isAdmin(this.userId)) {
-      throw new Meteor.Error(403, 'Not authorized');
+      throw new Meteor.Error(401, 'Not authorized');
     }
     const collections = [
       Languages,

@@ -11,10 +11,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "JSONStream": "^1.2.1",
     "autoprefixer": "^6.3.7",
     "basic-auth-connect": "^1.0.0",
     "bcrypt": "^0.8.7",
-    "faker": "^3.1.0"
+    "event-stream": "^3.3.4",
+    "faker": "^3.1.0",
+    "iconv-lite": "^0.4.13",
+    "progress-stream": "^1.2.0",
+    "request": "^2.75.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
@@ -41,6 +46,24 @@
     ],
     "rules": {
       "no-underscore-dangle": "off",
+      "no-console": "off",
+      "new-cap": [
+        2,
+        {
+          "capIsNewExceptions": [
+            "Match",
+            "Any",
+            "Object",
+            "ObjectIncluding",
+            "OneOf",
+            "Optional",
+            "Where",
+            "With",
+            "Fiber",
+            "SafeString"
+          ]
+        }
+      ],
       "meteor/eventmap-params": [
         "error",
         {

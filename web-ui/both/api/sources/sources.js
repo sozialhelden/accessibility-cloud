@@ -102,19 +102,20 @@ Sources.schema = new SimpleSchema({
   },
   'streamChain.$': {
     type: Object,
+    blackbox: true,
   },
   'streamChain.$.type': {
     type: String,
   },
-  'streamChain.$.parameters': {
-    type: Object,
-    blackbox: true,
-  },
-  'streamChain.$.parameters.mappings': {
-    type: Object,
-    optional: true,
-    blackbox: true,
-  },
+  // 'streamChain.$.parameters': {
+  //   type: Object,
+  //   blackbox: true,
+  // },
+  // 'streamChain.$.parameters.mappings': {
+  //   type: Object,
+  //   optional: true,
+  //   blackbox: true,
+  // },
 });
 
 Sources.attachSchema(Sources.schema);
