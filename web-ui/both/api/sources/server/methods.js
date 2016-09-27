@@ -17,7 +17,7 @@ Meteor.methods({
     check(limitCount, Number);
     return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({
       type: 'Feature',
-      geometry: pi.loc,
+      geometry: pi.geometry,
     }));
   },
 });

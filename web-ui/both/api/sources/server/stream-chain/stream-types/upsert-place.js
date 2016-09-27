@@ -12,6 +12,7 @@ export class UpsertPlace {
     this.stream = EventStream.map((placeInfo, callback) => {
       const originalId = placeInfo.originalId;
       check(originalId, String);
+      Object.assign(placeInfo, { sourceId });
       upsert({ sourceId, originalId }, placeInfo);
       callback(null, placeInfo);
       return placeInfo;
