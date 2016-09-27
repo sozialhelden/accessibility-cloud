@@ -15,7 +15,7 @@ Meteor.methods({
   getPointsForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
     check(limitCount, Number);
-    return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({
+    return _.map(PlaceInfos.find({  }, { limit: limitCount }).fetch(), (pi) => ({
       type: 'Feature',
       geometry: pi.geometry,
     }));

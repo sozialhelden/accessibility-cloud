@@ -8,6 +8,7 @@ import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
 import { HTTPDownload } from './stream-types/http-download';
 import { ParseJSONStream } from './stream-types/parse-json-stream';
 import { ParseJSONChunks } from './stream-types/parse-json-chunks';
+import { ParseCSVStream } from './stream-types/parse-csv-stream';
 import { ReadFile } from './stream-types/read-file';
 import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
@@ -19,6 +20,7 @@ const StreamTypes = {
   HTTPDownload,
   ParseJSONStream,
   ParseJSONChunks,
+  ParseCSVStream,
   ReadFile,
   Split,
   TransformData,

@@ -5,7 +5,7 @@ function compileMapping(fieldName, javascript) {
   try {
     // replace for minimum security
     // eslint-disable-next-line no-eval
-    return eval(`(row) => ${javascript.replace('{', '')}`);
+    return eval(`(row) => (${javascript})`);
   } catch (error) {
     console.error(`Illegal script for ${fieldName}:\n${error}`);
     return () => {};
@@ -29,6 +29,7 @@ export class TransformData {
         doc[fieldName] = fn(data);
       }
       doc.originalData = data;
+      console.log(doc);
       callback(null, doc);
       return null;
     });

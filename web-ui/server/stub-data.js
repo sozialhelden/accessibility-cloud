@@ -184,10 +184,15 @@ Factory.define('csvSource', Sources, {
       },
     },
     {
+      type: 'ParseCSVStream',
+      parameters: {
+        header: true,
+      },
+    },
+    {
       type: 'ParseJSONStream',
       parameters: {
-        path: 'features.*',
-        length: 'totalFeatures',
+        path: '*',
       },
     },
     {
@@ -195,24 +200,18 @@ Factory.define('csvSource', Sources, {
       parameters: {
         mappings: {
           originalId: "row['uuid']",
-          geometry: "{ type: 'Point', coordinates: [-123.137,49.25134] }",
-          // Name        : "'Public toilet in Rostock, ' + row['gemeindeteil_name']",
+          geometry: "{ type: 'Point', coordinates: [Number(row['longitude']), Number(row['latitude'])] }",
+          name: "'Public toilet in Rostock, ' + row['gemeindeteil_name']",
           address: "row['strasse_name'] + ' ' + row['hausnummer'] + row['hausnummer_zusatz'] + ', ' + row['postleitzahl'] + ' Rostock'",
-          // Latitude: "Number(row['latitude'])",
-          // Longitude: "Number(row['longitude'])",
           isAccessible: "row['behindertengerecht'] == '1'",
-          // originalId: 'row.id',
-          // geometry: 'row.geometry',
           properties: 'row.properties',
-          // address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
-          // isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
         },
       },
     },
-    {
-      type: 'ConsoleOutput',
-      parameters: {},
-    },
+    // {
+    //   type: 'ConsoleOutput',
+    //   parameters: {},
+    // },
     {
       type: 'UpsertPlace',
       parameters: {},

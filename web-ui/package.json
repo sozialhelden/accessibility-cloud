@@ -15,6 +15,7 @@
     "autoprefixer": "^6.3.7",
     "basic-auth-connect": "^1.0.0",
     "bcrypt": "^0.8.7",
+    "csvstream": "^1.1.0",
     "event-stream": "^3.3.4",
     "faker": "^3.1.0",
     "iconv-lite": "^0.4.13",
