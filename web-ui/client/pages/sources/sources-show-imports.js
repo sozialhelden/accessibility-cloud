@@ -31,14 +31,20 @@ Template.sources_show_imports_page.events({
       if (err) {
         console.log(err);
       } else {
-        // debugger;
-        FlowRouter.go('manage.sources.show.imports', { _id: FlowRouter.getParam('_id'), _importId: result });
+        FlowRouter.go('manage.sources.show.imports', {
+          _id: FlowRouter.getParam('_id'),
+          _importId: result,
+        });
       }
     });
   },
 });
 
+
 Template.sources_show_imports_page.helpers({
+  activeIfCurrentImport(sourceId) {
+    return FlowRouter.getParam('_importId') === sourceId ? 'active' : '';
+  },
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },

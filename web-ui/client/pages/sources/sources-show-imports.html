@@ -3,7 +3,7 @@
     <button class='btn start-import btn btn-primary'>Start Import</button>
     <ul class='with-blocks'>
     {{#each sourceImports}}
-      <li class='item block'>
+      <li class='item block {{activeIfCurrentImport _id}}'>
         <a href='{{pathFor "manage.sources.show.imports" _id= source._id _importId=_id}}'>{{startTimestamp}}</a>
       </li>
       {{/each}}
