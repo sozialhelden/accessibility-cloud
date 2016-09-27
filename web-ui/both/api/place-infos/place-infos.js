@@ -1,7 +1,12 @@
 import { Mongo } from 'meteor/mongo';
 import { isAdmin } from '/both/lib/is-admin';
+import { Meteor } from 'meteor/meteor';
 
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
+
+if (Meteor.isClient) {
+  window.PlaceInfos = PlaceInfos;
+}
 
 PlaceInfos.allow({
   insert: isAdmin,
