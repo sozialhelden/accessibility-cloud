@@ -4,19 +4,15 @@
     <ul class='with-blocks'>
     {{#each sourceImports}}
       <li class='item block {{activeIfCurrentImport _id}}'>
-        <a href='{{pathFor "manage.sources.show.imports" _id= source._id _importId=_id}}'>{{startTimestamp}}</a>
+        <a href='{{pathFor "manage.sources.show.import" _id= source._id _importId=_id}}'>{{humanReadableStartTimestamp}}</a>
       </li>
       {{/each}}
     </ul>
   </div>
   <div class='page content block along-sidebar'>
-    <h2>Results for Import Steps</h2>
     {{#with sourceImport}}
-      <pre>{{startTimestamp}}</pre>
+      <h2>Import results from {{humanReadableStartTimestamp}}</h2>
+      {{> sources_stream_chain}}
     {{/with}}
-    {{#each sourceImport.streamChain}}
-      <div class='code-block'>{{stringify this }}</div>
-    {{/each}}
   </div>
 </template>
-

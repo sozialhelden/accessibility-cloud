@@ -71,7 +71,7 @@ FlowRouter.route('/', {
         main: 'page_dashboard',
         header_navigation_list: 'dashboard_header_navigation' });
     } else {
-      BlazeLayout.render('app_layout_start_page', { 
+      BlazeLayout.render('app_layout_start_page', {
         main: 'page_start',
       });
     }
@@ -318,7 +318,7 @@ manageRoutes.route('/sources/:_id/imports', {
 
 
 manageRoutes.route('/sources/:_id/imports/:_importId?', {
-  name: 'manage.sources.show.imports',
+  name: 'manage.sources.show.import',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',

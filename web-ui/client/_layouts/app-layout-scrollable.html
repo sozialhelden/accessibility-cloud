@@ -1,6 +1,6 @@
 <template name="app_layout_scrollable">
   <header class='main-header'>
-    <div class='wrapper header'> 
+    <div class='wrapper header'>
       <div class='account-options'>
         {{#if currentUser}}
           <div class="btns-group-vertical ">
@@ -41,7 +41,7 @@
       </div>
     </div>
   </header>
-  <div class='page-content centered'>
+  <div class='page-content centered {{main}}'>
     {{> Template.dynamic template=main}}
   </div>
 

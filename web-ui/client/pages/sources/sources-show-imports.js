@@ -17,11 +17,9 @@ Template.sources_show_imports_page.onCreated(() => {
 
 Template.sources_show_header.helpers({
   source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    return Sources.findOne(FlowRouter.getParam('_id'));
   },
-
 });
-
 
 Template.sources_show_imports_page.events({
   'click .btn.start-import'(event) {
@@ -40,7 +38,6 @@ Template.sources_show_imports_page.events({
   },
 });
 
-
 Template.sources_show_imports_page.helpers({
   activeIfCurrentImport(sourceId) {
     return FlowRouter.getParam('_importId') === sourceId ? 'active' : '';
@@ -49,12 +46,10 @@ Template.sources_show_imports_page.helpers({
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
   source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    return Sources.findOne(FlowRouter.getParam('_id'));
   },
   sourceImport() {
-    const selectedImport = SourceImports.findOne({ _id: FlowRouter.getParam('_importId') });
-    // debugger;
-
+    const selectedImport = SourceImports.findOne(FlowRouter.getParam('importId'));
     if (selectedImport) {
       return selectedImport;
     }

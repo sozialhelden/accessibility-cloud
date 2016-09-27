@@ -1,0 +1,20 @@
+<template name="sources_stream_chain">
+  <ol class='stream-chain'>
+    {{#each streamChain}}
+      <li>
+        <header class='name'>{{camelize type}}</header>
+        <dl class='parameters'>
+          {{#each keyValue parameters}}
+            <dt>{{humanize key}}</dt>
+            <dd>{{stringify value}}</dd>
+          {{/each}}
+        </dl>
+        {{#with debugInfo}}
+          <div class='code-block'>{{stringify this}}</div>
+        {{/with}}
+      </li>
+    {{else}}
+      <span class='placeholder'>No Input Stream defined</span>
+    {{/each}}
+  </ol>
+</template>

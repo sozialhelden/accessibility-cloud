@@ -1,0 +1,43 @@
+@import '/client/stylesheets/_util/typography.less';
+@import '/client/stylesheets/_util/colors.less';
+
+ol.stream-chain {
+  li {
+    position: relative;
+    margin-bottom: 2.5em;
+    padding: 1em;
+    background-color: @color-grey085;
+  }
+  li:not(:last-child):after {
+    position: absolute;
+    bottom: -1.3em;
+    width: 3em;
+    left: 50%;
+    content: 'ß';
+    display: block;
+    clear: both;
+    .font-icons;
+    color: @color-grey085;
+  }
+  .name {
+    .type-bold;
+  }
+  dl.parameters {
+    display: inline-block;
+    dt, dd {
+      float: left;
+      margin-top: 0.75em;
+    }
+    dt {
+      clear: both;
+      width: 7em;
+      padding-right: 0.75em;
+    }
+    dd {
+      width: calc(~"100% - 7em");
+      word-break: break-word;
+      .type-code;
+      white-space: pre-wrap;
+    }
+  }
+}

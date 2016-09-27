@@ -2,15 +2,11 @@
     <div class='centered-content'>
       {{#with source}}
         <h3>Source definition</h3>
-        <div class='code-block'>{{stringify source}}</div>
-        <h4>Import-Chain</h4>
-        {{#if source.streamChain}}
-          {{#each source.streamChain}}
-            <div class='code-block'>{{stringify this }}</div>
-          {{/each}}
-        {{else}}
-          <span class='placeholder'>No Input Stream defined</span>
-        {{/if}}
+
+        <h4>Import process</h4>
+        {{> sources_stream_chain}}
+
+        <!-- <div class='code-block'>{{stringify source}}</div> -->
       {{/with}}
     </div>
 </template>

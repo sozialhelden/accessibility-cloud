@@ -50,6 +50,7 @@ export function createStreamChain(streamChainConfig, sourceImportId, sourceId) {
     });
     const streamObserver = new StreamTypes[type](parameters);
     console.log(streamObserver.stream);
+    check(streamObserver.stream, Object);
     streamObserver.stream.on('error', Meteor.bindEnvironment(error => {
       const modifier = { $set: { [errorKey]: {
         reason: error.reason,

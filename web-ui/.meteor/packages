@@ -79,3 +79,5 @@ meteorhacks:subs-manager
 
 # additional
 bevanhunt:leaflet
+underscorestring:underscore.string
+momentjs:moment

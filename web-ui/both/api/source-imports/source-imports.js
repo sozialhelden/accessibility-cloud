@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { isAdmin } from '/both/lib/is-admin';
+import { moment } from 'meteor/momentjs:moment';
 
 export const SourceImports = new Mongo.Collection('SourceImports');
 
@@ -21,4 +22,7 @@ SourceImports.publicFields = {
 
 SourceImports.helpers({
   editableBy: isAdmin,
+  humanReadableStartTimestamp() {
+    return moment(this.startTimestamp).format('DD.MM.YYYY HH:mm:ss');
+  }
 });
