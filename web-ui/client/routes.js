@@ -317,7 +317,7 @@ manageRoutes.route('/sources/:_id/imports', {
 });
 
 
-manageRoutes.route('/sources/:_id/imports/:_importId?', {
+manageRoutes.route('/sources/:_id/imports/:importId?', {
   name: 'manage.sources.show.import',
   action() {
     BlazeLayout.render('app_layout_scrollable', {

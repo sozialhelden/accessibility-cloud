@@ -4,7 +4,7 @@
     <ul class='with-blocks'>
     {{#each sourceImports}}
       <li class='item block {{activeIfCurrentImport _id}}'>
-        <a href='{{pathFor "manage.sources.show.import" _id= source._id _importId=_id}}'>{{humanReadableStartTimestamp}}</a>
+        <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>
       </li>
       {{/each}}
     </ul>
