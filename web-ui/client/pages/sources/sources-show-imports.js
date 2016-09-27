@@ -40,7 +40,7 @@ Template.sources_show_imports_page.events({
 
 Template.sources_show_imports_page.helpers({
   activeIfCurrentImport(sourceId) {
-    return FlowRouter.getParam('_importId') === sourceId ? 'active' : '';
+    return FlowRouter.getParam('importId') === sourceId ? 'active' : '';
   },
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
