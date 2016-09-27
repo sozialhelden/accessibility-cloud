@@ -37,9 +37,11 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     if (err) {
       console.log(err);
     } else {
-      const markers = new L.geoJson(result);
-      markers.addTo(map);
-      map.fitBounds(markers.getBounds().pad(0.3));
+      if (result.length > 0) {
+        const markers = new L.geoJson(result);
+        markers.addTo(map);
+        map.fitBounds(markers.getBounds().pad(0.3));
+      }
     }
   });
 });

@@ -39,7 +39,10 @@ Factory.define('_license_CC0', Licenses, {
   requiresShareAlike: false,
 });
 
-Factory.define('source', Sources, {
+
+// ---- JSON SOURCE -------------------------------------------------------------------------
+
+Factory.define('jsonSource', Sources, {
   organizationId: Factory.get('organization'),
   licenseId: Factory.get('_license_CC0'),
   languageId: Factory.get('language'),
@@ -77,7 +80,7 @@ Factory.define('source', Sources, {
           properties: 'row.properties',
           address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
           isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
-        }
+        },
       },
     },
     {
@@ -91,8 +94,8 @@ Factory.define('source', Sources, {
   ],
 });
 
-Factory.define('sourceImport', SourceImports, {
-  sourceId: Factory.get('source'),
+Factory.define('jsonSourceImport', SourceImports, {
+  sourceId: Factory.get('jsonSource'),
   // streamDebugInfo: [
   //   {
   //     bytesRead: 1000,
@@ -139,13 +142,9 @@ Factory.define('sourceImport', SourceImports, {
   numberOfPlacesUnchanged: 4,
 });
 
-Factory.define('sampleSourceImport', SourceImports, Factory.extend('sourceImport', {
-  sampleData: '…',
-}));
-
-Factory.define('placeInfo', PlaceInfos, {
-  sourceId: Factory.get('source'),
-  lastSourceImportId: Factory.get('sourceImport'),
+Factory.define('jsonPlaceInfo', PlaceInfos, {
+  sourceId: Factory.get('jsonSource'),
+  lastSourceImportId: Factory.get('jsonSourceImport'),
   data: {
     providedId: '234234',
     name: 'Hotel Adlon',
@@ -154,31 +153,122 @@ Factory.define('placeInfo', PlaceInfos, {
   geometry: { type: 'Point', coordinates: [-123.137,49.25134] },
 });
 
-Factory.define('placeImport', PlaceImports, {
+Factory.define('jsonPlaceImport', PlaceImports, {
   timestamp: 234234234,
-  placeInfoId: Factory.get('placeInfo'),
-  sourceImportId: Factory.get('sourceImport'),
+  placeInfoId: Factory.get('jsonPlaceInfo'),
+  sourceImportId: Factory.get('jsonSourceImport'),
 });
 
+
+// --------------- CSV Source ----------------------------------------------------------
+Factory.define('csvSource', Sources, {
+  organizationId: Factory.get('organization'),
+  licenseId: Factory.get('_license_CC0'),
+  languageId: Factory.get('language'),
+  name: 'Toilets in Rostock',
+  primaryRegion: 'Rostock, Germany',
+  description: 'germany-rostock-toilets (CSV)',
+  originWebsite: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
+  tocForSourcesAccepted: true,
+  streamChain: [
+    {
+      type: 'HTTPDownload',
+      parameters: {
+        sourceUrl: 'https://geo.sv.rostock.de/download/opendata/toiletten/toiletten.csv',
+      },
+    },
+    {
+      type: 'ConvertToUTF8',
+      parameters: {
+        fromCharSet: 'utf8',
+      },
+    },
+    {
+      type: 'ParseJSONStream',
+      parameters: {
+        path: 'features.*',
+        length: 'totalFeatures',
+      },
+    },
+    {
+      type: 'TransformData',
+      parameters: {
+        mappings: {
+          originalId: "row['uuid']",
+          geometry: "{ type: 'Point', coordinates: [-123.137,49.25134] }",
+          // Name        : "'Public toilet in Rostock, ' + row['gemeindeteil_name']",
+          address: "row['strasse_name'] + ' ' + row['hausnummer'] + row['hausnummer_zusatz'] + ', ' + row['postleitzahl'] + ' Rostock'",
+          // Latitude: "Number(row['latitude'])",
+          // Longitude: "Number(row['longitude'])",
+          isAccessible: "row['behindertengerecht'] == '1'",
+          // originalId: 'row.id',
+          // geometry: 'row.geometry',
+          properties: 'row.properties',
+          // address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
+          // isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
+        },
+      },
+    },
+    {
+      type: 'ConsoleOutput',
+      parameters: {},
+    },
+    {
+      type: 'UpsertPlace',
+      parameters: {},
+    },
+  ],
+});
+
+Factory.define('csvSourceImport', SourceImports, {
+  sourceId: Factory.get('csvSource'),
+
+  numberOfPlacesAdded: 1,
+  numberOfPlacesModified: 2,
+  numberOfPlacesRemoved: 3,
+  numberOfPlacesUnchanged: 4,
+});
+
+Factory.define('csvPlaceInfo', PlaceInfos, {
+  sourceId: Factory.get('csvSource'),
+  lastSourceImportId: Factory.get('csvSourceImport'),
+  data: {
+    providedId: '234234',
+    name: 'Hotel Adlon',
+    accessible: 0.2,
+  },
+  geometry: { type: 'Point', coordinates: [-123.137,49.25134] },
+});
+
+Factory.define('csvPlaceImport', PlaceImports, {
+  timestamp: 234234234,
+  placeInfoId: Factory.get('csvPlaceInfo'),
+  sourceImportId: Factory.get('csvSourceImport'),
+});
+
+
+// -- Insert to database ------------------------------------------
 function createStubData() {
   const language = Factory.create('language');
   const organization = Factory.create('organization');
   const license = Factory.create('_license_CC0', {
     organizationId: organization._id,
   });
-  const source = Factory.create('source', {
+
+  // --- JSON -------------------------------
+  const source = Factory.create('jsonSource', {
     organizationId: organization._id,
     languageId: language._id,
     licenseId: license._id,
   });
-  const sourceImport = Factory.create('sourceImport', {
+  const sourceImport = Factory.create('jsonSourceImport', {
     sourceId: source._id,
   });
-  const placeInfo = Factory.create('placeInfo', {
+  const placeInfo = Factory.create('jsonPlaceInfo', {
     sourceId: source._id,
     lastSourceImportId: sourceImport._id,
   });
-  const placeImport = Factory.create('placeImport', {
+  const placeImport = Factory.create('jsonPlaceImport', {
     placeInfoId: placeInfo._id,
     sourceImportId: sourceImport._id,
   });
@@ -191,6 +281,30 @@ function createStubData() {
     sourceImport,
     placeInfo,
     placeImport,
+  });
+
+  // --- CSV -------------------------------
+  const csvSource = Factory.create('csvSource', {
+    organizationId: organization._id,
+    languageId: language._id,
+    licenseId: license._id,
+  });
+  const csvSourceImport = Factory.create('csvSourceImport', {
+    sourceId: source._id,
+  });
+  const csvPlaceInfo = Factory.create('csvPlaceInfo', {
+    sourceId: csvSource._id,
+    lastSourceImportId: csvSourceImport._id,
+  });
+  const csvPlaceImport = Factory.create('csvPlaceImport', {
+    placeInfoId: csvPlaceInfo._id,
+    sourceImportId: csvSourceImport._id,
+  });
+  console.log({
+    csvSource,
+    csvSourceImport,
+    csvPlaceInfo,
+    csvPlaceImport,
   });
 }
 
