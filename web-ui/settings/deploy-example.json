@@ -1,0 +1,23 @@
+{
+    "galaxy.meteor.com": {
+        "env": {
+            "ROOT_URL": "https://....meteorapp.com",
+            "MONGO_URL": "mongodb://staging:<password>@ds013664.mlab.com:13664/",
+            "MAIL_URL": "smtp://development%40vr-roadshow.com:<password>@smtp.mailgun.org:465"
+        }
+    },
+    "s3": {
+        "key": "AKI...",
+        "secret": "..."
+    },
+    "public": {
+        "s3": {
+            "bucket": "...",
+            "region": "eu-west-1"
+        }
+    },
+    "kadira": {
+        "appId": "",
+        "appSecret": ""
+    }
+}
