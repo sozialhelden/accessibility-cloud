@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-
+import Stream from 'stream';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
 import { ConsoleOutput } from './stream-types/console-output';
@@ -49,8 +49,8 @@ export function createStreamChain(streamChainConfig, sourceImportId, sourceId) {
       }),
     });
     const streamObserver = new StreamTypes[type](parameters);
-    console.log(streamObserver.stream);
-    check(streamObserver.stream, Object);
+    // console.log(streamObserver.stream);
+    check(streamObserver.stream, Stream);
     streamObserver.stream.on('error', Meteor.bindEnvironment(error => {
       const modifier = { $set: { [errorKey]: {
         reason: error.reason,
