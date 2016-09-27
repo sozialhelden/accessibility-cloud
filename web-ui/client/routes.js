@@ -27,7 +27,7 @@ Planned routes are...
 /manage/sources/:_id/imports
 /manage/sources/:_id/format
 /manage/sources/:_id/settings
-/manage/sources/:_id/imports/:_importId
+/manage/sources/:_id/imports/:importId
 /manage/sources/:_id/access
 
 /manage/licenses/

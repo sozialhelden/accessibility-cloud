@@ -59,7 +59,7 @@ Template.sources_show_page.helpers({
     return Sources.findOne({ _id: FlowRouter.getParam('_id') });
   },
   sourceImport() {
-    const selectedImport = SourceImports.findOne({ sourceId: FlowRouter.getParam('_importId') });
+    const selectedImport = SourceImports.findOne({ sourceId: FlowRouter.getParam('importId') });
 
     if (selectedImport) {
       return selectedImport;

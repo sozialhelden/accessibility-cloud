@@ -31,7 +31,7 @@ Template.sources_show_imports_page.events({
       } else {
         FlowRouter.go('manage.sources.show.imports', {
           _id: FlowRouter.getParam('_id'),
-          _importId: result,
+          importId: result,
         });
       }
     });
