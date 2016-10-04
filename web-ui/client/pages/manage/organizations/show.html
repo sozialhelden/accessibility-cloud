@@ -1,6 +1,6 @@
 <template name="organizations_show_page">
   <div class='dashboard widget with-list single-widget sources'>
-    <h2>{{_ "Your sources"}}</h2>
+    <h2>{{_ "Sources of "}}{{organization.name}}</h2>
     <ul class='with-blocks'>
       {{#each organization.getSources}}
         <li class='list block {{isDraft}}'>

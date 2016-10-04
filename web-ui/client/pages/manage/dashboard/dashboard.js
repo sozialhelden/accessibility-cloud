@@ -6,8 +6,7 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.page_dashboard.onCreated(() => {
-  subsManager.subscribe('organizations.public');
-  subsManager.subscribe('sources.public');
+  subsManager.subscribe('manage-subscriptions-for-current-user');
 });
 
 const helpers = {

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Organizations } from '/both/api/organizations/organizations.js';
@@ -21,6 +22,12 @@ Template.organizations_create_page.helpers({
 
 AutoForm.addHooks('insertOrganizationForm', {
   onSuccess(formType, _id) {
+    // HACK this sould be called server-side
+
+    Meteor.call('organizations.join', _id, Meteor.userId(), (err, result) => {
+      //debugger;
+    });
+
     FlowRouter.go('manage.organizations.show', { _id });
 
     this.event.preventDefault();

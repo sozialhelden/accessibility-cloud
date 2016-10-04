@@ -7,9 +7,9 @@
   <div class='page content block dashboard'>
     <div class='dashboard widget with-list organisations'>
       <h2>{{_ "Your Organizations" }}</h2>
-      {{#if organizations}}
+      {{#if organizationsForCurrentUser}}
         <ul class='with-blocks'>
-          {{#each organizations}}
+          {{#each organizationsForCurrentUser}}
             <li class='list item block'>
               <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
             </li>
@@ -22,9 +22,9 @@
     </div>
     <div class='dashboard widget with-list sources'>
       <h2>{{_ "Share your data" }}</h2>
-      {{#if sources}}
+      {{#if sourcesForCurrentUser}}
         <ul class='with-blocks'>
-          {{#each sources}}
+          {{#each sourcesForCurrentUser}}
             <li class='list item block'>
               <a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a>
             </li>
