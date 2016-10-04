@@ -107,15 +107,24 @@ Sources.schema = new SimpleSchema({
   'streamChain.$.type': {
     type: String,
   },
-  // 'streamChain.$.parameters': {
-  //   type: Object,
-  //   blackbox: true,
-  // },
-  // 'streamChain.$.parameters.mappings': {
-  //   type: Object,
-  //   optional: true,
-  //   blackbox: true,
-  // },
+  isFreelyAccessible: {
+    type: Boolean,
+    label: 'Data is available to everybody',
+    defaultValue: true,
+  },
+  accessRestrictedTo: {
+    type: [String],
+    label: 'Data is available to everybody',
+    defaultValue: [],
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+      afFormGroup: {
+        label: false,
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -130,6 +139,8 @@ Sources.publicFields = {
   isDraft: 1,
   tocForSourcesAccepted: 1,
   streamChain: 1,
+  isFreelyAccessible: 1,
+  accessRestrictedTo: 1,
 };
 
 Sources.helpers({
