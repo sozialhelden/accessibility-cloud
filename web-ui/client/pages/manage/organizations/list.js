@@ -1,11 +1,10 @@
 import { Template } from 'meteor/templating';
 import { Organizations } from '/both/api/organizations/organizations.js';
+import subsManager from '/client/lib/subs-manager';
 // import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.organizations_list_page.onCreated(function organizationsShowPageOnCreated() {
-  this.autorun(() => {
-    this.subscribe('organizations.public');
-  });
+  subsManager.subscribe('organizations.public');
 });
 
 

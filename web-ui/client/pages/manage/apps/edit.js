@@ -3,14 +3,12 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Apps } from '/both/api/apps/apps.js';
 
 import { _ } from 'meteor/underscore';
+import subsManager from '/client/lib/subs-manager';
 
 Template.apps_edit_page.onCreated(function created() {
   window.Apps = Apps;
 
-  this.autorun(() => {
-    this.subscribe('sources.public');
-    this.subscribe('apps.public');
-  });
+  subsManager.subscribe('apps.public');
 });
 
 Template.apps_edit_page.helpers({

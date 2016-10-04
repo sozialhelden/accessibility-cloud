@@ -1,10 +1,9 @@
 import { Template } from 'meteor/templating';
 import { Organizations } from '/both/api/organizations/organizations.js';
+import subsManager from '/client/lib/subs-manager';
 
 Template.browse_organizations_page.onCreated(function organizationsShowPageOnCreated() {
-  this.autorun(() => {
-    this.subscribe('organizations.public');
-  });
+  subsManager.subscribe('organizations.public');
 });
 
 

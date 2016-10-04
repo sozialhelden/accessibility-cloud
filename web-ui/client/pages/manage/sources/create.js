@@ -6,17 +6,16 @@ import { Sources } from '/both/api/sources/sources.js';
 import { Languages } from '/both/api/languages/languages.js';
 import { AutoForm } from 'meteor/aldeed:autoform';
 import { _ } from 'meteor/underscore';
+import subsManager from '/client/lib/subs-manager';
 
 Template.sources_create_page.onCreated(function created() {
   window.Organizations = Organizations;
   window.Sources = Sources;
 
-  this.autorun(() => {
-    this.subscribe('sources.public');
-    this.subscribe('organizations.public');
-    this.subscribe('licenses.public');
-    this.subscribe('languages.public');
-  });
+  subsManager.subscribe('sources.public');
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('licenses.public');
+  subsManager.subscribe('languages.public');
 });
 
 const _helpers = {

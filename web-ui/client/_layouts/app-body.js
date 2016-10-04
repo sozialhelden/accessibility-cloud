@@ -7,6 +7,7 @@ import { Template } from 'meteor/templating';
 import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
+
 // import { Organizations } from '../../api/organizations/organizations.js';
 // import { insert } from '../../api/organizations/methods.js';
  
@@ -27,8 +28,6 @@ Meteor.startup(() => {
 });
 
 Template.App_body.onCreated(function appBodyOnCreated() {
-  this.subscribe('lists.public');
-  this.subscribe('lists.private');
 
   this.state = new ReactiveDict();
   this.state.setDefault({

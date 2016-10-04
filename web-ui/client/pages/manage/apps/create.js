@@ -3,15 +3,14 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Apps } from '/both/api/apps/apps.js';
 import { AutoForm } from 'meteor/aldeed:autoform';
+import subsManager from '/client/lib/subs-manager';
 
 Template.apps_create_page.onCreated(function created() {
   window.Organizations = Organizations;
   window.Apps = Apps;
 
-  this.autorun(() => {
-    this.subscribe('apps.public');
-    this.subscribe('organizations.public');
-  });
+  subsManager.subscribe('apps.public');
+  subsManager.subscribe('organizations.public');
 });
 
 

@@ -7,9 +7,8 @@ import { Apps } from '/both/api/apps/apps.js';
 import subsManager from '/client/lib/subs-manager';
 
 Template.organizations_show_header_sub.onCreated(() => {
-  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('manage-subscriptions-for-current-user');
   subsManager.subscribe('licenses.public');
-  subsManager.subscribe('apps.public');
 });
 
 

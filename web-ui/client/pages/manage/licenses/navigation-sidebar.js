@@ -2,14 +2,13 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Licenses } from '/both/api/licenses/licenses.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
+import subsManager from '/client/lib/subs-manager';
 
 // FIXME: not all required here
 Template.licenses_navigation_sidebar.onCreated(function created() {
-  this.autorun(() => {
-    this.subscribe('licenses.public');
-    this.subscribe('organizations.public');
-    this.subscribe('sources.public');
-  });
+  subsManager.subscribe('licenses.public');
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('sources.public');
 });
 
 function getOrganizationForView () {

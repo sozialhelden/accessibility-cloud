@@ -7,8 +7,7 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.sources_show_imports_page.onCreated(() => {
-  subsManager.subscribe('sources.public');
-  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('manage-subscriptions-for-current-user');
   subsManager.subscribe('sourceImports.public');
 
   window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging

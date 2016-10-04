@@ -8,7 +8,7 @@ Template.organizations_create_page.onCreated(function created() {
   window.Organizations = Organizations;
 
   this.autorun(() => {
-    this.subscribe('organizations.public');
+    subsManager.subscribe('manage-subscriptions-for-current-user');
   });
 });
 

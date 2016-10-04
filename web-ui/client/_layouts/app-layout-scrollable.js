@@ -6,7 +6,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
 import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
- 
+import subsManager from '/client/lib/subs-manager';
 import '../components/loading.js';
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
@@ -24,9 +24,6 @@ Meteor.startup(() => {
 });
 
 Template.app_layout_scrollable.onCreated(function appBodyOnCreated() {
-  this.subscribe('lists.public');
-  this.subscribe('lists.private');
-
   this.state = new ReactiveDict();
   this.state.setDefault({
     menuOpen: false,
