@@ -79,27 +79,59 @@ FlowRouter.route('/', {
 });
 
 // ---- Organizations ------------------------------
-FlowRouter.route('/organizations', {
-  name: 'organizations.list',
+// FlowRouter.route('/organizations', {
+//   name: 'organizations.list',
+//   action() {
+//     BlazeLayout.render('app_layout_scrollable', {
+//       main: 'page_orgas_list',
+//       header_navigation_list: 'home_header_navigation' });
+//   },
+// });
+
+// FlowRouter.route('/organizations/:_id', {
+//   name: 'organizations.show',
+//   action() {
+//     BlazeLayout.render('app_layout_scrollable', {
+//       main: 'organizations_show_page',
+//       header_navigation_list: 'organizations_show_page_header_navigation' });
+//   },
+// });
+
+// ========= BROWSE =======================================================
+
+const browseRoutes = FlowRouter.group({
+  name: 'browse',
+  prefix: '/browse',
+  triggersEnter: [
+    checkLoggedIn,
+  ],
+});
+
+browseRoutes.route('/dashboard', {
+  name: 'browse.dashboard',
+
   action() {
     BlazeLayout.render('app_layout_scrollable', {
-      main: 'page_orgas_list',
+      main: 'browse_dashboard_page',
       header_navigation_list: 'home_header_navigation' });
   },
 });
 
-FlowRouter.route('/organizations/:_id', {
-  name: 'organizations.show',
+browseRoutes.route('/sources/:_id', {
+  name: 'browse.sources.show',
+
   action() {
-    BlazeLayout.render('app_layout_scrollable', {
-      main: 'organizations_show_page',
-      header_navigation_list: 'organizations_show_page_header_navigation' });
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      //header_sub: 'sources_show_header_sub',
+    });
   },
 });
 
+
 // ========= MANAGE =======================================================
 
-// ---- organizations ---------------------
 
 const manageRoutes = FlowRouter.group({
   name: 'manage',

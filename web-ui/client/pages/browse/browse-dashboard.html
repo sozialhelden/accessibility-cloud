@@ -1,0 +1,38 @@
+<template name="browse_dashboard_page">
+  <div class='dashboard widget with-list organisations'>
+    <h2>Organizations</h2>
+    <ol>
+      {{#each organizations}}
+        <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
+        <li>
+          <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+          {{#unless isUserMemberOfOrganizationWithId _id}}
+            <a href='' class='action join organizations' organizationId='{{this._id}}'>Join</a>
+          {{else}}
+            (member)
+          {{/unless}}
+        </li>
+      {{/each}}
+    </ol>
+
+
+    <h2>Sources</h2>
+    <ol>
+      {{#each sources}}
+        <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
+        <li>
+          <a href='{{pathFor "browse.sources.show" _id= _id}}'>
+            {{name}}
+          </a>
+<!--           <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+          {{#unless isUserMemberOfOrganizationWithId _id}}
+            <a href='' class='action join organizations' organizationId='{{this._id}}'>Join</a>
+          {{else}}
+            (member)
+          {{/unless}}
+ -->        </li>
+      {{/each}}
+    </ol>
+
+  </div>
+</template>
