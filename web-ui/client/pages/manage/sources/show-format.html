@@ -6,6 +6,10 @@
         <h4>Import process</h4>
         {{> sources_stream_chain}}
 
+        <h4>Update input chain</h4>
+        <textarea class='code' id='streamChain'>{{stringify streamChain}}</textarea>
+        <button class='btn-primary save'>Save</button>
+
         <!-- <div class='code-block'>{{stringify source}}</div> -->
       {{/with}}
     </div>

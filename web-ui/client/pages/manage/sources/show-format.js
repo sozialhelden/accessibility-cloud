@@ -19,3 +19,17 @@ const helpers = {
 
 // Template.sources_show_header.helpers(helpers);
 Template.sources_show_format_page.helpers(helpers);
+
+Template.sources_show_format_page.events({
+  'click button.save': function saveButtonClicked(event) {
+    event.preventDefault();
+
+    const _id = FlowRouter.getParam('_id');
+    const newStreamChainText = $('textarea#streamChain')[0].value;
+    const newStreamChain = JSON.parse(newStreamChainText);
+
+    Sources.update(_id, {
+      $set: { streamChain: newStreamChain },
+    });
+  },
+});
