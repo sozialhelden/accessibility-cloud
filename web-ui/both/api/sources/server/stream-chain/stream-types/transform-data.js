@@ -5,7 +5,21 @@ function compileMapping(fieldName, javascript) {
   try {
     // replace for minimum security
     // eslint-disable-next-line no-eval
+
+    const helpers = {
+      OSM: {
+        fetchNameFromTags(tags) {
+          if (tags == null) {
+            return '?';
+          }
+
+          return tags['name'] || 'object';
+        },
+      },
+    };
+
     return eval(`(row) => (${javascript})`);
+
   } catch (error) {
     console.error(`Illegal script for ${fieldName}:\n${error}`);
     return () => {};
@@ -24,12 +38,13 @@ export class TransformData {
   constructor({ mappings }) {
     const compiledMappings = compileMappings(mappings);
     this.stream = EventStream.map((data, callback) => {
+
       const doc = {};
       for (const [fieldName, fn] of entries(compiledMappings)) {
         doc[fieldName] = fn(data);
       }
       doc.originalData = data;
-      console.log(doc);
+      //console.log(doc);
       callback(null, doc);
       return null;
     });

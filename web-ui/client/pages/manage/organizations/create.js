@@ -3,13 +3,12 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { AutoForm } from 'meteor/aldeed:autoform';
+import subsManager from '/client/lib/subs-manager';
 
 Template.organizations_create_page.onCreated(function created() {
   window.Organizations = Organizations;
 
-  this.autorun(() => {
-    subsManager.subscribe('manage-subscriptions-for-current-user');
-  });
+  subsManager.subscribe('manage-subscriptions-for-current-user');
 });
 
 

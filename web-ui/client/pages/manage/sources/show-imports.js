@@ -11,7 +11,11 @@ import subsManager from '/client/lib/subs-manager';
 Template.sources_show_imports_page.onCreated(() => {
   subsManager.subscribe('manage-subscriptions-for-current-user');
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('placeInfosFromImport.public', FlowRouter.getParam('importId'));
+
+  const importId = FlowRouter.getParam('importId');
+  if (importId) {
+    subsManager.subscribe('placeInfosFromImport.public', importId);
+  }
   window.SourceImports = SourceImports;	// FIXME: we don't need that only for debugging
 });
 
@@ -60,5 +64,9 @@ Template.sources_show_imports_page.helpers({
     const sourceImportId = FlowRouter.getParam('importId');
 
     return PlaceInfos.find({ sourceImportId }).count();
+  },
+  examplePlaceInfos() {
+    const sourceImportId = FlowRouter.getParam('importId');
+    return PlaceInfos.find({ sourceImportId }, { limit: 3 });
   },
 });

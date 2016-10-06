@@ -15,5 +15,11 @@
       <p>Updated: {{placesUpdatedCount}} places</p>
       {{> sources_stream_chain}}
     {{/with}}
+    <h2>Examples for imported places</h2>
+    {{#each examplePlaceInfos}}
+      <div class='code-block'>
+          {{stringify this}}
+      </div>
+    {{/each}}
   </div>
 </template>

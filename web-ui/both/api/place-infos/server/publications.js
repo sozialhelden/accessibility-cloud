@@ -9,5 +9,5 @@ Meteor.publish('placeInfos.public', () => PlaceInfos.find({}, options));
 Meteor.publish('placeInfosFromImport.public', function (sourceImportId) {
   check(sourceImportId, String);
 
-  return PlaceInfos.find({ sourceImportId });
+  return PlaceInfos.find({ sourceImportId }, { limit: 1000 });
 });

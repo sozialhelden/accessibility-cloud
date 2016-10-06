@@ -9,6 +9,7 @@ const sourceIdsToStreamChains = {};
 
 Meteor.methods({
   'sources.startImport'(sourceId) {
+    this.unblock();
     check(sourceId, String);
     if (!isAdmin(this.userId)) {
       throw Meteor.Error(401, 'Not authorized.');

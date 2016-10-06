@@ -10,7 +10,7 @@ const upsert = Meteor.bindEnvironment((...args) => {
 export class UpsertPlace {
   constructor({ sourceId, sourceImportId }) {
     this.stream = EventStream.map((placeInfo, callback) => {
-      const originalId = placeInfo.originalId;
+      const originalId = `${placeInfo.originalId}`;
       check(originalId, String);
       Object.assign(placeInfo, {
         sourceId,
