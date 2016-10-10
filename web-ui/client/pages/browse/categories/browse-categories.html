@@ -1,0 +1,25 @@
+<template name="categories_list_page">
+  <div class='dashboard widget with-list organisations'>
+    <h2>Categories</h2>
+    <ul>
+    {{#each categories}}
+      <li>
+        <img src='/icons/categories/{{icon}}.png'>
+        {{_id}}
+      </li>
+    {{/each}}
+    </ul>
+  </div>
+  <hr>
+  <div>
+    <h2>Reimport Categories Definitions as CSV</h2>
+    <a href='https://docs.google.com/spreadsheets/d/1MCjV0_lHllNjiHrC8iotZX4ZddAR7bOIqmsT3eZRb6I/edit?pli=1#gid=218507801'>Select from here</a>
+    <textarea class='code' id='categoriesAsCSV' placeholder='Paste CSV-information here'></textarea>
+    <button class='btn-primary js-import'>Import</button>
+    <h2>Result</h2>
+    <div class='code block'>
+      {{stringify importResult}}
+    </div>
+  </div>
+
+</template>

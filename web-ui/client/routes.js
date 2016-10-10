@@ -14,6 +14,10 @@ Planned routes are...
 /browse/organizations/:_id/
 /browse/organizations/:_id/sources ???
 
+/browse/categories
+/browse/categories/:_id
+/browse/categories/edit?
+
 / <- dashboard
 
 /manage/organizations/create
@@ -37,7 +41,6 @@ Planned routes are...
 /manage/apps/               <-- DO WE REALLY NEED THIS?
 /manage/apps/:_id
 /manage/apps/:_id/edit
-
 
 /help
 /signup
@@ -128,6 +131,32 @@ browseRoutes.route('/sources/:_id', {
     });
   },
 });
+
+
+browseRoutes.route('/categories/', {
+  name: 'browse.categories.list',
+
+  action() {
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'categories_list_page',
+      header_navigation_list: 'sources_show_header',
+    });
+  },
+});
+
+
+browseRoutes.route('/categories/:_id', {
+  name: 'browse.categories.show',
+
+  action() {
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'categories_show_page',
+      header_navigation_list: 'sources_show_header',
+    });
+  },
+});
+
+
 
 
 // ========= MANAGE =======================================================
