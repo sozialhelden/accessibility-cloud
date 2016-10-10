@@ -1,0 +1,44 @@
+[
+    {
+        "type": "HTTPDownload",
+        "parameters": {
+            "sourceUrl": "http://localhost:3000/data/wheelmap-pois-sample.json"
+        }
+    },
+    {
+        "type": "ConvertToUTF8",
+        "parameters": {
+            "fromCharSet": "utf8"
+        }
+    },
+    {
+        "type": "Split",
+        "parameters": {
+            "string": "\n"
+        }
+    },
+    {
+        "type": "ParseJSONChunks",
+        "parameters": {
+            "path": "*",
+            "length": "totalFeatures"
+        }
+    },
+    {
+        "type": "TransformData",
+        "parameters": {
+            "mappings": {
+                "originalId": "''+row.id",
+                "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
+                "category": " helpers.OSM.fetchCategoryFromTags(row.tags) ",
+                "name": "helpers.OSM.fetchNameFromTags(row.tags)",
+                "tags": "row.tags",
+                "isAccessible": "row.tags['wheelchair'] == 'yes'"
+            }
+        }
+    },
+    {
+        "type": "UpsertPlace",
+        "parameters": {}
+    }
+]
