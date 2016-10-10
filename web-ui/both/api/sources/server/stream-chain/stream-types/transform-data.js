@@ -1,5 +1,6 @@
 import EventStream from 'event-stream';
 import entries from '/both/lib/entries';
+import { acCategories } from '/both/lib/all-categories.js';
 
 function compileMapping(fieldName, javascript) {
   try {
@@ -13,7 +14,23 @@ function compileMapping(fieldName, javascript) {
             return '?';
           }
 
-          return tags['name'] || 'object';
+          return tags.name || 'object';
+        },
+        fetchCategoryFromTags(tags) {
+          if (tags === undefined) {
+            return 'empty';
+          }
+
+          for (let tag in tags) {
+            if (tags.hasOwnProperty(tag)) {
+              const categoryId = `${tag}_${tags[tag]}`.toLowerCase().replace(' ', '_');
+
+              if (acCategories[categoryId] !== undefined) {
+                return categoryId;
+              }
+            }
+          }
+          return 'undefined';
         },
       },
     };
@@ -44,7 +61,6 @@ export class TransformData {
         doc[fieldName] = fn(data);
       }
       doc.originalData = data;
-      //console.log(doc);
       callback(null, doc);
       return null;
     });
