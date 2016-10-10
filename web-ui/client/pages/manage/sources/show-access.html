@@ -5,7 +5,7 @@
 
         <form>
           <div class="form-group" data-required="true">
-            <label for="Er4BiiAfx6YJaK3Aa" class="control-label">{{_ 'Share your data with...'}}</label>
+            <label for="isFreelyAccessible" class="control-label">{{_ 'Share your data with...'}}</label>
               <select name="isFreelyAccessible" required="" class="form-control">
                 <option value="restricted" >{{_ "Only selected Organizations"}}</option>
                 <option value="isFreelyAccessible" {{selectedIfAccessibleToAll}}>{{_ "Everybody"}}</option>
@@ -26,7 +26,7 @@
             </li>
           {{/each}}
           </ul>
-          <button class='btn-primary save unchanged'>Save</button>
+          <button class='btn-primary js-save unchanged'>Save</button>
         {{/unless}}
       {{/with}}
     </div>

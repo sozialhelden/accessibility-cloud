@@ -51,7 +51,7 @@ Template.sources_show_access_page.events({
   'change input[type=checkbox]': function (event) {
     $('button.save').removeClass('unchanged');
   },
-  'click button.save': function (event) {
+  'click button.js-save': function (event) {
     event.preventDefault();
 
     const _id = FlowRouter.getParam('_id');

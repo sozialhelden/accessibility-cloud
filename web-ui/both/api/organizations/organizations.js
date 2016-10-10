@@ -45,6 +45,8 @@ Organizations.schema = new SimpleSchema({
         // placeholder: 'e.g. Adam-Riese-St. 27',
         options: [
           { label: '?', value: 'undefined' },
+          { label: 'Governmental Organization', value: 'governmental' },
+          { label: 'NGO', value: 'ngo' },
           { label: 'Non-Commercial', value: 'non-commercial' },
           { label: 'Student', value: 'student' },
           { label: 'GmbH', value: 'gmbh' },
