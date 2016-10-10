@@ -1,4 +1,10 @@
-const source = {
+# Collections and Schemas
+
+This document summarizes the most relevant collections and their formats for discussion. This document might have diverged from the implementation. If in doubt the SimpleSchemas defined in `/both/api/*` collections win.
+
+## sources
+```
+source = {
   organizationId : "12346abc",
   licenseId   : "12346abc",
   languageId  : "12346abc",
@@ -52,8 +58,9 @@ const source = {
     },
   ]
 }
+## sourceImports
 
-
+```
 sourceImport: {
   // getStatus(),
   _id: "_hotels_import_1"
@@ -71,8 +78,11 @@ sourceImport: {
   numberOfPlacesRemoved= 23423,
   numberOfPlacesUnchanged= 23423,
 }
+```
 
+## placeInfos
 
+```
 placeInfo: {
   _id:"_hotel_adlon",
   sourceId: "_hotelPlaces",
@@ -84,15 +94,19 @@ placeInfo: {
   },
 }
 
-
+## placeImports
+```
 placeImport: {
   _id: "_hotel_adlon_import_1",
   timestamp: 234234234,
   placeInfoId: "_hotel_adlin",
   sourceImportId: "_hotels_import_1",
 }
+```
 
+## licenses
 
+```
 license: {
   _id: "_ODbLv1.0",
   name: "234234e",
@@ -106,7 +120,4 @@ license: {
   consideredAsCCA: false,
   consideredAsCCSA: true,
 }
-
-/*
-  - download-frequency
-*/
+```
