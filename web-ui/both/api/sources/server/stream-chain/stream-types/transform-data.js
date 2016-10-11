@@ -1,12 +1,11 @@
 import EventStream from 'event-stream';
 import entries from '/both/lib/entries';
 import { acCategories } from '/both/lib/all-categories.js';
+import { _ } from 'meteor/stevezhu:lodash';
 
 function compileMapping(fieldName, javascript) {
   try {
-    // replace for minimum security
-    // eslint-disable-next-line no-eval
-
+    // eslint-disable-next-line no-unused-vars
     const helpers = {
       OSM: {
         fetchNameFromTags(tags) {
@@ -21,7 +20,7 @@ function compileMapping(fieldName, javascript) {
             return 'empty';
           }
 
-          for (let tag in tags) {
+          for (const tag in tags) {
             if (tags.hasOwnProperty(tag)) {
               const categoryId = `${tag}_${tags[tag]}`.toLowerCase().replace(' ', '_');
 
@@ -35,8 +34,10 @@ function compileMapping(fieldName, javascript) {
       },
     };
 
-    return eval(`(row) => (${javascript})`);
+    // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
 
+    // eslint-disable-next-line no-eval
+    return eval(`(row) => (${javascript})`);
   } catch (error) {
     console.error(`Illegal script for ${fieldName}:\n${error}`);
     return () => {};
@@ -54,11 +55,17 @@ function compileMappings(mappings) {
 export class TransformData {
   constructor({ mappings }) {
     const compiledMappings = compileMappings(mappings);
-    this.stream = EventStream.map((data, callback) => {
 
+    this.stream = EventStream.map((data, callback) => {
       const doc = {};
       for (const [fieldName, fn] of entries(compiledMappings)) {
-        doc[fieldName] = fn(data);
+        const value = fn(data);
+        if (fieldName.match(/-/)) {
+          // field name is probably a key path like 'a-b-c'
+          _.set(doc, fieldName.replace('-', '.'), value);
+        } else {
+          doc[fieldName] = value;
+        }
       }
       doc.originalData = data;
       callback(null, doc);

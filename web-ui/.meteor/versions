@@ -107,6 +107,7 @@ spacebars@1.0.13
 spacebars-compiler@1.0.13
 srp@1.0.9
 standard-minifier-js@1.2.0_1
+stevezhu:lodash@4.16.4
 stylus@2.513.5_1
 tap:i18n@1.8.2
 templating@1.2.15

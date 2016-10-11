@@ -10,6 +10,7 @@ const sourceIdsToStreamChains = {};
 Meteor.methods({
   'sources.startImport'(sourceId) {
     this.unblock();
+    console.log('Requested import for source', sourceId, '…');
     check(sourceId, String);
     if (!isAdmin(this.userId)) {
       throw Meteor.Error(401, 'Not authorized.');
@@ -27,6 +28,7 @@ Meteor.methods({
       numberOfPlacesRemoved: 0,
       numberOfPlacesUnchanged: 0,
     });
+    console.log('Creating stream chain for source import', sourceImportId, '…');
     const streamChain = createStreamChain(source.streamChain, sourceImportId, sourceId);
     sourceIdsToStreamChains[sourceId] = streamChain;
     return sourceImportId;
