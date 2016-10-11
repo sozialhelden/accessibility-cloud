@@ -18,6 +18,7 @@ function handleJSONRequest(req, res) {
 
   let responseData = null;
   let userId = null;
+  let user = null;
 
   try {
     const handler = httpMethodHandlers[req.method];
@@ -32,7 +33,7 @@ function handleJSONRequest(req, res) {
     }
 
     const collection = collectionWithName(collectionName);
-    const user = userFromRequest(req);
+    user = userFromRequest(req);
     userId = user && user._id;
     const options = { req, res, collectionName, collection, _id };
     console.log(
@@ -47,10 +48,10 @@ function handleJSONRequest(req, res) {
     responseData = callFunctionAsUser(handler, options, user);
   } catch (error) {
     // eslint-disable-next-line no-param-reassign
-    res.statusCode = error.error || 500;
+    res.statusCode = (error.error === 'validation-error') ? 422 : (error.error || 500);
     console.log(
       'Error while handling', req.url,
-      `(requested by user id ${userId}):`,
+      `(requested by ${displayedUserName(user, userId)}):`,
       error,
       error.stack
     );
