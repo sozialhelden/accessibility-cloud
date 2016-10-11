@@ -23,3 +23,5 @@ PlaceInfos.publicFields = {
 PlaceInfos.helpers({
   editableBy: isAdmin,
 });
+
+PlaceInfos.visibleSelectorFor = () => ({});

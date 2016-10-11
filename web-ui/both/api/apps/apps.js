@@ -80,6 +80,8 @@ Apps.publicFields = {
   tocForAppsAccepted: 1,
 };
 
+Apps.visibleSelectorFor = () => ({});
+
 Apps.helpers({
   // Used by methods-validation
   editableBy(userId) {

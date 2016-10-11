@@ -168,6 +168,8 @@ Organizations.publicFields = {
   tocFororganizationsAccepted: 1,
 };
 
+Organizations.visibleSelectorFor = () => ({});
+
 Organizations.helpers({
   editableBy(userId) {
     return true || userId;  // FIXME: allow editing only for members and admins of organization
