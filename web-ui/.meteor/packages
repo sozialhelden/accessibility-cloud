@@ -23,6 +23,8 @@ reactive-dict@1.1.8
 reactive-var@1.0.10
 aldeed:template-extension
 percolate:momentum
+aldeed:autoform
+meteorhacks:subs-manager
 
 # data
 mongo@1.1.12_1
@@ -50,9 +52,8 @@ useraccounts:flow-routing
 softwarerero:accounts-t9n
 
 # mobile
-crosswalk@1.6.2
+# crosswalk@1.6.2
 mobile-experience@1.0.4
-chriswessels:hammer
 
 # production
 juliancwirko:postcss
@@ -66,19 +67,17 @@ simple:rest
 
 # testing
 factory
-xolvio:cleaner
-dispatch:mocha-phantomjs
-practicalmeteor:chai
-practicalmeteor:sinon
-practicalmeteor:mocha
-hwillson:stub-collections
-johanbrook:publication-collector
-aldeed:autoform
-meteorhacks:subs-manager
+# xolvio:cleaner
+# dispatch:mocha-phantomjs
+# practicalmeteor:chai
+# practicalmeteor:sinon
+# practicalmeteor:mocha
+# hwillson:stub-collections
+# johanbrook:publication-collector
 
 
 # additional
-bevanhunt:leaflet
+# bevanhunt:leaflet
 underscorestring:underscore.string
 momentjs:moment
 browser-policy@1.0.9
