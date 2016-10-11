@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Organizations } from '/both/api/organizations/organizations';
@@ -20,8 +21,20 @@ Apps.allow({
   remove() { return true; },
 });
 
+Apps.deny({
+  update(userId, doc, fieldNames) {
+    if (_.include(fieldNames, 'tokenString')) {
+      return true;
+    }
+    return false;
+  },
+});
 
 Apps.schema = new SimpleSchema({
+  tokenString: {
+    type: String,
+    optional: true,
+  },
   organizationId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -48,11 +61,11 @@ Apps.schema = new SimpleSchema({
     },
     optional: true,
   },
-  website: {
-    label: 'Web-site (optional)',
+  websiteURL: {
+    label: 'Website (optional)',
     autoform: {
       afFieldInput: {
-        placeholder: 'http://a11y-hotels.org',
+        placeholder: 'http://a11y-gourmet.org',
       },
     },
     type: String,
@@ -64,7 +77,7 @@ Apps.schema = new SimpleSchema({
     type: Boolean,
     autoform: {
       afFieldInput: {
-        placeholder: 'http://a11y-hotels.org',
+        placeholder: 'http://a11y-gourmet.org',
       },
     },
   },
@@ -78,6 +91,10 @@ Apps.publicFields = {
   description: 1,
   website: 1,
   tocForAppsAccepted: 1,
+};
+
+Apps.privateFields = {
+  tokenString: 1,
 };
 
 Apps.visibleSelectorForUserId = () => ({});

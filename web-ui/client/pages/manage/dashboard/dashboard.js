@@ -1,8 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Organizations } from '/both/api/organizations/organizations.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
-import { Sources } from '/both/api/sources/sources.js';
+import { Apps } from '/both/api/apps/apps';
+import { Organizations } from '/both/api/organizations/organizations';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members';
+import { Sources } from '/both/api/sources/sources';
 import subsManager from '/client/lib/subs-manager';
 
 
@@ -13,6 +14,9 @@ Template.page_dashboard.onCreated(() => {
 const helpers = {
   organizations() {
     return Organizations.find({});
+  },
+  apps() {
+    return Apps.find({});
   },
   sources() {
     return Sources.find({});

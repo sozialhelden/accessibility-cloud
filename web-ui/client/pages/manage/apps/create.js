@@ -13,7 +13,6 @@ Template.apps_create_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
 });
 
-
 Template.apps_create_page.helpers({
   organization() {
     const orga = Organizations.findOne({ _id: FlowRouter.getParam('_id') });

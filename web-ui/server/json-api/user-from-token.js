@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Apps } from '/both/api/apps/apps';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members';
+import { Organizations } from '/both/api/organizations/organizations';
 import { displayedUserName } from './displayed-user-name';
 
 // Returns the user that is authenticated for the given token string, or undefined if the token
@@ -28,13 +29,18 @@ export function userFromToken(tokenString) {
       throw new Meteor.Error(401, `App ${app._id} has no organization set`);
     }
 
+    const organization = Organizations.findOne(app.organizationId);
+    if (!organization) {
+      throw new Meteor.Error(401, `App ${app._id} has an invalid organization set.`);
+    }
+
     const membership = OrganizationMembers.findOne({
       organizationId: app.organizationId,
       $or: [{ role: 'developer' }, { role: 'manager' }],
     });
     if (!membership) {
       throw new Meteor.Error(
-        401, `Could not find a user in organization ${app.organizationId}`
+        401, `Could not find a person with developer or manager role in organization ${organization.name} (${organization._id}).`
       );
     }
 

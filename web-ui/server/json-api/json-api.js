@@ -55,7 +55,7 @@ function handleJSONRequest(req, res) {
       error,
       error.stack
     );
-    responseData = _.pick(error, 'message', 'reason', 'details');
+    responseData = _.pick(error, 'reason', 'details');
   }
 
   const responseBody = EJSON.stringify(responseData);

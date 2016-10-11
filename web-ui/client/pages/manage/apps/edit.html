@@ -1,16 +1,15 @@
-<template name="apps_edit_page"> 
-
+<template name="apps_edit_page">
   <div class="sidebar">
     {{> apps_navigation_sidebar}}
   </div>
 
   <div class='page content block'>
     <h2>{{_ "Edit App"}}</h2>
-    {{#autoForm collection='Apps' doc=app id="updateAppForm" type="update"}}
+    {{#autoForm collection='Apps' docId=app._id doc=app id="updateAppForm" type="update"}}
 
       {{> afQuickField name='name'}}
       {{> afQuickField name='description'}}
-      {{> afQuickField name='website'}}
+      {{> afQuickField name='websiteURL'}}
       {{> afQuickField name='tocForAppsAccepted'}}
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}

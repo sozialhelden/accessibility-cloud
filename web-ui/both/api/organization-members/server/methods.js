@@ -35,7 +35,7 @@ Meteor.methods({
     return OrganizationMembers.insert({
       organizationId,
       userId,
-      role: 'undefined',
+      role: 'developer',
     });
   },
 });

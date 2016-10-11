@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Organizations } from '/both/api/organizations/organizations';
+import { roles } from './roles';
 
 export const OrganizationMembers = new Mongo.Collection('OrganizationMembers');
 
@@ -44,13 +45,7 @@ OrganizationMembers.schema = new SimpleSchema({
     autoform: {
       afFieldInput: {
         // placeholder: 'e.g. Adam-Riese-St. 27',
-        options: [
-          { label: 'Manager', value: 'manager' },
-          { label: 'Developer', value: 'developer' },
-          { label: 'Founder', value: 'founder' },
-          { label: 'Volunteer', value: 'volunteer' },
-          { label: 'Other', value: 'other' },
-        ],
+        options: roles,
       },
     },
   },
