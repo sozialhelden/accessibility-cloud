@@ -41,7 +41,7 @@ a.link {
   .type-lightitalic;
   color: @color-text-muted;
   text-align: center;
-  line-height: 128px;
+  min-height: 128px;
 }
 
 ul.with-blocks {
@@ -71,9 +71,11 @@ ul.with-blocks {
 
 .dashboard.widget {
   min-width: 29%;
+  text-align: center;
   // min-height: 100%/3;
-  flex-grow:1;
+  flex: 1;
   margin-right: @page-horizontal-padding;
+  padding-bottom: 1em;
   border-bottom: 1px solid @color-grey091;
 
   &:last-child {
@@ -96,8 +98,7 @@ ul.with-blocks {
   }
   a.add-entry {
     text-align: center;
-    padding-bottom: 1em;
-    // padding-left: 0.7em;
+    margin: 1em 0;
   }
 }
 

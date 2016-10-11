@@ -13,7 +13,7 @@ a {
 
 header.main-header {
   width: 100%;
-  min-height: 110px;
+  height: 110px;
   background-color: @color-grey091;
 
   .wrapper.header {
@@ -64,7 +64,7 @@ header.main-header {
       .type-light;
       color: @color-text;
       letter-spacing: 0.02em;
-      
+
       &:hover {
         .type-bold;
         letter-spacing: -0.015em;
@@ -79,7 +79,7 @@ header.main-header {
         display: inline-block;
         margin-right: 10px;
         list-style: none;
-  
+
         a {
           .font-s2;
           .type-light;
@@ -93,11 +93,14 @@ header.main-header {
     }
 
     ul.main-navigation {
-      padding-left: 0.85em;
+      padding-left: 53px;
+      position: relative;
 
       li {
         display: inline-block;
         list-style: none;
+        margin-right: 0.1em;
+
         .font-l1;
         .type-light;
         line-height: 1.27em;
@@ -133,7 +136,8 @@ header.main-header {
       // }
 
       li.home-link {
-        margin-right: -20px;
+        position: absolute;
+        left: 0;
 
         a {
           content: " ";
@@ -141,7 +145,7 @@ header.main-header {
           display: inline-block;
           margin-right: -17px;
           left: -6px;
-          top: 5px;  
+          top: 5px;
           width: 55px;
           height: 34px;
           background: url(images/ac-logosmall-dark.png) center center no-repeat;
@@ -169,7 +173,7 @@ header.main-header .sub-header {
       .type-light;
       color: @color-text;
       letter-spacing: 0.02em;
-      
+
       &:hover {
         letter-spacing: -0.01em;
       }

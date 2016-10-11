@@ -116,7 +116,7 @@ browseRoutes.route('/dashboard', {
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'browse_dashboard_page',
-      header_navigation_list: 'home_header_navigation' });
+      header_navigation_list: 'browse_dashboard_header' });
   },
 });
 
@@ -187,7 +187,7 @@ manageRoutes.route('/organizations/create', {
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_create_page',
-      // header_navigation_list: 'home_header_navigation',
+      header_navigation_list: 'organizations_create_header',
     });
   },
 });
