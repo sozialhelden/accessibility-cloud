@@ -11,3 +11,6 @@ Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
 
   return PlaceInfos.find({ sourceImportId }, { limit: 1000 });
 });
+
+console.log('Ensuring geospatial index for PlaceInfos...');
+PlaceInfos._ensureIndex({ geometry: '2dsphere' });
