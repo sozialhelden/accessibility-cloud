@@ -46,8 +46,7 @@ export function userFromToken(tokenString) {
 
   console.log(
     'Found user',
-    displayedUserName(user),
-    '.'
+    displayedUserName(user)
   );
 
   return user;

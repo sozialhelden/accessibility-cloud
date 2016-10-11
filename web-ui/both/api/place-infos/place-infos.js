@@ -24,4 +24,6 @@ PlaceInfos.helpers({
   editableBy: isAdmin,
 });
 
-PlaceInfos.visibleSelectorFor = () => ({});
+PlaceInfos.visibleSelectorForUserId = () => ({});
+// This would also be allowed
+// PlaceInfos.findOptionsFor = (userId) => ({});

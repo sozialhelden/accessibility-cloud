@@ -10,6 +10,8 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
 
+// Limits collections accessible over JSON API to a white list.
+
 const collections = [
   Apps,
   Languages,
@@ -26,6 +28,7 @@ const namesToCollections = _.indexBy(
   collection => s.slugify(s.humanize(collection._name))
 );
 
+// Returns a collection for a given route name (e.g. 'place-infos')
 export function collectionWithName(name) {
   return namesToCollections[name];
 }

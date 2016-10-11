@@ -1,6 +1,9 @@
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+// Return a MongoDB document selector for a search by distance built
+// with query parameters from given request.
+
 export function geometrySelector(req) {
   const locationQuery = _.pick(req.query, 'latitude', 'longitude', 'accuracy');
 

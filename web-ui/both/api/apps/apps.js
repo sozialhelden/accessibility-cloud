@@ -80,7 +80,7 @@ Apps.publicFields = {
   tocForAppsAccepted: 1,
 };
 
-Apps.visibleSelectorFor = () => ({});
+Apps.visibleSelectorForUserId = () => ({});
 
 Apps.helpers({
   // Used by methods-validation
