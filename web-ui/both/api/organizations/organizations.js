@@ -28,7 +28,7 @@ Organizations.allow({
 
 Organizations.schema = new SimpleSchema({
   name: {
-    label: 'Official english title',
+    label: 'Official English title',
     type: String,
     max: 1000,
     autoform: {
@@ -38,7 +38,7 @@ Organizations.schema = new SimpleSchema({
     },
   },
   legaltype: {
-    label: 'Legal_type',
+    label: 'Legal type',
     type: String,
     autoform: {
       afFieldInput: {
