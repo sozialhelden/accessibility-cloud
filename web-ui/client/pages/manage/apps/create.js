@@ -5,7 +5,7 @@ import { Apps } from '/both/api/apps/apps.js';
 import { AutoForm } from 'meteor/aldeed:autoform';
 import subsManager from '/client/lib/subs-manager';
 
-Template.apps_create_page.onCreated(function created() {
+Template.apps_create_page.onCreated(() => {
   window.Organizations = Organizations;
   window.Apps = Apps;
 

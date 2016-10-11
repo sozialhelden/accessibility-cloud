@@ -1,6 +1,7 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Organizations } from '/both/api/organizations/organizations.js';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
 import { Sources } from '/both/api/sources/sources.js';
 import subsManager from '/client/lib/subs-manager';
 
@@ -15,6 +16,10 @@ const helpers = {
   },
   sources() {
     return Sources.find({});
+  },
+  firstOrganizationId() {
+    const firstMembership = OrganizationMembers.findOne({ userId: Meteor.userId() });
+    return firstMembership && firstMembership.organizationId;
   },
 };
 
