@@ -33,12 +33,75 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     accessToken: 'your.mapbox.public.access.token',
   }).addTo(map);
 
-  Meteor.call('getPointsForSource', FlowRouter.getParam('_id'), (err, result) => {
+  // Meteor.call('getPointsForSource', FlowRouter.getParam('_id'), (err, result) => {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     if (result.length > 0) {
+  //       const markers = new L.geoJson(result);
+  //       markers.addTo(map);
+  //       map.fitBounds(markers.getBounds().pad(0.3));
+  //     }
+  //   }
+  // });
+  const greenIcon = new L.Icon(
+  {
+    iconUrl: '/icons/marker-shield-green.png',
+    iconSize: [36, 36],
+    shadowSize: [36, 36],
+    iconAnchor: [36/2, 32],
+    shadowAnchor: [36/2, 32],
+    popupAnchor: [-3, -76],
+  });
+
+  const redIcon = new L.Icon(
+  {
+    iconUrl: '/icons/marker-shield-red.png',
+    iconSize: [36, 36],
+    shadowSize: [36, 36],
+    iconAnchor: [36/2, 32],
+    shadowAnchor: [36/2, 32],
+    popupAnchor: [-3, -76],
+  });
+
+  const grayIcon = new L.Icon(
+  {
+    iconUrl: '/icons/marker-shield-gray.png',
+    iconSize: [36, 36],
+    shadowSize: [36, 36],
+    iconAnchor: [36/2, 32],
+    shadowAnchor: [36/2, 32],
+    popupAnchor: [-3, -76],
+  });
+
+
+  Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
     if (err) {
       console.log(err);
     } else {
       if (result.length > 0) {
-        const markers = new L.geoJson(result);
+        const geoMarkerData = _.map(result, (item) => ({
+          type: 'Feature',
+          geometry: item.geometry,
+          data: item,
+        }));
+
+        const markers = new L.geoJson(geoMarkerData, {
+          pointToLayer: function(feature, latlng) {
+            // debugger
+            let marker = undefined;
+            if (feature.data.isAccessible === true) {
+              marker = greenIcon;
+            } else if (feature.data.isAccessible === false) {
+              marker = redIcon;
+            }
+            else {
+              marker = grayIcon;
+            }
+            return L.marker(latlng, { icon: marker });
+          },
+        });
+
         markers.addTo(map);
         map.fitBounds(markers.getBounds().pad(0.3));
       }
