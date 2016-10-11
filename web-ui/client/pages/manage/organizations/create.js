@@ -8,7 +8,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.organizations_create_page.onCreated(function created() {
   window.Organizations = Organizations;
 
-  subsManager.subscribe('manage-subscriptions-for-current-user');
+  subsManager.subscribe('organizations.withContent.mine');
 });
 
 

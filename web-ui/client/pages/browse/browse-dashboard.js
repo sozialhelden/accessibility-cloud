@@ -9,7 +9,7 @@ import { _ } from 'meteor/underscore';
 Template.browse_dashboard_page.onCreated(function organizationsShowPageOnCreated() {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
-  subsManager.subscribe('manage-subscriptions-for-current-user');
+  subsManager.subscribe('organizations.withContent.mine');
 });
 
 

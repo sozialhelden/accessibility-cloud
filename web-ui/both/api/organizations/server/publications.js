@@ -13,11 +13,10 @@ Meteor.publish('organizations.public', function organizationsPublic() {
   return Organizations.find({});
 });
 
-Meteor.publish('manage-subscriptions-for-current-user', function manageSubscriptionsForCurrentUser() {
-
+Meteor.publish('organizations.withContent.mine', function manageSubscriptionsForCurrentUser() {
   const userId = this.userId;
   if (!userId) {
-    return null;
+    return [];
   }
 
   const membershipsCursor = OrganizationMembers.find({ userId });

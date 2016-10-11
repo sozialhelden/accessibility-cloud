@@ -6,7 +6,7 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.page_dashboard.onCreated(() => {
-  subsManager.subscribe('manage-subscriptions-for-current-user');
+  subsManager.subscribe('organizations.withContent.mine');
 });
 
 const helpers = {

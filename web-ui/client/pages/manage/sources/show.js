@@ -8,7 +8,7 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.sources_show_page.onCreated(() => {
-  subsManager.subscribe('manage-subscriptions-for-current-user');
+  subsManager.subscribe('organizations.withContent.mine');
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sources.public');  // this is being reused...
 

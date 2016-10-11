@@ -7,7 +7,7 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.sources_show_access_page.onCreated(() => {
-  subsManager.subscribe('manage-subscriptions-for-current-user');
+  subsManager.subscribe('organizations.withContent.mine');
   subsManager.subscribe('organizations.public');
 
   window.Sources = Sources; // FIXME: we don't need that only for debugging

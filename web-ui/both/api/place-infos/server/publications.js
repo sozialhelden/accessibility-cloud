@@ -6,7 +6,7 @@ const options = { fields: PlaceInfos.publicFields };
 
 Meteor.publish('placeInfos.public', () => PlaceInfos.find({}, options));
 
-Meteor.publish('placeInfosFromImport.public', function (sourceImportId) {
+Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
   check(sourceImportId, String);
 
   return PlaceInfos.find({ sourceImportId }, { limit: 1000 });
