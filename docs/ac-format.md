@@ -35,7 +35,7 @@
     "acVersion": "1",
     "lastSourceImportId": "R7tbPmwn8Jbhi54rM",
 
-    "data": {
+    "properties": {
         "name": "Hotel Adlon",                               # short name
         "description": "",
         "address": "",
