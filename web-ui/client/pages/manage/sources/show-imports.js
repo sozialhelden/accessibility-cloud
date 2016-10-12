@@ -27,7 +27,7 @@ Template.sources_show_header.helpers({
 });
 
 Template.sources_show_imports_page.events({
-  'click .btn.start-import'(event) {
+  'click .btn.js-start-import'(event) {
     event.preventDefault();
 
     Meteor.call('sources.startImport', FlowRouter.getParam('_id'), (err, result) => {

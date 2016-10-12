@@ -55,6 +55,10 @@ export function createStreamChain(streamChainConfig, sourceImportId, sourceId) {
       }),
     });
 
+    if (StreamTypes[type] === undefined) {
+      console.warn('ERROR: ${type} is not a valid stream type.`');
+      return {};
+    }
     const runningStreamObserver = new StreamTypes[type](parameters);
 
     // Validate setting up Step with parameters worked

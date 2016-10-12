@@ -2,22 +2,13 @@
 @import '/client/stylesheets/_util/colors.less';
 
 ol.stream-chain {
+  font-size: 12px;
+
   li {
     position: relative;
-    margin-bottom: 2.5em;
-    padding: 1em;
+    margin-bottom: 1px;
+    padding: 5px;
     background-color: @color-grey085;
-  }
-  li:not(:last-child):after {
-    position: absolute;
-    bottom: -1.3em;
-    width: 3em;
-    left: 50%;
-    content: 'ß';
-    display: block;
-    clear: both;
-    .font-icons;
-    color: @color-grey085;
   }
   .name {
     .type-bold;
@@ -26,12 +17,10 @@ ol.stream-chain {
     display: inline-block;
     dt, dd {
       float: left;
-      margin-top: 0.75em;
     }
     dt {
       clear: both;
       width: 7em;
-      padding-right: 0.75em;
     }
     dd {
       width: calc(~"100% - 7em");
@@ -39,5 +28,8 @@ ol.stream-chain {
       .type-code;
       white-space: pre-wrap;
     }
+  }
+  .code-block {
+    font-size:10px;
   }
 }

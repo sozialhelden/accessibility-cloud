@@ -1,16 +1,28 @@
 <template name="sources_show_format_page">
-    <div class='centered-content'>
-      {{#with source}}
-        <h3>Source definition</h3>
-
-        <h4>Import process</h4>
-        {{> sources_stream_chain}}
-
-        <h4>Update input chain</h4>
-        <textarea class='code' id='streamChain'>{{stringify streamChain}}</textarea>
-        <button class='btn-primary save'>Save</button>
-
-        <!-- <div class='code-block'>{{stringify source}}</div> -->
-      {{/with}}
+  {{#with source}}
+    <div class='stream-chain'>
+      <h2>Import Definition</h2>
+      <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/importing-data.md'>Read Documentation</a>
+      <textarea class='code' id='streamChain'>{{stringify streamChain}}</textarea>
+      <button class='btn-primary js-save'>Save</button>
+      <button class='btn js-start-import btn btn-primary'>Start Import</button>
     </div>
+    <div class='centered-content'>
+      {{#with lastSourceImport}}
+        <h2>{{_"Latest Import"}}</h2>
+        <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>
+        {{> sources_stream_chain}}
+      {{else}}
+        no imports
+      {{/with}}
+
+      <h2>Examples for imported places</h2>
+      {{#each examplePlaceInfos}}
+        <div class='code-block'>
+            {{stringify this}}
+        </div>
+      {{/each}}
+
+    </div>
+  {{/with}}
 </template>
