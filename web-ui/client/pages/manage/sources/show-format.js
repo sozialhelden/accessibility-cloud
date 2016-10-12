@@ -25,7 +25,7 @@ const helpers = {
   },
   lastSourceImport() {
     const sourceId = FlowRouter.getParam('_id');
-    const latestImport = SourceImports.findOne({ sourceId }, { sort: { DateTime: -1 } });
+    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
     if (latestImport) {
       return latestImport;
     }
@@ -38,7 +38,7 @@ const helpers = {
   },
   examplePlaceInfos() {
     const sourceId = FlowRouter.getParam('_id');
-    const latestImport = SourceImports.findOne({ sourceId }, { sort: { DateTime: -1 } });
+    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
     if (latestImport) {
       return PlaceInfos.find({ sourceImportId: latestImport._id }, { limit: 3 });
     }
