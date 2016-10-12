@@ -1,0 +1,41 @@
+[
+    {
+        "type": "HTTPDownload",
+        "parameters": {
+            "sourceUrl": "http://localhost:3000/data/axsmap.csv"
+        }
+    },
+    {
+        "type": "ConvertToUTF8",
+        "parameters": {
+            "fromCharSet": "utf8"
+        }
+    },
+    {
+        "type": "ParseCSVStream",
+        "parameters": {
+            "header": true
+        }
+    },
+    {
+        "type": "ParseJSONStream",
+        "parameters": {
+            "path": "*"
+        }
+    },
+    {
+        "type": "TransformData",
+        "parameters": {
+            "mappings": {
+                "originalId": "row['place_id']",
+                "geometry": "{ type: 'Point', coordinates: [Number(row['longitude']), Number(row['latitude'])] }",
+                "name": "row['name']",
+                "address": "row['address']",
+            }
+        }
+    },
+    {
+        "type": "UpsertPlace",
+        "parameters": {}
+    }
+]

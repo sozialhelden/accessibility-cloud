@@ -15,6 +15,32 @@ Template.sources_show_page.onCreated(() => {
   window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging
 });
 
+// Extend Leaflet-icon to support colors and category-images
+L.AccessibilityIcon = L.Icon.extend({
+  options: {
+    // EDIT THIS TO POINT TO THE FILE AT http://www.charliecroom.com/marker_hole.png (or your own marker)
+    iconUrl: '<%= image_path("leaflet/marker_hole.png") %>',
+    number: '',
+    shadowUrl: null,
+    iconSize: new L.Point(25, 41),
+    iconAnchor: new L.Point(13, 41),
+    popupAnchor: new L.Point(0, -33),
+    className: 'leaflet-div-icon accessiblity',
+  },
+
+  createIcon: function () {
+    const div = document.createElement('div');
+    const img = this._createImg(this.options['iconUrl']);
+    div.appendChild ( img );
+    this._setIconStyles(div, 'icon');
+    return div;
+  },
+
+  //you could change this to add a shadow like in the normal marker if you really wanted
+  createShadow: function () {
+    return null;
+  }
+});
 
 Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
   this.autorun(() => {
@@ -33,47 +59,6 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     accessToken: 'your.mapbox.public.access.token',
   }).addTo(map);
 
-  // Meteor.call('getPointsForSource', FlowRouter.getParam('_id'), (err, result) => {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     if (result.length > 0) {
-  //       const markers = new L.geoJson(result);
-  //       markers.addTo(map);
-  //       map.fitBounds(markers.getBounds().pad(0.3));
-  //     }
-  //   }
-  // });
-  const greenIcon = new L.Icon(
-  {
-    iconUrl: '/icons/marker-shield-green.png',
-    iconSize: [36, 36],
-    shadowSize: [36, 36],
-    iconAnchor: [36/2, 32],
-    shadowAnchor: [36/2, 32],
-    popupAnchor: [-3, -76],
-  });
-
-  const redIcon = new L.Icon(
-  {
-    iconUrl: '/icons/marker-shield-red.png',
-    iconSize: [36, 36],
-    shadowSize: [36, 36],
-    iconAnchor: [36/2, 32],
-    shadowAnchor: [36/2, 32],
-    popupAnchor: [-3, -76],
-  });
-
-  const grayIcon = new L.Icon(
-  {
-    iconUrl: '/icons/marker-shield-gray.png',
-    iconSize: [36, 36],
-    shadowSize: [36, 36],
-    iconAnchor: [36/2, 32],
-    shadowAnchor: [36/2, 32],
-    popupAnchor: [-3, -76],
-  });
-
 
   Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
     if (err) {
@@ -88,17 +73,40 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
 
         const markers = new L.geoJson(geoMarkerData, {
           pointToLayer: function(feature, latlng) {
-            // debugger
-            let marker = undefined;
+            let color = 'gray';
+
             if (feature.data.isAccessible === true) {
-              marker = greenIcon;
+              color = 'green';
             } else if (feature.data.isAccessible === false) {
-              marker = redIcon;
+              color = 'red';
             }
-            else {
-              marker = grayIcon;
-            }
-            return L.marker(latlng, { icon: marker });
+
+            console.log(feature.data);
+            const categoryIconName = feature.data.category || "place";
+
+            // const markerIcon = new L.Icon(
+            // {
+            //   iconUrl: '/icons/categories/' + categoryIconName + '.png',
+            //   shadowIconUrl: '/icons/marker-shield-' + color + '.png',
+            //   iconSize: [36, 36],
+            //   shadowSize: [22, 22],
+            //   iconAnchor: [36/2, 32],
+            //   shadowAnchor: [36/2, 32],
+            //   popupAnchor: [-3, -76],
+            // });
+
+            // return L.marker(latlng, { icon: markerIcon });
+            const acIcon = new L.AccessibilityIcon({
+              iconUrl: `/icons/categories/${categoryIconName}.png`,
+              shadowIconUrl: `/icons/marker-shield-${color}.png`,
+              className: `ac-marker ${color}`,
+              iconSize: [36, 36],
+              // shadowSize: [22, 22],
+              // iconAnchor: [36/2, 32],
+              // shadowAnchor: [36/2, 32],
+              // popupAnchor: [-3, -76],
+            });
+            return L.marker(latlng, { icon: acIcon });
           },
         });
 
