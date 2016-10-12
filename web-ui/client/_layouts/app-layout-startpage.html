@@ -1,5 +1,9 @@
 <template name="app_layout_start_page">
-
+  {{#unless connected}}
+    <div class="offline-indicator">
+      <span>{{_"Trying to connect..."}}</span>
+    </div>
+  {{/unless}}
   <div class='account-options'>
     {{#if currentUser}}
       <div class="btns-group-vertical ">

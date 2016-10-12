@@ -285,3 +285,58 @@ ul.with-blocks {
     }
   }
 }
+
+.offline-indicator {
+  position:fixed;
+  top:5px;
+  right:5px;
+  background-color: white;
+  font-weight: bold;
+  padding:0.5em 1em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 10000;
+
+  span {
+    color: @color-error;
+    margin-left:20px;
+  }
+
+  @-webkit-keyframes spin {
+    from {
+      -webkit-transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  span:before {
+    content: 'r';
+    font-family: iconfield;
+    position: absolute;
+    color: @color-error;
+    left:10px;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin:50% 50%;
+    -ms-transform-origin:50% 50%; /* IE 9 */
+    -webkit-animation: spin 5s infinite linear;
+    -moz-animation: spin 5s infinite linear;
+    -o-animation: spin 5s infinite linear;
+    animation: spin 5s infinite linear;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: bottom;
+    line-height: 20px;
+  }
+}
+
+
