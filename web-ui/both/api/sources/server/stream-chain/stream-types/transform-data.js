@@ -1,7 +1,17 @@
 import EventStream from 'event-stream';
 import entries from '/both/lib/entries';
-import { acCategories } from '/both/lib/all-categories.js';
+import { Categories } from '/both/api/categories/categories.js';
+
 import { _ } from 'meteor/stevezhu:lodash';
+
+const categoryIdForSynonyms = {};
+_.each(Categories.find({}).fetch(), function(category) {
+  _.each(category.synonyms, function(s) {
+    if (s) {
+      categoryIdForSynonyms[s] = category._id;
+    }
+  });
+});
 
 function compileMapping(fieldName, javascript) {
   try {
@@ -20,12 +30,13 @@ function compileMapping(fieldName, javascript) {
             return 'empty';
           }
 
-          for (const tag in tags) {
+          for (let tag in tags) {
             if (tags.hasOwnProperty(tag)) {
-              const categoryId = `${tag}_${tags[tag]}`.toLowerCase().replace(' ', '_');
+              const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
 
-              if (acCategories[categoryId] !== undefined) {
-                return categoryId;
+              if (categoryIdForSynonyms[categoryId]) {
+
+                return categoryIdForSynonyms[categoryId];
               }
             }
           }
