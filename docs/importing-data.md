@@ -24,20 +24,13 @@ Find and convert JSON-Objects within the incoming text-buffer into a data-object
 Convert the incoming text-buffer from a single JSON-Object into an object. This can be useful if the stream is includes JSON-objects that are not seperated by commas.
 
 ### ParseCSVStream
-Convert to a line of CSV into an object. [ReadMore](https://www.npmjs.com/package/csvstream)
+We use the [FastCSV](https://www.npmjs.com/package/fast-csv) modul.
 
-Parameters:
-- 'header': true.
-
-Options (csvstream(options))
-Options are optional.
-
-encoding: default to utf8
-delimiter: default to ,
-newlint: default to \n
-quote: default to \"
-header: default to false
-
+#### Parameters
+`"objectMode" = true`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer.
+`"headers" = false`: Set to true if you expect the first line of your CSV to contain headers, alternatly you can specify an array of headers to use. You can also specify a sparse array to omit some of the columns.
+`"ignoreEmpty" = false`: If you wish to ignore empty rows.
+`"delimiter" = ","`: If your data uses an alternate delimiter such as ; or \t.
 
 ### ConsoleOutput
 ### TransformData
