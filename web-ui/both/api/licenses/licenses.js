@@ -37,17 +37,6 @@ Licenses.schema = new SimpleSchema({
     optional: true,
     max: 1000,
   },
-  version: {
-    type: String,
-    label: 'Version (optional)',
-    autoform: {
-      afFieldInput: {
-        placeholder: 'e.g. v1',
-      },
-    },
-    optional: true,
-    max: 10,
-  },
   websiteURL: {
     type: String,
     label: 'Link to descriptive website (optional)',
@@ -108,7 +97,6 @@ Licenses.publicFields = {
   organizationId: 1,
   name: 1,
   shorthand: 1,
-  version: 1,
   plainTextSummary: 1,
   websiteURL: 1,
   fullTextURL: 1,

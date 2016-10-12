@@ -21,9 +21,29 @@ Factory.define('organization', Organizations, {
   tocFororganizationsAccepted: true,
 });
 
-Factory.define('language', Languages, {
+Factory.define('language-de', Languages, {
   name: 'Deutsch',
   languageCode: 'de',
+});
+Factory.define('language-en', Languages, {
+  name: 'English',
+  languageCode: 'en',
+});
+Factory.define('language-zh', Languages, {
+  name: 'Chinese',
+  languageCode: 'zh',
+});
+Factory.define('language-sp', Languages, {
+  name: 'Spanish',
+  languageCode: 'sp',
+});
+Factory.define('language-fr', Languages, {
+  name: 'French',
+  languageCode: 'fr',
+});
+Factory.define('language-ru', Languages, {
+  name: 'Russion',
+  languageCode: 'ru',
 });
 
 
@@ -31,7 +51,6 @@ Factory.define('_license_CC0', Licenses, {
   name: 'Public Domain',
   shorthand: 'CC0',
   plainTextSummary: 'The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.',
-  version: '',
   websiteURL: 'https://creativecommons.org/publicdomain/zero/1.0/',
   fullTextURL: 'https://creativecommons.org/publicdomain/zero/1.0/legalcode',
   consideredAs: 'CC0',
@@ -45,7 +64,7 @@ Factory.define('_license_CC0', Licenses, {
 Factory.define('jsonSource', Sources, {
   organizationId: Factory.get('organization'),
   licenseId: Factory.get('_license_CC0'),
-  languageId: Factory.get('language'),
+  languageId: Factory.get('language-en'),
   name: 'Toilets in Vienna (JSON)',
   primaryRegion: 'Vienna, Austria',
   description: 'All public toilets in vienna (JSON)',
@@ -164,9 +183,8 @@ Factory.define('jsonPlaceImport', PlaceImports, {
 Factory.define('csvSource', Sources, {
   organizationId: Factory.get('organization'),
   licenseId: Factory.get('_license_CC0'),
-  languageId: Factory.get('language'),
+  languageId: Factory.get('language-en'),
   name: 'Toilets in Rostock (CSV)',
-  primaryRegion: 'Rostock, Germany',
   description: 'germany-rostock-toilets (CSV)',
   originWebsite: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
   tocForSourcesAccepted: true,
@@ -248,7 +266,12 @@ Factory.define('csvPlaceImport', PlaceImports, {
 
 // -- Insert to database ------------------------------------------
 function createStubData() {
-  const language = Factory.create('language');
+  const languageEN = Factory.create('language-en');
+  Factory.create('language-de');
+  Factory.create('language-zh');
+  Factory.create('language-fr');
+  Factory.create('language-sp');
+  Factory.create('language-ru');
   const organization = Factory.create('organization');
   const license = Factory.create('_license_CC0', {
     organizationId: organization._id,
@@ -257,7 +280,7 @@ function createStubData() {
   // --- JSON -------------------------------
   const source = Factory.create('jsonSource', {
     organizationId: organization._id,
-    languageId: language._id,
+    languageId: languageEN._id,
     licenseId: license._id,
   });
   const sourceImport = Factory.create('jsonSourceImport', {
@@ -274,7 +297,7 @@ function createStubData() {
 
   console.log({
     license,
-    language,
+    languageEN,
     organization,
     source,
     sourceImport,
@@ -285,7 +308,7 @@ function createStubData() {
   // --- CSV -------------------------------
   const csvSource = Factory.create('csvSource', {
     organizationId: organization._id,
-    languageId: language._id,
+    languageId: languageEN._id,
     licenseId: license._id,
   });
   const csvSourceImport = Factory.create('csvSourceImport', {

@@ -53,16 +53,6 @@ Sources.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  primaryRegion: {
-    label: 'Primary region of focus (optional)',
-    autoform: {
-      afFieldInput: {
-        placeholder: 'e.g. Central Europe',
-      },
-    },
-    type: String,
-    optional: true,
-  },
   description: {
     label: 'Description',
     type: String,
@@ -133,7 +123,6 @@ Sources.publicFields = {
   organizationId: 1,
   licenseId: 1,
   name: 1,
-  primaryRegion: 1,
   description: 1,
   originWebsite: 1,
   isDraft: 1,
