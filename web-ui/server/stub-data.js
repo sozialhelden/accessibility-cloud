@@ -96,9 +96,10 @@ Factory.define('jsonSource', Sources, {
         mappings: {
           originalId: 'row.id',
           geometry: 'row.geometry',
+          category: 'toilets',
           properties: 'row.properties',
           address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
-          isAccessible: 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
+          'properties-accessibility-withWheelchair': 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
         },
       },
     },
@@ -169,7 +170,7 @@ Factory.define('jsonPlaceInfo', PlaceInfos, {
     name: 'Hotel Adlon',
     accessible: 0.2,
   },
-  geometry: { type: 'Point', coordinates: [-123.137,49.25134] },
+  geometry: { type: 'Point', coordinates: [12.077916412746292,54.17957489112234] },
 });
 
 Factory.define('jsonPlaceImport', PlaceImports, {
@@ -218,10 +219,11 @@ Factory.define('csvSource', Sources, {
       parameters: {
         mappings: {
           originalId: "row['uuid']",
+          category: 'toilets',
           geometry: "{ type: 'Point', coordinates: [Number(row['longitude']), Number(row['latitude'])] }",
           name: "'Public toilet in Rostock, ' + row['gemeindeteil_name']",
           address: "row['strasse_name'] + ' ' + row['hausnummer'] + row['hausnummer_zusatz'] + ', ' + row['postleitzahl'] + ' Rostock'",
-          isAccessible: "row['behindertengerecht'] == '1'",
+          'properties-accessibility-withWheelchair': "row['behindertengerecht'] == '1'",
           properties: 'row.properties',
         },
       },

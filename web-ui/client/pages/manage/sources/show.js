@@ -81,7 +81,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
             }
           }
           catch(e) {
-            console.warn("Failed to get color for", e, placenfo);
+            console.warn("Failed to get color for", e, placeInfo);
           }
           return 'grey';
         };
