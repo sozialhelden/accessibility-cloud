@@ -36,26 +36,39 @@
     "lastSourceImportId": "R7tbPmwn8Jbhi54rM",
 
     "properties": {
-        "name": "Hotel Adlon",                               # short name
-        "description": "",
+        "name": "Hotel Adlon",                               // short name
+        "description": "",                                   // optional
         "address": "",
-        "providedId": "234234",                              # id within data-source
-        "category": "hotel",                                 # see [categories]
+        "providedId": "234234",                              // id within data-source
+        "category": "hotel",                                 // see [ac-categories]
 
         "accessibility": {
-            "withWheelchair": true|false,
-            "withGuidanceDog": true|false,
-            "withLimitedSight": true|false,
-
-            "entrance": {
-                "wheelchair": 0.5,
-                "steps": 0,
-                "doorwidth":0.6,
-                "blind": "braillesignage",
+            withWheelchair: true|false,
+            withGuidanceDog: true|false,
+            withLimitedSight: true|false,
+            entrance: {
+                wheelchair: 0.5,
+                blind: "braillesignage",
+                access: {
+                    stepFree: false,
+                    oneStepWithHeight: 10,
+                    ramp: false,
+                    lift: false,
+                },
+                doorOpening: {
+                    automatic: false,
+                    width: 30,
+                    isMainEntrance: true,
+                },
+                doorObstacles: {
+                    noMarkingOnGlassDoor: false,
+                    doorDifficultToHoldOpen: false,
+                    doorHandleNotPractical: false,
+                }, 
+                restrooms: {
+                    wheelchair: 0.1,
+                },
             }
-            "restrooms": {
-                "wheelchair": 0.1,
-            },
         },
     }
     "geometry": {
