@@ -1,7 +1,3 @@
-node_modules
-output
-logs
-M-logs.log
-status.json
-ac-settings.json
-**/npm-debug.log
+node_modules/
+settings/*
+!settings/*-example.json

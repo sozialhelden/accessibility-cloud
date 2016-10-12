@@ -9,7 +9,7 @@ Running locally
 ---------------
 
 - Have Meteor.js and Node.js installed.
-- `cd web-ui` into the meteor app directory in your terminal
+- `cd` into the meteor app directory in your terminal
 - Run `npm install` to install necessary dependencies
 - Run `meteor --settings settings/local.json` to start the app
 - Navigate to [http://localhost:3000](http://localhost:3000).
