@@ -1,8 +1,10 @@
-import CSVStream from 'csvstream';
-// import { check } from 'meteor/check';
+import FastCSV from 'fast-csv';
 
 export class ParseCSVStream {
   constructor(options) {
-    this.stream = new CSVStream(options);
+    this.stream = new FastCSV(options);
+      // .transform(function(data) {
+      //   console.log(">>>>>>>> Tranform", data);
+      // });
   }
 }

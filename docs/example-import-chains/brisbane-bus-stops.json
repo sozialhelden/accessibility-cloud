@@ -1,0 +1,45 @@
+[
+    {
+        "type": "HTTPDownload",
+        "parameters": {
+            "sourceUrl": "https://data.brisbane.qld.gov.au/data/dataset/c3b074e7-5b93-4737-8b49-9c5fe9dd45fa/resource/0c4fda19-f96a-4174-a821-be6dad2e45cf/download/BUSSTOPS.csv"
+        }
+    },
+    {
+        "type": "ConvertToUTF8",
+        "parameters": {
+            "fromCharSet": "utf8"
+        }
+    },
+    {
+        "type": "ConsoleOutput",
+        "parameters": {}
+    },
+    {
+        "type": "ParseCSVStream",
+        "parameters": {
+            "headers": true,
+            "objectMode": true
+        }
+    },
+    {
+        "type": "ConsoleOutput",
+        "parameters": {}
+    },
+    {
+        "type": "TransformData",
+        "parameters": {
+            "mappings": {
+                "originalId": "row['HASTUS_ID']",
+                "category": "'bus_stop'",
+                "geometry": "{ type: 'Point', coordinates: [Number(row['LONGITUDE']), Number(row['LATITUDE'])] }",
+                "properties-name": "row['DESCRIPTION']",
+                "properties-accessibility-withWheelchair": "row['ROAD_GRADIENT'] == 'Easy'"
+            }
+        }
+    },
+    {
+        "type": "UpsertPlace",
+        "parameters": {}
+    }
+]

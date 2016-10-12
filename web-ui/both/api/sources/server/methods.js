@@ -20,7 +20,7 @@ Meteor.methods({
       geometry: pi.geometry,
     }));
   },
-  getPlacesForSource(sourceId, limitCount = 100) {
+  getPlacesForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
     check(limitCount, Number);
     // return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({

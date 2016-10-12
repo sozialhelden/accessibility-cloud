@@ -2,7 +2,7 @@
     {
         "type": "HTTPDownload",
         "parameters": {
-            "sourceUrl": "http://localhost:3000/data/wheelmap-pois-sample.json"
+            "sourceUrl": "http://localhost:3000/data/wheelmap-10000.json"
         }
     },
     {

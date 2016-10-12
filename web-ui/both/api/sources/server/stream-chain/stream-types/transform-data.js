@@ -73,7 +73,7 @@ export class TransformData {
         const value = fn(data);
         if (fieldName.match(/-/)) {
           // field name is probably a key path like 'a-b-c'
-          _.set(doc, fieldName.replace('-', '.'), value);
+          _.set(doc, fieldName.replace(/-/g, '.'), value);
         } else {
           doc[fieldName] = value;
         }

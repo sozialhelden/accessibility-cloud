@@ -1,0 +1,40 @@
+[
+    {
+        "type": "HTTPDownload",
+        "parameters": {
+            "sourceUrl": "https://www.data.brisbane.qld.gov.au/data/dataset/10321c52-cad6-4e2c-8e79-d11fe6f23b50/resource/bdffec72-f4b5-4107-b7e3-751652af28f2/download/Ferry-Terminals-JUNE-2016.csv"
+        }
+    },
+    {
+        "type": "ConvertToUTF8",
+        "parameters": {
+            "fromCharSet": "utf16"
+        }
+    },
+    {
+        "type": "ParseCSVStream",
+        "parameters": {
+            "headers": true
+        }
+    },
+    {
+        "type": "ConsoleOutput",
+        "parameters": {}
+    },
+    {
+        "type": "TransformData",
+        "parameters": {
+            "mappings": {
+                "originalId": "row['id']",
+                "category": "'ferry'",
+                "geometry": "{ type: 'Point', coordinates: [Number(row['Longitude']), Number(row['Latitude'])] }",
+                "properties-name": "row['DESCRIPTION']",
+                "properties-accessibility-withWheelchair": "row['Accessibility'] == 'Disabled Access'"
+            }
+        }
+    },
+    {
+        "type": "UpsertPlace",
+        "parameters": {}
+    }
+]

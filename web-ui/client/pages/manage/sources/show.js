@@ -10,7 +10,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.sources_show_page.onCreated(() => {
   subsManager.subscribe('organizations.withContent.mine');
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('sources.public');  // this is being reused...
+  subsManager.subscribe('sources.public');  
 
   window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging
 });
@@ -18,8 +18,6 @@ Template.sources_show_page.onCreated(() => {
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
   options: {
-    // EDIT THIS TO POINT TO THE FILE AT http://www.charliecroom.com/marker_hole.png (or your own marker)
-    iconUrl: '<%= image_path("leaflet/marker_hole.png") %>',
     number: '',
     shadowUrl: null,
     iconSize: new L.Point(25, 41),
@@ -41,6 +39,7 @@ L.AccessibilityIcon = L.Icon.extend({
     return null;
   }
 });
+
 
 Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
   this.autorun(() => {
@@ -64,47 +63,39 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     if (err) {
       console.log(err);
     } else {
+
+      // Add markers to map
       if (result.length > 0) {
         const geoMarkerData = _.map(result, (item) => ({
           type: 'Feature',
           geometry: item.geometry,
-          data: item,
+          placeData: item,
         }));
+
+        function getColorForWheelchairAccessiblity (placeInfo) {
+          try {
+            if (placeInfo.properties.accessibility.withWheelchair === true) {
+              return 'green';
+            } else if (placeInfo.properties.accessibility.withWheelchair === false) {
+              return 'red';
+            }
+          }
+          catch(e) {
+            console.warn("Failed to get color for", e, placenfo);
+          }
+          return 'grey';
+        };
 
         const markers = new L.geoJson(geoMarkerData, {
           pointToLayer: function(feature, latlng) {
-            let color = 'gray';
 
-            if (feature.data.isAccessible === true) {
-              color = 'green';
-            } else if (feature.data.isAccessible === false) {
-              color = 'red';
-            }
+            const categoryIconName = feature.placeData.category || "place";
+            const color = getColorForWheelchairAccessiblity(feature.placeData);
 
-            console.log(feature.data);
-            const categoryIconName = feature.data.category || "place";
-
-            // const markerIcon = new L.Icon(
-            // {
-            //   iconUrl: '/icons/categories/' + categoryIconName + '.png',
-            //   shadowIconUrl: '/icons/marker-shield-' + color + '.png',
-            //   iconSize: [36, 36],
-            //   shadowSize: [22, 22],
-            //   iconAnchor: [36/2, 32],
-            //   shadowAnchor: [36/2, 32],
-            //   popupAnchor: [-3, -76],
-            // });
-
-            // return L.marker(latlng, { icon: markerIcon });
             const acIcon = new L.AccessibilityIcon({
               iconUrl: `/icons/categories/${categoryIconName}.png`,
-              shadowIconUrl: `/icons/marker-shield-${color}.png`,
               className: `ac-marker ${color}`,
               iconSize: [36, 36],
-              // shadowSize: [22, 22],
-              // iconAnchor: [36/2, 32],
-              // shadowAnchor: [36/2, 32],
-              // popupAnchor: [-3, -76],
             });
             return L.marker(latlng, { icon: acIcon });
           },
