@@ -51,8 +51,16 @@
 
     <div class='dashboard widget with-list'>
       <h2>{{_ "Access data"}}</h2>
-      <span class='placeholder'>{{_ "Your apps will appear here."}}</span>
       {{#if organizationsForCurrentUser.count}}
+        <ul class='with-blocks'>
+          {{#each appsForCurrentUser}}
+            <li class='list item block'>
+              <a href='{{pathFor "manage.apps.show" _id=_id}}'>{{name}}</a>
+            </li>
+          {{else}}
+            <span class='placeholder'>{{_ "Your apps will appear here."}}</span>
+          {{/each}}
+        </ul>
         <a class='call-to-action button' href='{{pathFor "manage.organizations.apps.create" _id=firstOrganizationId}}'>
           {{_ "Register app"}}
         </a>
