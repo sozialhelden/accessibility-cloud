@@ -3,6 +3,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Organizations } from '/both/api/organizations/organizations';
 
+import { _ } from 'meteor/underscore';
+
 export const Sources = new Mongo.Collection('Sources');
 
 // Deny all client-side updates since we will be using methods to manage this collection
@@ -140,5 +142,14 @@ Sources.helpers({
   },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
+  },
+  guessedFormatName() {
+    const downloadItem = _.find(this.streamChain, chainItem => chainItem.type === 'HTTPDownload');
+    // debugger
+    switch (downloadItem && downloadItem.parameters && downloadItem.parameters.inputMimeType) {
+      case 'application/json': return 'JSON';
+      case 'text/csv': return 'CSV';
+      default: return '(Unknown format)';
+    }
   },
 });

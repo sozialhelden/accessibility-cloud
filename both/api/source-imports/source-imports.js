@@ -24,5 +24,5 @@ SourceImports.helpers({
   editableBy: isAdmin,
   humanReadableStartTimestamp() {
     return moment(this.startTimestamp).format('DD.MM.YYYY HH:mm:ss');
-  }
+  },
 });

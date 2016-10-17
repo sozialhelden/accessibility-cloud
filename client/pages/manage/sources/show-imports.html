@@ -1,21 +1,25 @@
 <template name="sources_show_imports_page">
   <div class='sidebar navigation'>
     <button class='btn js-start-import btn btn-primary'>Start Import</button>
+    <!-- <button class='btn start-import btn btn-primary'>Upload {{source.guessedFormatName}}</button> -->
     <ul class='with-blocks'>
-    {{#each sourceImports}}
-      <li class='item block {{activeIfCurrentImport _id}}'>
-        <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>
-      </li>
+      {{#each sourceImports}}
+        <li class='item block {{activeIfCurrentImport _id}}'>
+          <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>
+        </li>
       {{/each}}
     </ul>
   </div>
+
   <div class='page content block along-sidebar'>
     {{#with sourceImport}}
       <h2>Import results from {{humanReadableStartTimestamp}}</h2>
       <p>Updated: {{placesUpdatedCount}} places</p>
       {{> sources_stream_chain}}
     {{/with}}
+
     <h2>Examples for imported places</h2>
+
     {{#each examplePlaceInfos}}
       <div class='code-block'>
           {{stringify this}}
