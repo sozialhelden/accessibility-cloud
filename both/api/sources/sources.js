@@ -143,10 +143,12 @@ Sources.helpers({
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },
-  guessedFormatName() {
+  inputMimeType() {
     const downloadItem = _.find(this.streamChain, chainItem => chainItem.type === 'HTTPDownload');
-    // debugger
-    switch (downloadItem && downloadItem.parameters && downloadItem.parameters.inputMimeType) {
+    return (downloadItem && downloadItem.parameters && downloadItem.parameters.inputMimeType);
+  },
+  inputMimeTypeName() {
+    switch (this.inputMimeType()) {
       case 'application/json': return 'JSON';
       case 'text/csv': return 'CSV';
       default: return '(Unknown format)';

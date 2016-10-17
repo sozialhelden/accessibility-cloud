@@ -1,7 +1,8 @@
 <template name="sources_show_imports_page">
   <div class='sidebar navigation'>
     <button class='btn js-start-import btn btn-primary'>Start Import</button>
-    <!-- <button class='btn start-import btn btn-primary'>Upload {{source.guessedFormatName}}</button> -->
+    <!-- <button class='btn js-upload-file btn btn-primary'>Upload {{source.inputMimeTypeName}}</button> -->
+    {{> fileUpload additionalCSSClasses='btn btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' }}
     <ul class='with-blocks'>
       {{#each sourceImports}}
         <li class='item block {{activeIfCurrentImport _id}}'>
