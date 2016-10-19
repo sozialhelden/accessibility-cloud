@@ -148,10 +148,61 @@
                 },
             },
 
-            inside: {
-                spacious: 0.6,
-                welllit: 0.5,
+            indoors: {
+                isSpacious: true,
+                isWellLit: ttue,
+                isQuiet: true,
+                hasRemoveControlAudioSigns: true,
+                sitemap: {
+                    isNearEntrance: true,
+                    inBraille: true,
+                    isRaised: true,
+                    hasLargePrint: true,
+                    language: 'en',
+                }
+                wheelchairAccess: {
+                    isPartial: false,
+                    isTotal: true,
+                },
+                widthOfAisles: "> 140cm",
+                tacticleGuidesStips: {
+                    towardsReceptionDesk: true,
+                    haveVisualContrats: true,
+                },
+                receptionDesk: {
+                    height: "<=80cm",
+                    isNearEntrance: true,
+                },
+                signage: {
+                    isUnderstandable: true,
+                    isReadible: true,
+                    language: 'de',
+                }
             },
+            lift: {
+                haveVoiceAnnounceSystem: true,
+                controls: {
+                    height: "90cm",
+                    areHighContrast: true,
+                    inBraille: true,
+                    areRaised: true,
+                },
+                cabin: {
+                    width: "140cm",
+                    length: "110cm",
+                    door: {
+                        width: "100cm",
+                    }
+                }
+            },
+            stairs: {
+                count: ">10 ± 2",
+                stepHeight: "12cm ±1",
+                handRailExists: true,
+                stairLiftExists: true,
+                haveStairNosing: true,
+                haveTactileSafetyStrip: true,
+            }
             parking: {
                 disabledParkingSpaces: {
                     areAvailable: true,
