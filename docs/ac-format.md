@@ -1,4 +1,4 @@
-# AC interachange format
+# Accessibility Cloud exchange format
 
 ## Considerations:
 
