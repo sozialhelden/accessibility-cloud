@@ -35,27 +35,47 @@
 - room description could be identically for hotel-rooms, dining-rooms, meeting, rooms, etc.
 - "hotelroom" vs "hotelRooms"
 
-## A sample response block looks like this:
+### `accessibleWithWheelchair` vs. `ratingForWheelchair`
+- Reality will demanand a final yes/no answer from AC.
+- Many sources rate the accessibility on a scale (e.g. from 1-5 Stars)
+- Some sources rate the accessibility as yes/limited/no -> could be translated into rating
+- Maybe we could phrase the answere as something like 'likelyhoodOfAccessibilityByWheelchair'
+
+
+## A sample response block including all possible properties
+
+Note: this refinement of this format is still in progress as more and more data-sources are being added.
 
 ```
 {
-    "_id": "ttikRCM5Sz2v2m3cZ",
-    "sourceId": "BwEuneiKbLGJyEeDE",
-    "acVersion": "1",
-    "lastSourceImportId": "R7tbPmwn8Jbhi54rM",
+    _id: "ttikRCM5Sz2v2m3cZ",
+    sourceId: "BwEuneiKbLGJyEeDE",
+    acVersion: "1",
+    lastSourceImportId: "R7tbPmwn8Jbhi54rM",
+    detailsURL: 'https://...',
 
-    "properties": {
-        "name": "Hotel Adlon",                              // short name
-        "description": "",                                  // optional
-        "address": "",
-        "providedId": "234234",                             // id within data-source
-        "category": "hotel",                                // see [ac-categories]
+    license: {
+
+    },
+    source: {
+        sourceURL:
+        name:
+    }
+
+    properties: {
+        name: "Hotel Adlon",                              // short name
+        description: "",                                  // optional
+        address: "",
+        providedId: "234234",                             // id within data-source
+        category: "hotel",                                // see [ac-categories]
+
 
         "accessibility": {
-            isAccessibleWithWheelchair: true|false,         // Overall accessibility
-            isAccessibleWithGuideDog: true|false,
-            isAccessibleWithLimitedSight: true|false,
-            ratingForWheelchair: 0.7,
+            accessibleWithWheelchair: true,               // RFC: Overall accessibility, could this be merged with ratingForWheelchair
+            accessibleWithGuideDog: true,
+            accessibleWithLimitedSight: true,
+            ratingForWheelchair: 0.7,                     // 
+            widthOfAllOpeningsAndAisles: ">90",           // RFC
             entrance: {
                 isMainEntrance: true,
                 intercom: {
@@ -63,7 +83,6 @@
                     height: "90..120cm",
                     isColorContrastedWithWall: true,
                 },
-                visitorsAreVisibleFromInside: true,
                 ratingForWheelchair: 0 .. 1,
                 isStepFree: false,
                 steps: {
@@ -80,14 +99,114 @@
                     hasClearMarkingOnGlassDoor: false,
                     isEasyToHoldOpen: false,
                     hasErgonomicDoorHandle: false,
+                    noRevolvingDoor: false,                 // RFC... negation in attribute?
                 },
                 hasSlope: true,
                 hasReadableSign: true,
             },
-            restroom: {
+            restrooms: {
+                turningSpaceInside: ">150cm",
+                hasBathTub: true,
+                mirrorAccessibleWhileSeated: true,
+                heightOfMirrorFromGround: "100cm",
+                hasSupportRails: true,
+                heightOfSoapAndDrier: "",
+                hasSpaceAlongsideToilets: true,
+                washBasingAccessibleWithWheelchairs: true,
+                shampooSuitableForWheelChair: true,
 
+                toilette: {
+                    heightOfBase: "40 .. 45cm",
+                    spaceOnLeftSide: ">70",
+                    spaceOnRightSide: ">70",
+                    foldableHandles: {
+                        onLeftSide: true,
+                        onRightSide: true,
+                        heightAboveToiletteBase: ">15cm",
+                        extensionOnToilet: ">28cm",     // RFC: better label required,
+                        distance: "60 .. 65cm",
+                    },
+                },
+                hasShower: true,
+                entrance: {
+                    isAutomatic: false,
+                    doorWidth: "85cm",
+                    hasClearMarkingOnGlassDoor: false,
+                    isEasyToHoldOpen: false,
+                    hasErgonomicDoorHandle: false,
+                    isStepFree: true,
+                    turningSpaceInFront: ">150cm",
+                    doorOpensToOutside: true,
+                },
+                shower: {
+                    supportRails{
+                        height:"85 .. 107cm",
+                        aboveAndBelowControls: true,
+                    },
+                    controls: {
+                        height: 85cm,
+                    },
+                    hasSupportRails: true,
+                    isWalkIn: true,
+                    hasShowerSeat: true,
+                    step: "<2cm",
+                    showerSeat: {
+                        isRemovable: true,
+                        isFixes: false,
+                        isFoldable: false
+                    }
+                },
+                washBasin: {
+                    accessibleWithWheelchair: true,
+                    height: ">80cm",
+                    spaceBelow: {
+                        height: "> 67cm",
+                        depth: "30cm",
+                    }
+                },
             },
-            hotelRoom: {
+            indoors: {
+                isSpacious: true,
+                isWellLit: ttue,
+                isQuiet: true,
+                steplessFloor: true,                        // single-level?
+                hasRemoteControlAudioSigns: true,
+                privateAreaAccessibleWithWheelchair: true,   // do we need this property?
+                spacesReservedForPeopleWithWheelChairsAvailable: true,  // name too long
+                turningsSpaceInFrontOfRelevantFurniture: ">140",  // RFC?
+                widthOfAislesAndOpenings: "> 140cm",
+
+                sitemap: {
+                    isNearEntrance: true,
+                    inBraille: true,
+                    isRaised: true,
+                    hasLargePrint: true,
+                    language: 'en',
+                }
+                allPathways: {
+                    width: ">150",
+                    widthAtObstacles: ">90cm",
+                },
+
+                wheelchairAccess: {
+                    isPartial: false,
+                    isTotal: true,
+                },
+                tacticleGuidesStips: {
+                    towardsReceptionDesk: true,
+                    haveVisualContrats: true,
+                },
+                receptionDesk: {
+                    height: "<=80cm",
+                    isNearEntrance: true,
+                },
+                signage: {
+                    isUnderstandable: true,
+                    isReadible: true,
+                    language: 'de',
+                }
+            },
+            rooms: {                                    // "hotelRoom?"
                 hasFlashingOrVibratingFireAlarm: true,
                 furnitureIsRemovable: false,
                 powerOutlets: {
@@ -117,68 +236,112 @@
                     turningSpaceInFront: "",
                 }
                 restroom: {
-                    entrance: {
-                        isAutomatic: false,
-                        doorWidth: "85cm",
-                        hasClearMarkingOnGlassDoor: false,
-                        isEasyToHoldOpen: false,
-                        hasErgonomicDoorHandle: false,
-                        isStepFree: true,
-                        turningSpaceInFront: ">150cm",
-                    },
-                    turningSpaceInside: ">150cm",
-                    hasBathTub: true,
-                    hasSupportRails: true,
-                    heightOfMirrorFromGround: "100cm",
-                    heightOfToiletBase: "40 .. 45cm",
-                    heightOfSoapAndDrier: "",
-                    hasShower: true,
-                    shower: {
-                        hasSupportRails: true,
-                        isWalkIn: true,
-                        hasShowerSeat: true,
-                        showerSeat: {
-                            isRemovable: true,
-                            isFixes: false,
-                            isFoldable: false
-                        }
-                    }
-                    hasSpaceAlongsideToilets: true,
-                    washBasingAccessibleWithWheelchairs: true,
+                    <see accessibility.restroom.*>
                 },
+            },
+            poolArea: {
+                poolHasAccessFacility: true,
+            },
+            beach: {
+                accessibleForWheelchairs: true,
+            },
+            saunaWheelChairAvailable: true,
+            lectureHall: {                              // merge with 'theatre', 'conference room', 'meetinghall'?
+                stage: {
+                    isAccessibleWithWheelchair: true,
+                }
+                auditorium: {
+                    isAccessibleWithWheelchair: true,
+                    hasInductionLoop: true,
+                    transferToRegularSeatPossible: true
+                }
+            },
+            vendingMachines: {
+                easyToUse: true,
+                controls: {
+                    height: "<120cm",
+                    areHighContrast: true,
+                    inBraille: true,
+                    areRaised: true,
+                },
+            },
+            changingRoom: {
+                turningSpaceInside: ">150cm",
+                hasSupportRails: true,
+                heightOfMirrorFromGround: "100cm",
+                heightOfHooks: "<120cm",
+                seatingIsPossible: true,
+            },
+            cashRegister: {
+                height: "90",
+                creditCardReaderIsRemovable: true,
+            },
+            canteen: {                                      // merge with diningRoom?
+                tableServiceAvailable: true,
+                tablesAreAccessibleWithWheelchair: true,                  // do we need to clarify?
+                tables: {
+                    height: "<80",                          // RFC: or better heightOfAllTables
+                    spaceBelow: {
+                        height: ">67cm",
+                        depth: ">30cm",
+                    }
+                }
+            },
+            services: {
+                mobileSafetyDepositBoxAvailable: true,
+                manualWheelChairAvailable: true,
+                allTerrainWheelChairAvailable: true,
+                hoistAvailable: true,
+                changingTable: true,             // 
+                vehiclesAreAdaptedForWheelchairs: true,
+                meetingRoomAccessibleByWheelChair: true,    // murky
+                accessibleTables: true,                     // murky
+            }
+            activities: {
+                forHearingImpaired: true,,
+                forLearningImpaired: true,
+                forPhysicallyImpaired: true,,
+                forVisuallyImpaired: true,
+            }
+            media: {                                        // This category is too unspecific
+                print: {
+                    inBraille, true,
+                    asAudio: true,
+                    largePrint: true,
+                    contrastingBackground true,
+                    easyToUnderstand: true,
+                    languages: ['en', 'de']
+                },
+                audioGuides: {
+                    areAvailable: true,
+                    easyToUnderstand: true,
+                },
+                presentations: {                 // merge with 'performances', 'screenings', 'lectureHall'
+                    hasDedicatedScreenForSubtitles: true,
+                    hasSubtitles: true,
+                    hasRealtimeCaptioning: true,
+                },
+                menu: {
+                    inBraille, true,
+                    asAudio: true,
+                    largePrint: true,
+                    contrastingBackground true,
+                    easyToUnderstand: true,
+                    languages: ['en', 'de']
+                },
+                exhibits: {
+                    turningSpaceInFront: ">140cm",
+                    clearlyVisibleWhileSeated: true,
+                    informationReadableWhileSeated: true,
+                },
+            },
+            staff: {
+                canSeeVisitorsFromInside: true,
+                canAssistWithSpecialNeeds: true,
+                trainedInSigning: true,
+                trainedInAccomodattingVisitorsWithDisabilities: true,   // very unspecific
             },
 
-            indoors: {
-                isSpacious: true,
-                isWellLit: ttue,
-                isQuiet: true,
-                hasRemoveControlAudioSigns: true,
-                sitemap: {
-                    isNearEntrance: true,
-                    inBraille: true,
-                    isRaised: true,
-                    hasLargePrint: true,
-                    language: 'en',
-                }
-                wheelchairAccess: {
-                    isPartial: false,
-                    isTotal: true,
-                },
-                widthOfAisles: "> 140cm",
-                tacticleGuidesStips: {
-                    towardsReceptionDesk: true,
-                    haveVisualContrats: true,
-                },
-                receptionDesk: {
-                    height: "<=80cm",
-                    isNearEntrance: true,
-                },
-                signage: {
-                    isUnderstandable: true,
-                    isReadible: true,
-                    language: 'de',
-                }
-            },
             lift: {
                 haveVoiceAnnounceSystem: true,
                 controls: {
@@ -193,7 +356,10 @@
                     door: {
                         width: "100cm",
                     }
-                }
+                },
+                wheelChairPlatformLift {
+
+                },
             },
             stairs: {
                 count: ">10 ± 2",
@@ -209,16 +375,25 @@
                     widerThanRegularSpaces:,
                     count: "2",
                     locatedInside: true,
+                    width: ">350cm",
+                    length: ">500cm",
                 }
             },
             outside: {
                 pavement: {
                     distantToDroppedKerbs: "<20m ±10",  // interpretation of "nearby",
                     hasSignificantSlope: false,
-                    isCobbleStone: true,
+                    isCobbleStone: true,                // RFC: replace with 'evenPavement'
                     streetIsSloping: true,
                     turningSpace: "<150cm",             // interpretation of "very narrow"
-                }
+                },
+                allPathways: {
+                    width: ">150",
+                    widthAtObstacles: ">90cm",
+                    maxLongitudinalSlope: "<6deg",
+                    maxLateralSlope: "<2.5deg",
+                },
+                spaceBetweenExistingBallards: ">90cm",
             },
         },
     }
@@ -253,7 +428,7 @@
     - not include ranges (e.g. bad: `"steps.moreThan3: ..."`  better: `".steps.count": ">3"` )
     - focus on good accessibility rather than negative obstacles:  e.g. `.easyToHoldOpen` or `hasErgnomicHandle` are better than `.difficultToOpen`, `doorHandleNotPractical`, or `isNotMainEntrance`
     - indicate if property is a boolean, e.g. `hasHandrail`, `clearlyVisible`, `removableRampAvailable`
-    - not be confused with translation (e.g. If we call a propertie 'Restroom' or 'Bathroom' can be solved by translations)
+    - not be confused with translation (e.g. If we call a propertie 'Restroom' or 'Bathroom' can be solved by synonoms or translations)
     - indicate interpreting summaries with a `rating*`-prefix, e.g. `entrance.ratingForWheelchair`
     - be as self-contained as possible `furnitureIsRemovable` is better than `room.hasRemovableFurniture`
 - Precission may vary for various reasons:
@@ -310,6 +485,91 @@ As of Oct 2016 this is under heavy development and not even close to production.
             }
         ]
     }
+
+## Requirement Catalogues
+
+For certifications, collecting deep data and filtering places by certain requirements or standards, it could be very useful to translate requirement specifications for into a machine-readible format. Consider [this German requirements catalog for accessible travels](http://www.reisen-fuer-alle.de/qualitaetskriterien_fuer_rollstuhlfahrer_324.html).
+
+It features a list of well-defined criterias that can be matched against the ac-format described above. Thus a requirement-catalog can be seen as:
+
+- a list of property-requirements
+- a list of explanations for property-requires
+- clear identification of target purpose, author, data, legal-status or relevant laws
+- restricted to regions or countries
+- structured into serveral levels: (partically accessible, fully accessible)
+
+With a clear definition of such a catalogue it would be possible to implement very efficient data-collection tools, reference-documents, or – in the long run – the basis for machine learning algorithms that will automate the gathering of properties through image- or 3d-scan analysis.
+
+The data-structure for a requirement-catalogue might look like this:
+
+```
+    particiallyAccessibleWithWheelchair: {
+
+        title: {
+            en: 'Certified partially accessible with wheelchair (DSFT)',
+            de: 'Barrierefreiheit geprüft – teilweise barrierefrei (DSFT)',
+        },
+        description: {
+
+        },
+        relevancy: {
+            withWheelchair: 1,
+            withElectricWheelchair: 1,
+        },
+        legalStatus: 'voluntairy certificate',
+        websiteURL: 'http://www.reisen-fuer-alle.de/qualitaetskriterien_fuer_rollstuhlfahrer_324.html',
+        criteriaGroup: {
+            title: {
+                de: 'Allgemeines',
+            },
+            description: {
+            },
+            criteriaList:[
+                {
+                    description: {
+                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit.
+    (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
+                    },
+                    propertyId: 'accessibility.widthOfAllOpeningsAndAisles',
+                    importance: 'required',
+                    ranges: {
+                        '<90cm': 'not fullfilled',
+                        '90cm .. 120cm': 'fullfilled',
+                        '>120cm': 'excellent',
+                    }
+                },
+                {
+                    description: {
+                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit. (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
+                    },
+                    properties: [
+                        {
+                            propertyId: 'accessibility.widthOfAllOpeningsAndAisles',
+                            importance: 'required',
+                            ranges: {
+                                '<90cm': 'not fullfilled',
+                                '90cm .. 120cm': 'fullfilled',
+                                '>120cm': 'excellent',
+                            },
+                        },
+                        {
+                            propertyId: 'accessibility.indoors.widthOfAislesAndOpenings',
+                            importance: 'required',
+                            ranges: {
+                                '<90cm': 'not fullfilled',
+                                '90cm .. 120cm': 'fullfilled',
+                                '>120cm': 'excellent',
+                            },
+                        },
+                    ]
+                },
+            ],
+        }
+    }
+```
+
+
+
 
 ## Reoccuring property-groups
 
