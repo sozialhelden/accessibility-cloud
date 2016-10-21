@@ -53,6 +53,11 @@ Template.sources_show_imports_page.helpers({
   source() {
     return Sources.findOne(FlowRouter.getParam('_id'));
   },
+  fileMetadata() {
+    return {
+      sourceId: FlowRouter.getParam('_id'),
+    };
+  },
   sourceImport() {
     const selectedImport = SourceImports.findOne(FlowRouter.getParam('importId'));
     if (selectedImport) {

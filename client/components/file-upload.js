@@ -1,12 +1,15 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { check } from 'meteor/check';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-function uploadFile({ file, onUploaded, onProgress }) {
+function uploadFile({ file, metadata = {}, onUploaded, onProgress, onError }) {
   check(file, File);
   check(onUploaded, Function);
   check(onProgress, Function);
-
+  check(onError, Function);
+  check(metadata, Object);
+  console.log('Uploading', file, 'with metadata', metadata);
   const xhr = new XMLHttpRequest();
   xhr.upload.addEventListener('progress', (e) => {
     if (e.lengthComputable) {
@@ -19,14 +22,30 @@ function uploadFile({ file, onUploaded, onProgress }) {
     console.log('Error while uploading file:', error);
   };
   xhr.onload = () => {
-    debugger
+    try {
+      const response = JSON.parse(xhr.response);
+      if (response.error) {
+        onError(response.error);
+        return;
+      }
+      console.log('File succesfully uploaded:', response);
+    } catch (error) {
+      alert('Could not parse JSON response from file upload.');
+    }
   };
-  xhr.open('POST', '/file-upload');
-  // xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
 
-  const reader = new FileReader();
-  reader.onload = event => xhr.send(event.target.result);
-  reader.readAsArrayBuffer(file);
+  Meteor.call('getFileUploadToken', (error, token) => {
+    if (error) {
+      alert('Could not get file upload token:', error.reason);
+      return;
+    }
+    const queryString = Object.keys(metadata).map(k => `${k}=${metadata[k]}`).join('&');
+    xhr.open('POST', `/file-upload?token=${token}&${queryString}`);
+    // xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
+    const reader = new FileReader();
+    reader.onload = event => xhr.send(event.target.result);
+    reader.readAsArrayBuffer(file);
+  });
 }
 
 Template.fileUpload.helpers({
@@ -44,9 +63,10 @@ Template.fileUpload.events({
 
     const file = event.target.files[0];
     if (!file) return;
-
+    const metadata = instance.data.metadata || {};
     uploadFile({
       file,
+      metadata,
       onUploaded() {
         console.log('File uploaded', file);
         instance.percentage.set(100);
@@ -55,6 +75,9 @@ Template.fileUpload.events({
         console.log('Upload progress:', percentage, '%');
         instance.percentage.set(percentage);
       },
+      onError(error) {
+        alert('Could not upload file:', response.error.reason);
+      }
     });
 
     if (instance.data.accept && !file.type.match(instance.data.accept)) {

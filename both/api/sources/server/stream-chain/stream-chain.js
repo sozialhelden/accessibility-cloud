@@ -29,13 +29,23 @@ const StreamTypes = {
   UpsertPlace,
 };
 
-// Returns an array of Node.js stream objects generated from given config.
-export function createStreamChain(streamChainConfig, sourceImportId, sourceId) {
+// Returns an array of Node.js stream objects (encapsulated in observer objects) generated
+// from given stream chain configuration.
+export function createStreamChain({
+  // An array of objects. Each object configures a part of the stream chain.
+  streamChainConfig,
+  // Reference to a SourceImports document that should be updated with progress info
+  sourceImportId,
+  // Reference to a source that this import belongs to.
+  sourceId,
+  // Optional: An input stream that will be used to replace the first stream object
+  inputStreamToReplaceFirstStream,
+}) {
   check(streamChainConfig, [Object]);
-  let previousStream = null;
+  let previousStream = inputStreamToReplaceFirstStream || null;
   console.log('Supported stream types:', StreamTypes);
-
-  return streamChainConfig.map(({ type, parameters }, index) => {
+  const skipCount = inputStreamToReplaceFirstStream ? 1 : 0;
+  return streamChainConfig.splice(skipCount).map(({ type, parameters }, index) => {
     check(type, String);
     check(parameters, Object);
     console.log('Creating', type, 'stream...');
