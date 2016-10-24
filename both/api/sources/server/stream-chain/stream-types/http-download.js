@@ -1,13 +1,15 @@
 import createProgressStream from 'progress-stream';
+import { Throttle } from 'stream-throttle';
 import request from 'request';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import streamLength from 'stream-length';
 
 export class HTTPDownload {
-  constructor({ sourceUrl, onProgress, onDebugInfo }) {
+  constructor({ sourceUrl, onProgress, onDebugInfo, bytesPerSecond }) {
     check(sourceUrl, String);
     check(onProgress, Function);
     check(onDebugInfo, Function);
+    check(bytesPerSecond, Match.Optional(Number));
 
     this.stream = request(sourceUrl);
 
@@ -35,6 +37,10 @@ export class HTTPDownload {
       });
     });
 
+    // Throttle stream when data processing afterwards might overload otherwise
+    if (bytesPerSecond) {
+      this.stream = this.stream.pipe(new Throttle({ rate: bytesPerSecond }));
+    }
 
     this.stream = this.stream.pipe(progressStream);
   }
