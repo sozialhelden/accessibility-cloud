@@ -25,11 +25,11 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "row['id']",
-                "category": "'ferry'",
+                "properties-originalId": "row['id']",
+                "properties-category": "'ferry'",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['Longitude']), Number(row['Latitude'])] }",
                 "properties-name": "row['DESCRIPTION']",
-                "properties-accessibility-withWheelchair": "row['Accessibility'] == 'Disabled Access'"
+                "properties-accessibility-accessibleWith-wheelchair": "row['Accessibility'] == 'Disabled Access'"
             }
         }
     },

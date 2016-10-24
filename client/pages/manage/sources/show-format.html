@@ -8,6 +8,10 @@
       <button class='btn js-start-import btn btn-primary'>Start Import</button>
     </div>
     <div class='centered-content'>
+      <div class='errors'>
+        No errors so far...
+      </div>
+
       {{#with lastSourceImport}}
         <h2>{{_"Latest Import"}}</h2>
         <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>

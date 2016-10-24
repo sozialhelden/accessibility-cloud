@@ -28,22 +28,21 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "row.place_id",
+                "properties-originalId": "row.place_id",
                 "detailsURL": "'https://axsmap.com/venue/' + row.place_id",
                 "geometry": "{ type: 'Point', coordinates: helpers.AXSMaps.guessLngLat(row.lngLat) }",
                 "properties-name": "row.name",
                 "properties-category": "helpers.AXSMaps.getCategoryFromList(row.types)",
                 "properties-address": "_.join([row.address, row.city,row.state])",
-                "properties-accessibility-accessibleWith-wheelchair": "row.entry > 3",
-                "properties-accessibility-ratingForWheelchair": "row.entry/5",
-                "properties-accessibility-entrances[0]-ratingForWheelchair": "row.entry/5",
-                "properties-accessibility-entrances[0]-isMainEntrance": "helpers.AXSMaps.estimateRatingFor(row, row.secondentrance) < 0.5",
-                "properties-accessibility-entrances[0]-hasRemovableRamp": "helpers.AXSMaps.estimateRatingFor(row, row.ramp)",
+                "properties-accessibility -accessibleWith-wheelchair": "row.entry > 3",
+                "properties-accessibility-areas-0-entrances-0-ratingForWheelchair": "row.entry/5",
+                "properties-accessibility-areas-0-ratingSpacious": "helpers.AXSMaps.estimateRatingFor(row, row.spacious)",
+                "properties-accessibility-areas-0-isWellLit": "helpers.AXSMaps.estimateFlagFor(row, row.welllit)",
+                "properties-accessibility-areas-0-isQuiet": "helpers.AXSMaps.estimateFlagFor(row, row.quiet)",
+                "properties-accessibility-areas-0-entrances-0-isMainEntrance": "helpers.AXSMaps.estimateRatingFor(row, row.secondentrance) < 0.5",
+                "properties-accessibility-areas-0-entrances-0-hasRemovableRamp": "helpers.AXSMaps.estimateRatingFor(row, row.ramp)",
                 "properties-accessibility-accessibleWith-guideDog": "helpers.AXSMaps.estimateFlagFor(row, row.guidedog)",
-                "properties-accessibility-indoors-ratingSpacious": "helpers.AXSMaps.estimateRatingFor(row, row.spacious)",
-                "properties-accessibility-parking-parkingSpacesForWheelchairUsers-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
-                "properties-accessibility-indoors-isWellLit": "helpers.AXSMaps.estimateFlagFor(row, row.welllit)",
-                "properties-accessibility-indoors-isQuiet": "helpers.AXSMaps.estimateFlagFor(row, row.quiet)"
+                "properties-accessibility-parking-parkingSpacesForWheelchairUsers-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)"
             }
         }
     },

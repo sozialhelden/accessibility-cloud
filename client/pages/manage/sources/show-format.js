@@ -4,6 +4,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
+import { acFormat } from '/both/lib/ac-format.js';
+
+import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
 
@@ -47,7 +50,6 @@ const helpers = {
 };
 
 Template.sources_show_format_page.helpers(helpers);
-
 Template.sources_show_format_page.events({
   'click button.js-save': function saveButtonClicked(event) {
     event.preventDefault();
@@ -70,5 +72,39 @@ Template.sources_show_format_page.events({
         console.log('import finished', result);
       }
     });
+  },
+  'input textarea#streamChain'(event) {
+    let chain = undefined;
+    try {
+      const chainText = $('textarea#streamChain')[0].value;
+      chain = JSON.parse(chainText);
+    } catch (e) {
+      $('.errors').html('Invalid json format');
+      return;
+    }
+    for (let i = 0; i < chain.length; i++) {
+      const chainPart = chain[i];
+      if (chainPart.type !== 'TransformData') {
+        continue;
+      }
+      // console.log(chain[i]);
+      const mappings = chainPart.parameters.mappings;
+      if (mappings === undefined) {
+        $('.errors').html('No mappings defined');
+        return;
+      }
+      let missingPaths = [];
+
+      _.each(mappings, function (obj, key) {
+        const path = key.replace(/-/g, '.');
+
+        if (_.get(acFormat, path) === undefined) {
+          missingPaths.push(path);
+        }
+      });
+      if (missingPaths) {
+        $('.errors').html('Invalid mapping paths:<ul><li>' + missingPaths.join('</li><li>') + '</li></ul> <a href="https://github.com/sozialhelden/ac-machine/blob/master/docs/ac-format.md">Please see documentation</a>' );
+      }
+    }
   },
 });
