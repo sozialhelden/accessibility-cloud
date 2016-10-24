@@ -16,6 +16,7 @@ PlaceInfos.allow({
 
 PlaceInfos.publicFields = {
   sourceId: 1,
+  originalId: 1,
   lastSourceImportId: 1,
   data: 1,
 };
@@ -27,3 +28,9 @@ PlaceInfos.helpers({
 PlaceInfos.visibleSelectorForUserId = () => ({});
 // This would also be allowed
 // PlaceInfos.findOptionsFor = (userId) => ({});
+
+if (Meteor.isServer) {
+  PlaceInfos._ensureIndex({ sourceId: 1 });
+  PlaceInfos._ensureIndex({ originalId: 1 });
+  PlaceInfos._ensureIndex({ sourceId: 1, originalId: 1 });
+}
