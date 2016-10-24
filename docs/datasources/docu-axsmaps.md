@@ -35,36 +35,11 @@ Some notes on the API inport-format of axsmaps
 
 
 
-"bathroom": -> prore
-"place_id": "ChIJO6_O_lxZwokRQ3c5GO6sTkE",
-"google_url": "https://plus.google.com/108166561315032013796/about?hl=en",
-"lngLat": [
-  40.719417,
-  -73.956245
-],
-"spacious": 5,
-"name": "Soft Spot",
-"ramp": 0,
-"parking": 0,
-"types": [
-  "night_club",
-  "bar",
-  "establishment"
-],
-"entry": 3.5,
-"quiet": 2,
-"secondentrance": 1,
-"state": "NY",
-"city": ""
-
-
-
-
 
 ## Description of data format
 There is a [extensive description](https://www.axsmap.com/faq/) on the AXSMaps page.
 
-### `entrance` 
+### `entry` 
 Average community ratings on a scale from 0 (not) to 5 (totally), 0 is default for no review, 1-5 is actual rating
 
 [Voting-documtion](https://www.axsmap.com/faq/) from the AXSMap documentation:

@@ -72,16 +72,16 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
           placeData: item,
         }));
 
-        function getColorForWheelchairAccessiblity (placeInfo) {
+        function getColorForWheelchairAccessiblity (placeData) {
           try {
-            if (placeInfo.properties.accessibility.withWheelchair === true) {
+            if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
               return 'green';
-            } else if (placeInfo.properties.accessibility.withWheelchair === false) {
+            } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
               return 'red';
             }
           }
           catch(e) {
-            console.warn("Failed to get color for", e, placeInfo);
+            console.warn("Failed to get color for", e, placeData);
           }
           return 'grey';
         };
@@ -89,7 +89,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
         const markers = new L.geoJson(geoMarkerData, {
           pointToLayer: function(feature, latlng) {
 
-            const categoryIconName = feature.placeData.category || "place";
+            const categoryIconName = feature.placeData.properties.category || "place";
             const color = getColorForWheelchairAccessiblity(feature.placeData);
 
             const acIcon = new L.AccessibilityIcon({

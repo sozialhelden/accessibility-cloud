@@ -70,7 +70,7 @@ export function createStreamChain(streamChainConfig, sourceImportId, sourceId) {
     runningStreamObserver.stream.on('error', Meteor.bindEnvironment(error => {
       const modifier = { $set: { [errorKey]: {
         reason: error.reason,
-        stack: error.stack,
+        //stack: error.stack,
       } } };
       SourceImports.update(sourceImportId, modifier);
     }));

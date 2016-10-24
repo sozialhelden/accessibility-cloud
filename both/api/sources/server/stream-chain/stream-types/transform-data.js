@@ -29,13 +29,11 @@ function compileMapping(fieldName, javascript) {
           if (tags === undefined) {
             return 'empty';
           }
-
           for (let tag in tags) {
             if (tags.hasOwnProperty(tag)) {
               const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
 
               if (categoryIdForSynonyms[categoryId]) {
-
                 return categoryIdForSynonyms[categoryId];
               }
             }
@@ -43,10 +41,60 @@ function compileMapping(fieldName, javascript) {
           return 'undefined';
         },
       },
+      AXSMaps: {
+        estimateRatingFor(obj, voteCount) {
+          const maxVotes = _.max([
+            obj.spacious,
+            obj.ramp,
+            obj.parking,
+            obj.quiet,
+            obj.secondentrance,
+          ]);
+
+          if (maxVotes === 0) {
+            return undefined;
+          }
+
+          return voteCount / maxVotes;
+        },
+        estimateFlagFor(obj, voteCount) {
+          const maxVotes = _.max([
+            obj.spacious,
+            obj.ramp,
+            obj.parking,
+            obj.quiet,
+            obj.secondentrance,
+          ]);
+
+          if (maxVotes === 0) {
+            return undefined;
+          }
+
+          return voteCount / maxVotes > 0.5;
+        },
+        getCategoryFromList(categories) {
+          if (!categories) {
+            return 'undefined';
+          }
+
+          for (let i = 0; i < categories.length; ++i) {
+            const c = categoryIdForSynonyms[categories[i]];
+            if (c) {
+              return c;
+            }
+          }
+          return 'undefined';
+        },
+        guessLngLat(lngLat) {
+          if (lngLat[1] < -20 || lngLat[1] > 60) {
+            return [lngLat[1], lngLat[0]];
+          }
+          return lngLat;
+        },
+      },
     };
 
     // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
-
     // eslint-disable-next-line no-eval
     return eval(`(row) => (${javascript})`);
   } catch (error) {
@@ -73,12 +121,15 @@ export class TransformData {
         const value = fn(data);
         if (fieldName.match(/-/)) {
           // field name is probably a key path like 'a-b-c'
-          _.set(doc, fieldName.replace(/-/g, '.'), value);
+          // Don't polute database with undefined properties
+          if (value !== undefined) {
+            _.set(doc, fieldName.replace(/-/g, '.'), value);
+          }
         } else {
           doc[fieldName] = value;
         }
       }
-      doc.originalData = data;
+      doc.originalData = data.toString();
       callback(null, doc);
       return null;
     });

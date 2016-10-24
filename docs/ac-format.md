@@ -80,9 +80,9 @@ Note: this refinement of this format is still in progress as more and more data-
 
         "accessibility": {
             accessibleWith: {
+                wheelchair: true,
                 guideDog: true,
                 limitedSight: true,
-                withWheelchair: true,
             },
             offersActivitiesFor: {
                 hearingImpaired: true,,
@@ -247,7 +247,9 @@ Note: this refinement of this format is still in progress as more and more data-
                     hasFlashingOrVibratingFireAlarm: true,
                     hasRemovableFurniture: false,
                     isStepLess: true,
-                    floorNumber: "",
+                    floorLevel: 1,
+
+
                     ground: {
                         distanceToDroppedCurb: "<20m ±10",  // interpretation of "nearby",
                         slopeAngle: "6deg",
@@ -416,10 +418,10 @@ Note: this refinement of this format is still in progress as more and more data-
                     areAvailable: true,
                     location: "2nd floor",
                     count: 2,
-                    isLocatedInside: true,              // need review
+                    isLocatedInside: true,              // needs review
                     width: ">350cm",
                     length: ">500cm",
-                    hasDedicatedSignage: true,          
+                    hasDedicatedSignage: true,
                 }
             },
             outside: {                                  // needs review ""

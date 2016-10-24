@@ -2,7 +2,7 @@
     {
         "type": "HTTPDownload",
         "parameters": {
-            "sourceUrl": "http://localhost:3000/data/axsmap.csv"
+            "sourceUrl": "http://localhost:3000/data/axsmapdata.json"
         }
     },
     {
@@ -12,15 +12,16 @@
         }
     },
     {
-        "type": "ParseCSVStream",
+        "type": "Split",
         "parameters": {
-            "header": true
+            "string": "\n"
         }
     },
     {
-        "type": "ParseJSONStream",
+        "type": "ParseJSONChunks",
         "parameters": {
-            "path": "*"
+            "path": "*",
+            "length": "totalFeatures"
         }
     },
     {
@@ -28,37 +29,22 @@
         "parameters": {
             "mappings": {
                 "originalId": "row.place_id",
-                "detailsURL": "'https://axsmap.com/venue/'+row.place_id"
-                "geometry": "{ type: 'Point', coordinates: [Number(row.longitude), Number(row.latitude)] }",
+                "detailsURL": "'https://axsmap.com/venue/' + row.place_id",
+                "geometry": "{ type: 'Point', coordinates: helpers.AXSMaps.guessLngLat(row.lngLat) }",
                 "properties-name": "row.name",
-                "properties-address": "row.address",
-                "accessibility-ratingForWheelchair": "row.bathroom",
-                "accessibility-entrances[0]-ratingForWheelchair": "row.entry",
-                "accessibility-entrances[0]-hasRemovableRamp": "helpers.AXSMaps.estimateRatingFor(row, row.ramp)",
-                "accessibility-parking-disabledParkingSpaces-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
-                "accessibility-parking-disabledParkingSpaces-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
-
-                
-      
-      "google_url": "https://plus.google.com/108166561315032013796/about?hl=en",
-      "lngLat": [
-        40.719417,
-        -73.956245
-      ],
-      "spacious": 5,
-      "name": "Soft Spot",
-      "ramp": 0,
-      "parking": 0,
-      "types": [
-        "night_club",
-        "bar",
-        "establishment"
-      ],
-      "entry": 3.5,
-      "quiet": 2,
-      "secondentrance": 1,
-      "state": "NY",
-      "city": ""            }
+                "properties-category": "helpers.AXSMaps.getCategoryFromList(row.types)",
+                "properties-address": "_.join([row.address, row.city,row.state])",
+                "properties-accessibility-accessibleWith-wheelchair": "row.entry > 3",
+                "properties-accessibility-ratingForWheelchair": "row.entry/5",
+                "properties-accessibility-entrances[0]-ratingForWheelchair": "row.entry/5",
+                "properties-accessibility-entrances[0]-isMainEntrance": "helpers.AXSMaps.estimateRatingFor(row, row.secondentrance) < 0.5",
+                "properties-accessibility-entrances[0]-hasRemovableRamp": "helpers.AXSMaps.estimateRatingFor(row, row.ramp)",
+                "properties-accessibility-accessibleWith-guideDog": "helpers.AXSMaps.estimateFlagFor(row, row.guidedog)",
+                "properties-accessibility-indoors-ratingSpacious": "helpers.AXSMaps.estimateRatingFor(row, row.spacious)",
+                "properties-accessibility-parking-parkingSpacesForWheelchairUsers-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
+                "properties-accessibility-indoors-isWellLit": "helpers.AXSMaps.estimateFlagFor(row, row.welllit)",
+                "properties-accessibility-indoors-isQuiet": "helpers.AXSMaps.estimateFlagFor(row, row.quiet)"
+            }
         }
     },
     {
@@ -66,6 +52,3 @@
         "parameters": {}
     }
 ]
-
-
-
