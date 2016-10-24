@@ -1,7 +1,7 @@
 <template name="sources_stream_chain">
   <ol class='stream-chain'>
     {{#each streamChain}}
-      <li>
+      <li class='item {{#if debugInfo.error}}has-error{{/if}}'>
         <header class='name'>{{camelize type}}</header>
         <dl class='parameters'>
           {{#each keyValue parameters}}

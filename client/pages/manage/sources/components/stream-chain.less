@@ -4,15 +4,23 @@
 ol.stream-chain {
   font-size: 12px;
 
-  li {
+  li.item {
     position: relative;
     margin-bottom: 1px;
     padding: 5px;
     background-color: @color-grey085;
+    &.has-error {
+      background-color: mix(@color-error, @color-grey085, 10%);
+      .name {
+        color: @color-error;
+      }
+    }
   }
+
   .name {
     .type-bold;
   }
+
   dl.parameters {
     display: inline-block;
     dt, dd {
