@@ -1,3 +1,3 @@
-# Welcome to the [Accessibility Cloud](https://accessiblity.cloud) documentation
+# Welcome to the [Accessibility Cloud](https://accessibility.cloud) documentation
 
 
