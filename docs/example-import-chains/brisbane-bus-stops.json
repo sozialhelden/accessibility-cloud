@@ -30,11 +30,11 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "row['HASTUS_ID']",
-                "category": "'bus_stop'",
+                "properties-originalId": "row['HASTUS_ID']",
+                "properties-category": "'bus_stop'",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['LONGITUDE']), Number(row['LATITUDE'])] }",
                 "properties-name": "row['DESCRIPTION']",
-                "properties-accessibility-withWheelchair": "row['ROAD_GRADIENT'] == 'Easy'"
+                "properties-accessibility-accessibleWith-wheelchair": "row['ROAD_GRADIENT'] == 'Easy'"
             }
         }
     },

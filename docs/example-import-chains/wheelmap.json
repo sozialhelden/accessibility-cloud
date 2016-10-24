@@ -28,12 +28,11 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "''+row.id",
+                "properties-originalId": "''+row.id",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "category": " helpers.OSM.fetchCategoryFromTags(row.tags) ",
-                "name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "tags": "row.tags",
-                "isAccessible": "row.tags['wheelchair'] == 'yes'"
+                "properties-category": " helpers.OSM.fetchCategoryFromTags(row.tags) ",
+                "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
+                "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
             }
         }
     },
