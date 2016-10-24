@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import Stream from 'stream';
+import vstream from 'vstream';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
 import { ConsoleOutput } from './stream-types/console-output';
 import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
+import { Generic } from './stream-types/generic';
 import { HTTPDownload } from './stream-types/http-download';
 import { ParseJSONStream } from './stream-types/parse-json-stream';
 import { ParseJSONChunks } from './stream-types/parse-json-chunks';
@@ -18,6 +20,7 @@ import { UpsertPlace } from './stream-types/upsert-place';
 const StreamTypes = {
   ConsoleOutput,
   ConvertToUTF8,
+  Generic,
   HTTPDownload,
   ParseJSONStream,
   ParseJSONChunks,
@@ -41,11 +44,22 @@ export function createStreamChain({
   // Optional: An input stream that will be used to replace the first stream object
   inputStreamToReplaceFirstStream,
 }) {
+  // console.log('Supported stream types:', StreamTypes);
   check(streamChainConfig, [Object]);
+
   let previousStream = inputStreamToReplaceFirstStream || null;
-  console.log('Supported stream types:', StreamTypes);
   const skipCount = inputStreamToReplaceFirstStream ? 1 : 0;
-  return streamChainConfig.splice(skipCount).map(({ type, parameters }, index) => {
+  const modifiedStreamChainConfig = streamChainConfig.splice(skipCount);
+  if (inputStreamToReplaceFirstStream) {
+    modifiedStreamChainConfig.unshift({
+      type: 'Generic',
+      parameters: {
+        stream: inputStreamToReplaceFirstStream,
+      },
+    });
+  }
+
+  const result = modifiedStreamChainConfig.map(({ type, parameters }, index) => {
     check(type, String);
     check(parameters, Object);
     console.log('Creating', type, 'stream...');
@@ -68,7 +82,7 @@ export function createStreamChain({
     });
 
     if (StreamTypes[type] === undefined) {
-      console.warn('ERROR: ${type} is not a valid stream type.`');
+      console.warn(`ERROR: "${type}" is not a valid stream type.`);
       return {};
     }
     const runningStreamObserver = new StreamTypes[type](parameters);
@@ -76,21 +90,46 @@ export function createStreamChain({
     // Validate setting up Step with parameters worked
     check(runningStreamObserver.stream, Stream);
 
-    // Execute
     runningStreamObserver.stream.on('error', Meteor.bindEnvironment(error => {
+      console.log('Error on', type, 'stream (#', index, 'in chain):', error, error.stack);
       const modifier = { $set: { [errorKey]: {
         reason: error.reason,
-        //stack: error.stack,
+        message: error.message,
+        stack: error.stack,
+        timestamp: Date.now(),
       } } };
       SourceImports.update(sourceImportId, modifier);
     }));
 
+    runningStreamObserver.stream.on('finish', Meteor.bindEnvironment(() => {
+      const modifier = { $set: {
+        finishedTimestamp: Date.now(),
+      } };
+      SourceImports.update(sourceImportId, modifier);
+    }));
+
+    const wrappedStream = vstream.wrapStream(runningStreamObserver.stream, type);
+
     // Connect to previous stream's output
     if (previousStream) {
-      previousStream.pipe(runningStreamObserver.stream);
+      previousStream.pipe(wrappedStream);
     }
-    previousStream = runningStreamObserver.stream;
+    previousStream = wrappedStream;
 
     return runningStreamObserver;
   });
+
+  if (inputStreamToReplaceFirstStream) {
+    const streamReport = (eventName) => () => {
+      console.log('------', eventName, '------');
+      result[0].stream.vsWalk(stream => stream.vsDumpDebug(process.stdout));
+    };
+    inputStreamToReplaceFirstStream.on('data', streamReport('data'));
+    inputStreamToReplaceFirstStream.on('error', streamReport('error'));
+    inputStreamToReplaceFirstStream.on('finish', streamReport('finish'));
+    if (inputStreamToReplaceFirstStream !== result[result.length - 1].stream.vsHead()) {
+      throw new Meteor.Error(500, 'Stream chain not correctly built.');
+    }
+  }
+  return result;
 }

@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { isAdmin } from '/both/lib/is-admin';
 import { moment } from 'meteor/momentjs:moment';
+import { _ } from 'meteor/underscore';
 
 export const SourceImports = new Mongo.Collection('SourceImports');
 
@@ -24,5 +25,16 @@ SourceImports.helpers({
   editableBy: isAdmin,
   humanReadableStartTimestamp() {
     return moment(this.startTimestamp).format('DD.MM.YYYY HH:mm:ss');
+  },
+  hasError() {
+    if (!this.streamChain) return false;
+    return _.any(this.streamChain, streamElement =>
+      streamElement.debugInfo && streamElement.debugInfo.error
+    );
+  },
+  isFinished() {
+    if (!this.streamChain) return false;
+    const lastStream = _.last(this.streamChain);
+    return lastStream && lastStream.finishedTimestamp;
   },
 });
