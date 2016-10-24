@@ -16,6 +16,7 @@ import { ReadFile } from './stream-types/read-file';
 import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
 import { UpsertPlace } from './stream-types/upsert-place';
+import { InsertPlace } from './stream-types/insert-place';
 
 const StreamTypes = {
   ConsoleOutput,
@@ -30,6 +31,7 @@ const StreamTypes = {
   Split,
   TransformData,
   UpsertPlace,
+  InsertPlace,
 };
 
 function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, index }) {
@@ -96,7 +98,11 @@ export function createStreamChain({
         SourceImports.update(sourceImportId, modifier);
       }),
       onDebugInfo: Meteor.bindEnvironment(debugInfo => {
-        const modifier = { $set: { [debugInfoKey]: debugInfo } };
+        const debugInfoWithPaths = {};
+        Object.keys(debugInfo).forEach(key => {
+          debugInfoWithPaths[`${debugInfoKey}.${key}`] = debugInfo[key];
+        });
+        const modifier = { $set: debugInfoWithPaths };
         SourceImports.update(sourceImportId, modifier);
       }),
     });
@@ -119,23 +125,30 @@ export function createStreamChain({
 
     const wrappedStream = vstream.wrapStream(runningStreamObserver.stream, type);
 
+    // wrappedStream vsCounterBump
     // Connect to previous stream's output if existing
     previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;
 
     return runningStreamObserver;
   });
 
-  if (inputStreamToReplaceFirstStream) {
-    const streamReport = (eventName) => () => {
-      console.log('------', eventName, '------');
-      result[0].stream.vsWalk(stream => stream.vsDumpDebug(process.stdout));
-    };
-    inputStreamToReplaceFirstStream.on('data', streamReport('data'));
-    inputStreamToReplaceFirstStream.on('error', streamReport('error'));
-    inputStreamToReplaceFirstStream.on('finish', streamReport('finish'));
-    if (inputStreamToReplaceFirstStream !== result[result.length - 1].stream.vsHead()) {
-      throw new Meteor.Error(500, 'Stream chain not correctly built.');
-    }
-  }
+  // console.log('Stream chain:', result);
+
+  // const firstStream = result[0] && result[0].stream;
+  // const lastStream = result[result.length - 1] && result[result.length - 1].stream;
+  // if (firstStream) {
+  //   const streamReport = (eventName) => () => {
+  //     console.log('------', eventName, '------');
+  //     firstStream.vsWalk(stream => {
+  //       stream.vsDumpDebug(process.stdout)
+  //     });
+  //   };
+  //   firstStream.on('data', streamReport('data'));
+  //   firstStream.on('error', streamReport('error'));
+  //   lastStream.on('finish', streamReport('finish'));
+  //   if (firstStream !== lastStream.vsHead()) {
+  //     throw new Meteor.Error(500, 'Stream chain not correctly built.');
+  //   }
+  // }
   return result;
 }

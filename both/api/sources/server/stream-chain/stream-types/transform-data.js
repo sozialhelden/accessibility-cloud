@@ -1,12 +1,14 @@
+import { check } from 'meteor/check';
 import EventStream from 'event-stream';
 import entries from '/both/lib/entries';
+import { ObjectProgressStream } from '../object-progress-stream';
 import { Categories } from '/both/api/categories/categories.js';
 
 import { _ } from 'meteor/stevezhu:lodash';
 
 const categoryIdForSynonyms = {};
-_.each(Categories.find({}).fetch(), function(category) {
-  _.each(category.synonyms, function(s) {
+Categories.find({}).fetch().forEach(category => {
+  category.synonyms.forEach(s => {
     if (s) {
       categoryIdForSynonyms[s] = category._id;
     }
@@ -29,15 +31,10 @@ function compileMapping(fieldName, javascript) {
           if (tags === undefined) {
             return 'empty';
           }
-          for (let tag in tags) {
-            if (tags.hasOwnProperty(tag)) {
-              const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
-
-              if (categoryIdForSynonyms[categoryId]) {
-                return categoryIdForSynonyms[categoryId];
-              }
-            }
-          }
+          Object.keys(tags).forEach(tag => {
+            const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
+            return categoryIdForSynonyms[categoryId];
+          });
           return 'undefined';
         },
       },
@@ -85,11 +82,15 @@ function compileMapping(fieldName, javascript) {
           }
           return 'undefined';
         },
-        guessLngLat(lngLat) {
-          if (lngLat[1] < -20 || lngLat[1] > 60) {
-            return [lngLat[1], lngLat[0]];
+        guessGeoPoint(lngLat) {
+          if (!lngLat) {
+            return null;
           }
-          return lngLat;
+          let coordinates = lngLat;
+          if (lngLat[1] < -20 || lngLat[1] > 60) {
+            coordinates = [lngLat[1], lngLat[0]];
+          }
+          return { coordinates, type: 'Point' };
         },
       },
     };
@@ -112,7 +113,9 @@ function compileMappings(mappings) {
 }
 
 export class TransformData {
-  constructor({ mappings }) {
+  constructor({ mappings, onProgress }) {
+    check(mappings, Object);
+    check(onProgress, Function);
     const compiledMappings = compileMappings(mappings);
 
     this.stream = EventStream.map((data, callback) => {
@@ -133,5 +136,8 @@ export class TransformData {
       callback(null, doc);
       return null;
     });
+
+    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
+
 }

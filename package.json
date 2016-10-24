@@ -23,7 +23,8 @@
     "fast-csv": "^2.3.0",
     "iconv-lite": "^0.4.13",
     "progress-stream": "^1.2.0",
-    "request": "^2.75.0"
+    "request": "^2.75.0",
+    "stream-length": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",

@@ -4,9 +4,9 @@ import { check } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { ObjectProgressStream } from '../object-progress-stream';
 
-const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
+const insert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
   try {
-    PlaceInfos.upsert(...args);
+    PlaceInfos.insert(...args);
   } catch (error) {
     if (onDebugInfo) {
       onDebugInfo({
@@ -17,8 +17,8 @@ const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
   }
 });
 
-// TODO: Refactor this, this is almost the same as InsertPlace
-export class UpsertPlace {
+// TODO: Refactor this, this is almost the same as UpsertPlace
+export class InsertPlace {
   constructor({ sourceId, sourceImportId, onDebugInfo, onProgress }) {
     check(sourceId, String);
     check(sourceImportId, String);
@@ -32,7 +32,7 @@ export class UpsertPlace {
         sourceId,
         sourceImportId,
       });
-      upsert(onDebugInfo, { sourceId, originalId }, placeInfo);
+      insert(onDebugInfo, placeInfo);
       callback(null, placeInfo);
       return placeInfo;
     });
