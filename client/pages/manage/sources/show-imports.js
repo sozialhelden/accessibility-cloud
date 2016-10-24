@@ -48,7 +48,9 @@ Template.sources_show_imports_page.helpers({
     return FlowRouter.getParam('importId') === sourceId ? 'active' : '';
   },
   sourceImports() {
-    return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
+    const selector = { sourceId: FlowRouter.getParam('_id') };
+    const options = { sort: { startTimestamp: -1 } };
+    return SourceImports.find(selector, options);
   },
   source() {
     return Sources.findOne(FlowRouter.getParam('_id'));

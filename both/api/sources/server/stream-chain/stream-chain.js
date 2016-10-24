@@ -32,6 +32,26 @@ const StreamTypes = {
   UpsertPlace,
 };
 
+function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, index }) {
+  stream.on('error', Meteor.bindEnvironment(error => {
+    console.log('Error on', type, 'stream (#', index, 'in chain):', error, error.stack);
+    const modifier = { $set: { [errorKey]: {
+      reason: error.reason,
+      message: error.message,
+      stack: error.stack,
+      timestamp: Date.now(),
+    } } };
+    SourceImports.update(sourceImportId, modifier);
+  }));
+
+  stream.on('finish', Meteor.bindEnvironment(() => {
+    const modifier = { $set: {
+      finishedTimestamp: Date.now(),
+    } };
+    SourceImports.update(sourceImportId, modifier);
+  }));
+}
+
 // Returns an array of Node.js stream objects (encapsulated in observer objects) generated
 // from given stream chain configuration.
 export function createStreamChain({
@@ -82,39 +102,25 @@ export function createStreamChain({
     });
 
     if (StreamTypes[type] === undefined) {
-      console.warn(`ERROR: "${type}" is not a valid stream type.`);
-      return {};
+      throw new Error(422, `ERROR: "${type}" is not a valid stream type.`);
     }
     const runningStreamObserver = new StreamTypes[type](parameters);
 
     // Validate setting up Step with parameters worked
     check(runningStreamObserver.stream, Stream);
 
-    runningStreamObserver.stream.on('error', Meteor.bindEnvironment(error => {
-      console.log('Error on', type, 'stream (#', index, 'in chain):', error, error.stack);
-      const modifier = { $set: { [errorKey]: {
-        reason: error.reason,
-        message: error.message,
-        stack: error.stack,
-        timestamp: Date.now(),
-      } } };
-      SourceImports.update(sourceImportId, modifier);
-    }));
-
-    runningStreamObserver.stream.on('finish', Meteor.bindEnvironment(() => {
-      const modifier = { $set: {
-        finishedTimestamp: Date.now(),
-      } };
-      SourceImports.update(sourceImportId, modifier);
-    }));
+    setupEventHandlersOnStream({
+      errorKey,
+      stream: runningStreamObserver.stream,
+      sourceImportId,
+      type,
+      index,
+    });
 
     const wrappedStream = vstream.wrapStream(runningStreamObserver.stream, type);
 
-    // Connect to previous stream's output
-    if (previousStream) {
-      previousStream.pipe(wrappedStream);
-    }
-    previousStream = wrappedStream;
+    // Connect to previous stream's output if existing
+    previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;
 
     return runningStreamObserver;
   });
