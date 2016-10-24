@@ -27,11 +27,38 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "row['place_id']",
-                "geometry": "{ type: 'Point', coordinates: [Number(row['longitude']), Number(row['latitude'])] }",
-                "name": "row['name']",
-                "address": "row['address']",
-            }
+                "originalId": "row.place_id",
+                "detailsURL": "'https://axsmap.com/venue/'+row.place_id"
+                "geometry": "{ type: 'Point', coordinates: [Number(row.longitude), Number(row.latitude)] }",
+                "properties-name": "row.name",
+                "properties-address": "row.address",
+                "accessibility-ratingForWheelchair": "row.bathroom",
+                "accessibility-entrances[0]-ratingForWheelchair": "row.entry",
+                "accessibility-entrances[0]-hasRemovableRamp": "helpers.AXSMaps.estimateRatingFor(row, row.ramp)",
+                "accessibility-parking-disabledParkingSpaces-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
+                "accessibility-parking-disabledParkingSpaces-areAvailable": "helpers.AXSMaps.estimateRatingFor(row, row.parking)",
+
+                
+      
+      "google_url": "https://plus.google.com/108166561315032013796/about?hl=en",
+      "lngLat": [
+        40.719417,
+        -73.956245
+      ],
+      "spacious": 5,
+      "name": "Soft Spot",
+      "ramp": 0,
+      "parking": 0,
+      "types": [
+        "night_club",
+        "bar",
+        "establishment"
+      ],
+      "entry": 3.5,
+      "quiet": 2,
+      "secondentrance": 1,
+      "state": "NY",
+      "city": ""            }
         }
     },
     {
@@ -39,3 +66,6 @@
         "parameters": {}
     }
 ]
+
+
+

@@ -4,7 +4,7 @@ Some notes on the API inport-format of Jaccede
 ## References
 - [Mapping Jaccede Properties](https://docs.google.com/spreadsheets/d/1D-RwYeTm8eDN95R4pDAJUWn8n_FY4QlMnbQAfj6Z6dc/edit#gid=2140391884)
 - [API reference](http://apidoc.jaccede.com/#/places/get)
-
+- [A sample place-details page](https://www.jaccede.com/en/p/ChIJN6uWRp68rhIRC9VoO58Xhso/hotel-albert-1er-toulouse)
 
 ## Considerations
 

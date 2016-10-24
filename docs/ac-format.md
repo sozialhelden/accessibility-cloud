@@ -1,6 +1,8 @@
+# ac-format (temp)
+
 # Accessibility Cloud exchange format
 
-## Considerations:
+## Considerations
 
 - Needs to be easily convertible into existing data-formats for services like AXSMaps, Jaccede, and Wheelmap.
 - Should enable import of very detailed data for different needs and focus areas
@@ -11,8 +13,9 @@
 - There should be a current valid schema for the complete accessiblity-specification. Thise schema is validated during import and mappings with invalid datapoints or formats produce warnings and are omitted. However, additions, refinements and clarifications of that schema should be moderated by the ac-community painless and fast. (e.g. 1-3 days between suggestion and implementation).
 - Sooner or later a visual mapping / exploration / description of the data catalog is necessary. [This concept](https://invis.io/XF8W2XHE4#/130859674_A06-Details) can be a good starting point.
 - We group different aspects of the accessibility-data spacially (entrance, stairs, restrooms) instead of need (wheelchair vs. visually impaired).
-- Should balance depth of datastructure with amount of properties.  E.i. don't nest two properties for the sake of nesting.
-- Group interpreting/sumarization properties outside of groups (e.g. don't nest `.isStepFree`  into `.steps.`. Otherwise the path of the complete property would be awkward to read (`.entrance.isStepFree` is better than `.entrance.steps.isStepFree`)
+- Should balance depth of data structure with amount of properties.  E.i. don't nest two properties for the sake of nesting.
+- Group interpreting/summarization properties outside of groups (e.g. don't nest `.isStepFree`  into `.steps.`. Otherwise the path of the complete property would be awkward to read (`.entrance.isStepFree` is better than `.entrance.steps.isStepFree`)
+- Types of accessibility should clarified -> bad: `isAccessible` better: `accessibleWithWheelchar`
 
 ## Code-style
 
@@ -27,15 +30,17 @@
 ## Needs discussion / open questions
 
 - "steps" vs. "stairs"
-- "available" vs. "exists" vs. "has"
-- do we ignore multipe entries, rooms, facilities?
+- do we ignore multiple entries, rooms, facilities,lifts?
+  - could be a political answer like "describe the least accessible room"
 - how do we deal with "jaccede::services/equipment/Other/pleaseSpecify" ?
 - "Lavatories" vs. "restroom"
 - "restroom" vs. "restrooms"
 - room description could be identically for hotel-rooms, dining-rooms, meeting, rooms, etc.
 - "hotelroom" vs "hotelRooms"
+- "categories" as array?
 
 ### `accessibleWithWheelchair` vs. `ratingForWheelchair`
+
 - Reality will demanand a final yes/no answer from AC.
 - Many sources rate the accessibility on a scale (e.g. from 1-5 Stars)
 - Some sources rate the accessibility as yes/limited/no -> could be translated into rating
@@ -43,6 +48,9 @@
 
 
 ## A sample response block including all possible properties
+
+
+properties.accessibility.accessibleWith.whee
 
 Note: this refinement of this format is still in progress as more and more data-sources are being added.
 
@@ -71,318 +79,353 @@ Note: this refinement of this format is still in progress as more and more data-
 
 
         "accessibility": {
-            accessibleWithWheelchair: true,               // RFC: Overall accessibility, could this be merged with ratingForWheelchair
-            accessibleWithGuideDog: true,
-            accessibleWithLimitedSight: true,
-            ratingForWheelchair: 0.7,                     // 
-            widthOfAllOpeningsAndAisles: ">90",           // RFC
-            entrance: {
-                isMainEntrance: true,
-                intercom: {
-                    isAvailable: true,
-                    height: "90..120cm",
-                    isColorContrastedWithWall: true,
-                },
-                ratingForWheelchair: 0 .. 1,
-                isStepFree: false,
-                steps: {
-                    count: ">10 ± 2",
-                    stepHeight: "12cm ±1",
-                    handRailExists: true,
-                    stairLiftExists: true,
-                    haveStairNosing: true,
-                }
-                hasRemovableRamp: false,
-                door: {
-                    isAutomatic: false,
-                    width: "85cm",
-                    hasClearMarkingOnGlassDoor: false,
-                    isEasyToHoldOpen: false,
-                    hasErgonomicDoorHandle: false,
-                    noRevolvingDoor: false,                 // RFC... negation in attribute?
-                },
-                hasSlope: true,
-                hasReadableSign: true,
+            accessibleWith: {
+                guideDog: true,
+                limitedSight: true,
+                withWheelchair: true,
             },
-            restrooms: {
-                turningSpaceInside: ">150cm",
-                hasBathTub: true,
-                mirrorAccessibleWhileSeated: true,
-                heightOfMirrorFromGround: "100cm",
-                hasSupportRails: true,
-                heightOfSoapAndDrier: "",
-                hasSpaceAlongsideToilets: true,
-                washBasingAccessibleWithWheelchairs: true,
-                shampooSuitableForWheelChair: true,
+            offersActivitiesFor: {
+                hearingImpaired: true,,
+                learningImpaired: true,
+                physicallyImpaired: true,,
+                visuallyImpaired: true,
+            },
 
-                toilette: {
-                    heightOfBase: "40 .. 45cm",
-                    spaceOnLeftSide: ">70",
-                    spaceOnRightSide: ">70",
-                    foldableHandles: {
-                        onLeftSide: true,
-                        onRightSide: true,
-                        heightAboveToiletteBase: ">15cm",
-                        extensionOnToilet: ">28cm",     // RFC: better label required,
-                        distance: "60 .. 65cm",
+            widthOfAllOpeningsAndAisles: ">90",             // RFC
+
+            entrances: [
+                {
+                    name: 'Main Entrance',
+                    ratingForWheelchair: 0 .. 1,
+                    isMainEntrance: true,
+                    isStepFree: false,
+                    isALift: true,
+                    hasRemovableRamp: false,
+                    slopeAngle: '6%',                       //
+                    hasVisualSign: true,                    // needs review
+                    hasBrailleSign: true,
+
+                    intercom: {
+                        isAvailable: true,
+                        height: "90..120cm",
+                        isColorContrastedWithWall: true,    // needs review
                     },
-                },
-                hasShower: true,
-                entrance: {
-                    isAutomatic: false,
-                    doorWidth: "85cm",
-                    hasClearMarkingOnGlassDoor: false,
-                    isEasyToHoldOpen: false,
-                    hasErgonomicDoorHandle: false,
-                    isStepFree: true,
-                    turningSpaceInFront: ">150cm",
-                    doorOpensToOutside: true,
-                },
-                shower: {
-                    supportRails{
-                        height:"85 .. 107cm",
-                        aboveAndBelowControls: true,
+                    stairs: {
+                        <see stairs.*>
+                    }
+                    door: {
+                        isAutomatic: false,
+                        width: "85cm",
+                        hasClearMarkingOnGlassDoor: false,
+                        isEasyToHoldOpen: false,
+                        hasErgonomicDoorHandle: false,
+                        isRevolving: false,
                     },
-                    controls: {
-                        height: 85cm,
+                }
+            ],
+            stairs: [
+                {
+                    count: ">10 ± 2",
+                    hasHighcontrastAndAntiSlipStairNosing: true,    // needs review
+                    name: "mainStaris",
+                    stepHeight: "12cm ±1",
+                    hasHandRail: true,
+                    hasStairLift: true,
+                    hasTactileSafetyStrip: true,
+                    wheelChairPlatformLift {
+                        height: 120cm,
+                        width: 110cm,
                     },
+                }
+            ],
+
+            restrooms: [
+                {
+                    ratingForWheelchair: 0.3,
+                    turningSpaceInside: ">150cm",
+                    hasBathTub: true,
+                    mirrorAccessibleWhileSeated: true,
+                    heightOfMirrorFromGround: "100cm",
                     hasSupportRails: true,
-                    isWalkIn: true,
-                    hasShowerSeat: true,
-                    step: "<2cm",
-                    showerSeat: {
-                        isRemovable: true,
-                        isFixes: false,
-                        isFoldable: false
-                    }
+                    heightOfSoapAndDrier: "100 .. 120cm",
+                    hasSpaceAlongsideToilet: true,
+                    washBasinAccessibleWithWheelchair: true,
+                    shampooAccessibleWithWheelchair: true,
+
+                    entrance: {
+                        isAutomatic: false,
+                        doorWidth: "85cm",
+                        hasClearMarkingOnGlassDoor: false,
+                        isEasyToHoldOpen: false,
+                        hasErgonomicDoorHandle: false,
+                        isStepFree: true,
+                        turningSpaceInFront: ">150cm",
+                        doorOpensToOutside: true,
+                    },
+                    toilet: {
+                        heightOfBase: "40 .. 45cm",
+                        spaceOnLeftSide: ">70",
+                        spaceOnRightSide: ">70",
+                        foldableHandles: {
+                            onLeftSide: true,
+                            onRightSide: true,
+                            height: ">85cm",
+                            extensionOverToilet: ">28cm",     // RFC: better label required,
+                            distance: "60 .. 65cm",
+                        },
+                    },
+                    hasShower: true,
+                    shower: {
+                        hasSupportRails: true,
+                        step: "<2cm",
+                        isWalkIn: true,                        // needs review
+                        supportRails: {
+                            height:"85 .. 107cm",
+                            aboveAndBelowControls: true,
+                        },
+                        controls: {
+                            height: 85cm,
+                            isEasyToUse: true,
+                            hasErgonomicHandle: true,
+                        },
+                        hasShowerSeat: true,
+                        showerSeat: {
+                            isRemovable: true,
+                            isFixed: false,
+                            isFoldable: false
+                        }
+                    },
+                    washBasin: {
+                        accessibleWithWheelchair: true,
+                        height: ">80cm",
+                        spaceBelow: {
+                            height: "> 67cm",
+                            depth: "30cm",
+                        }
+                    },
                 },
-                washBasin: {
-                    accessibleWithWheelchair: true,
-                    height: ">80cm",
-                    spaceBelow: {
-                        height: "> 67cm",
-                        depth: "30cm",
-                    }
-                },
-            },
+            ],
             indoors: {
-                isSpacious: true,
-                isWellLit: ttue,
+                ratingSpacious: 1,                      // needs review
+                isWellLit: true,
                 isQuiet: true,
-                steplessFloor: true,                        // single-level?
+                hasSteplessFloor: true,                                 // single-level?
                 hasRemoteControlAudioSigns: true,
-                privateAreaAccessibleWithWheelchair: true,   // do we need this property?
                 spacesReservedForPeopleWithWheelChairsAvailable: true,  // name too long
-                turningsSpaceInFrontOfRelevantFurniture: ">140",  // RFC?
-                widthOfAislesAndOpenings: "> 140cm",
+                turningsSpaceInFrontOfRelevantFurniture: ">140",        // find better adj for 'relevant'
+                widthOfOpeningsAndAisles: "> 140cm",
 
                 sitemap: {
-                    isNearEntrance: true,
-                    inBraille: true,
+                    distanceFromEntrance: "<10m",
+                    isBraille: true,
                     isRaised: true,
                     hasLargePrint: true,
-                    language: 'en',
+                    languages: ['en'],
+                    hasSimpleLanguage: true,
                 }
                 allPathways: {
                     width: ">150",
                     widthAtObstacles: ">90cm",
                 },
-
-                wheelchairAccess: {
-                    isPartial: false,
-                    isTotal: true,
+                tactileGuideStrips: {
+                    isGuidingToInfoDesk: true,                              // needs review
+                    hasVisualContrat: true,
                 },
-                tacticleGuidesStips: {
-                    towardsReceptionDesk: true,
-                    haveVisualContrats: true,
-                },
-                receptionDesk: {
-                    height: "<=80cm",
-                    isNearEntrance: true,
+                infoDesk: {
+                    heightOfCounter: "<=80cm",
+                    distanceToEntrance: "<10m",
                 },
                 signage: {
-                    isUnderstandable: true,
                     isReadible: true,
-                    language: 'de',
-                }
-            },
-            rooms: {                                    // "hotelRoom?"
-                hasFlashingOrVibratingFireAlarm: true,
-                furnitureIsRemovable: false,
-                powerOutlets: {
-                    haveContrastColor: true
-                }
-                switches: {
-                    haveContrastColor: true,
-                }
-                bed: {
-                    height: "120cm ± 10",
-                    heightIsAdjustable: false,
-                    turningSpaceBeside: ">90cm",
-                    spaceBelow: "20cm",
-                },
-                entrance: {
-                    isAutomatic: false,
-                    doorWidth: "85cm",
-                    hasClearMarkingOnGlassDoor: false,
-                    isEasyToHoldOpen: false,
-                    hasErgonomicDoorHandle: false,
-                    isStepFree: true,
-                    turningSpaceInFront: ">150",
-                    roomNumberIsRaisedOrBraille: true,
-                },
-                wardrope: {
-                    heightForRail: "<140cm",
-                    turningSpaceInFront: "",
-                }
-                restroom: {
-                    <see accessibility.restroom.*>
+                    languages: ['de'],
                 },
             },
-            poolArea: {
-                poolHasAccessFacility: true,
+            areas: [
+                {                                                        // "hotelRoom?"
+                    tags: ['meeting-room', 'confidential', 'bedroom', 'terrace', 'roof','font-space'],   // TBD
+                    name: '',
+                    hasFlashingOrVibratingFireAlarm: true,
+                    hasRemovableFurniture: false,
+                    isStepLess: true,
+                    floorNumber: "",
+                    ground: {
+                        distanceToDroppedCurb: "<20m ±10",  // interpretation of "nearby",
+                        slopeAngle: "6deg",
+                        isCobbleStone: true,                // RFC: replace with 'evenPavement'
+                        turningSpace: "<150cm",             // interpretation of "very narrow"
+                    },
+
+                    powerOutlets: {
+                        haveContrastColor: true,
+                        isErgnomicToUse: true,
+                        hasChildProtection: true,
+                        height: "10 .. 30cm",
+                    }
+                    switches: {
+                        haveContrastColor: true,
+                        isErgnomicToUse: true,
+                        height: "120cm",
+                    }
+                    bed: {
+                        height: "120cm ± 10",
+                        adjustableHeight: "30 .. 140cm",
+                        turningSpaceBeside: ">90cm",
+                        spaceBelow: "20cm",
+                    },
+                    entrance: {
+                        <see accessibility.entrance.*>
+                    },
+                    wardrobe: {
+                        heightForRail: "<140cm",
+                        turningSpaceInFront: ">140cm",
+                    }
+                    restroom: {
+                        <see accessibility.restroom.*>
+                    },
+                    changingRoom: {
+                        turningSpaceInside: ">150cm",
+                        hasSupportRails: true,
+                        heightOfMirrorFromGround: "100cm",
+                        heightOfHooks: "<120cm",
+                        seatingIsPossible: true,
+                    },
+                },
+            ]
+            poolOrSaunaArea: {                                             // needs review
+                hasPoolAccessFacility: true,
+                hasSaunaWheelchair: true,
             },
             beach: {
-                accessibleForWheelchairs: true,
+                isAccessibleForWheelchair: true,
             },
-            saunaWheelChairAvailable: true,
-            lectureHall: {                              // merge with 'theatre', 'conference room', 'meetinghall'?
-                stage: {
-                    isAccessibleWithWheelchair: true,
-                }
-                auditorium: {
-                    isAccessibleWithWheelchair: true,
-                    hasInductionLoop: true,
-                    transferToRegularSeatPossible: true
-                }
-            },
-            vendingMachines: {
-                easyToUse: true,
-                controls: {
-                    height: "<120cm",
-                    areHighContrast: true,
-                    inBraille: true,
-                    areRaised: true,
+            stages: [
+                {                              // merge with 'theatre', 'conference room', 'meetinghall'?
+                    name: 'Kinosaal 3',
+                    stage: {
+                        isAccessibleWithWheelchair: true,
+                        durationOfLift: "<10sec",
+                        turningSpace: "150cm",
+                    },
+                    auditorium: {
+                        isAccessibleWithWheelchair: true,
+                        wheelchairPlaces: {
+                            count: 1,
+                            hasSpaceForAssistent: true,
+                        }
+                        hasInductionLoop: true,
+                        transferToRegularSeatPossible: true
+                    }
                 },
-            },
-            changingRoom: {
-                turningSpaceInside: ">150cm",
-                hasSupportRails: true,
-                heightOfMirrorFromGround: "100cm",
-                heightOfHooks: "<120cm",
-                seatingIsPossible: true,
-            },
+            ],
+            vendingMachines: [
+                {
+                    name: "Ticket Machine 1",
+                    easyToUse: true,
+                    languages: [en,de],
+                    hasHeadPhoneJack: true,
+                    hasSpeech: true,
+                    controls: {
+                        height: "<120cm",
+                        areHighContrast: true,
+                        inBraille: true,
+                        areRaised: true,
+                    },
+                },
+            ]
             cashRegister: {
-                height: "90",
-                creditCardReaderIsRemovable: true,
+                height: "90cm",
+                hasRemovableCreditCardReader: true,
             },
-            canteen: {                                      // merge with diningRoom?
-                tableServiceAvailable: true,
-                tablesAreAccessibleWithWheelchair: true,                  // do we need to clarify?
+            diningArea: {                                      // merge with 'diningRoom'?
+                hasTableService: true,
+                turningSpace: "30 .. 120cm",
+                isAccessibleWithWheelchair: true,
+                wheelchairPlaces: {
+                    count: 1,
+                    hasSpaceForAssistent: true,
+                }
+
                 tables: {
-                    height: "<80",                          // RFC: or better heightOfAllTables
+                    height: "60 .. 80cm",
                     spaceBelow: {
                         height: ">67cm",
                         depth: ">30cm",
                     }
-                }
+                },
+                seats: {
+                    height: "20 .. 120cm",
+                },
             },
             services: {
-                mobileSafetyDepositBoxAvailable: true,
-                manualWheelChairAvailable: true,
-                allTerrainWheelChairAvailable: true,
-                hoistAvailable: true,
-                changingTable: true,             // 
-                vehiclesAreAdaptedForWheelchairs: true,
-                meetingRoomAccessibleByWheelChair: true,    // murky
-                accessibleTables: true,                     // murky
+                hasMobileSafetyDepositBox: true,
+                hasManualWheelChair: true,
+                hasAllTerrainWheelChair: true,
+                hasHoist: true,
+                hasChangingTable: true,                        //
+                hasVehiclesAreAdaptedForWheelchairs: true,
             }
-            activities: {
-                forHearingImpaired: true,,
-                forLearningImpaired: true,
-                forPhysicallyImpaired: true,,
-                forVisuallyImpaired: true,
-            }
-            media: {                                        // This category is too unspecific
-                print: {
-                    inBraille, true,
-                    asAudio: true,
-                    largePrint: true,
-                    contrastingBackground true,
-                    easyToUnderstand: true,
-                    languages: ['en', 'de']
-                },
-                audioGuides: {
-                    areAvailable: true,
-                    easyToUnderstand: true,
-                },
-                presentations: {                 // merge with 'performances', 'screenings', 'lectureHall'
+            media: [
+                {                                            // This category is too unspecific
+                    type: documents|menu|audioGuide|presentations|exhibits|movie|screen,
+                    name: "Speisekarte",
+                    isBraille, true,
+                    isAudio: true,
+                    isLargePrint: true,
+                    hasContrastingBackground true,
+                    isEasyToUnderstand: true,
                     hasDedicatedScreenForSubtitles: true,
                     hasSubtitles: true,
                     hasRealtimeCaptioning: true,
-                },
-                menu: {
-                    inBraille, true,
-                    asAudio: true,
-                    largePrint: true,
-                    contrastingBackground true,
-                    easyToUnderstand: true,
                     languages: ['en', 'de']
-                },
-                exhibits: {
                     turningSpaceInFront: ">140cm",
-                    clearlyVisibleWhileSeated: true,
-                    informationReadableWhileSeated: true,
+                    isClearlyVisibleWhileSeated: true,
+                    isInformationReadableWhileSeated: true,
                 },
-            },
+            ],
+
             staff: {
                 canSeeVisitorsFromInside: true,
                 canAssistWithSpecialNeeds: true,
-                trainedInSigning: true,
-                trainedInAccomodattingVisitorsWithDisabilities: true,   // very unspecific
+                isTrainedInSigning: true,
+                hasFreeAssistentForVisitors: true,
+                isTrainedInAccomodattingVisitorsWithDisabilities: true,   // very unspecific and loooong
             },
 
-            lift: {
-                haveVoiceAnnounceSystem: true,
-                controls: {
-                    height: "90cm",
-                    areHighContrast: true,
-                    inBraille: true,
-                    areRaised: true,
+            lifts: [
+                {
+                    name:'Main Lift',
+                    hasVoiceAnnounceSystem: true,
+                    hasEmergencyVoiceIntercom: true,
+                    controls: {
+                        height: "90 .. 120cm",
+                        isHighContrast: true,
+                        isBraille: true,
+                        isRaised: true,
+                    },
+                    cabin: {
+                        width: "140cm",
+                        length: "110cm",
+                        door: {
+                            width: "100cm",
+                        }
+                    },
                 },
-                cabin: {
-                    width: "140cm",
-                    length: "110cm",
-                    door: {
-                        width: "100cm",
-                    }
-                },
-                wheelChairPlatformLift {
-
-                },
-            },
-            stairs: {
-                count: ">10 ± 2",
-                stepHeight: "12cm ±1",
-                handRailExists: true,
-                stairLiftExists: true,
-                haveStairNosing: true,
-                haveTactileSafetyStrip: true,
-            }
+            ],
             parking: {
-                disabledParkingSpaces: {
+                parkingSpacesForWheelchairUsers: {
                     areAvailable: true,
-                    widerThanRegularSpaces:,
-                    count: "2",
-                    locatedInside: true,
+                    location: "2nd floor",
+                    count: 2,
+                    isLocatedInside: true,              // need review
                     width: ">350cm",
                     length: ">500cm",
+                    hasDedicatedSignage: true,          
                 }
             },
-            outside: {
+            outside: {                                  // needs review ""
                 pavement: {
-                    distantToDroppedKerbs: "<20m ±10",  // interpretation of "nearby",
-                    hasSignificantSlope: false,
+                    distanceToDroppedCurb: "<20m ±10",  // interpretation of "nearby",
+                    slopeAngle: "6deg",
                     isCobbleStone: true,                // RFC: replace with 'evenPavement'
                     streetIsSloping: true,
                     turningSpace: "<150cm",             // interpretation of "very narrow"
@@ -409,7 +452,9 @@ Note: this refinement of this format is still in progress as more and more data-
 
 
 
+
 ## Properties 
+
 - We should invest some time to think about dealing with property-types early, because making things "up on the fly" will likely either make things inprecise, or difficult to read either for machines or humans.
 - API responses should be concise:
     - if possible optimized for a target audience (e.g. wheelchair users) and locale (e.g. United States)
@@ -421,25 +466,21 @@ Note: this refinement of this format is still in progress as more and more data-
 - Property names should ...
     - be as concise as possible
     - be american english
-    - should avoid accronyms
+    - start with `is*` or `has*` if a boolean
+    - should avoid accronyms (`WC` -> `toilet`)
     - be camelCase
-    - not repeat parent-attributes (e.g. bad: `"doorOpening.doorWidth": ...`  better: `"entrance.width" : "90cm ±5"`)
+    - not repeat parent-attributes (e.g. bad: `"doorOpening.doorWidth": ...`  better: `"entrance.width" : "90cm +-5"`)
     - not include units (e.g. bad: `"doorOpening.widthInCm" : ...`   better: `".entrance.width": ">90cm"`)
     - not include ranges (e.g. bad: `"steps.moreThan3: ..."`  better: `".steps.count": ">3"` )
-    - focus on good accessibility rather than negative obstacles:  e.g. `.easyToHoldOpen` or `hasErgnomicHandle` are better than `.difficultToOpen`, `doorHandleNotPractical`, or `isNotMainEntrance`
-    - indicate if property is a boolean, e.g. `hasHandrail`, `clearlyVisible`, `removableRampAvailable`
-    - not be confused with translation (e.g. If we call a propertie 'Restroom' or 'Bathroom' can be solved by synonoms or translations)
+    - focus on good accessibility rather than negative obstacles:  e.g. `.isEasyToHoldOpen` or `hasErgnomicHandle` are better than `.difficultToOpen`, `doorHandleNotPractical`, or `isNotMainEntrance`
+    - not be confused with translation (e.g. If we call a property 'Restroom' or 'Bathroom' can be solved by synonyms or translations)
     - indicate interpreting summaries with a `rating*`-prefix, e.g. `entrance.ratingForWheelchair`
-    - be as self-contained as possible `furnitureIsRemovable` is better than `room.hasRemovableFurniture`
-- Precission may vary for various reasons:
+- Precision may vary for various reasons:
     - edges might be curved or slanted
     - precise measuring might not be possible.
     - multipe entities with a range of values might exist (e.g. several doors or windows)
-    - it's better to have an inmprecise estimation that no attribute at all.
+    - it's better to have an non-accurate estimation that no attribute at all.
     - We are aware of the intrisinc complexity. But we can add this feature later.
-- We suggest to store all values in meters and convert on the fly into human readible format either by a library or by the API:
-    - API request could specify the locale to prefare inches over centinemters.
-    - defaults for these settings could already be entered with the access-key-settings
 - Different units should be supported: widths and height might be specified and cm, however, distances (like to the next parking spot) are given in m or even kilometer.
 - Properties should also store relavancy for different needs.
 - Also definitions of valid/required valid-ranges together with references would be of enormous value.
@@ -448,43 +489,7 @@ Note: this refinement of this format is still in progress as more and more data-
 
 As of Oct 2016 this is under heavy development and not even close to production.
 
-    'accessibility.access.entrance.door.width': {
-        '_id': 'accessibility.access.entrance.door.width',
-        'parentId':'accessibility.access.entrance.door',
-        'name': 'width',
-        'path': 'accessibility.access.entrance.door.width',
-        'type': 'distance',
-        'translations': {
-            'en': "Door-width",
-            'de': "Türbreite",
-        },
-        'imageURL': "",
-        'iconURL': "",
-        'relevancy': {
-            'wheelchairs': 1,
-            'blind':0,
-        },
-        'description': "markdown wiki-description with links guidelines and discussions",
-        'preferedUnit': 'cm',
-        'contraints: {
-            'validRange': "0.3 .. 10",
-        },
-        'requirements': [
-            {
-                relevantFor: ['wheelchairs', 'electic wheelchairs'],
-                ranges: {
-                    '0 .. 0.8':'inaccessible',
-                    '0.9 .. 0.8':'limited',
-                    '0.9 .. inifinity':'accessible',
-                },
-                references: [
-                    'url':"http://www.reisen-fuer-alle.de/qualitaetskriterien_fuer_rollstuhlfahrer_324.html",
-                    'name': "Reisen für alle",
-                    'country': 'de'
-                ]
-            }
-        ]
-    }
+    'accessibility.entrance.door.width': { '_id': 'accessibility.access.entrance.door.width', 'parentId':'accessibility.entrance.door', 'name': 'width', 'path': 'accessibility.entrance.door.width', 'translations': { 'en-US': "Door-width", 'de-CH': "Türbreite", }, 'explainingImageURL': "", 'acPropertyIcon': "", 'relevancyForUserGroups': { 'wheelchair': 0.85, 'blind': 0, 'visuallyImpaired': 0, }, 'description': { 'en-UK': "markdown wiki-description with links guidelines and discussions", } 'preferedUnit': 'cm', 'contraints': { // TBD }, }
 
 ## Requirement Catalogues
 
@@ -571,34 +576,30 @@ The data-structure for a requirement-catalogue might look like this:
 
 
 
+
 ## Reoccuring property-groups
 
 - Reoccuring elements should be consistent: the description format of entrances should be identical for `entrance`, `room.entrance.`, `room.restroom.entrance`
 - Attributes (like the "width of a door") and relevant value ranges (less or more than 90cm) should be separated. The interpretation/format of the value should not be mixed with the storage of the value in the database.
 - The exported format should be optimized for human readibility 
 
-        entrance: {
-            isAutomatic: false,
-            doorWidth: "85cm ±2",
-            hasClearMarkingOnGlassDoor: false,
-            isEasyToHoldOpen: false,
-            hasErgonomicDoorHandle: false,
-            isStepFree: true,
-            turningSpaceInFront: ">150cm",
-        },
+        entrance: { isAutomatic: false, doorWidth: "85cm ±2", hasClearMarkingOnGlassDoor: false, isEasyToHoldOpen: false, hasErgonomicDoorHandle: false, isStepFree: true, turningSpaceInFront: ">150cm", },
 
 ### Boolean properties
+
 - The world is not black and white. However the data of AC should be optimized for the consumption by non-expert, which prefare "we believe this place is accessible for wheelchair users" over "93% of reviewers gave an accessiblity-rating for 50% or higher". If necessary, we should not sacrifice the usefulness for the majority of the users over the requirements and opinions of few domain-experts. Never the less, we should always try provide additional data on how a boolean yes/no claim has been made.
 - To avoid legal claims AC should clearily reject all responsibility for the quality of the given data.
 - For a specific place we should only store boolean-attributes if a clear 'yes|no' was possible. For undecided properties we should leave the db-reference blank.
 
 #### Numeric properties ("Qualifiers")
+
 - Examples:
     - `entrance.doorOpening.width`
     - `entrance.doorOpening.heightOfDoorHandle`
     - `entrance.doorOpening.heightOfSingleStep`
 
 ### Strings properties
+
 - Examples
     - Addresse etc.
 
@@ -606,18 +607,19 @@ The data-structure for a requirement-catalogue might look like this:
 
 
 ## Interpreting and styling data
+
 - AC should provide a library that allows the interpretation of response data.
 - For all properties we should have offer a locale interpretation schema that includes...
     - translation
     - descriptions
-    - valid/recommented/required ranges, e.g.
-        ".doorOpening.width" : { "<0.9":   }
+- valid/recommented/required ranges, e.g. ".doorOpening.width" : { "<0.9":   }
     - relevancy for different forms of disability
     - human readible units (e.g. cm/inch, vs. m/ft vs. km/miles)
     - backlink to AC-wiki for that property with further discussion, norms, laws, regulations for different countries.
 - The lib should of functionality for converting metric data into human readible local "0.900001±1" -> "90cm".
 
 ## Storing properties with precision in the database
+
 - Use-cases to think about:
     - less-then
     - more than
@@ -635,13 +637,14 @@ The data-structure for a requirement-catalogue might look like this:
 #### Additional references
 
 Wiki-Data has a very elaborate system of defining the valid ranges of properties.
+
 - [WikiData All Properties](https://www.wikidata.org/wiki/Wikidata:Database_reports/Constraint_violations/All_properties)
 - [WikiData Constraints](https://www.wikidata.org/wiki/Template:Constraint)
 
 
 ### Fringe-Cases that eventually need specification
 
-- non-point geo-information (e.g. bus-lines, parks, path-ways)
+- non-point geo-information (e.g. rolling stock (e.g. trains), parks, path-ways)
 - image-annotations
 - 3d-models / scans
 - surface-properties (curbs on street-corners)
