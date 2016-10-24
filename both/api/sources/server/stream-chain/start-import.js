@@ -1,5 +1,5 @@
 import Stream from 'stream';
-
+import Fiber from 'fibers';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 
@@ -53,6 +53,6 @@ Meteor.methods({
   'sources.startImport'(sourceId) {
     check(sourceId, String);
     this.unblock();
-    startImport({ sourceId, userId: this.userId });
+    Fiber(() => startImport({ sourceId, userId: this.userId })).run();
   },
 });
