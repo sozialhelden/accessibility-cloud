@@ -89,6 +89,7 @@ add to `.gitignore`
 
 Login to 
 [eu-west-1.galaxy.meteor.com](https://eu-west-1.galaxy.meteor.com/app/acloud.meteorapp.com)
+
 - Click "Apps"
 - Click on the app (e.g. acloud.meteorapp.com)
 - Click "Logs"  

@@ -10,7 +10,7 @@ ecmascript@0.5.8_1
 es5-shim@4.6.14_1
 check@1.2.3
 tracker@1.1.0
-audit-argument-checks
+audit-argument-checks@1.0.7
 
 # standard libraries
 jquery@1.11.9
@@ -28,7 +28,7 @@ aldeed:autoform
 meteorhacks:subs-manager
 
 # data
-mongo@1.1.12_1
+mongo@1.1.13
 aldeed:simple-schema
 aldeed:collection2
 dburles:collection-helpers

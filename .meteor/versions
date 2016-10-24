@@ -75,10 +75,10 @@ mobile-status-bar@1.0.12
 modules@0.7.6_1
 modules-runtime@0.7.6_1
 momentjs:moment@2.15.1
-mongo@1.1.12_5
+mongo@1.1.13
 mongo-id@1.0.5
 npm-bcrypt@0.9.1_1
-npm-mongo@2.2.10_1
+npm-mongo@2.2.11_1
 observe-sequence@1.0.12
 ordered-dict@1.0.8
 percolate:momentum@0.7.2
