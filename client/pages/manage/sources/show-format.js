@@ -5,6 +5,7 @@ import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { acFormat } from '/both/lib/ac-format.js';
+import { $ } from 'meteor/jquery';
 
 import { _ } from 'meteor/stevezhu:lodash';
 
@@ -102,8 +103,10 @@ Template.sources_show_format_page.events({
           missingPaths.push(path);
         }
       });
-      if (missingPaths) {
+      if (missingPaths.length) {
         $('.errors').html('Invalid mapping paths:<ul><li>' + missingPaths.join('</li><li>') + '</li></ul> <a href="https://github.com/sozialhelden/ac-machine/blob/master/docs/ac-format.md">Please see documentation</a>' );
+      } else {
+        $('.errors').html('');
       }
     }
   },

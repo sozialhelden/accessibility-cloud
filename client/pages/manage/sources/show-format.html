@@ -9,24 +9,26 @@
     </div>
     <div class='centered-content'>
       <div class='errors'>
-        No errors so far...
       </div>
+      {{#if lastSourceImport}}
 
-      {{#with lastSourceImport}}
-        <h2>{{_"Latest Import"}}</h2>
-        <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>
-        {{> sources_stream_chain}}
+        {{#with lastSourceImport}}
+          <h2>{{_"Latest Import"}}</h2>
+          <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>
+          {{> sources_stream_chain}}
+        {{else}}
+          <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
+        {{/with}}
+
+        <h2>Examples for imported places</h2>
+        {{#each examplePlaceInfos}}
+          <div class='code-block'>
+              {{stringify this}}
+          </div>
+        {{/each}}
       {{else}}
-        no imports
-      {{/with}}
-
-      <h2>Examples for imported places</h2>
-      {{#each examplePlaceInfos}}
-        <div class='code-block'>
-            {{stringify this}}
-        </div>
-      {{/each}}
-
+        <p class='placeholder'>{{_"Please insert import definition into the left side."}}</p>
+      {{/if}}
     </div>
   {{/with}}
 </template>

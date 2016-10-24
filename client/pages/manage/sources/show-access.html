@@ -1,7 +1,7 @@
 <template name="sources_show_access_page">
     <div class='centered-content'>
       {{#with source}}
-        <h2>Controll Access for this source</h2>
+        <h2>Control Access for this Source</h2>
 
         <form>
           <div class="form-group" data-required="true">
@@ -14,7 +14,7 @@
         </form>
 
         {{#unless source.isFreelyAccessible}}
-          <h3>Restrict access to the following organizations</h3>
+          <h3>Restrict JSON API access to the following organizations</h3>
           <ul class='access-list'>
           {{# each organizations}}
             <li class=''>

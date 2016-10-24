@@ -13,7 +13,6 @@ import { isAdmin } from '/both/lib/is-admin';
 
 Factory.define('organization', Organizations, {
   name: 'ACME GmbH',
-  legaltype: 'gmbh',
   address: 'Friedrichstr. 123',
   zipCode: '12345',
   city: 'Berlin',
@@ -42,7 +41,7 @@ Factory.define('language-fr', Languages, {
   languageCode: 'fr',
 });
 Factory.define('language-ru', Languages, {
-  name: 'Russion',
+  name: 'Russian',
   languageCode: 'ru',
 });
 

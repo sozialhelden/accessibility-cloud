@@ -28,7 +28,7 @@ Organizations.allow({
 
 Organizations.schema = new SimpleSchema({
   name: {
-    label: 'Official English title',
+    label: 'Name of company or individual',
     type: String,
     max: 1000,
     autoform: {
@@ -36,26 +36,6 @@ Organizations.schema = new SimpleSchema({
         placeholder: 'e.g. xyz123 Inc.',
       },
     },
-  },
-  legaltype: {
-    label: 'Legal type',
-    type: String,
-    autoform: {
-      afFieldInput: {
-        // placeholder: 'e.g. Adam-Riese-St. 27',
-        options: [
-          { label: '?', value: 'undefined' },
-          { label: 'Governmental Organization', value: 'governmental' },
-          { label: 'NGO', value: 'ngo' },
-          { label: 'Non-Commercial', value: 'non-commercial' },
-          { label: 'Student', value: 'student' },
-          { label: 'GmbH', value: 'gmbh' },
-          { label: 'Inc.', value: 'Inc.' },
-          { label: 'Company', value: 'company' },
-        ],
-      },
-    },
-    max: 1000,
   },
   address: {
     label: 'Address',
@@ -156,7 +136,6 @@ Organizations.attachSchema(Organizations.schema);
 // them here to keep them private to the server.
 Organizations.publicFields = {
   name: 1,
-  legaltype: 1,
   address: 1,
   addressAdditional: 1,
   zipCode: 1,
