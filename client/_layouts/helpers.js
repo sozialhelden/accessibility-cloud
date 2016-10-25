@@ -99,6 +99,13 @@ export const helpers = {
 
     return true;
   },
+  activeIfRouteNameIs(routeName) {
+    return routeName === FlowRouter._current.route.name ? 'active' : '';
+  },
+  activeIfRouteNameMatches(regex) {
+    const currentRouteName = FlowRouter._current.route.name;
+    return currentRouteName.match(regex) ? 'active' : '';
+  },
   templateGestures: {
     'swipeleft .cordova'(event, instance) {
       instance.state.set('menuOpen', false);
