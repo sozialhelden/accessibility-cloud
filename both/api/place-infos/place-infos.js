@@ -36,7 +36,7 @@ PlaceInfos.visibleSelectorForUserId = () => ({});
 function convertToGeoJSONFeature(doc, coordinatesForDistance) {
   const properties = {};
   Object.assign(properties, doc.properties, doc);
-  if (coordinatesForDistance) {
+  if (coordinatesForDistance && properties.geometry && properties.geometry.coordinates) {
     properties.distance = geoDistance(coordinatesForDistance, properties.geometry.coordinates);
   }
   delete properties.properties;

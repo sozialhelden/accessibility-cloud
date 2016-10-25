@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { geometrySelector } from './geometry';
 import { paginationOptions } from './pagination';
+import { fieldOptions } from './fields';
 
 export function buildSelectorAndOptions({ req, _id, collection, userId }) {
   let selector = null;
@@ -32,6 +33,7 @@ export function buildSelectorAndOptions({ req, _id, collection, userId }) {
   const options = { transform: null };
 
   Object.assign(options, paginationOptions(req));
+  Object.assign(options, fieldOptions(req));
 
   // Allow per-user find options, e.g. limited field dependent
   if (typeof collection.findOptionsForUserId === 'function') {
