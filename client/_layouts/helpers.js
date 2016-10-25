@@ -104,10 +104,12 @@ export const helpers = {
     return u === undefined ? false : u.isAdmin;
   },
   activeIfRouteNameIs(routeName) {
-    return routeName === FlowRouter._current.route.name ? 'active' : '';
+    FlowRouter.watchPathChange();
+    return routeName === FlowRouter.current().route.name ? 'active' : '';
   },
   activeIfRouteNameMatches(regex) {
-    const currentRouteName = FlowRouter._current.route.name;
+    FlowRouter.watchPathChange();
+    const currentRouteName = FlowRouter.current().route.name;
     return currentRouteName.match(regex) ? 'active' : '';
   },
   templateGestures: {
