@@ -6,21 +6,7 @@
 
 
 <template name="browse_dashboard_page">
-  <div class='dashboard widget with-list organisations'>
-    <h2>Organizations</h2>
-    <ol>
-      {{#each organizations}}
-        <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
-        <li>
-          <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
-          {{#unless isUserMemberOfOrganizationWithId _id}}
-            <a href='' class='action join organizations' organizationId='{{this._id}}'>Admin Join</a>
-          {{else}}
-            (member)
-          {{/unless}}
-        </li>
-      {{/each}}
-    </ol>
+  <div class='dashboard with-list organisations'>
 
     <h2>Sources</h2>
     <ul class='with-blocks'>
@@ -28,7 +14,15 @@
         <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
         <li class='list block'>
           <a href='{{pathFor "browse.sources.show" _id= _id}}'>
-            {{name}}
+            <span class='main'>
+              {{getOrganization.name}}
+            </span>
+            <span class='minor'>
+              {{name}}
+            </span>
+            <span class='on-right'>
+              {{getLicense.shorthand}}
+            </span>
           </a>
 <!--           <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
           {{#unless isUserMemberOfOrganizationWithId _id}}
@@ -40,6 +34,22 @@
       {{/each}}
     </ul>
 
-    <a href='{{pathFor "browse.categories.list"}}'>Categories</a>
+    {{#if isAdmin }}
+    <h2>Administration</h2>
+    <ul>
+      {{#each organizations}}
+        <li>
+          <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+          {{#unless isUserMemberOfOrganizationWithId _id}}
+            <a href='' class='action join organizations' organizationId='{{this._id}}'>(Join as admin)</a>
+          {{else}}
+            (member)
+          {{/unless}}
+        </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+    <br>
+    <a href='{{pathFor "browse.categories.list"}}'>{{_'Import Categories'}}</a>
   </div>
 </template>

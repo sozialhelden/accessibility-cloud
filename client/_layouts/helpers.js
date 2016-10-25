@@ -99,6 +99,10 @@ export const helpers = {
 
     return true;
   },
+  isAdmin() {
+    const u = Meteor.user();
+    return u === undefined ? false : u.isAdmin;
+  },
   activeIfRouteNameIs(routeName) {
     return routeName === FlowRouter._current.route.name ? 'active' : '';
   },

@@ -3,12 +3,16 @@ import { Template } from 'meteor/templating';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Sources } from '/both/api/sources/sources.js';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { helpers } from '/client/_layouts/helpers';
+
 import subsManager from '/client/lib/subs-manager';
 import { _ } from 'meteor/underscore';
+
 
 Template.browse_dashboard_page.onCreated(function organizationsShowPageOnCreated() {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
+  subsManager.subscribe('licenses.public');
   subsManager.subscribe('organizations.withContent.mine');
 });
 
@@ -18,6 +22,7 @@ Template.browse_dashboard_page.onRendered(function organizationsShowPageOnRender
   });
 });
 
+Template.browse_dashboard_page.helpers(helpers);
 
 Template.browse_dashboard_page.helpers({
   organizations() {

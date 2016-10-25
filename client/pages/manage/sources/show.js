@@ -90,7 +90,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
 
       const markers = new L.geoJson(geoMarkerData, {
         pointToLayer(feature, latlng) {
-          const categoryIconName = feature.placeData.properties.category || 'place';
+          const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
           const color = getColorForWheelchairAccessiblity(feature.placeData);
 
           const acIcon = new L.AccessibilityIcon({

@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
 
 import { _ } from 'meteor/underscore';
@@ -142,6 +143,9 @@ Sources.helpers({
   },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
+  },
+  getLicense() {
+    return Licenses.findOne(this.licenseId);
   },
   inputMimeType() {
     const downloadItem = _.find(this.streamChain, chainItem => chainItem.type === 'HTTPDownload');
