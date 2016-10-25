@@ -43,7 +43,12 @@ Template.sources_show_imports_page.events({
   },
 });
 
+function getCurrentSource() {
+  return Sources.findOne(FlowRouter.getParam('_id'));
+}
+
 Template.sources_show_imports_page.helpers({
+  source: getCurrentSource,
   activeIfCurrentImport(sourceId) {
     return FlowRouter.getParam('importId') === sourceId ? 'active' : '';
   },
@@ -52,12 +57,55 @@ Template.sources_show_imports_page.helpers({
     const options = { sort: { startTimestamp: -1 } };
     return SourceImports.find(selector, options);
   },
-  source() {
-    return Sources.findOne(FlowRouter.getParam('_id'));
-  },
   fileMetadata() {
     return {
       sourceId: FlowRouter.getParam('_id'),
+    };
+  },
+  fileCallbacks() {
+    function showError(message) {
+      debugger
+      console.error(message);
+      alert(`Error while uploading: ${message}`);
+    }
+    return {
+      onError(error) {
+        showError(error.message || error.reason);
+      },
+      onUploaded(response) {
+        if (!response.uploadedFile) {
+          return showError('Server did not send uploaded file information.');
+        }
+
+        const source = getCurrentSource();
+        if (!source) {
+          return showError('Source not loaded yet. Can\'t set URL.');
+        }
+
+        const firstStream = source.streamChain && source.streamChain[0];
+        if (!firstStream) {
+          return showError('Source has no first stream chain element. Can\'t set URL.');
+        }
+
+        if (firstStream.type !== 'HTTPDownload') {
+          return showError('First stream is no HTTP download stream. Can\'t set URL.');
+        }
+
+        Meteor.call(
+          'updateDataURLForSource',
+          source._id,
+          response.uploadedFile.storageUrl,
+          (error) => {
+            if (error) {
+              showError(error.message || error.reason);
+              return;
+            }
+            Meteor.call('sources.startImport', source._id);
+          }
+        );
+
+        return true;
+      },
     };
   },
   sourceImport() {

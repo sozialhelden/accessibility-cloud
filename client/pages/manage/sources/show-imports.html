@@ -1,8 +1,8 @@
 <template name="sources_show_imports_page">
   <div class='sidebar navigation'>
     <button class='btn js-start-import btn btn-primary'>Start Import</button>
-<!--     {{> fileUpload additionalCSSClasses='btn btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata}}
- -->    <ul class='with-blocks source-imports'>
+    {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
+    <ul class='with-blocks source-imports'>
       {{#each sourceImports}}
         <li class='item block {{activeIfCurrentImport _id}} {{#if hasError}}has-error{{/if}} {{#if isFinished}}is-finished{{/if}}'>
           <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>

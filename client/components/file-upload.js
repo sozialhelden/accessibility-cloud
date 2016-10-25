@@ -9,7 +9,9 @@ function uploadFile({ file, metadata = {}, onUploaded, onProgress, onError }) {
   check(onProgress, Function);
   check(onError, Function);
   check(metadata, Object);
+
   console.log('Uploading', file, 'with metadata', metadata);
+
   const xhr = new XMLHttpRequest();
   xhr.upload.addEventListener('progress', (e) => {
     if (e.lengthComputable) {
@@ -17,9 +19,9 @@ function uploadFile({ file, metadata = {}, onUploaded, onProgress, onError }) {
       onProgress(percentage);
     }
   }, false);
-  xhr.upload.addEventListener('load', onUploaded, false);
   xhr.onerror = (error) => {
     console.log('Error while uploading file:', error);
+    onError(error);
   };
   xhr.onload = () => {
     try {
@@ -29,55 +31,78 @@ function uploadFile({ file, metadata = {}, onUploaded, onProgress, onError }) {
         return;
       }
       console.log('File succesfully uploaded:', response);
+      onUploaded(response, xhr);
     } catch (error) {
-      alert('Could not parse JSON response from file upload.');
+      onError(error);
+    }
+    if (xhr.status > 400) {
+      onError(new Error(`Got error ${xhr.status} (${xhr.statusText}) on upload.`));
     }
   };
 
   Meteor.call('getFileUploadToken', (error, token) => {
     if (error) {
-      alert('Could not get file upload token:', error.reason);
+      onError(new Error('Could not get file upload token:', error.reason));
       return;
     }
+    Object.assign(metadata, {
+      token,
+      mimeType: file.type,
+      originalFileName: file.name,
+    });
     const queryString = Object.keys(metadata).map(k => `${k}=${metadata[k]}`).join('&');
-    xhr.open('POST', `/file-upload?token=${token}&${queryString}`);
+    xhr.open('POST', `/file-upload?${queryString}`);
     // xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
     const reader = new FileReader();
     reader.onload = event => xhr.send(event.target.result);
     reader.readAsArrayBuffer(file);
   });
+
+  return xhr;
 }
 
 Template.fileUpload.helpers({
   percentage() {
     return Template.instance().percentage.get();
   },
+  isComplete() {
+    return Template.instance().percentage.get() === 100;
+  },
 });
 
 Template.fileUpload.events({
   'change input[type="file"]'(event, instance) {
+    const callback = (name, ...args) => {
+      if (instance.data.callbacks && instance.data.callbacks[name]) {
+        instance.data.callbacks[name].apply(instance.data, args);
+      }
+    };
+
     if (event.target.files.length > 1) {
-      alert('Currently, only one file upload at once is supported.');
+      callback('onError', new Error('Currently, only one file upload at once is supported.'));
       return;
     }
 
     const file = event.target.files[0];
     if (!file) return;
     const metadata = instance.data.metadata || {};
-    uploadFile({
+    const xhr = uploadFile({
       file,
       metadata,
-      onUploaded() {
+      onUploaded(response) {
         console.log('File uploaded', file);
         instance.percentage.set(100);
+        callback('onUploaded', response, xhr);
       },
       onProgress(percentage) {
         console.log('Upload progress:', percentage, '%');
         instance.percentage.set(percentage);
+        callback('onProgress', percentage, xhr);
       },
       onError(error) {
-        alert('Could not upload file:', response.error.reason);
-      }
+        alert('Could not upload file:', error.reason);
+        callback('onError', error, xhr);
+      },
     });
 
     if (instance.data.accept && !file.type.match(instance.data.accept)) {

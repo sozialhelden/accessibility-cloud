@@ -1,6 +1,10 @@
 <template name="fileUpload">
-  <input type='file' class='{{additionalCSSClasses}}' accept='{{accept}}'>
-  {{#if percentage}}
+  <input type='file' class='file-upload {{additionalCSSClasses}}' accept='{{accept}}'>
+  {{#if isComplete}}
+    <div class='complete-notice'>Complete!</div>
+  {{else}}
+    {{#if percentage}}
     {{percentage}}%
+    {{/if}}
   {{/if}}
 </template>

@@ -39,50 +39,57 @@ function respond(res, code, json) {
   res.end(JSON.stringify(json));
 }
 
+function respondWithError(res, code, reason) {
+  console.error('Responding with error', code, reason);
+  respond(res, code, { error: { reason } });
+}
+
 function handleUploadRequest(req, res) {
   try {
     const query = url.parse(req.url, true).query;
+
     const token = query.token;
     if (!token) {
-      respond(res, 422, { error: { reason: 'Please supply a `token` query string parameter.' } });
+      respondWithError(res, 422, 'Please supply a `token` query string parameter.');
       return;
     }
 
     const userId = tokensToUserIds[token];
     if (!userId) {
-      respond(res, 422, { error: {
-        reason: 'Supplied token was invalid. Please supply a valid token!',
-      } });
+      respondWithError(res, 422, 'Supplied token was invalid. Please supply a valid token!');
       return;
     }
+
     delete tokensToUserIds[token];
 
     console.log('Uploading file for user', userId, '…');
 
-    // const suffix = mime.extension(req.files.file);
+    const suffix = mime.extension(req.query.mimeType || 'application/octet-stream');
     const attributes = {
       userId,
-      remotePath: `${userId}/${Random.id()}`,
+      remotePath: `uploads/${userId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
       timestamp: new Date(),
       metadata: req.query,
     };
     console.log('Inserting file upload', attributes);
     const _id = UploadedFiles.insert(attributes);
     const fileDoc = UploadedFiles.findOne(_id);
+
     fileDoc.saveUploadFromStream(req, (error) => {
-      if (error) {
-        const errorResponse = (error instanceof Meteor.Error) ?
-          error :
-          { error: { reason: 'Internal server error while streaming.' } };
-        console.error('Error while streaming file upload:', error);
-        respond(res, 500, errorResponse);
+      if (!error) {
+        respond(res, 200, { error: null, uploadedFile: UploadedFiles.findOne(_id) });
+        return;
+      }
+      if (error instanceof Meteor.Error) {
+        respond(res, 500, error);
       } else {
-        respond(res, 200, { error: null, fileDoc });
+        respondWithError(500, 'Internal server error while streaming.');
+        console.error('Internal error was:', error, error.stack);
       }
     });
   } catch (error) {
-    console.error('Could not upload file:', error, error.stack);
-    respond(res, 500, { error: { reason: 'Internal server error.' } });
+    respondWithError(500, 'Internal server error while handling upload request.');
+    console.error('Internal error was:', error, error.stack);
   }
 }
 

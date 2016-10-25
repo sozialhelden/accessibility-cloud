@@ -6,15 +6,17 @@
             "MAIL_URL": "smtp://development%40vr-roadshow.com:<password>@smtp.mailgun.org:465"
         }
     },
-    "s3": {
-        "key": "AKI...",
-        "secret": "..."
-    },
     "public": {
+      "aws": {
+        "region": "eu-central-1",
         "s3": {
-            "bucket": "...",
-            "region": "eu-west-1"
+          "bucket": "accessibility-cloud"
         }
+      }
+    },
+    "aws": {
+      "accessKeyId": "AKI....",
+      "secretAccessKey": "abc"
     },
     "kadira": {
         "appId": "",

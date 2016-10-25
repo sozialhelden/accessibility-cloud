@@ -29,6 +29,16 @@ UploadedFiles.schema = new SimpleSchema({
   metadata: {
     type: Object,
     blackbox: true,
+    optional: true,
+  },
+  s3Error: {
+    type: Object,
+    blackbox: true,
+    optional: true,
+  },
+  isUploadedToS3: {
+    type: Boolean,
+    optional: true,
   },
 });
 
