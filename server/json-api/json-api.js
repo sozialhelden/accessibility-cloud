@@ -11,14 +11,17 @@ import { collectionWithName } from './collections';
 import { callFunctionAsUser } from './call-function-as-user';
 import { userFromRequest } from './user-from-request';
 import { displayedUserName } from './displayed-user-name';
+import { setAccessControlHeaders } from './set-access-control-headers';
 
-function handleJSONRequest(req, res) {
+function handleJSONRequest(req, res, next) {
   const { pathname } = url.parse(req.url);
   const [collectionName, _id] = pathname.replace(/^\//, '').split('/');
 
   let responseData = null;
   let userId = null;
   let user = null;
+
+  setAccessControlHeaders(res);
 
   try {
     const handler = httpMethodHandlers[req.method];
@@ -33,8 +36,16 @@ function handleJSONRequest(req, res) {
     }
 
     const collection = collectionWithName(collectionName);
-    user = userFromRequest(req);
-    userId = user && user._id;
+    if (req.method === 'OPTIONS') {
+      if (!collection) {
+        // We don't know if the OPTIONS request was meant for another API, so let another
+        // middleware handle it
+        return next();
+      }
+    } else {
+      user = userFromRequest(req);
+      userId = user && user._id;
+    }
     const options = { req, res, collectionName, collection, _id };
     console.log(
       'User',
@@ -71,6 +82,15 @@ function acceptsJSON(format) {
 }
 
 function handleFilteredJSONRequests(req, res, next) {
+  function handle() {
+    Fiber(() => handleJSONRequest(req, res, next)).run();
+  }
+
+
+  if (req.method === 'OPTIONS') {
+    return handle();
+  }
+
   if (!req.headers.accept) {
     return next();
   }
@@ -83,7 +103,7 @@ function handleFilteredJSONRequests(req, res, next) {
     return next();
   }
 
-  return Fiber(() => handleJSONRequest(req, res)).run();
+  return handle();
 }
 
 Meteor.startup(() => {

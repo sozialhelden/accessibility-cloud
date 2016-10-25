@@ -20,5 +20,14 @@ export function GET({ req, collection, _id, userId }) {
   }
 
   // Return array of documents
-  return collection.find(selector, options).fetch();
+  const results = collection.find(selector, options).fetch();
+
+  if (typeof collection.wrapAPIResponse === 'function') {
+    return collection.wrapAPIResponse({ results, req, _id, userId });
+  }
+
+  return {
+    count: results.length,
+    results,
+  };
 }
