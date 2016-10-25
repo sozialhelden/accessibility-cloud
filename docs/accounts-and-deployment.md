@@ -19,8 +19,7 @@ copy deployment-comment...
 
     DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy [hostname] --settings path-to-settings.json
 
-# MLAB
-
+# MLAB (MongoDB)
 - login at http://mlab.com
 - Click Create New
   - Check Region Amazon EU Ireland
@@ -32,11 +31,11 @@ copy deployment-comment...
 - click "create database"
 
 ## Add database-user
-- select database
-- click users
-- select user-name like 'staging'
-- create secure password (e.g. 1password)
-- copy access-urls:
+- Select database
+- Click users
+- Select user-name like 'staging'
+- Create secure password (e.g. 1password)
+- Copy access-urls:
  
 Access-Urls:
 
@@ -48,7 +47,7 @@ To connect using a driver via the standard MongoDB URI:
 
 ## save deployment-settings
 
-Create `settings/deply.json` with...
+Create `settings/staging.json` with...
 
     {
         "galaxy.meteor.com": {
@@ -82,7 +81,7 @@ add to `.gitignore`
 
 # Deploy
 
-    DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy acloud.meteorapp.com --settings settings/staging.json
+    DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy acloud.eu.meteorapp.com --settings settings/staging.json
 
 
 # Check app status
@@ -112,5 +111,6 @@ Login to
     - Password: (see above)
     - Database: `ac-staging`
 
+# Purging the database 
 
 

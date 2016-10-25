@@ -14,7 +14,7 @@
         <li>
           <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
           {{#unless isUserMemberOfOrganizationWithId _id}}
-            <a href='' class='action join organizations' organizationId='{{this._id}}'>Join</a>
+            <a href='' class='action join organizations' organizationId='{{this._id}}'>Admin Join</a>
           {{else}}
             (member)
           {{/unless}}
@@ -23,10 +23,10 @@
     </ol>
 
     <h2>Sources</h2>
-    <ol>
+    <ul class='with-blocks'>
       {{#each sources}}
         <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
-        <li>
+        <li class='list block'>
           <a href='{{pathFor "browse.sources.show" _id= _id}}'>
             {{name}}
           </a>
@@ -38,7 +38,7 @@
           {{/unless}}
  -->        </li>
       {{/each}}
-    </ol>
+    </ul>
 
     <a href='{{pathFor "browse.categories.list"}}'>Categories</a>
   </div>

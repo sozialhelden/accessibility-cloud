@@ -138,7 +138,7 @@ browseRoutes.route('/categories/', {
   action() {
     BlazeLayout.render('app_layout_mapview', {
       main: 'categories_list_page',
-      header_navigation_list: 'sources_show_header',
+      header_navigation_list: 'categories_list_head',
     });
   },
 });
