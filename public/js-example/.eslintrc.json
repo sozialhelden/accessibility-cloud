@@ -9,6 +9,7 @@
   },
   "globals": {
     "AccessibilityCloud": true,
+    "Mustache": true,
     "$": true
   },
   "env": {
@@ -25,6 +26,7 @@
     "no-console": [0],
     "prefer-arrow-callback": [0],
     "no-var": [0],
-    "prefer-template": [0]
+    "prefer-template": [0],
+    "func-names": [0]
   }
 }

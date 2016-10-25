@@ -1,0 +1,18 @@
+body.ac-example {
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.ac-result-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ac-result {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+.ac-result-name {
+  font-weight: bold;
+}

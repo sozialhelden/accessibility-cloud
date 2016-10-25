@@ -3,27 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>accessibility.cloud JS example application</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="mustache-2.2.1.min.js"></script>
     <script src="accessibility.cloud.js"></script>
+    <link rel="stylesheet" href="accessibility.cloud.css">
   </head>
-  <body>
+  <body class='ac-example'>
     <h1>Accessibility cloud JS example application</h1>
+
     <p>Below you should see a list of locations around Manhattan, New York.</p>
-    <div class='result'></div>
+
+    <div class='ac-results' role="complementary">
+      <div class='ac-loading'>Loading…</div>
+    </div>
 
     <script>
       $(function() {
         AccessibilityCloud.token = '46b6545d6bb95a9948d3a6d011bf12db';
-
-        var element = document.querySelector('.result');
-
-        var parameters = {
-          latitude: 40.728292,
-          longitude: -73.9875852,
-          accuracy: 100
-        };
-
-        AccessibilityCloud.renderPlaces(element, parameters);
+        var element = document.querySelector('.ac-results');
+        var parameters = { latitude: 40.728292, longitude: -73.9875852, accuracy: 100, limit: 10 };
+        AccessibilityCloud.loadAndRenderPlaces(element, parameters);
       });
     </script>
   </body>
