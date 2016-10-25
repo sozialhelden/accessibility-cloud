@@ -51,8 +51,8 @@ This is an update data-structure, the groups accessibility data into areas of di
       stairs: [
         {
           count: '>10 ± 2',
-          hasHighcontrastAndAntiSlipStairNosing: true,    // needs review
-          name: 'mainStaris',
+          hasHighContrastAndAntiSlipStairNosing: true,    // needs review
+          name: 'mainStairs',
           stepHeight: '12cm ±1',
           hasHandRail: true,
           hasStairLift: true,
@@ -115,8 +115,8 @@ This is an update data-structure, the groups accessibility data into areas of di
               },
               stairs: {
                 count: '>10 ± 2',
-                hasHighcontrastAndAntiSlipStairNosing: true,    // needs review
-                name: 'mainStaris',
+                hasHighContrastAndAntiSlipStairNosing: true,    // needs review
+                name: 'main stairs',
                 stepHeight: '12cm ±1',
                 hasHandRail: true,
                 hasStairLift: true,
@@ -205,13 +205,13 @@ This is an update data-structure, the groups accessibility data into areas of di
 
           powerOutlets: {
             haveContrastColor: true,
-            isErgnomicToUse: true,
+            isErgonomicToUse: true,
             hasChildProtection: true,
             height: '10 .. 30cm',
           },
           switches: {                           // RFC: rename to "controls?"
             haveContrastColor: true,
-            isErgnomicToUse: true,
+            isErgonomicToUse: true,
             height: '120cm',
           },
 
@@ -264,7 +264,7 @@ This is an update data-structure, the groups accessibility data into areas of di
 
           wheelchairPlaces: {
             count: 1,
-            hasSpaceForAssistent: true,
+            hasSpaceForAssistant: true,
           },
 
           tables: {
@@ -279,7 +279,7 @@ This is an update data-structure, the groups accessibility data into areas of di
             height: '20 .. 120cm',
           },
 
-          services: {                                     // RFC? do we need to group these 
+          services: {                                     // RFC? do we need to group these
             hasRemovableFurniture: false,
             hasInductionLoop: true,
             hasRemoteControlAudioSigns: true,
@@ -310,7 +310,7 @@ This is an update data-structure, the groups accessibility data into areas of di
 
           tactileGuideStrips: {
             isGuidingToInfoDesk: true,                              // needs review
-            hasVisualContrat: true,
+            hasVisualContrast: true,
           },
 
           infoDesk: {
@@ -319,7 +319,7 @@ This is an update data-structure, the groups accessibility data into areas of di
           },
 
           signage: {
-            isReadible: true,
+            isReadable: true,
             languages: ['de'],
           },
 
@@ -347,8 +347,8 @@ This is an update data-structure, the groups accessibility data into areas of di
         canSeeVisitorsFromInside: true,
         canAssistWithSpecialNeeds: true,
         isTrainedInSigning: true,
-        hasFreeAssistentForVisitors: true,
-        isTrainedInAccomodattingVisitorsWithDisabilities: true,   // very unspecific and loooong
+        hasFreeAssistantForVisitors: true,
+        isTrainedInAccomodatingVisitorsWithDisabilities: true,   // very unspecific and loooong
       },
       lifts: [
         {
