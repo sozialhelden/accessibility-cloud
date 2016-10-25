@@ -1,7 +1,28 @@
 <template name="sources_show_page">
-  <div class='sidebar'>
-    {{#with source}}
-      <h3>Source definition</h3>
+  <div class='sidebar with-details'>
+    {{#with selectedPlace}}
+      <span class='js-close close-window icon'></span>
+      <h4>{{selectedPlace.properties.name}}</h4>
+      <p>{{uppercase selectedPlace.properties.category}}</p>
+      <pre class='readible json'>{{stringifyHuman selectedPlace.properties.accessibility}}</pre>
+
+      <hr/>
+      {{#if placeDetailsVisible}}
+        <a href='.' class='js-click-hide-details'>Hide details</a>
+        <pre class='readible json'>
+          {{stringify selectedPlace}}
+        </pre>
+      {{else}}
+        <a href='.' class='js-click-show-details'>Show details</a>
+      {{/if}}
+    {{else}}
+      {{#with source}}
+        <h3>Source definition</h3>
+        {{source.description}}
+        {{#if source.websiteURL}}
+          <a href='{{source.websiteURL}}'></a>
+        {{/if}}
+      {{/with}}    
     {{/with}}
   </div>
   <div class='content'>

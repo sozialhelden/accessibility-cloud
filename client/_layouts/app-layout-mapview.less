@@ -1,3 +1,5 @@
+@import "/client/stylesheets/utils.less";
+
 .full-height {
   height:100vh;
   display: flex;
@@ -9,9 +11,14 @@
     bottom:0;
 
     .sidebar {
+      overflow: auto;
       background-color:white;
       box-shadow: 0 0 5px rgba(0,0,0,0.4);
       width:200px;
+
+      &.with-details {
+        width:300px;
+      }
     }
 
     .content {
@@ -21,6 +28,22 @@
         height:100%;
       }
     }
+  }
+}
+
+span.close-window.icon {
+  padding:4px;
+  float:right;
+  color:@color-grey085;
+  
+  &:hover {
+    color:@color-grey054;
+  }
+  &:before {
+    font-family: "iconfield";
+    content:"\E845";
+    
+    cursor: pointer;
   }
 }
 

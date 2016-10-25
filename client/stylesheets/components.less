@@ -142,7 +142,6 @@ ul.with-blocks {
 }
 
 .sidebar {
-
   h2 {
     .font-s3;
     .type-bold;
@@ -171,13 +170,29 @@ ul.with-blocks {
       .type-regular;
       letter-spacing: -0.015em;
     }
+  &.with-details {
+    padding:10px;
+    width:300px;
+  }
 
   &:last-child {
     margin-bottom: 1.7em;
   }
-  a {
+  a.with-padding {
     padding: 1.4em;
   }
+
+  hr {
+    height:1px;
+    background-color: @color-grey096;
+    border:none;
+    margin-bottom:5px;
+  }
+}
+
+pre.readible.json {
+  font-size:12px;
+  font-family: monospace;
 }
 
 .code-block {

@@ -14,8 +14,14 @@ const helpers = {
   FlowRouter,
   humanize: s.humanize,
   camelize: s.camelize,
+  uppercase(str) {
+    return str.toUpperCase();
+  },
   stringify(object) {
     return JSON.stringify(object, true, 4);
+  },
+  stringifyHuman(object) {
+    return JSON.stringify(object, true, 2).replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '').replace(/\n\s\s/g, '\n');
   },
   _(str) {
     return str;

@@ -1,10 +1,13 @@
 import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
+import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
+
 
 
 Template.sources_show_page.onCreated(() => {
@@ -26,20 +29,32 @@ L.AccessibilityIcon = L.Icon.extend({
     className: 'leaflet-div-icon accessiblity',
   },
 
-  createIcon: function () {
+  createIcon() {
     const div = document.createElement('div');
-    const img = this._createImg(this.options['iconUrl']);
-    div.appendChild ( img );
+    const img = this._createImg(this.options.iconUrl);
+    div.appendChild(img);
     this._setIconStyles(div, 'icon');
     return div;
   },
 
-  //you could change this to add a shadow like in the normal marker if you really wanted
-  createShadow: function () {
+  createShadow() {
     return null;
-  }
+  },
 });
 
+function getColorForWheelchairAccessiblity (placeData) {
+  try {
+    if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
+      return 'green';
+    } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
+      return 'red';
+    }
+  }
+  catch (e) {
+    console.warn('Failed to get color for', e, placeData);
+  }
+  return 'grey';
+}
 
 Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
   this.autorun(() => {
@@ -63,47 +78,38 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     if (err) {
       console.log(err);
     } else {
-
-      // Add markers to map
-      if (result.length > 0) {
-        const geoMarkerData = _.map(result, (item) => ({
-          type: 'Feature',
-          geometry: item.geometry,
-          placeData: item,
-        }));
-
-        function getColorForWheelchairAccessiblity (placeData) {
-          try {
-            if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
-              return 'green';
-            } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
-              return 'red';
-            }
-          }
-          catch(e) {
-            console.warn("Failed to get color for", e, placeData);
-          }
-          return 'grey';
-        };
-
-        const markers = new L.geoJson(geoMarkerData, {
-          pointToLayer: function(feature, latlng) {
-
-            const categoryIconName = feature.placeData.properties.category || "place";
-            const color = getColorForWheelchairAccessiblity(feature.placeData);
-
-            const acIcon = new L.AccessibilityIcon({
-              iconUrl: `/icons/categories/${categoryIconName}.png`,
-              className: `ac-marker ${color}`,
-              iconSize: [36, 36],
-            });
-            return L.marker(latlng, { icon: acIcon });
-          },
-        });
-
-        markers.addTo(map);
-        map.fitBounds(markers.getBounds().pad(0.3));
+      if (result.length === 0) {
+        return;
       }
+
+      const geoMarkerData = _.map(result, (item) => ({
+        type: 'Feature',
+        geometry: item.geometry,
+        placeData: item,
+      }));
+
+      const markers = new L.geoJson(geoMarkerData, {
+        pointToLayer(feature, latlng) {
+          const categoryIconName = feature.placeData.properties.category || 'place';
+          const color = getColorForWheelchairAccessiblity(feature.placeData);
+
+          const acIcon = new L.AccessibilityIcon({
+            iconUrl: `/icons/categories/${categoryIconName}.png`,
+            className: `ac-marker ${color}`,
+            iconSize: [36, 36],
+          });
+          const marker = L.marker(latlng, { icon: acIcon })
+          marker.on('click', function(e, o) {
+            console.log('clicked2:', e, o);
+            Session.set('SelectedPlace', e.target.feature.placeData);
+          });
+
+          return marker;
+        },
+      });
+
+      markers.addTo(map);
+      map.fitBounds(markers.getBounds().pad(0.3));
     }
   });
 });
@@ -112,7 +118,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
 Template.sources_show_header.helpers({
   source() {
     return Sources.findOne({ _id: FlowRouter.getParam('_id') });
-  },
+  },  
 });
 
 
@@ -131,4 +137,27 @@ Template.sources_show_page.helpers({
     }
     return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
+  selectedPlace() {
+    return Session.get('SelectedPlace');
+  },
+  placeDetailsVisible() {
+    return Session.get('PlaceDetailsVisible');
+  },
 });
+
+Template.sources_show_page.events({
+  'click .js-click-show-details'(event) {
+    Session.set('PlaceDetailsVisible', true);
+    event.preventDefault();
+  },
+  'click .js-click-hide-details'(event) {
+    Session.set('PlaceDetailsVisible', false);
+    event.preventDefault();
+  },
+  'click .js-close'(event) {
+    Session.set('SelectedPlace', undefined);
+    event.preventDefault();
+  },
+});
+
+
