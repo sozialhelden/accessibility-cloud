@@ -1,23 +1,27 @@
 export const acFormat = {
-  _id: 'ttikRCM5Sz2v2m3cZ',
-  sourceId: 'BwEuneiKbLGJyEeDE',
+  _id: 'someId',
   acVersion: '1',
-  lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
-  detailsURL: 'https://...',
-
-  license: {
-
-  },
-  source: {
-    sourceURL: 'https://',
-    name: 'source name',
-  },
 
   properties: {
+    originalId: '3',
+
+    lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
+    detailsURL: 'https://...',
+
+    license: {
+      name: 'GPLv3',
+      licenseURL: 'https://accessibility.cloud/licenses/23asxas23k2d2',
+    },
+
+    sourceId: 'BwEuneiKbLGJyEeDE',
+    sourceDetails: {
+      name: 'source name',
+      sourceURL: 'https://',
+    },
+
     name: 'Hotel Adlon',                              // short name
     description: '',                                  // optional
     address: '',
-    originalId: '234234',                             // id within data-source
     category: 'hotel',                                // see [ac-categories]
 
     accessibility: {

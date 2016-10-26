@@ -28,9 +28,9 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "properties-originalId": "row.place_id",
-                "detailsURL": "'https://axsmap.com/venue/' + row.place_id",
                 "geometry": "{ type: 'Point', coordinates: helpers.AXSMaps.guessLngLat(row.lngLat) }",
+                "properties-originalId": "row.place_id",
+                "properties-detailsURL": "'https://axsmap.com/venue/' + row.place_id",
                 "properties-name": "row.name",
                 "properties-category": "helpers.AXSMaps.getCategoryFromList(row.types)",
                 "properties-address": "_.join([row.address, row.city,row.state])",

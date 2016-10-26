@@ -30,9 +30,9 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
+                "geometry": "{ type: 'Point', coordinates: [Number(row['LONGITUDE']), Number(row['LATITUDE'])] }",
                 "properties-originalId": "row['HASTUS_ID']",
                 "properties-category": "'bus_stop'",
-                "geometry": "{ type: 'Point', coordinates: [Number(row['LONGITUDE']), Number(row['LATITUDE'])] }",
                 "properties-name": "row['DESCRIPTION']",
                 "properties-accessibility-accessibleWith-wheelchair": "row['ROAD_GRADIENT'] == 'Easy'"
             }

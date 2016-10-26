@@ -26,13 +26,14 @@ export class UpsertPlace {
     check(onProgress, Function);
 
     this.stream = EventStream.map((placeInfo, callback) => {
-      const originalId = `${placeInfo.originalId}`;
-      check(originalId, String);
-      Object.assign(placeInfo, {
-        sourceId,
-        sourceImportId,
-      });
-      upsert(onDebugInfo, { sourceId, originalId }, placeInfo);
+      const originalId = `${placeInfo.properties.originalId}`;
+
+      check(placeInfo.properties.originalId, String);
+      Object.assign(placeInfo.properties, { sourceId, sourceImportId });
+      upsert(onDebugInfo, {
+        'properties.sourceId': sourceId,
+        'properties.originalId': originalId,
+      }, placeInfo);
       callback(null, placeInfo);
       return placeInfo;
     });

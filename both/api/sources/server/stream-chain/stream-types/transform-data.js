@@ -132,7 +132,8 @@ export class TransformData {
           doc[fieldName] = value;
         }
       }
-      doc.originalData = data.toString();
+
+      doc.originalData = JSON.stringify(data, true, 4);
       callback(null, doc);
       return null;
     });

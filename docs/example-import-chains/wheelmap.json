@@ -28,8 +28,8 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "properties-originalId": "''+row.id",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
+                "properties-originalId": "''+row.id",
                 "properties-category": " helpers.OSM.fetchCategoryFromTags(row.tags) ",
                 "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
                 "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
