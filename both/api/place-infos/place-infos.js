@@ -44,7 +44,7 @@ function convertToGeoJSONFeature(doc, coordinatesForDistance) {
   return {
     type: 'Feature',
     geometry: properties.geometry,
-    properties: _.omit(properties, 'geometry'),
+    properties: _.omit(properties, 'geometry', 'originalData'),
   };
 }
 
