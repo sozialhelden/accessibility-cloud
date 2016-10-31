@@ -72,6 +72,8 @@ PlaceInfos.relationships = {
   },
 };
 
+PlaceInfos.includePathsByDefault = ['source.license'];
+
 if (Meteor.isServer) {
   PlaceInfos._ensureIndex({ 'properties.sourceId': 1 });
   PlaceInfos._ensureIndex({ 'properties.originalId': 1 });
