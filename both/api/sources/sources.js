@@ -144,6 +144,8 @@ Sources.relationships = {
   },
 };
 
+Sources.visibleSelectorForUserId = () => ({});
+
 Sources.helpers({
   // Used by methods-validation
   editableBy(userId) {

@@ -22,3 +22,5 @@ PlaceImports.publicFields = {
 PlaceImports.helpers({
   editableBy: isAdmin,
 });
+
+PlaceImports.visibleSelectorForUserId = () => ({});

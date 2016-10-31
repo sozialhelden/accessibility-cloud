@@ -15,6 +15,8 @@ Languages.schema = new SimpleSchema({
   languageCode: { type: String },
 });
 
+Languages.visibleSelectorForUserId = () => ({});
+
 Languages.attachSchema(Languages.schema);
 
 Languages.publicFields = {

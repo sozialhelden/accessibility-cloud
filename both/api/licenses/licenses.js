@@ -93,6 +93,8 @@ Licenses.schema = new SimpleSchema({
 
 Licenses.attachSchema(Licenses.schema);
 
+Licenses.visibleSelectorForUserId = () => ({});
+
 Licenses.publicFields = {
   organizationId: 1,
   name: 1,

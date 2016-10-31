@@ -21,6 +21,8 @@ SourceImports.publicFields = {
   numberOfPlacesUnchanged: 1,
 };
 
+SourceImports.visibleSelectorForUserId = () => ({});
+
 SourceImports.helpers({
   editableBy: isAdmin,
   humanReadableStartTimestamp() {

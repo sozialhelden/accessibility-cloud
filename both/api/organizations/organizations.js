@@ -152,7 +152,7 @@ Organizations.publicFields = {
   tocFororganizationsAccepted: 1,
 };
 
-Organizations.visibleSelectorFor = () => ({});
+Organizations.visibleSelectorForUserId = () => ({});
 
 Organizations.helpers({
   editableBy(userId) {
