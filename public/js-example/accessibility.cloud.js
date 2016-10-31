@@ -33,10 +33,6 @@
     },
 
     renderPlaces: function (element, places, related) {
-<<<<<<< 03a79ee4a7a13a7db6be3757a7038f9a3fb918cf
-      // $(element).text(JSON.stringify(response.features));
-=======
->>>>>>> Include source name in JS API example
       var self = this;
       if (!$(element).length) {
         console.error('Could not render results, element not found.');
