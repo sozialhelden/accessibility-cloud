@@ -54,7 +54,7 @@ Create `settings/staging.json` with...
             "env": {
                 "ROOT_URL": "https://....meteorapp.com",
                 "MONGO_URL": "mongodb://staging:<password>@ds013664.mlab.com:13664/",
-                "MAIL_URL": "smtp://development%40vr-roadshow.com:<password>@smtp.mailgun.org:465"
+                "MAIL_URL": "smtp://development%40ourdomain.com:<password>@smtp.mailgun.org:465"
             }
         },
         "s3": {
