@@ -135,6 +135,15 @@ Sources.publicFields = {
   accessRestrictedTo: 1,
 };
 
+Sources.relationships = {
+  belongsTo: {
+    license: {
+      foreignCollection: Licenses,
+      foreignKey: 'licenseId',
+    },
+  },
+};
+
 Sources.helpers({
   // Used by methods-validation
   editableBy(userId) {

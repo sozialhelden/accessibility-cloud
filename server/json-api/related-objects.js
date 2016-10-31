@@ -4,7 +4,7 @@ import { check, Match } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 
 
-function findRelatedDocumentsForFieldName({ documents, collection, fieldName, userId }) {
+function findRelatedDocuments({ collection, documents, fieldName, userId }) {
   check(documents, [Object]);
   check(collection, Mongo.Collection);
   check(fieldName, String);
@@ -24,24 +24,47 @@ function findRelatedDocumentsForFieldName({ documents, collection, fieldName, us
   selector._id = { $in: foreignIds };
 
   const options = { transform: null };
-  // Allow per-user find options, e.g. limited field dependent
+  // Allow per-user find options, e.g. limited fields dependent on who you are
   if (typeof foreignCollection.findOptionsForUserId === 'function') {
     Object.assign(options, foreignCollection.findOptionsForUserId(userId) || {});
   }
 
-  console.log('Foreign document selector:', selector, 'options:', options);
+  console.log(
+    'Fetching',
+    collection._name,
+    foreignCollection._name,
+    `(${fieldName})`,
+    selector,
+    'options:',
+    options
+  );
 
   const foreignDocuments = foreignCollection.find(selector, options).fetch();
   console.log('Foreign documents', foreignDocuments);
-  return { foreignCollection, foreignDocuments };
+  return {
+    foreignDocuments,
+    foreignCollectionName: foreignCollection._name,
+    foreignCollection,
+  };
 }
 
+// If you specify a field with a path, the parent documents have to be fetched before the children.
+// This function returns an array of paths to fetch in the right order for a given list of paths.
+// Example: ['organization', 'source.license'] => ['organization', 'source', 'source.license']
+
+function expandFieldPathsToFetch(fieldPaths) {
+  return _.uniq(_.flatten(fieldPaths.map(path => {
+    const pathArray = path.split('.');
+    return Array.from({ length: path.length }, (v, k) => k)
+      .map(length => pathArray.slice(0, length + 1).join('.'));
+  }))).sort();
+}
 
 // This finds related children documents for a given list of documents.
 
-export function findRelatedDocuments({ documents, req, collection, userId }) {
-  check(documents, [Object]);
-  check(collection, Mongo.Collection);
+export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, userId }) {
+  check(rootDocuments, [Object]);
+  check(rootCollection, Mongo.Collection);
   check(userId, Match.Optional(String));
 
   const includeChildrenQuery = req.query.includeChildren;
@@ -51,19 +74,36 @@ export function findRelatedDocuments({ documents, req, collection, userId }) {
 
   check(includeChildrenQuery, String);
 
-  const fieldNames = includeChildrenQuery.split(',');
-  if (!fieldNames.length) {
+  const requestedFieldPaths = includeChildrenQuery.split(',');
+  if (!requestedFieldPaths.length) {
     return {};
   }
-
-  const relatedDocuments = {};
-
-  fieldNames.forEach(fieldName => {
-    const options = { documents, fieldName, collection, userId };
-    const { foreignCollection, foreignDocuments } = findRelatedDocumentsForFieldName(options);
-    relatedDocuments[foreignCollection._name] = relatedDocuments[foreignCollection._name] || {};
-    relatedDocuments[foreignCollection._name] = _.indexBy(foreignDocuments, '_id');
+  const fieldPaths = expandFieldPathsToFetch(requestedFieldPaths);
+  const resultsByPath = {};
+  console.log('Fetching documents for field paths:', fieldPaths);
+  fieldPaths.forEach(fieldPath => {
+    const [, parentPath, fieldName] =
+      fieldPath.match(/(.*)\.([^\.]+$)/) || [null, null, fieldPath];
+    const documents = parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments;
+    const collection = parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection;
+    resultsByPath[fieldPath] =
+      findRelatedDocuments({
+        collection,
+        documents,
+        fieldName: fieldName || fieldPath,
+        userId,
+      });
   });
-
-  return relatedDocuments;
+  const results = {};
+  Object.keys(resultsByPath).forEach(path => {
+    if (!_.include(requestedFieldPaths, path)) {
+      return;
+    }
+    const { foreignCollectionName, foreignDocuments } = resultsByPath[path];
+    results[foreignCollectionName] = results[foreignCollectionName] || {};
+    foreignDocuments.forEach(doc => {
+      results[foreignCollectionName][doc._id] = doc;
+    });
+  });
+  return results;
 }
