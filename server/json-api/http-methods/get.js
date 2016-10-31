@@ -23,7 +23,7 @@ export function GET({ req, collection, _id, userId }) {
   // Return array of documents
   const results = collection.find(selector, options).fetch();
 
-  const relatedDocuments = findAllRelatedDocuments({
+  const related = findAllRelatedDocuments({
     req,
     userId,
     rootCollection: collection,
@@ -31,12 +31,12 @@ export function GET({ req, collection, _id, userId }) {
   });
 
   if (typeof collection.wrapAPIResponse === 'function') {
-    return collection.wrapAPIResponse({ results, req, _id, userId, relatedDocuments });
+    return collection.wrapAPIResponse({ results, req, _id, userId, related });
   }
 
   return {
     count: results.length,
-    relatedDocuments,
+    related,
     results,
   };
 }

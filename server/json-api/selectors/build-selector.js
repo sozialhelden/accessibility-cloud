@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { geometrySelector } from './geometry';
 import { paginationOptions } from './pagination';
 import { fieldOptions } from './fields';
+import { _ } from 'meteor/underscore';
 
 export function buildSelectorAndOptions({ req, _id, collection, userId }) {
   let selector = null;
@@ -10,10 +11,10 @@ export function buildSelectorAndOptions({ req, _id, collection, userId }) {
     selector = collection.visibleSelectorForUserId(userId);
   }
 
-  if (!selector) {
+  if (!_.isObject(selector)) {
     // This means the collection has to have a visibleSelectorForUserIdUserIdUserId() method defined
     // eslint-disable-next-line max-len
-    throw new Meteor.Error(401, 'Collection is accessible over API, but no allowed collection content defined for authenticated user.');
+    throw new Meteor.Error(401, `${collection._name} collection is accessible over API, but no allowed collection content defined for authenticated user.`);
   }
 
   Object.assign(selector, geometrySelector(req));
@@ -39,7 +40,6 @@ export function buildSelectorAndOptions({ req, _id, collection, userId }) {
   if (typeof collection.findOptionsForUserId === 'function') {
     Object.assign(options, collection.findOptionsForUserId(userId) || {});
   }
-
 
   return { selector, options };
 }

@@ -48,7 +48,7 @@ function convertToGeoJSONFeature(doc, coordinatesForDistance) {
   };
 }
 
-PlaceInfos.wrapAPIResponse = ({ results, req, relatedDocuments }) => {
+PlaceInfos.wrapAPIResponse = ({ results, req, related }) => {
   // This is checked in buildSelectorAndOptions already, so no extra check here
   let coordinates = undefined;
   if (req.query.latitude && req.query.longitude) {
@@ -58,7 +58,7 @@ PlaceInfos.wrapAPIResponse = ({ results, req, relatedDocuments }) => {
   return {
     type: 'FeatureCollection',
     featureCount: results.length,
-    relatedDocuments,
+    related,
     features: results.map(doc => convertToGeoJSONFeature(doc, coordinates)),
   };
 };

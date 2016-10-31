@@ -66,7 +66,7 @@ function handleJSONRequest(req, res, next) {
       error,
       error.stack
     );
-    responseData = _.pick(error, 'reason', 'details');
+    responseData = { error: _.pick(error, 'reason', 'details') };
   }
 
   const responseBody = EJSON.stringify(responseData);
@@ -85,7 +85,6 @@ function handleFilteredJSONRequests(req, res, next) {
   function handle() {
     Fiber(() => handleJSONRequest(req, res, next)).run();
   }
-
 
   if (req.method === 'OPTIONS') {
     return handle();
