@@ -19,3 +19,33 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 - Add an app for your organization
   - The created app comes with a free API token that allows you to make HTTP requests to our API.
   - To start using the API, follow the instructions in your app's settings on the web page.
+
+## Endpoints
+
+### GET /apps
+
+TODO
+
+### GET /languages
+
+TODO
+
+### GET /licenses
+
+TODO
+
+### GET /organizations
+
+TODO
+
+### GET /place-infos
+
+TODO
+
+### GET /source-imports
+
+TODO
+
+### GET /sources
+
+TODO
