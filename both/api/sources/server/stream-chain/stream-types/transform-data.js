@@ -123,9 +123,9 @@ export class TransformData {
       for (const [fieldName, fn] of entries(compiledMappings)) {
         const value = fn(data);
         if (fieldName.match(/-/)) {
-          // field name is probably a key path like 'a-b-c'
-          // Don't polute database with undefined properties
+          // Field name is probably a key path like 'a-b-c'
           if (value !== undefined) {
+            // Don't polute database with undefined properties
             _.set(doc, fieldName.replace(/-/g, '.'), value);
           }
         } else {
@@ -133,7 +133,7 @@ export class TransformData {
         }
       }
 
-      doc.originalData = JSON.stringify(data, true, 4);
+      doc.originalProperties = JSON.stringify(data, true, 4);
       callback(null, doc);
       return null;
     });

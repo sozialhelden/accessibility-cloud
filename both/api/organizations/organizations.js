@@ -31,6 +31,7 @@ Organizations.schema = new SimpleSchema({
     label: 'Name of company or individual',
     type: String,
     max: 1000,
+    optional: true,
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. xyz123 Inc.',
@@ -41,6 +42,7 @@ Organizations.schema = new SimpleSchema({
     label: 'Address',
     type: String,
     max: 1000,
+    optional: true,
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. Adam-Riese-St. 27',
@@ -62,6 +64,7 @@ Organizations.schema = new SimpleSchema({
     label: 'ZIP-Code',
     type: String,
     max: 1000,
+    optional: true,
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. 12345',
@@ -71,6 +74,7 @@ Organizations.schema = new SimpleSchema({
   city: {
     label: 'City',
     type: String,
+    optional: true,
     max: 100,
     autoform: {
       afFieldInput: {
@@ -81,6 +85,7 @@ Organizations.schema = new SimpleSchema({
   country: {
     label: 'Country',
     type: String,
+    optional: true,
     max: 100,
     autoform: {
       afFieldInput: {

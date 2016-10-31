@@ -13,17 +13,17 @@
     },
 
     resultsTemplate: function () {
-      // TODO: Finish + test aria accessibility attributes
+      // TODO: Finish + test area accessibility attributes
       // Template format: https://github.com/janl/mustache.js
       // eslint-disable-next-line no-multi-str
       return '<ul class="ac-result-list" role="treegrid"> \
         {{#places}} \
           <li class="ac-result" role="gridcell" aria-expanded="false"> \
             {{#properties}} \
-              <img src="icons/categories/{{category}}.png" role="presentation"> \
+              <img src="https://dl.dropboxusercontent.com/u/5503063/tmp/ac-icons/{{category}}.png" role="presentation"> \
               <header class="ac-result-name" role="heading">{{name}}</header> \
               <div class="ac-result-category">{{category}}</div> \
-              <a href="{{detailsURL}}" class="ac-result-link">{{sourceId}}</a> \
+              <a href="{{detailsURL}}" class="ac-result-link">{{sourceName}}</a> \
               <div class="ac-result-distance">{{formattedDistance}}</div> \
               <div class="ac-result-accessibility">Accessibility: {{formattedAccessibility}}</div> \
             {{/properties}} \
@@ -45,7 +45,10 @@
             return Math.round(this.distance) + 'm';
           },
           formattedAccessibility: function () {
-            return JSON.stringify(this.accessibility);
+            return JSON.stringify(this.accessibility, true, 2).replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '').replace(/\n\s\s/g, '\n');
+          },
+          sourceName: function() {
+            return 'by XYZ'; // FIXME: needs to fetch correct source name
           },
         }));
       } else {

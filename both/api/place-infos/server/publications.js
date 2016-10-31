@@ -4,12 +4,13 @@ import { PlaceInfos } from '../place-infos.js';
 
 const options = { fields: PlaceInfos.publicFields };
 
-Meteor.publish('placeInfos.public', () => PlaceInfos.find({}, options));
+// Publishing all placeInfos can be VERY slow.
+// Meteor.publish('placeInfos.public', () => PlaceInfos.find({}, options));
 
 Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
   check(sourceImportId, String);
 
-  return PlaceInfos.find({ sourceImportId }, { limit: 1000 });
+  return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 1000 });
 });
 
 console.log('Ensuring geospatial index for PlaceInfos...');

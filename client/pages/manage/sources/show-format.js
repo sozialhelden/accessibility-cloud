@@ -38,13 +38,13 @@ const helpers = {
   placesUpdatedCount() {
     const sourceImportId = FlowRouter.getParam('importId');
 
-    return PlaceInfos.find({ sourceImportId }).count();
+    return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }).count();
   },
   examplePlaceInfos() {
     const sourceId = FlowRouter.getParam('_id');
     const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
     if (latestImport) {
-      return PlaceInfos.find({ sourceImportId: latestImport._id }, { limit: 3 });
+      return PlaceInfos.find({ 'properties.sourceImportId': latestImport._id }, { limit: 3 });
     }
     return null;
   },

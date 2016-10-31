@@ -17,7 +17,7 @@ Meteor.methods({
   getPointsForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
     check(limitCount, Number);
-    return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({
+    return _.map(PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch(), (pi) => ({
       type: 'Feature',
       geometry: pi.geometry,
     }));
@@ -25,11 +25,11 @@ Meteor.methods({
   getPlacesForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
     check(limitCount, Number);
-    // return _.map(PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch(), (pi) => ({
+    // return _.map(PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch(), (pi) => ({
     //   type: 'Feature',
     //   geometry: pi.geometry,
     // }));
-    return PlaceInfos.find({ sourceId }, { limit: limitCount }).fetch();
+    return PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch();
   },
   updateDataURLForSource(sourceId, url) {
     check(sourceId, String);

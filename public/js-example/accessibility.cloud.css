@@ -16,3 +16,10 @@ body.ac-example {
 .ac-result-name {
   font-weight: bold;
 }
+
+.ac-result-accessibility {
+  // font-family: monospace;
+  // white-space: nowrap;
+  white-space: pre;
+  font-family: 'Helvetica Neue', sans-serif;
+}
