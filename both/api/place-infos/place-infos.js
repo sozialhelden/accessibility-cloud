@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { isAdmin } from '/both/lib/is-admin';
 import { Meteor } from 'meteor/meteor';
 import { geoDistance } from '/both/lib/geo-distance';
+import { Sources } from '/both/api/sources/sources';
 
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 
@@ -47,7 +48,7 @@ function convertToGeoJSONFeature(doc, coordinatesForDistance) {
   };
 }
 
-PlaceInfos.wrapAPIResponse = ({ results, req }) => {
+PlaceInfos.wrapAPIResponse = ({ results, req, relatedDocuments }) => {
   // This is checked in buildSelectorAndOptions already, so no extra check here
   let coordinates = undefined;
   if (req.query.latitude && req.query.longitude) {
@@ -57,8 +58,18 @@ PlaceInfos.wrapAPIResponse = ({ results, req }) => {
   return {
     type: 'FeatureCollection',
     featureCount: results.length,
+    relatedDocuments,
     features: results.map(doc => convertToGeoJSONFeature(doc, coordinates)),
   };
+};
+
+PlaceInfos.relationships = {
+  belongsTo: {
+    source: {
+      foreignCollection: Sources,
+      foreignKey: 'sourceId',
+    },
+  },
 };
 
 if (Meteor.isServer) {

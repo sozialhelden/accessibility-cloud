@@ -5,8 +5,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 export function fieldOptions(req) {
   const fieldsQuery = _.pick(req.query, 'include', 'exclude');
-  console.log('Fields:', fieldsQuery);
-
+  
   const schema = new SimpleSchema({
     include: {
       type: String,

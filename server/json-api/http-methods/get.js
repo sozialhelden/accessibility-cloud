@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { buildSelectorAndOptions } from '../selectors/build-selector';
 import { EJSON } from 'meteor/ejson';
+import { buildSelectorAndOptions } from '../selectors/build-selector';
+import { findRelatedDocuments } from '../related-objects';
 
 // Handle a GET HTTP request. The following variables are available inside the function:
 //  }
@@ -22,12 +23,20 @@ export function GET({ req, collection, _id, userId }) {
   // Return array of documents
   const results = collection.find(selector, options).fetch();
 
+  const relatedDocuments = findRelatedDocuments({
+    req,
+    userId,
+    collection,
+    documents: results,
+  });
+
   if (typeof collection.wrapAPIResponse === 'function') {
-    return collection.wrapAPIResponse({ results, req, _id, userId });
+    return collection.wrapAPIResponse({ results, req, _id, userId, relatedDocuments });
   }
 
   return {
     count: results.length,
+    relatedDocuments,
     results,
   };
 }
