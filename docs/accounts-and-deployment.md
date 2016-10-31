@@ -2,7 +2,9 @@ The following guide explains the steps of setting up all accounts and doing a de
 
 Time of last update Sep. 2016
 
-# Create galaxy account
+# Setting up Accounts
+
+## Create galaxy account
 This is required for a fast hosting of meteor Apps.
 
 - Login to [https://eu-west-1.galaxy.meteor.com/](https://eu-west-1.galaxy.meteor.com/)
@@ -19,7 +21,7 @@ copy deployment-comment...
 
     DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy [hostname] --settings path-to-settings.json
 
-# MLAB (MongoDB)
+## MLAB (MongoDB)
 - login at http://mlab.com
 - Click Create New
   - Check Region Amazon EU Ireland
@@ -30,13 +32,13 @@ copy deployment-comment...
 - for a free version select "sandbox"
 - click "create database"
 
-## Add database-user
+### Add database-user
 - Select database
 - Click users
 - Select user-name like 'staging'
 - Create secure password (e.g. 1password)
 - Copy access-urls:
- 
+
 Access-Urls:
 
     mongo ds033956.mlab.com:33956/ac-staging -u <dbuser> -p <dbpassword>
@@ -45,7 +47,7 @@ To connect using a driver via the standard MongoDB URI:
 
     mongodb://<dbuser>:<dbpassword>@ds033956.mlab.com:33956/ac-staging
 
-## save deployment-settings
+## Save deployment-settings in local file
 
 Create `settings/staging.json` with...
 
@@ -79,12 +81,30 @@ add to `.gitignore`
     settings/*
     !settings/*-example.json
 
-# Deploy
+
+
+## AWS
+
+
+
+## Mailgun
+
+- later
+
+## Kadira
+
+
+
+# Deployment
 
     DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy acloud.eu.meteorapp.com --settings settings/staging.json
 
 
-# Check app status
+
+
+# Development
+
+## Check app status
 
 Login to 
 [eu-west-1.galaxy.meteor.com](https://eu-west-1.galaxy.meteor.com/app/acloud.meteorapp.com)
@@ -94,13 +114,7 @@ Login to
 - Click "Logs"  
 
 
-# Mailgun
-- later
-
-# Kadira
-
-
-# Checking the database with mongoLab (MacOS)
+## Checking the database with mongoLab (MacOS)
 
 - Download and install [MongoLab](https://mongohub.s3.amazonaws.com/MongoHub.zip)
 - Click [+] to create a new app and fill out:
@@ -111,6 +125,6 @@ Login to
     - Password: (see above)
     - Database: `ac-staging`
 
-# Purging the database 
+## Purging the database 
 
 

@@ -70,6 +70,9 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [ ] It's easy to adjust the minimal CSS-definitions to integrate the the widget seamlessly into your app
 - [ ] You can extend the original API-example be also showing place-markers on the map and lists of your application.
 
+
+
+
 ## Support
 
 - [ ] You plan to show markers from the API on a map. You start coding but get stuck in a problem. You quickly find where to ask questions and discuss your problem (e.g. github-issues, forum, email, irc-channel, etc.).

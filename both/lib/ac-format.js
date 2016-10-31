@@ -56,7 +56,7 @@ export const acFormat = {
 
       areas: [
         {                                                        // 'hotelRoom?'
-          tags: ['indoors', 'outdoors', 'meeting-room', 'confidential', 'bedroom', 'terrace', 'roof', 'font-space'],   // TBD
+          tags: ['indoors', 'outdoors', 'meeting-room', 'confidential', 'bedroom', 'terrace', 'roof', 'front-space'],   // TBD
           name: '',
           floorLevel: 1,
 

@@ -1,4 +1,44 @@
 (function () {
+  var formatName = function (name) {
+    return name.replace(/([A-Z])/g, ' $1')
+               .replace(/^./, function (str) { return str.toUpperCase(); })
+               .replace(/^Rating /, '')
+               ;   // uppercase the first character
+  };
+
+  var formatValue = function (value) {
+    if (value === true) return 'Yes';
+    if (value === false) return 'No';
+    return value;
+  };
+
+  var formatRating = function (rating) {
+    var between0and5 = Math.floor(Math.min(1, Math.max(0, rating)) * 5 );
+    var stars = '*****'.slice(5 - between0and5);
+    return '<span class="stars">' + stars + '</span> <span class="numeric">' + between0and5 + '/5</span>';
+  };
+
+  var recursivelyRenderProperties = function(element) {
+    if ($.isArray(element)) {
+      return '<ul class="ac-list">' + element.map(function (element) {
+        return '<li>' + recursivelyRenderProperties(element) + '</li>';
+      }).join('') + '</ul>';
+    } else if ($.isPlainObject(element)) {
+      return '<ul class="ac-group">' + $.map(element,
+        function (value, key) {
+          if ($.isArray(value) || $.isPlainObject(value)) {
+            return '<li class="ac-group"><span>' + formatName(key) + '</span> ' + recursivelyRenderProperties(value) + '</li>';
+          }
+          if (key.startsWith('rating')) {
+            return '<li class="ac-rating">' + formatName(key) + ': ' + formatRating(parseFloat(value)) + '</li>';  
+          }
+          return '<li>' + formatName(key) + ': ' + formatValue(value) + '</li>';
+        }
+      ).join('') + '</ul>';
+    }
+    return element;
+  };
+
   window.AccessibilityCloud = {
     getPlacesAround: function (parameters) {
       return $.ajax({
@@ -13,8 +53,6 @@
     },
 
     resultsTemplate: function () {
-      // TODO: Finish + test area accessibility attributes
-      // Template format: https://github.com/janl/mustache.js
       // eslint-disable-next-line no-multi-str
       return '<ul class="ac-result-list" role="treegrid"> \
         {{#places}} \
@@ -25,7 +63,7 @@
               <div class="ac-result-category">{{category}}</div> \
               <a href="{{detailsURL}}" class="ac-result-link">{{sourceName}}</a> \
               <div class="ac-result-distance">{{formattedDistance}}</div> \
-              <div class="ac-result-accessibility">Accessibility: {{formattedAccessibility}}</div> \
+              <div class="ac-result-accessibility">Accessibility: {{{formattedAccessibility}}}</div> \
             {{/properties}} \
           </li> \
         {{/places}} \
@@ -44,10 +82,7 @@
             return Math.round(this.distance) + 'm';
           },
           formattedAccessibility: function () {
-            // TODO: Introduce 'real' formatting here
-            return JSON.stringify(this.accessibility, true, 2)
-              .replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '')
-              .replace(/\n\s\s/g, '\n');
+            return recursivelyRenderProperties(this.accessibility);
           },
           sourceName: function () {
             var source = related.Sources && related.Sources[this.sourceId];

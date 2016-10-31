@@ -23,3 +23,29 @@ body.ac-example {
   white-space: pre;
   font-family: 'Helvetica Neue', sans-serif;
 }
+
+.ac-result li.ac-group > span {
+  font-weight: bold;
+}
+
+.ac-result ul {
+  padding:0 0 0.5em 1em;
+}
+
+.ac-result ul.ac-list {
+  padding:0 0 0.5em 0em;
+}
+
+/*
+.ac-result li {
+  padding:0 0 0.5em 1em;
+}*/
+
+.ac-result li.ac-group {
+  padding:0.5em 0 0.5em 0em;
+}
+
+
+.ac-result li {
+  list-style: none;
+}
