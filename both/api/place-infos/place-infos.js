@@ -62,7 +62,7 @@ PlaceInfos.wrapAPIResponse = ({ results, req }) => {
 };
 
 if (Meteor.isServer) {
-  PlaceInfos._ensureIndex({ sourceId: 1 });
-  PlaceInfos._ensureIndex({ originalId: 1 });
-  PlaceInfos._ensureIndex({ sourceId: 1, originalId: 1 });
+  PlaceInfos._ensureIndex({ 'properties.sourceId': 1 });
+  PlaceInfos._ensureIndex({ 'properties.originalId': 1 });
+  PlaceInfos._ensureIndex({ 'properties.sourceId': 1, 'properties.originalId': 1 });
 }

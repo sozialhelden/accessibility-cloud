@@ -124,7 +124,7 @@ export class TransformData {
         const value = fn(data);
         if (fieldName.match(/-/)) {
           // Field name is probably a key path like 'a-b-c'
-          if (value !== undefined) {
+          if (value !== undefined && value !== null) {
             // Don't polute database with undefined properties
             _.set(doc, fieldName.replace(/-/g, '.'), value);
           }

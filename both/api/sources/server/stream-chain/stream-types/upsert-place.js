@@ -25,10 +25,19 @@ export class UpsertPlace {
     check(onDebugInfo, Function);
     check(onProgress, Function);
 
-    this.stream = EventStream.map((placeInfo, callback) => {
-      const originalId = `${placeInfo.properties.originalId}`;
+    let skippedRecordCount = 0;
 
-      check(placeInfo.properties.originalId, String);
+    this.stream = EventStream.map((placeInfo, callback) => {
+      const originalId = placeInfo.properties.originalId;
+
+      if (!originalId) {
+        skippedRecordCount++;
+        callback(null, placeInfo);
+        return placeInfo;
+      }
+
+      check(originalId, String);
+
       Object.assign(placeInfo.properties, { sourceId, sourceImportId });
       upsert(onDebugInfo, {
         'properties.sourceId': sourceId,
@@ -36,6 +45,12 @@ export class UpsertPlace {
       }, placeInfo);
       callback(null, placeInfo);
       return placeInfo;
+    });
+
+    this.stream.on('finish', () => {
+      onDebugInfo({
+        skippedRecordWarning: `Skipped ${skippedRecordCount} PlaceInfo records without originalId.`,
+      });
     });
 
     this.progressStream = new ObjectProgressStream(this.stream, onProgress);

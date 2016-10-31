@@ -20,7 +20,7 @@
         {{#places}} \
           <li class="ac-result" role="gridcell" aria-expanded="false"> \
             {{#properties}} \
-              <img src="https://dl.dropboxusercontent.com/u/5503063/tmp/ac-icons/{{category}}.png" role="presentation"> \
+              <img src="https://dl.dropboxusercontent.com/u/5503063/ac/icons/{{category}}.png" role="presentation"> \
               <header class="ac-result-name" role="heading">{{name}}</header> \
               <div class="ac-result-category">{{category}}</div> \
               <a href="{{detailsURL}}" class="ac-result-link">{{sourceName}}</a> \
