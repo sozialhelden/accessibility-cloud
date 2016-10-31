@@ -128,7 +128,7 @@ Organizations.schema = new SimpleSchema({
       },
     },
   },
-  tocFororganizationsAccepted: {
+  tocForOrganizationsAccepted: {
     label: 'I have read and agree to the teams and conditions',
     type: Boolean,
   },
@@ -149,7 +149,7 @@ Organizations.publicFields = {
   phoneNumber: 1,
   webSite: 1,
   description: 1,
-  tocFororganizationsAccepted: 1,
+  tocForOrganizationsAccepted: 1,
 };
 
 Organizations.visibleSelectorForUserId = () => ({});

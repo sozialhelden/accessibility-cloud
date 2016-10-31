@@ -17,7 +17,7 @@ Factory.define('organization', Organizations, {
   zipCode: '12345',
   city: 'Berlin',
   country: 'DE',
-  tocFororganizationsAccepted: true,
+  tocForOrganizationsAccepted: true,
 });
 
 Factory.define('language-de', Languages, {
