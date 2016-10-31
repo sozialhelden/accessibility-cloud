@@ -3,7 +3,7 @@
     getPlacesAround: function (parameters) {
       return $.ajax({
         dataType: 'json',
-        url: 'http://localhost:3000/place-infos',
+        url: 'http://localhost:3000/place-infos?includeRelated=source',
         data: parameters,
         headers: {
           Accept: 'application/json',
@@ -32,7 +32,7 @@
       </ul>';
     },
 
-    renderPlaces: function (element, places) {
+    renderPlaces: function (element, places, related) {
       // $(element).text(JSON.stringify(response.features));
       var self = this;
       if (!$(element).length) {
@@ -45,10 +45,14 @@
             return Math.round(this.distance) + 'm';
           },
           formattedAccessibility: function () {
-            return JSON.stringify(this.accessibility, true, 2).replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '').replace(/\n\s\s/g, '\n');
+            // TODO: Introduce 'real' formatting here
+            return JSON.stringify(this.accessibility, true, 2)
+              .replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '')
+              .replace(/\n\s\s/g, '\n');
           },
-          sourceName: function() {
-            return 'by XYZ'; // FIXME: needs to fetch correct source name
+          sourceName: function () {
+            var source = related.Sources && related.Sources[this.sourceId];
+            return source && source.name;
           },
         }));
       } else {
@@ -61,7 +65,7 @@
 
       return this.getPlacesAround(parameters)
         .done(function handleResponse(response) {
-          self.renderPlaces(element, response.features);
+          self.renderPlaces(element, response.features, response.related);
         })
         .fail(function handleError(error) {
           var message = (error && error.message) || 'No error message';
