@@ -15,7 +15,7 @@ Welcome and thank you for reading this.
 #### JSON-API
 
 - [JSON-API](docs/json-api.md) - a skelleton for documentation
-- [JavaScript client example](public/js-example/README.md) - a sample widget the illustrates an API end-point
+- [JavaScript API-client example](public/js-example/README.md) - a sample widget the illustrates an API end-point
 
 ### Development
 

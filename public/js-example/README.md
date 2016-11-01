@@ -23,7 +23,7 @@ Right now the source-code of the example resides inside the [ac-machine reposito
 
 6. Copy your *API access token*.
 
-    ![api-token-view](/Users/pixtur/coding/sozialhelden/ac-machine/docs/images/api-token-view.png)
+    ![api-token-view](http://i.imgur.com/SLkyvER.png)
 
 ## Run the client
 
@@ -31,4 +31,4 @@ Right now the source-code of the example resides inside the [ac-machine reposito
 7. Open `index.html` with your favorite text editor and replace the *API token* around line 22 with the one you copy from above.
 8. Open index.html in your web-browser. The result should look similar to this:
 
- ![js-api-client-example](/Users/pixtur/coding/sozialhelden/ac-machine/docs/images/js-api-client-example.png)
+ ![js-api-client-example](http://i.imgur.com/EX22bbX.png)
