@@ -12,19 +12,11 @@
         }
     },
     {
-        "type": "ConsoleOutput",
-        "parameters": {}
-    },
-    {
         "type": "ParseCSVStream",
         "parameters": {
             "headers": true,
             "objectMode": true
         }
-    },
-    {
-        "type": "ConsoleOutput",
-        "parameters": {}
     },
     {
         "type": "TransformData",

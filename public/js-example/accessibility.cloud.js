@@ -27,6 +27,10 @@
       return '<ul class="ac-group">' + $.map(element,
         function (value, key) {
           if ($.isArray(value) || $.isPlainObject(value)) {
+            if (key === 'areas' && value.length === 1) {
+              return recursivelyRenderProperties(value[0]);
+            }
+
             return '<li class="ac-group"><span>' + formatName(key) + '</span> ' + recursivelyRenderProperties(value) + '</li>';
           }
           if (key.startsWith('rating')) {
@@ -58,12 +62,15 @@
         {{#places}} \
           <li class="ac-result" role="gridcell" aria-expanded="false"> \
             {{#properties}} \
-              <img src="https://dl.dropboxusercontent.com/u/5503063/ac/icons/{{category}}.png" role="presentation"> \
-              <header class="ac-result-name" role="heading">{{name}}</header> \
-              <div class="ac-result-category">{{category}}</div> \
-              <a href="{{detailsURL}}" class="ac-result-link">{{sourceName}}</a> \
-              <div class="ac-result-distance">{{formattedDistance}}</div> \
-              <div class="ac-result-accessibility">Accessibility: {{{formattedAccessibility}}}</div> \
+              <div class="ac-summary"> \
+                <img src="https://dl.dropboxusercontent.com/u/5503063/ac/icons/{{category}}.png" role="presentation"> \
+                <header class="ac-result-name" role="heading">{{name}}</header> \
+                <div class="ac-result-distance">{{formattedDistance}}</div> \
+                <div class="ac-result-category">{{category}}</div> \
+                <a href="{{detailsURL}}" class="ac-result-link">SourceLink {{sourceName}}</a> \
+                <div class="ac-result-accessibility-summary">{{accessibilitySummary}}</div> \
+                <div class="ac-result-accessibility-details ac-hidden">{{{formattedAccessibility}}}</div> \
+              </div> \
             {{/properties}} \
           </li> \
         {{/places}} \
@@ -84,11 +91,24 @@
           formattedAccessibility: function () {
             return recursivelyRenderProperties(this.accessibility);
           },
+          accessibilitySummary: function () {
+            if (this.accessibility.accessibleWith.wheelchair) {
+              return 'Accessible with wheelchair';
+            }
+            return 'NOT accessible with wheelchair';
+          },
           sourceName: function () {
             var source = related.Sources && related.Sources[this.sourceId];
             return source && source.name;
           },
         }));
+        $('li.ac-result').click(function(event) {
+          $(event.target)
+            .parent()
+            .find('.ac-result-accessibility-details')
+            .first()
+            .slideToggle();
+        });
       } else {
         $(element).html('<div class="ac-no-results">No results.</div>');
       }
@@ -102,7 +122,11 @@
           self.renderPlaces(element, response.features, response.related);
         })
         .fail(function handleError(error) {
-          var message = (error && error.message) || 'No error message';
+
+          var message = 'No error message';
+          if (error) {
+            message = error.statusText + '\n' + error.responseText;
+          }
           $(element)
             .append('<div class="ac-error"></div>')
             .text('Could not load data: ' + message);
