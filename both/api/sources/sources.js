@@ -51,11 +51,7 @@ Sources.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-  languageId: {
-    label: 'Primary Language',
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-  },
+
   description: {
     label: 'Description',
     type: String,
@@ -82,10 +78,11 @@ Sources.schema = new SimpleSchema({
     type: Boolean,
     label: 'Only a draft (not listed in publicly)',
     defaultValue: true,
+    optional: true,
   },
   tocForSourcesAccepted: {
     type: Boolean,
-    label: 'I have read and agreed to the Terms & Conditions. '
+    label: 'I have read and agreed to the Terms & Conditions. <b>bold</b> '
          + 'Esp. that I am the owner of the data or have the right to publish it.',
   },
   streamChain: {
@@ -124,7 +121,6 @@ Sources.attachSchema(Sources.schema);
 
 Sources.publicFields = {
   organizationId: 1,
-  licenseId: 1,
   name: 1,
   description: 1,
   originWebsiteURL: 1,

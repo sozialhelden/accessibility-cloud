@@ -1,3 +1,10 @@
+<template name="afTosCheckbox">
+  <div>
+    <label>
+      <input type="checkbox" value="true" {{atts}} /> By checking this box, you agree to our <a href="{{pathFor 'App.termsOfService'}}" target="_blank">Terms of Service</a> and <a href="{{pathFor 'App.termsOfService'}}" target="_blank">Privacy Policy</a></label>
+  </div>
+</template>
+
 <template name="organizations_create_header">
   <li>
     Organizations
@@ -11,10 +18,6 @@
   <div class="form block">
     <h2>{{_ "Please set up your organization:" }}</h2>
     {{> quickForm collection="Organizations"  id="insertOrganizationForm" type="insert"}}
-<!--       {{#autoForm  collection='Organizations' id="insertOrganizationForm" type="insert"}}
-      {{> afQuickField name='name'}}
-      <button type="submit" class="btn btn-primary">Create</button>
-    {{/autoForm}} -->
   </div>
   <div class="hints">
     <h3 class="hint">{{_ "You’re not a member of an organization, yet." }}</h3>

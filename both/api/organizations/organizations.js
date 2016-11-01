@@ -31,7 +31,6 @@ Organizations.schema = new SimpleSchema({
     label: 'Name of company or individual',
     type: String,
     max: 1000,
-    optional: true,
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. xyz123 Inc.',
@@ -131,6 +130,10 @@ Organizations.schema = new SimpleSchema({
   tocForOrganizationsAccepted: {
     label: 'I have read and agree to the teams and conditions',
     type: Boolean,
+    autoform: {
+      type: 'boolean-checkbox',
+    },
+    allowedValues: [true],
   },
 });
 

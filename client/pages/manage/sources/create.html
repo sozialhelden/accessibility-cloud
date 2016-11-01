@@ -17,11 +17,20 @@
     {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
       {{> afQuickField name='name'}}
       {{> afQuickField name="licenseId" options=licenses noselect="true"}}
-      {{> afQuickField name='languageId' options=languages}}
       {{> afQuickField name='description'}}
       {{> afQuickField name='originWebsiteURL'}}
       {{> afQuickField name='isDraft'}}
-      {{> afQuickField name='tocForSourcesAccepted'}}
+
+      <div class="form-group {{#if afFieldIsInvalid name='tocForSourcesAccepted'}}has-error{{/if}}">
+        <label>
+          <input type="checkbox" value="true" name="tocForSourcesAccepted" id="ToaQ8s4gSBG7oetZH" data-schema-key="tocForSourcesAccepted">
+          I have read and agreed to the <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/terms-for-sources.md'>Terms &amp; Conditions</a>.
+         Esp. that I am the owner of the data or have the right to publish it.
+        </label>
+        {{#if afFieldIsInvalid name='tocForSourcesAccepted'}}
+          <span class="help-block">You must accept the terms and conditions.</span>
+        {{/if}}
+      </div>
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
         <button type="submit" class="btn btn-primary">Insert</button>
@@ -31,6 +40,7 @@
     <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
     <ol class="checks">
       <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>
+      <li>{{_ "Tipp: you can add a custom-license under"}} <a href='{{pathFor "manage.organizations.show.licenses" _id=organization._id}}'>{{_"licenses"}}</a></li>
     </ol>
   </div>
 </template>
