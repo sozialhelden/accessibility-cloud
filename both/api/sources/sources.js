@@ -67,7 +67,7 @@ Sources.schema = new SimpleSchema({
     },
     optional: true,
   },
-  originWebsite: {
+  originWebsiteURL: {
     label: 'Web-site (optional)',
     autoform: {
       afFieldInput: {
@@ -127,7 +127,7 @@ Sources.publicFields = {
   licenseId: 1,
   name: 1,
   description: 1,
-  originWebsite: 1,
+  originWebsiteURL: 1,
   isDraft: 1,
   tocForSourcesAccepted: 1,
   streamChain: 1,

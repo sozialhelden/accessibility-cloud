@@ -19,7 +19,9 @@
       </div>
       <div>
         <label>{{_ "plainTextSummary"}}</label>
-        {{plainTextSummary}}
+        <div class='markdown'>
+          {{#markdown}}{{plainTextSummary}}{{/markdown}}
+        </div>
       </div>
       <div>
         <label>{{_"websiteURL"}}</label>

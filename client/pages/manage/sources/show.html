@@ -17,12 +17,17 @@
       {{/if}}
     {{else}}
       {{#with source}}
-        <h3>Source definition</h3>
-        {{source.description}}
-        {{#if source.websiteURL}}
-          <a href='{{source.websiteURL}}'></a>
+        <h3>About source</h3>
+        <div class='markdown'>
+          {{#markdown}}{{source.description}}{{/markdown}}
+        </div>
+
+        {{#if source.originWebsiteURL}}
+          <p>
+            <a href='{{source.originWebsiteURL}}'>Web-Site with description</a>
+          </p>
         {{/if}}
-      {{/with}}    
+      {{/with}}
     {{/with}}
   </div>
   <div class='content'>

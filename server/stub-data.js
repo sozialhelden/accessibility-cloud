@@ -67,7 +67,7 @@ Factory.define('jsonSource', Sources, {
   name: 'Toilets in Vienna (JSON)',
   primaryRegion: 'Vienna, Austria',
   description: 'All public toilets in vienna (JSON)',
-  originWebsite: 'http://data.wien.gv.at',
+  originWebsiteURL: 'http://data.wien.gv.at',
   tocForSourcesAccepted: true,
   streamChain: [
     {
@@ -186,7 +186,7 @@ Factory.define('csvSource', Sources, {
   languageId: Factory.get('language-en'),
   name: 'Toilets in Rostock (CSV)',
   description: 'germany-rostock-toilets (CSV)',
-  originWebsite: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
+  originWebsiteURL: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
   tocForSourcesAccepted: true,
   streamChain: [
     {
