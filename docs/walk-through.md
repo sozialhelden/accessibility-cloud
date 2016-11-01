@@ -76,3 +76,10 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 ## Support
 
 - [ ] You plan to show markers from the API on a map. You start coding but get stuck in a problem. You quickly find where to ask questions and discuss your problem (e.g. github-issues, forum, email, irc-channel, etc.).
+
+
+
+## More
+
+- [ ] After logout I will be forwarded to the start-page
+- [ ] ​

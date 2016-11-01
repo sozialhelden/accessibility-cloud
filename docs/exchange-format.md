@@ -1,5 +1,3 @@
-# ac-format (temp)
-
 # Accessibility Cloud exchange format
 
 ## Considerations
@@ -36,12 +34,14 @@
 - "restroom" vs. "restrooms" -> should be plural, if array
 - room description could be identically for hotel-rooms, dining-rooms, meeting, rooms, etc.
 - "hotelroom" vs "hotelRooms" -> area of type "bedroom"
-
-
-## more questions
 - "categories" as array?
 
-### group stuff by areas
+
+### Grouping information by areas
+
+To avoid reoccuring but potentially inconsistent sub-schemas for different areas like "inside"/"outside", we decide to group the majority of accessibility-information under a list of areas. By this the schema for the description of an *area* can be consistent, and we can describe potentially highly complex scenarios like movie-theatre-complexes with areas for lobby, restaurant and all the separate screening-halls.
+
+The proposal for the overall structure thus looks like this:
 
 ```
   areas[]
@@ -51,33 +51,14 @@
       .entrance
   .lifts[]
   .stairs[]
-``
-
-- separete 'indoors' and 'outdoors' anly as types of area?
-- make `dining-area.` a special type of `area.`?
+```
 
 
-### `accessibleWithWheelchair` vs. `ratingForWheelchair`
-
-- Reality will demanand a final yes/no answer from AC.
-- Many sources rate the accessibility on a scale (e.g. from 1-5 Stars)
-- Some sources rate the accessibility as yes/limited/no -> could be translated into rating
-- Maybe we could phrase the answere as something like 'likelyhoodOfAccessibilityByWheelchair'
 
 
-## A sample response block including all possible properties
 
-Note:
+## A complete sample object
 
-- This refinement of this format is still in progress as more and more data-sources are being added.
-- The definitiona below is in javascript to allow for comments and fewer quotation-marks.
-This is an updated data-structure, the groups accessibility data into areas of different types:
-
-- 'inside'
-- 'outside'
-- 'pool-area'
-- 'terrace'
-- 'dining'
 
 ```
 {
@@ -101,21 +82,21 @@ This is an updated data-structure, the groups accessibility data into areas of d
     address: '',
     originalId: '234234',                             // id within data-source
     category: 'hotel',                                // see [ac-categories]
-
+    
     accessibility: {
       accessibleWith: {
         wheelchair: true,
         guideDog: true,
         limitedSight: true,
       },
-
+    
       offersActivitiesFor: {
         hearingImpaired: true,
         learningImpaired: true,
         physicallyImpaired: true,
         visuallyImpaired: true,
       },
-
+    
       stairs: [
         {
           count: '>10 ± 2',
@@ -131,17 +112,17 @@ This is an updated data-structure, the groups accessibility data into areas of d
           },
         },
       ],
-
+    
       areas: [
         {                                                        // 'hotelRoom?'
           tags: ['indoors', 'outdoors', 'meeting-room', 'confidential', 'bedroom', 'terrace', 'roof','font-space'],   // TBD
           name: '',
           floorLevel: 1,
-
+    
           ratingSpacious: 1,                      // needs review
           isWellLit: true,
           isQuiet: true,
-
+    
           ground: {
             isStepLess: true,
             distanceToDroppedCurb: '<20m ±10',      // interpretation of 'nearby',
@@ -150,7 +131,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
             turningSpace: '<150cm',                 // interpretation of 'very narrow'
             streetIsSloping: true,
           },
-
+    
           pathways: {                               // RFC do we need this group?
             //turningsSpaceInFrontOfRelevantFurniture: '>140',        // find better adj for 'relevant'
             //widthOfOpeningsAndAisles: '> 140cm',
@@ -163,7 +144,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
             maxLongitudinalSlope: '<6deg',
             maxLateralSlope: '<2.5deg',
           },
-
+    
           entrances: [
             {
               name: 'Main Entrance',
@@ -175,7 +156,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
               slopeAngle: '6%',                       //
               hasVisualSign: true,                    // needs review
               hasBrailleSign: true,
-
+    
               intercom: {
                 isAvailable: true,
                 height: '90..120cm',
@@ -216,7 +197,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
               hasSpaceAlongsideToilet: true,
               washBasinAccessibleWithWheelchair: true,
               shampooAccessibleWithWheelchair: true,
-
+    
               entrance: {
                 isAutomatic: false,
                 doorWidth: '85cm',
@@ -270,7 +251,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
               },
             },
           ],
-
+    
           powerOutlets: {
             haveContrastColor: true,
             isErgnomicToUse: true,
@@ -282,19 +263,19 @@ This is an updated data-structure, the groups accessibility data into areas of d
             isErgnomicToUse: true,
             height: '120cm',
           },
-
+    
           bed: {
             height: '120cm ± 10',
             adjustableHeight: '30 .. 140cm',
             turningSpaceBeside: '>90cm',
             spaceBelow: '20cm',
           },
-
+    
           wardrobe: {
             heightForRail: '<140cm',
             turningSpaceInFront: '>140cm',
           },
-
+    
           changingRoom: {
             turningSpaceInside: '>150cm',
             hasSupportRails: true,
@@ -302,13 +283,13 @@ This is an updated data-structure, the groups accessibility data into areas of d
             heightOfHooks: '<120cm',
             seatingIsPossible: true,
           },
-
+    
           stage: {
             isAccessibleWithWheelchair: true,
             durationOfLift: '<10sec',                 // RFC this is very special
             turningSpace: '150cm',
           },
-
+    
           vendingMachines: [
             {
               name: 'Ticket Machine 1',
@@ -324,17 +305,17 @@ This is an updated data-structure, the groups accessibility data into areas of d
               },
             },
           ],
-
+    
           cashRegister: {
             height: '90cm',
             hasRemovableCreditCardReader: true,
           },
-
+    
           wheelchairPlaces: {
             count: 1,
             hasSpaceForAssistent: true,
           },
-
+    
           tables: {
             height: '60 .. 80cm',
             spaceBelow: {
@@ -342,31 +323,31 @@ This is an updated data-structure, the groups accessibility data into areas of d
               depth: '>30cm',
             },
           },
-
+    
           seats: {
             height: '20 .. 120cm',
           },
-
+    
           services: {                                     // RFC? do we need to group these 
             hasRemovableFurniture: false,
             hasInductionLoop: true,
             hasRemoteControlAudioSigns: true,
-
+    
             hasTableService: true,
             transferToRegularSeatPossible: true,
-
+    
             hasMobileSafetyDepositBox: true,
             hasHoist: true,
             hasChangingTable: true,                       //
             hasFlashingOrVibratingFireAlarm: true,
-
+    
             hasPoolAccessFacility: true,
             hasSaunaWheelchair: true,
             hasManualWheelChair: true,
             hasAllTerrainWheelChair: true,
             hasVehiclesAreAdaptedForWheelchairs: true,
           },
-
+    
           sitemap: {
             distanceFromEntrance: '<10m',
             isBraille: true,
@@ -375,22 +356,22 @@ This is an updated data-structure, the groups accessibility data into areas of d
             languages: ['en'],
             hasSimpleLanguage: true,
           },
-
+    
           tactileGuideStrips: {
             isGuidingToInfoDesk: true,                              // needs review
             hasVisualContrat: true,
           },
-
+    
           infoDesk: {
             heightOfCounter: '<=80cm',
             distanceToEntrance: '<10m',
           },
-
+    
           signage: {
             isReadible: true,
             languages: ['de'],
           },
-
+    
           media: [
             {
               type: 'documents',                          // documents|menu|audioGuide|presentations|exhibits|movie|screen,
@@ -459,6 +440,7 @@ This is an updated data-structure, the groups accessibility data into areas of d
     ],
   },
 };
+```
 
 
 
