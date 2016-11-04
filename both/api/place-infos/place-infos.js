@@ -44,7 +44,7 @@ PlaceInfos.relationships = {
   belongsTo: {
     source: {
       foreignCollection: Sources,
-      foreignKey: 'sourceId',
+      foreignKey: 'properties.sourceId',
     },
   },
 };

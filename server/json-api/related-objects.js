@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
-import { _ } from 'meteor/underscore';
+import { _ } from 'meteor/stevezhu:lodash';
 
 
 // For each given document in `documents`, look up the related document that is specified by
@@ -24,7 +24,7 @@ function findRelatedDocuments({ collection, documents, fieldName, userId }) {
   if (typeof foreignCollection.visibleSelectorForUserId === 'function') {
     Object.assign(visibleSelector, foreignCollection.visibleSelectorForUserId(userId) || {});
   }
-  const foreignIds = _.uniq(_.map(documents, doc => doc[foreignKey]));
+  const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
   const selector = { $and: [visibleSelector, { _id: { $in: foreignIds } }] };
 
   // Allow per-user find options, e.g. limited fields dependent on who you are
@@ -92,7 +92,7 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, us
   const results = {};
 
   Object.keys(resultsByPath).forEach(path => {
-    if (!_.include(requestedAndDefaultFieldPaths, path)) {
+    if (!requestedAndDefaultFieldPaths.includes(path)) {
       return;
     }
     const { foreignCollectionName, foreignDocuments } = resultsByPath[path];
