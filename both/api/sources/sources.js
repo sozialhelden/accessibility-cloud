@@ -64,11 +64,6 @@ Sources.schema = new SimpleSchema({
     defaultValue: true,
     optional: true,
   },
-  tocForSourcesAccepted: {
-    type: Boolean,
-    label: 'I have read and agreed to the Terms & Conditions. <b>bold</b> '
-         + 'Esp. that I am the owner of the data or have the right to publish it.',
-  },
   streamChain: {
     type: Array,
     label: 'Stream chain setup',

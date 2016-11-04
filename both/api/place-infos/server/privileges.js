@@ -25,5 +25,5 @@ PlaceInfos.visibleSelectorForUserId = (userId) => {
   check(selector, Object);
   const options = { transform: null, fields: { _id: 1 } };
   const sourceIds = Sources.find(selector, options).fetch().map(s => s._id);
-  return { sourceId: { $in: sourceIds } };
+  return { 'properties.sourceId': { $in: sourceIds } };
 };

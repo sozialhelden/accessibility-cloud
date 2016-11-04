@@ -18,7 +18,6 @@ Sources.publicFields = {
   originWebsite: 1,
   languageId: 1,
   isDraft: 1,
-  tocForSourcesAccepted: 1,
   streamChain: 1,
   isFreelyAccessible: 1,
   accessRestrictedTo: 1,
@@ -36,7 +35,6 @@ Sources.visibleSelectorForUserId = (userId) => {
     $or: [
       { organizationId: { $in: organizationIds } },
       {
-        tocForSourcesAccepted: true,
         isDraft: false,
         isFreelyAccessible: true,
       },

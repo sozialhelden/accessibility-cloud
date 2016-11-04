@@ -67,7 +67,6 @@ Factory.define('jsonSource', Sources, {
   primaryRegion: 'Vienna, Austria',
   description: 'All public toilets in vienna (JSON)',
   originWebsiteURL: 'http://data.wien.gv.at',
-  tocForSourcesAccepted: true,
   streamChain: [
     {
       type: 'HTTPDownload',
@@ -179,7 +178,6 @@ Factory.define('csvSource', Sources, {
   name: 'Toilets in Rostock (CSV)',
   description: 'germany-rostock-toilets (CSV)',
   originWebsiteURL: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
-  tocForSourcesAccepted: true,
   streamChain: [
     {
       type: 'HTTPDownload',

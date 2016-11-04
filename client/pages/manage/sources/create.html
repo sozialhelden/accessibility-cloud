@@ -21,17 +21,6 @@
       {{> afQuickField name='originWebsiteURL'}}
       {{> afQuickField name='isDraft'}}
 
-      <div class="form-group {{#if afFieldIsInvalid name='tocForSourcesAccepted'}}has-error{{/if}}">
-        <label>
-          <input type="checkbox" value="true" name="tocForSourcesAccepted" id="ToaQ8s4gSBG7oetZH" data-schema-key="tocForSourcesAccepted">
-          I have read and agreed to the <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/terms-for-sources.md'>Terms &amp; Conditions</a>.
-         Esp. that I am the owner of the data or have the right to publish it.
-        </label>
-        {{#if afFieldIsInvalid name='tocForSourcesAccepted'}}
-          <span class="help-block">You must accept the terms and conditions.</span>
-        {{/if}}
-      </div>
-
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
         <button type="submit" class="btn btn-primary">Insert</button>
       {{/autoForm}}
