@@ -56,6 +56,7 @@ Apps.schema = new SimpleSchema({
     allowedValues: [true],
   },
 });
+
 Apps.schema.messages({
   notAllowed: 'Sorry, but this is not a valid option.',
 });

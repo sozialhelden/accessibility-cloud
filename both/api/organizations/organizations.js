@@ -116,6 +116,11 @@ Organizations.schema = new SimpleSchema({
   },
 });
 
+Organizations.schema.messages({
+  notAllowed: 'Sorry, but this is not a valid option.',
+});
+
+
 Organizations.attachSchema(Organizations.schema);
 
 Organizations.helpers({
