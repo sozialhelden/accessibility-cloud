@@ -40,16 +40,10 @@ export const events = {
   },
 
   'click .js-logout'() {
-    Meteor.logout();
-
-    // if we are on a private list, we'll need to go to a public one
-    if (ActiveRoute.name('Lists.show')) {
-      // TODO -- test this code path
-      // const list = Lists.findOne(FlowRouter.getParam('_id'));
-      // if (list.userId) {
-      //   FlowRouter.go('Lists.show', Lists.findOne({ userId: { $exists: false } }));
-      // }
-    }
+    Meteor.logout(function() {
+      FlowRouter.go('/');
+      FlowRouter.reload();
+    });
   },
 
   'click .js-new-organization'() {

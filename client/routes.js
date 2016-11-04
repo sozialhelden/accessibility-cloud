@@ -104,9 +104,9 @@ FlowRouter.route('/', {
 const browseRoutes = FlowRouter.group({
   name: 'browse',
   prefix: '/browse',
-  triggersEnter: [
-    checkLoggedIn,
-  ],
+  // triggersEnter: [
+  //   checkLoggedIn,
+  // ],
 });
 
 browseRoutes.route('/dashboard', {
