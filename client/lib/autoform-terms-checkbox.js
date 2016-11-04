@@ -2,7 +2,7 @@ import { AutoForm } from 'meteor/aldeed:autoform';
 
 if (Meteor.isClient) {
 AutoForm.addInputType('tos-checkbox', {
-  template: 'afTosCheckbox',
+  template: 'afTosForSourcesCheckbox',
   valueOut() {
     return !!this.is(':checked');
   },

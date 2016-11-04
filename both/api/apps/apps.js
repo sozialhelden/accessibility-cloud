@@ -73,14 +73,16 @@ Apps.schema = new SimpleSchema({
     optional: true,
   },
   tocForAppsAccepted: {
-    label: 'I read and agree the terms of conditions for apps',
     type: Boolean,
     autoform: {
-      afFieldInput: {
-        placeholder: 'http://a11y-gourmet.org',
-      },
+      label: false,
+      type: 'tos-checkbox',
     },
+    allowedValues: [true],
   },
+});
+Apps.schema.messages({
+  notAllowed: 'Sorry, but this is not a valid option.',
 });
 
 Apps.attachSchema(Apps.schema);

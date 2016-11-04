@@ -40,3 +40,14 @@ AccountsTemplates.configureRoute('resetPwd', {
   name: 'resetPwd',
   path: '/reset-password',
 });
+
+AccountsTemplates.addField({
+  _id: 'tocForUserAccepted',
+  type: 'checkbox',
+  displayName: 'I have read and understood the terms and conditions',
+  template: 'customCheckboxTemplate',
+
+  func(value) {
+    return !value;
+  },
+});
