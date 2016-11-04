@@ -1,13 +1,13 @@
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Sources } from '/both/api/sources/sources.js';
+import { AutoForm } from 'meteor/aldeed:autoform';
 import { Licenses } from '/both/api/licenses/licenses.js';
 import { Languages } from '/both/api/languages/languages.js';
 import subsManager from '/client/lib/subs-manager';
 
 import { _ } from 'meteor/underscore';
 
-Template.licenses_edit_page.onCreated(function created() {
+Template.licenses_edit_page.onCreated(() => {
   window.Licenses = Licenses;
 
   subsManager.subscribe('sources.public');
@@ -22,11 +22,18 @@ Template.licenses_edit_page.helpers({
 
   languages() {
     const list = Languages.find({}).fetch();
-    return _.map(list, function(language) {
-      return {
-        label: language.name,
-        value: language._id,
-      };
-    });
+    return _.map(list, language => ({
+      label: language.name,
+      value: language._id,
+    }));
+  },
+});
+
+AutoForm.addHooks('updateLicenseForm', {
+  onSuccess() {
+    FlowRouter.go('manage.licenses.show', { _id: this.docId });
+
+    this.event.preventDefault();
+    return false;
   },
 });

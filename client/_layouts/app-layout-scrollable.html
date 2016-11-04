@@ -4,6 +4,7 @@
       <span>{{_"Trying to connect..."}}</span>
     </div>
   {{/unless}}
+
   <header class='main-header'>
     <div class='wrapper header'>
       <div class='account-options'>
@@ -42,15 +43,29 @@
         <li class='home-link'>
           <a href='/'> </a>
         </li>
-        {{> Template.dynamic template=header_navigation_list}}
+        {{#if isApproved}}
+          {{> Template.dynamic template=header_navigation_list}}
+        {{else}}
+          {{> header_approval_needed }}
+        {{/if}}
       </ul>
       <div class='sub-header'>
-        {{> Template.dynamic template=header_sub}}
+        {{#if isApproved}}
+          {{> Template.dynamic template=header_sub}}
+        {{/if}}
       </div>
     </div>
   </header>
-  <div class='page-content centered {{main}}'>
-    {{> Template.dynamic template=main}}
-  </div>
 
+  <div class='page-content centered {{main}}'>
+    {{#if isApproved}}
+      {{> Template.dynamic template=main}}
+    {{else}}
+      {{#if Template.subscriptionsReady}}
+        {{> page_approval_needed}}
+      {{else}}
+        {{> App_loading}}
+      {{/if}}
+    {{/if}}
+  </div>
 </template>

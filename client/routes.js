@@ -59,19 +59,14 @@ function checkLoggedIn (ctx, redirect) {
   }
 }
 
-function redirectIfLoggedIn (ctx, redirect) {
-  if (Meteor.userId()) {
-    redirect('/dashboard');
-  }
-}
-
 FlowRouter.route('/', {
   name: 'dashboard',
   action() {
     if (Meteor.userId()) {
       BlazeLayout.render('app_layout_scrollable', {
         main: 'page_dashboard',
-        header_navigation_list: 'dashboard_header_navigation' });
+        header_navigation_list: 'dashboard_header_navigation',
+      });
     } else {
       BlazeLayout.render('app_layout_start_page', {
         main: 'page_start',

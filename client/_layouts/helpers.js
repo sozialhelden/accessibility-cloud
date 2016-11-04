@@ -94,8 +94,12 @@ export const helpers = {
     return true;
   },
   isAdmin() {
-    const u = Meteor.user();
-    return u === undefined ? false : u.isAdmin;
+    const user = Meteor.user();
+    return !!user && user.isAdmin;
+  },
+  isApproved() {
+    const user = Meteor.user();
+    return !!user && user.isApproved;
   },
   activeIfRouteNameIs(routeName) {
     FlowRouter.watchPathChange();
@@ -122,4 +126,5 @@ export function onCreated() {
     menuOpen: false,
     userMenuOpen: false,
   });
+  this.subscribe('currentUserData');
 }

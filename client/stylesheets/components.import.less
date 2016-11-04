@@ -1,34 +1,45 @@
 @import './utils.import.less';
 
-a.call-to-action.button,
-button.btn.btn-primary,
-button.btn-primary {
-  color:purple;
+a.button,
+button.btn {
   min-width: 10em;
   margin: 1em 0;
-  padding: 0 18px;
+  padding: 0.5em 0.75em;
   .font-s3;
   .type-regular;
-  line-height: 48px;
   text-align: center;
   text-transform: uppercase;
+  cursor: pointer;
+}
+
+a.call-to-action.button,
+button.btn-primary {
   color: white;
   background-color: @color-primary;
-  cursor: pointer;
-
   &:hover {
-    background-color: #29A3CB;
+    background-color: darken(@color-primary, 5%);
   }
-
+  &:active {
+    background-color: darken(@color-primary, 20%);
+  }
   &.unchanged {
     background-color: @color-grey085;
+  }
+}
+
+button.btn-danger {
+  color: white;
+  &:hover {
+    background-color: @color-negative;
+  }
+  &:active {
+    background-color: darken(@color-negative, 10%);
   }
 }
 
 a.call-to-action.button.big {
   .font-m2;
   .type-light;
-  line-height: 2;
   min-width: 7em;
 }
 
@@ -37,15 +48,14 @@ a.link {
 }
 
 .placeholder {
-  .font-l1;
+  .font-m2;
   .type-lightitalic;
   color: @color-text-muted;
   text-align: center;
-  min-height: 128px;
+  margin: 0.5em 0;
 }
 
 ul.with-blocks {
-  // padding-top:0.5em;
   padding-bottom:1em;
 
   li.list.block {
@@ -79,12 +89,19 @@ ul.with-blocks {
 
 .dashboard.widget {
   min-width: 29%;
+  @media screen and (max-width: 768px) {
+    min-width: 100%;
+  }
   text-align: center;
   // min-height: 100%/3;
   flex: 1;
   margin-right: @page-horizontal-padding;
   padding-bottom: 1em;
   border-bottom: 1px solid @color-grey091;
+
+  .hint {
+    padding: 0.5em 0.75em;
+  }
 
   &:last-child {
     margin-right: 0;
@@ -98,15 +115,21 @@ ul.with-blocks {
 .dashboard.widget.with-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1.5rem;
 
   ul li a {
     color: @color-text;
     .font-m1;
     .type-light;
   }
+
   a.add-entry {
     text-align: center;
     margin: 1em 0;
+  }
+
+  > * {
+    margin: 0 0 1.5rem 0;
   }
 }
 
@@ -204,12 +227,11 @@ pre.readible.json {
 }
 
 .code-block {
-  padding: 4px 4px;
+  padding: 0.25em 0.55em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   white-space: pre-wrap;
   .type-code;
-  .font-s3;
   line-height: 1.3em;
   border-radius: 4px;
   border: 1px solid @color-code-border;

@@ -6,7 +6,6 @@ import subsManager from '/client/lib/subs-manager';
 
 // FIXME: not all required here
 Template.apps_navigation_sidebar.onCreated(function created() {
-
   subsManager.subscribe('apps.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');

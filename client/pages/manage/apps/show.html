@@ -27,7 +27,7 @@
       <div>
         <h3>Getting started with our API</h3>
         <p>
-          Your <strong>API access token</strong> for {{name}} is <code class='code-block'>{{tokenString}}</code>.
+          Your <strong>API access token</strong> for {{name}} is <code>{{tokenString}}</code>.
         </p>
         <p>
           Please keep it secret and only use it for {{name}}! If you want to request data from multiple apps, just create a new app here.
@@ -42,7 +42,7 @@
     -H 'X-Token: {{tokenString}}' \
     {{rootUrl}}place-infos\?latitude\=48.251\&amp;longitude\=16.5\&amp;accuracy\=10000</p>
         <p>
-          If you start on the command line, we recommend piping your curl output through <a href='https://stedolan.github.io/jq/'><code>jq</code></a> when testing API requests in the command line. <code>jq</code> can be installed using your favorite package manager (e.g. <code>apt-get install curl jq</code> on Debian-based Linux or <code>brew install curl jq</code> on Macs).
+          If you start on the command line, we recommend piping your curl output through <a href='https://stedolan.github.io/jq/'><code>jq</code></a> when testing API requests in the command line. <code>jq</code> can be installed using your favorite package manager (e.g. <code>apt-get install jq</code> on Debian-based Linux or <code>brew install jq</code> on Macs).
         </p>
 
         <h4>…in JavaScript (with jQuery)</h4>
@@ -60,6 +60,10 @@
         <h4>In other environments</h4>
         <p>
           If you need help integrating the API with any other language or programming environment, feel free to <a href='mailto:holger@sozialhelden.de'>contact us</a> so we can help you with that!
+        </p>
+        <h3>Further reading</h3>
+        <p>
+          You can find more API documentation in <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/json-api.md'>our repository on Github</a>.
         </p>
       </div>
       <div>

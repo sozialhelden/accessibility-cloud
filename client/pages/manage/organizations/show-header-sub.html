@@ -2,7 +2,7 @@
   <div class='sub-pages'>
     <a href='{{pathFor "manage.organizations.show" _id=organization._id}}' class='{{activeIfRouteNameIs "manage.organizations.show"}}'>{{_"Data Sources"}}</a>
     <a href='{{pathFor "manage.organizations.show.licenses" _id=organization._id}}' class='{{activeIfRouteNameMatches "licenses"}}'>{{_"Licenses"}}</a>
-    <a href='{{pathFor "manage.organizations.show.apps" _id=organization._id}}' class='{{activeIfRouteNameMatches "apps"}}'>{{_ "API-Clients"}}</a>
+    <a href='{{pathFor "manage.organizations.show.apps" _id=organization._id}}' class='{{activeIfRouteNameMatches "apps"}}'>{{_ "API Clients"}}</a>
     <a href='{{pathFor "manage.organizations.show.settings" _id=organization._id}}' class='{{activeIfRouteNameIs "manage.organizations.show.settings"}}'>{{_"Settings"}}</a>
   </div>
 </template>

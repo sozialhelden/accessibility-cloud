@@ -17,7 +17,7 @@
         </ul>
         <a class='add-entry' href='{{pathFor "manage.organizations.create"}}'>{{_ "Create an Organization"}}</a>
       {{else}}
-        <span class='placeholder'>{{_ "You are not part of an organisation yet." }}</span>
+        <div class='placeholder'>{{_ "You are not part of an organisation yet." }}</div>
         <a class='call-to-action button' href='{{pathFor "manage.organizations.create"}}'>
           {{_ "Create your First Organization"}}
         </a>
@@ -35,38 +35,38 @@
           {{/each}}
         </ul>
       {{else}}
-        <span class='placeholder'>{{_ "Your data sources will appear here."}}</span>
+        <div class='placeholder'>{{_ "Your data sources will appear here."}}</div>
       {{/if}}
       {{#if organizationsForCurrentUser.count}}
-      <!-- <div class='wrapper'>
-        <a class='button cta' href='{{pathFor "manage..create"}}'>Add Organization</a>
-        <div class='button cta'>Add data source</div>
-        <span class='subtle'>{{_ "Creating a data source allows others to access your API."}}</span>
-      </div> -->
+        <a class='call-to-action button' href='{{pathFor "manage.organizations.sources.create" _id=firstOrganizationId}}'>
+          {{_ "Add data source"}}
+        </a>
+        <div class='subtle hint'>{{_ "Creating a data source allows you to access data from other providers via your API or from files you upload."}}</div>
       {{else}}
-        <span class='subtle'>{{_ "Create an organization to add your own data sources."}}</span>
+        <div class='subtle hint'>{{_ "Create an organization to add your own data sources."}}</div>
       {{/if}}
-        <!-- ADDING A DATA_SOURCE IS ONLY POSSIBLE FROM AN ORGANIZATION -->
     </div>
 
     <div class='dashboard widget with-list'>
       <h2>{{_ "Access data"}}</h2>
-      {{#if organizationsForCurrentUser.count}}
+      {{#if appsForCurrentUser.count}}
         <ul class='with-blocks'>
           {{#each appsForCurrentUser}}
             <li class='list item block'>
               <a href='{{pathFor "manage.apps.show" _id=_id}}'>{{name}}</a>
             </li>
-          {{else}}
-            <span class='placeholder'>{{_ "Your apps will appear here."}}</span>
           {{/each}}
         </ul>
+      {{else}}
+        <div class='placeholder'>{{_ "Your apps will appear here."}}</div>
+      {{/if}}
+      {{#if organizationsForCurrentUser.count}}
         <a class='call-to-action button' href='{{pathFor "manage.organizations.apps.create" _id=firstOrganizationId}}'>
           {{_ "Register app"}}
         </a>
-        <span class='subtle'>{{_ "Creating an app allows you to access our API."}}</span>
+        <div class='subtle hint'>{{_ "Creating an app allows you to access our API."}}</div>
       {{else}}
-        <span class='subtle'>{{_ "Create an organization to add your own apps."}}</span>
+        <div class='subtle hint'>{{_ "Create an organization to add your own apps."}}</div>
       {{/if}}
     </div>
   </div>

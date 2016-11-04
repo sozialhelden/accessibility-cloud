@@ -26,8 +26,9 @@
 }
 
 .type-code {
-  font-family: "Code Sans", "Source Code Pro", "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+  font-family: "Source Code Pro", "Code Sans", "Input Mono Condensed", monospace;
   font-style: 500;
+  font-size: 90%;
 }
 
 // ---------------------------- font sizes -------------------------
@@ -93,8 +94,13 @@
 
 code {
   .type-code();
+  color: @color-sourcecode;
 }
 
 strong {
   .type-bold();
+}
+
+.huge {
+  .font-l3();
 }

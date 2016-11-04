@@ -113,7 +113,14 @@ a {
     font-family: 'sourcesanspro-regular';
     text-decoration: none;
     cursor: pointer;
+    &:hover {
+      color: darken(@color-primary, 5%);
+    }
+    &:active {
+      color: darken(@color-primary, 20%);
+    }
 }
+
 a * {
     cursor: pointer !important;
 }
