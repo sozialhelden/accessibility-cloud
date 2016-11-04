@@ -9,7 +9,8 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import subsManager from '/client/lib/subs-manager';
 
 Template.sources_show_imports_page.onCreated(() => {
-  subsManager.subscribe('organizations.withContent.mine');
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('sources.public');
   subsManager.subscribe('sourceImports.public');
 
   const importId = FlowRouter.getParam('importId');

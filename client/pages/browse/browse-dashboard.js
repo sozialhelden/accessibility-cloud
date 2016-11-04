@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Sources } from '/both/api/sources/sources.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { isUserMemberOfOrganizationWithId } from '/both/api/organizations/privileges.js';
 import { helpers } from '/client/_layouts/helpers';
 
 import subsManager from '/client/lib/subs-manager';
@@ -13,7 +13,7 @@ Template.browse_dashboard_page.onCreated(function organizationsShowPageOnCreated
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
-  subsManager.subscribe('organizations.withContent.mine');
+  
 });
 
 
@@ -25,19 +25,12 @@ Template.browse_dashboard_page.onRendered(function organizationsShowPageOnRender
 Template.browse_dashboard_page.helpers(helpers);
 
 Template.browse_dashboard_page.helpers({
+  isUserMemberOfOrganizationWithId,
   organizations() {
     return Organizations.find({});
   },
   sources() {
     return Sources.find({});
-  },
-  isUserMemberOfOrganizationWithId(_id) {
-    const userId = Meteor.userId();
-    const orgaIds = _.map(OrganizationMembers.find({ userId }).fetch(), function fetchOrgId(m) {
-      return m.organizationId;
-    });
-    const isMember = orgaIds.indexOf(_id) !== -1;
-    return isMember;
   },
 });
 

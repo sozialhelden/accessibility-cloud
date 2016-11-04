@@ -17,15 +17,6 @@ export const Categories = new Mongo.Collection('Categories');
 }
 */
 
-
-// FIXME: WARNING, these need to be fixed
-Categories.allow({
-  insert() { return true; },
-  update() { return true; },
-  remove() { return true; },
-});
-
-
 Categories.schema = new SimpleSchema({
   icon: {
     type: String,
@@ -50,10 +41,3 @@ Categories.schema = new SimpleSchema({
 });
 
 Categories.attachSchema(Categories.schema);
-
-Categories.publicFields = {
-  icon: 1,
-  translations: 1,
-  synonums: 1,
-  parentIds: 1,
-};

@@ -1,47 +1,58 @@
 /* eslint-disable prefer-arrow-callback */
 
 import { Meteor } from 'meteor/meteor';
-// import { check } from 'meteor/check';
+import { Mongo } from 'meteor/mongo';
+import { check } from 'meteor/check';
+
 import { Organizations } from '../organizations.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
-import { Sources } from '/both/api/sources/sources.js';
-import { Apps } from '/both/api/apps/apps.js';
-import { _ } from 'meteor/underscore';
+
+import { getOrganizationIdsForUserId } from '../privileges';
+import { publishPublicFields, publishPrivateFields } from '/server/publish';
 
 
-Meteor.publish('organizations.public', function organizationsPublic() {
-  return Organizations.find({});
-});
+publishPublicFields('organizations', Organizations);
 
-Meteor.publish('organizations.withContent.mine', function manageSubscriptionsForCurrentUser() {
-  const userId = this.userId;
-  if (!userId) {
-    return [];
-  }
+publishPrivateFields(
+  'organizations',
+  Organizations,
+  userId => ({ _id: { $in: getOrganizationIdsForUserId(userId) } })
+);
 
-  const membershipsCursor = OrganizationMembers.find({ userId });
-  const memberships = membershipsCursor.fetch();
+// Publishes private fields for all documents that reference an organization you are member of.
+// You can optionally supply a function to limit the retrieved documents to a more specific set.
+// The function is called with a userId argument and should return a selector.
 
-  const orgaIds = _.map(memberships, function fetchId(m) {
-    return m.organizationId;
-  });
+export function publishPrivateFieldsForMembers(
+  publicationName,
+  collection,
+  selectorFn = () => ({})
+) {
+  check(publicationName, String);
+  check(collection, Mongo.Collection);
+  check(selectorFn, Function);
 
-  return [
-    membershipsCursor,
-    Organizations.find({
-      _id: {
-        $in: orgaIds,
-      },
-    }),
-    Sources.find({
-      organizationId: {
-        $in: orgaIds,
-      },
-    }),
-    Apps.find({
-      organizationId: {
-        $in: orgaIds,
-      },
-    }),
-  ];
-});
+  const name = `${publicationName}.private`;
+
+  console.log('Publishing', name, 'for referred organization members…');
+
+  Meteor.publish(
+    name,
+    function publish() {
+      if (!collection.privateFields) {
+        this.ready();
+        return [];
+      }
+
+      const organizationIds = getOrganizationIdsForUserId(this.userId);
+
+      const specifiedSelector = selectorFn(this.userId);
+      check(specifiedSelector, {});
+
+      const selectorWithOrganizationId = Object.assign({}, specifiedSelector, {
+        organizationId: { $in: organizationIds },
+      });
+
+      return collection.find(selectorWithOrganizationId, { fields: collection.privateFields });
+    }
+  );
+}

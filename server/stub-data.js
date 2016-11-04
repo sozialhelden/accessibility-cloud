@@ -4,7 +4,6 @@ import { Factory } from 'meteor/factory';
 import { Languages } from '/both/api/languages/languages';
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
-import { PlaceImports } from '/both/api/place-imports/place-imports';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
@@ -172,13 +171,6 @@ Factory.define('jsonPlaceInfo', PlaceInfos, {
   geometry: { type: 'Point', coordinates: [12.077916412746292,54.17957489112234] },
 });
 
-Factory.define('jsonPlaceImport', PlaceImports, {
-  timestamp: 234234234,
-  placeInfoId: Factory.get('jsonPlaceInfo'),
-  sourceImportId: Factory.get('jsonSourceImport'),
-});
-
-
 // --------------- CSV Source ----------------------------------------------------------
 Factory.define('csvSource', Sources, {
   organizationId: Factory.get('organization'),
@@ -257,13 +249,6 @@ Factory.define('csvPlaceInfo', PlaceInfos, {
   },
   geometry: { type: 'Point', coordinates: [-123.137,49.25134] },
 });
-
-Factory.define('csvPlaceImport', PlaceImports, {
-  timestamp: 234234234,
-  placeInfoId: Factory.get('csvPlaceInfo'),
-  sourceImportId: Factory.get('csvSourceImport'),
-});
-
 
 // -- Insert to database ------------------------------------------
 function createStubData() {
@@ -346,7 +331,6 @@ Meteor.methods({
       Languages,
       Licenses,
       Organizations,
-      PlaceImports,
       PlaceInfos,
       SourceImports,
       Sources,

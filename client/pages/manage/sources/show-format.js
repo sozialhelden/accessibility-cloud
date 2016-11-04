@@ -13,7 +13,8 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.sources_show_format_page.onCreated(() => {
-  subsManager.subscribe('organizations.withContent.mine');
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('sources.public');
   subsManager.subscribe('sourceImports.public');
 
   window.SourceImports = SourceImports;

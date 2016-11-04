@@ -31,6 +31,7 @@ export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream 
 
   const sourceImportId = SourceImports.insert({
     sourceId,
+    organizationId: source.organizationId,
     streamChain: source.streamChain,
     startTimestamp: Date.now(),
     numberOfPlacesAdded: 0,

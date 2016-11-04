@@ -1,4 +1,6 @@
-import { Meteor } from 'meteor/meteor';
 import { Licenses } from '../licenses.js';
+import { publishPublicFields } from '/server/publish';
+import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
-Meteor.publish('licenses.public', () => Licenses.find({}, { fields: Licenses.publicFields }));
+publishPublicFields('licenses', Licenses);
+publishPrivateFieldsForMembers('licenses', Licenses);

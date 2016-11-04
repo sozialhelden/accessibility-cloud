@@ -1,6 +1,5 @@
 import { _ } from 'meteor/underscore';
 import { Mongo } from 'meteor/mongo';
-import { isAdmin } from '/both/lib/is-admin';
 import { Meteor } from 'meteor/meteor';
 import { geoDistance } from '/both/lib/geo-distance';
 import { Sources } from '/both/api/sources/sources';
@@ -10,23 +9,6 @@ export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 if (Meteor.isClient) {
   window.PlaceInfos = PlaceInfos;
 }
-
-PlaceInfos.allow({
-  insert: isAdmin,
-  update: isAdmin,
-  remove: isAdmin,
-});
-
-PlaceInfos.publicFields = {
-  sourceId: 1,
-  originalId: 1,
-  lastSourceImportId: 1,
-  data: 1,
-};
-
-PlaceInfos.helpers({
-  editableBy: isAdmin,
-});
 
 PlaceInfos.visibleSelectorForUserId = () => ({});
 // This would also be allowed

@@ -7,7 +7,10 @@ import subsManager from '/client/lib/subs-manager';
 
 
 Template.sources_show_access_page.onCreated(() => {
-  subsManager.subscribe('organizations.withContent.mine');
+  subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('sourceImports.private');
+  subsManager.subscribe('sources.public');
+  subsManager.subscribe('sources.private');
   subsManager.subscribe('organizations.public');
 
   window.Sources = Sources; // FIXME: we don't need that only for debugging

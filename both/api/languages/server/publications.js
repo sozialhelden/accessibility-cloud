@@ -1,4 +1,4 @@
-import { Meteor } from 'meteor/meteor';
 import { Languages } from '../languages.js';
+import { publishPublicFields } from '/server/publish';
 
-Meteor.publish('languages.public', () => Languages.find({}, { fields: Languages.publicFields }));
+publishPublicFields('languages', Languages);

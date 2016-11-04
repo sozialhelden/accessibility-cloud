@@ -1,34 +1,9 @@
 import { Mongo } from 'meteor/mongo';
-import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-
 import { Organizations } from '/both/api/organizations/organizations';
+import { isAdmin } from '/both/lib/is-admin';
 
 export const Apps = new Mongo.Collection('Apps');
-
-// Deny all client-side updates since we will be using methods to manage this collection
-// Apps.deny({
-//   insert() { return true; },
-//   update() { return true; },
-//   remove() { return true; },
-// });
-
-
-// FIXME: WARNING, these need to be fixed
-Apps.allow({
-  insert() { return true; }, // FIXME: should be member of organization or admin
-  update() { return true; },
-  remove() { return true; },
-});
-
-Apps.deny({
-  update(userId, doc, fieldNames) {
-    if (_.include(fieldNames, 'tokenString')) {
-      return true;
-    }
-    return false;
-  },
-});
 
 Apps.schema = new SimpleSchema({
   tokenString: {
@@ -87,26 +62,7 @@ Apps.schema.messages({
 
 Apps.attachSchema(Apps.schema);
 
-Apps.publicFields = {
-  organizationId: 1,
-  name: 1,
-  description: 1,
-  website: 1,
-  tocForAppsAccepted: 1,
-};
-
-Apps.privateFields = {
-  tokenString: 1,
-};
-
-Apps.visibleSelectorForUserId = () => ({});
-
 Apps.helpers({
-  // Used by methods-validation
-  editableBy(userId) {
-    // FIXME: allow editing only for members and admins of source
-    return true;
-  },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },

@@ -9,13 +9,12 @@ import { _ } from 'meteor/stevezhu:lodash';
 import subsManager from '/client/lib/subs-manager';
 
 
-
 Template.sources_show_page.onCreated(() => {
-  subsManager.subscribe('organizations.withContent.mine');
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('sources.public');  
+  subsManager.subscribe('sources.public');
+  subsManager.subscribe('organizations.public');
 
-  window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging
+  window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
 // Extend Leaflet-icon to support colors and category-images
@@ -118,7 +117,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
 Template.sources_show_header.helpers({
   source() {
     return Sources.findOne({ _id: FlowRouter.getParam('_id') });
-  },  
+  },
 });
 
 
@@ -159,5 +158,3 @@ Template.sources_show_page.events({
     event.preventDefault();
   },
 });
-
-

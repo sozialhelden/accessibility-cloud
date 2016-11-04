@@ -5,7 +5,6 @@ import { Apps } from '/both/api/apps/apps';
 import { Languages } from '/both/api/languages/languages';
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
-import { PlaceImports } from '/both/api/place-imports/place-imports';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
@@ -17,7 +16,6 @@ const collections = [
   Languages,
   Licenses,
   Organizations,
-  PlaceImports,
   PlaceInfos,
   SourceImports,
   Sources,

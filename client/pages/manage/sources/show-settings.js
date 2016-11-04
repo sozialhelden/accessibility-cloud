@@ -10,7 +10,7 @@ import subsManager from '/client/lib/subs-manager';
 
 Template.sources_show_settings_page.onCreated(function created() {
   window.Sources = Sources;
-
+  subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
   subsManager.subscribe('languages.public');
@@ -48,4 +48,3 @@ Template.sources_show_settings_page.helpers({
     });
   },
 });
-

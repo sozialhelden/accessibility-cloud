@@ -8,6 +8,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.apps_show_page.onCreated(() => {
   subsManager.subscribe('apps.public');
   subsManager.subscribe('apps.private');
+  subsManager.subscribe('apps.private.withToken');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
 });
@@ -20,10 +21,6 @@ const helpers = {
   app() {
     const app = Apps.findOne({ _id: FlowRouter.getParam('_id') });
     return app;
-  },
-  organizations() {
-    const orgCursor = Apps.find({});
-    return orgCursor;
   },
   rootUrl() {
     return Meteor.absoluteUrl('');

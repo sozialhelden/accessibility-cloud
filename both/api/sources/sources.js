@@ -8,22 +8,6 @@ import { _ } from 'meteor/underscore';
 
 export const Sources = new Mongo.Collection('Sources');
 
-// Deny all client-side updates since we will be using methods to manage this collection
-// Sources.deny({
-//   insert() { return true; },
-//   update() { return true; },
-//   remove() { return true; },
-// });
-
-
-// FIXME: WARNING, these need to be fixed
-Sources.allow({
-  insert() { return true; }, // FIXME: should be member of organization or admin
-  update() { return true; },
-  remove() { return true; },
-});
-
-
 Sources.schema = new SimpleSchema({
   organizationId: {
     type: String,
@@ -119,18 +103,6 @@ Sources.schema = new SimpleSchema({
 
 Sources.attachSchema(Sources.schema);
 
-Sources.publicFields = {
-  organizationId: 1,
-  name: 1,
-  description: 1,
-  originWebsiteURL: 1,
-  isDraft: 1,
-  tocForSourcesAccepted: 1,
-  streamChain: 1,
-  isFreelyAccessible: 1,
-  accessRestrictedTo: 1,
-};
-
 Sources.relationships = {
   belongsTo: {
     license: {
@@ -140,14 +112,7 @@ Sources.relationships = {
   },
 };
 
-Sources.visibleSelectorForUserId = () => ({});
-
 Sources.helpers({
-  // Used by methods-validation
-  editableBy(userId) {
-    // FIXME: allow editing only for members and admins of source
-    return true;
-  },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },
