@@ -35,9 +35,15 @@ Sources.visibleSelectorForUserId = (userId) => {
   return {
     $or: [
       { organizationId: { $in: organizationIds } },
-      { isFreelyAccessible: true },
       {
+        tocForSourcesAccepted: true,
+        isDraft: false,
+        isFreelyAccessible: true,
+      },
+      {
+        isDraft: false,
         isFreelyAccessible: false,
+        tocForSourcesAccepted: true,
         accessRestrictedTo: {
           $elemMatch: { $in: organizationIds },
         },
