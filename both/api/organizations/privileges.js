@@ -93,7 +93,7 @@ export function userHasFullAccessToOrganization(userId, organization) {
     return false;
   }
   check(userId, String);
-  check(organization, Match.ObjectIncluding({ _id: String }));
+  check(organization._id, String);
 
   return userHasFullAccessToOrganizationId(userId, organization._id);
 }
