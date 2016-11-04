@@ -128,10 +128,10 @@ Organizations.schema = new SimpleSchema({
     },
   },
   tocForOrganizationsAccepted: {
-    label: 'I have read and agree to the teams and conditions',
     type: Boolean,
     autoform: {
-      type: 'boolean-checkbox',
+      label: false,
+      type: 'tos-checkbox',
     },
     allowedValues: [true],
   },

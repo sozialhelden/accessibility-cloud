@@ -21,13 +21,13 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 ## Creating an Orginization
 
 - [x] You learn that before doing anything meaningful, you have to create or join an *Organizations*
-- [ ] A member can invite/add you to an existing organization.
+- [ ] A member can invite/add you to an existing organization (or an entity for a single "individual").
 - [x] Or, you can create a new organization.
 
-## Creatign a Data Source
+## Creating a Data Source
 
 - [ ] You learn that to share data, you need to create *a data source*.
-- [ ] You can create *a data source* for your new *Organization*.
+- [x] You can create *a data source* for your new *Organization*.
 - [ ] In the create data-source form, you see that each data-source requires a license.
 - [ ] You can check the existing *predefined licenses*, but... 
 - [ ] ...you decided to add a new custom license for your data source.
@@ -40,7 +40,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [x] You learn that you need to define how your data-source is mapped into the ac-format.
 - [x] You learn that there is a generic [ac-format](ac-format.md) and how you can find additional documentation on that topic.
 - [ ] You click a link to find more documentation [on github](https://github.com/sozialhelden/ac-machine/tree/master/docs) and are happy to see that this is a freely accessible open source project.
-- [x] You learn that you don't have to understand how to map your data – you can always find help from the ac-community through the support-email-address (or other channels).
+- [x] You learn that you don't have to understand how to map your data – you can always find help from the ac-community through the support-email-address (or other channels like irc?).
 - [x] You can update your data, so some members of the AC-community can then help you converting the data-format.
 - [ ] You can initialize the source-import-definition from a list of templates for importing CSV and JSON.
 - [x] You can edit the information in a textarea, but...
@@ -48,6 +48,11 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [x] Once you updated the information you can press *import* and see that a new progress is now running in the background and indicates its process with a collection of progress bars.
 - [ ] You understand that importing data is really complicated but are happy to find a link to the extensive documentation on importing data on github.
 - [x] In the settings you also control which organizations can access the data source.
+
+## Just confirm what the AC-people prepared
+
+- You get a direct link to a page that shows how the staff of AC integrated your data source, you can preview the data and confirm your TOC to publish. This links gets open through an invitation Email.
+- convert Holgers "google form" to a data-contributor sign up.
 
 ## Accessing Data
 
@@ -83,3 +88,4 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 
 - [ ] After logout I will be forwarded to the start-page
 - [ ] ​
+
