@@ -1,5 +1,7 @@
 import { isAdmin } from '/both/lib/is-admin';
+import { check } from 'meteor/check';
 import { PlaceInfos } from '../place-infos';
+import { Sources } from '/both/api/sources/sources';
 
 PlaceInfos.allow({
   insert: isAdmin,
@@ -17,3 +19,11 @@ PlaceInfos.publicFields = {
 PlaceInfos.helpers({
   editableBy: isAdmin,
 });
+
+PlaceInfos.visibleSelectorForUserId = (userId) => {
+  const selector = Sources.visibleSelectorForUserId(userId);
+  check(selector, Object);
+  const options = { transform: null, fields: { _id: 1 } };
+  const sourceIds = Sources.find(selector, options).fetch().map(s => s._id);
+  return { sourceId: { $in: sourceIds } };
+};

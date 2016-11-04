@@ -10,11 +10,6 @@ if (Meteor.isClient) {
   window.PlaceInfos = PlaceInfos;
 }
 
-PlaceInfos.visibleSelectorForUserId = () => ({});
-// This would also be allowed
-// PlaceInfos.findOptionsFor = (userId) => ({});
-
-
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
 function convertToGeoJSONFeature(doc, coordinatesForDistance) {
   const properties = {};
