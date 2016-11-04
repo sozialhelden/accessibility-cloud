@@ -70,7 +70,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
     id: 'accesssibility-cloud',
-    accessToken: 'your.mapbox.public.access.token',
+    accessToken: Meteor.settings.public.mapbox || 'your.mapbox.public.access.token',
   }).addTo(map);
 
 
