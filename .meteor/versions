@@ -82,6 +82,11 @@ npm-bcrypt@0.9.1_1
 npm-mongo@2.2.11_1
 observe-sequence@1.0.12
 ordered-dict@1.0.8
+peerlibrary:assert@0.2.5
+peerlibrary:fiber-utils@0.6.0
+peerlibrary:reactive-mongo@0.1.1
+peerlibrary:reactive-publish@0.3.0
+peerlibrary:server-autorun@0.5.2
 percolate:momentum@0.7.2
 percolate:velocityjs@1.2.1_1
 promise@0.8.7

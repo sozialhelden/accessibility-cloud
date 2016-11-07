@@ -15,7 +15,12 @@ function publishAndLog(name, publishFunction) {
 // specify what's visible, implement `visibleSelectorForUserId` and `findOptionsForUserId` in your
 // collection.
 
-export function publishPublicFields(publicationName, collection, selectorFunction = () => ({})) {
+export function publishPublicFields(
+  publicationName,
+  collection,
+  selectorFunction = () => ({}),
+  options = {}
+) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
   const givenSelector = selectorFunction(this.userId);
@@ -24,9 +29,14 @@ export function publishPublicFields(publicationName, collection, selectorFunctio
   publishAndLog(
     `${publicationName}.public`,
     function publish() {
-      const visibleSelector = collection.visibleSelectorForUserId(this.userId);
-      const selector = { $and: [givenSelector, visibleSelector] };
-      return collection.find(selector, { fields: collection.publicFields });
+      this.autorun(() => {
+        const visibleSelector = collection.visibleSelectorForUserId(this.userId);
+        const selector = { $and: [givenSelector, visibleSelector] };
+        return collection.find(
+          selector,
+          Object.assign({}, options, { fields: collection.publicFields })
+        );
+      });
     }
   );
 }
@@ -34,7 +44,12 @@ export function publishPublicFields(publicationName, collection, selectorFunctio
 
 // Like publishPublicFields, but publishes only private fields.
 
-export function publishPrivateFields(publicationName, collection, selectorFunction = () => ({})) {
+export function publishPrivateFields(
+  publicationName,
+  collection,
+  selectorFunction = () => ({}),
+  options = {}
+) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
   check(selectorFunction, Function);
@@ -43,9 +58,14 @@ export function publishPrivateFields(publicationName, collection, selectorFuncti
   publishAndLog(
     `${publicationName}.private`,
     function publish() {
-      const visibleSelector = collection.visibleSelectorForUserId(this.userId);
-      const selector = { $and: [givenSelector, visibleSelector] };
-      return collection.find(selector, { fields: collection.privateFields });
+      this.autorun(() => {
+        const visibleSelector = collection.visibleSelectorForUserId(this.userId);
+        const selector = { $and: [givenSelector, visibleSelector] };
+        return collection.find(
+          selector,
+          Object.assign({}, options, { fields: collection.publicFields })
+        );
+      });
     }
   );
 }

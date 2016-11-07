@@ -35,6 +35,7 @@ dburles:collection-helpers
 reywood:publish-composite
 mdg:validated-method
 mdg:validation-error
+peerlibrary:reactive-publish # Allows server-side publications to update their content reactively
 
 # routing
 kadira:flow-router

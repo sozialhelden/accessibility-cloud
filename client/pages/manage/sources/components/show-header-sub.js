@@ -5,7 +5,8 @@ import { Sources } from '/both/api/sources/sources.js';
 import subsManager from '/client/lib/subs-manager';
 
 Template.sources_show_header_sub.onCreated(() => {
-  
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('sources.public');
 });
 
 

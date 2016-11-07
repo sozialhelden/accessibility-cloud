@@ -1,5 +1,6 @@
-import { Meteor } from 'meteor/meteor';
 import { SourceImports } from '../source-imports.js';
+import { publishPublicFields } from '/server/publish';
+import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
-const options = { fields: SourceImports.publicFields, sort: { startTimestamp: -1 } };
-Meteor.publish('sourceImports.public', () => SourceImports.find({}, options));
+publishPublicFields('sourceImports', SourceImports);
+publishPrivateFieldsForMembers('sourceImports', SourceImports);
