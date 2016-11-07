@@ -1,27 +1,15 @@
 <template name="Auth_page">
-  <!-- <div class="page auth"> -->
-<!--     <nav>
-      <div class="nav-group">
-        <a href="#" class="js-menu nav-item">
-          <span class="icon-list-unordered"></span>
-        </a>
-      </div>
-    </nav>
- -->
-<!--   <div class="wrapper auth"> -->
-    {{> atForm}}
+  {{> atForm}}
 
-    <div class="hints">
-      <h3 class="tip">{{_ "You will make a difference, because…" }}</h3>
-      <ol class="checks">
-        <li>{{_ "Even small changes quickly sum up." }}</li>
-        <li>{{_ "We’re are a friendly and caring community" }}.</li>
-        <li>{{_ "It’s free!" }}</li>
-        <li>{{_ "It’s easy!" }}</li>
-      </ol>
-    </div>
-<!--     </div>
-  </div> -->
+  <div class="hints">
+    <h3 class="tip">{{_ "You will make a difference, because…" }}</h3>
+    <ol class="checks">
+      <li>{{_ "Even small changes quickly sum up." }}</li>
+      <li>{{_ "We’re are a friendly and caring community" }}.</li>
+      <li>{{_ "It’s free!" }}</li>
+      <li>{{_ "It’s easy!" }}</li>
+    </ol>
+  </div>
 </template>
 
 <template name="override-atPwdFormBtn">
@@ -31,7 +19,7 @@
 </template>
 
 <template name="override-atTextInput">
-  <div class="input {{#if isValidating}}validating{{/if}} {{#if hasError}}error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}">
+  <fieldset class="{{#if isValidating}}validating{{/if}} {{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}">
     <input type="{{type}}" id="at-field-{{_id}}" name="at-field-{{_id}}" placeholder="{{placeholder}}" autocapitalize="none" autocorrect="off">
     {{#if hasIcon}}
         <span class="{{iconClass}}"></span>
@@ -39,7 +27,7 @@
     {{#if hasError}}
       <div class='help-block'>{{errorText}}</div>
     {{/if}}
-  </div>
+  </fieldset>
 </template>
 
 <template name="override-atTitle">

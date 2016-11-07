@@ -1,5 +1,5 @@
 <template name="customCheckboxTemplate">
-  <div class='form-group {{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}'>
+  <fieldset class='{{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}'>
     <label for='at-field-{{_id}}'>
       <input type='checkbox' id='at-field-{{_id}}' name="at-field-{{_id}}">
     </label>
@@ -7,5 +7,5 @@
     {{#if hasError}}
       <div class="help-block">{{errorText}}</div>
     {{/if}}
-  </div>
+  </fieldset>
 </template>

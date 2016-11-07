@@ -4,17 +4,17 @@
         <h2>Control Access for this Source</h2>
 
         <form>
-          <div class="form-group" data-required="true">
+          <fieldset data-required="true">
             <label for="isFreelyAccessible" class="control-label">{{_ 'Share your data with...'}}</label>
               <select name="isFreelyAccessible" required="" class="form-control">
                 <option value="restricted" >{{_ "Only selected Organizations"}}</option>
                 <option value="isFreelyAccessible" {{selectedIfAccessibleToAll}}>{{_ "Everybody"}}</option>
             </select>
-          </div>
+          </fieldset>
         </form>
 
         {{#unless source.isFreelyAccessible}}
-          <h3>Restrict JSON API access to the following organizations</h3>
+          <h3>Restrict access to the following organizations</h3>
           <ul class='access-list'>
           {{# each organizations}}
             <li class=''>
