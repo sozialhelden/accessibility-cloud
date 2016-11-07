@@ -1,30 +1,27 @@
 # Converting source-data into common ac-data
 
 ## Stream Chain elements
-We make data-import as flexible as possible, we seperate the process into small steps that are linked together through pipes. 
+To make importing data as flexible and efficient as possible, we seperate the process into small processing modules that are linked together through stream pipes.
 
-### HTTPDownload
-Download any data from an URL.
+Currently, we support the following stream modules:
 
-### ReadFile
-TBD
+### `HTTPDownload`
+Downloads any data from an URL.
 
-### ConvertToUTF8
-Convert downloaded data into UTF8 (the format of the database). [Incomming formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
+### `ConvertToUTF8`
+Converts downloaded data into UTF8 (the format of the database). [Incomming formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
 
-### Split
-Split the incoming streams into chunks.
+### `Split`
+Splits the incoming string into chunks that can be processed as objects, using a given delimiter.
 
-Parameters:
+### `ParseJSONStream`
+Reads one single JSON string as a stream, scraping all JSON objects or values matching a given path and returning them as JavaScript objects.
 
-### ParseJSONStream
-Find and convert JSON-Objects within the incoming text-buffer into a data-object.
+### `ParseJSONChunks`
+Reads multiple JSON strings (each representing one JSON object) and converts the incoming text buffers into JavaScript objects. This can be useful for the common case that the input data consists of multiple JSON objects delimited by newlines (or other characters).
 
-### ParseJSONChunks
-Convert the incoming text-buffer from a single JSON-Object into an object. This can be useful if the stream is includes JSON-objects that are not seperated by commas.
-
-### ParseCSVStream
-We use the [FastCSV](https://www.npmjs.com/package/fast-csv) modul.
+### `ParseCSVStream`
+Parses a CSV stream and outputs JSON strings for each line, optionally reading the header and using it for the property names. We use the [FastCSV](https://www.npmjs.com/package/fast-csv) module for this. Note that you currently have to use ParseJSONChunks after this module to convert the JSON strings into actual JavaScript objects before further processing.
 
 #### Parameters
 `"objectMode" = true`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer.
@@ -32,15 +29,32 @@ We use the [FastCSV](https://www.npmjs.com/package/fast-csv) modul.
 `"ignoreEmpty" = false`: If you wish to ignore empty rows.
 `"delimiter" = ","`: If your data uses an alternate delimiter such as ; or \t.
 
-### ConsoleOutput
-### TransformData
-### UpsertPlace
+### `TransformData`
+Transforms given JSON objects into the [accessibility.cloud format](./exchange-format.md) using mappings and JavaScript.
 
-## Defining mappings
+#### Defining mappings
 
+You can use JavaScript functions to convert from your original data into 
 
+```
+"mappings": {
+    "originalId": "''+row.id",
+    "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
+    "name": "helpers.OSM.fetchNameFromTags(row.tags)",
+    "tags": "row.tags",
+    "isAccessible": "row.tags['wheelchair'] == 'yes'"
+}
+```
 
-## A sample stream-chain definition
+### `UpsertPlace`
+
+Inserts an object into the database as place. The place will be associated with the source you have created in the accessibility.cloud web UI and will be available over the API users as soon as
+
+- you have accepted the terms and conditions for the organization under whose name the data source is published
+- your data source is not in draft state anymore (see the source's 'Settings' tab in the web UI)
+- the app token that is used to query the API belongs to an app by an organization that is allowed to read your source's data (you can either allow everyone or specific organizations to use your data source in the 'Settings' tab).
+
+## An exemplary stream chain definition
 
 ```
 [
@@ -90,7 +104,7 @@ We use the [FastCSV](https://www.npmjs.com/package/fast-csv) modul.
 
 
 ## Helper functions
-Converting complex data is very complex. That's why we included a number of helper functions and libraries.
+Converting complex data is—you guessed right—complex :) That's why we included a number of helper functions and libraries.
 
 ### Implemented
 
