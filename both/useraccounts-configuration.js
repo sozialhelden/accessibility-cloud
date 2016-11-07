@@ -22,6 +22,11 @@ AccountsTemplates.configure({
   defaultLayout: 'App_body',
   defaultContentRegion: 'main',
   defaultLayoutRegions: {},
+  negativeFeedback: false,
+  negativeValidation: true,
+  positiveValidation: true,
+  positiveFeedback: true,
+  showValidating: true,
 });
 
 AccountsTemplates.configureRoute('signIn', {
@@ -44,7 +49,9 @@ AccountsTemplates.configureRoute('resetPwd', {
 AccountsTemplates.addField({
   _id: 'tocForUserAccepted',
   type: 'checkbox',
-  displayName: 'I have read and understood the terms and conditions',
+  displayName: 'I have read and understood the Terms and Conditions',
+  errStr: 'You must agree to the Terms and Conditions.',
+  required: true,
   template: 'customCheckboxTemplate',
 
   func(value) {
