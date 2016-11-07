@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import { Sources } from '../sources';
 import { TAPi18n } from 'meteor/tap:i18n';
+import { Sources } from '../sources';
+import { Organizations } from '/both/api/organizations/organizations';
 import {
   getOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
@@ -35,20 +36,28 @@ Sources.helpers({
 
 Sources.visibleSelectorForUserId = (userId) => {
   const organizationIds = getOrganizationIdsForUserId(userId);
+  const organizationIdsWithAcceptedToS = Organizations.find(
+    { tocForOrganizationsAccepted: true },
+    { fields: { _id: 1 } }
+  ).map(organization => organization._id);
+
   return {
     $or: [
+      // match sources of my own organizations
       { organizationId: { $in: organizationIds } },
+      // match published freely accessible sources of other organizations that have accepted ToS
       {
         isDraft: false,
         isFreelyAccessible: true,
+        organizationId: { $in: organizationIdsWithAcceptedToS },
       },
+      // match published restricted-access sources of other organizations that have accepted ToS
       {
         isDraft: false,
         isFreelyAccessible: false,
         tocForSourcesAccepted: true,
-        accessRestrictedTo: {
-          $elemMatch: { $in: organizationIds },
-        },
+        organizationId: { $in: organizationIdsWithAcceptedToS },
+        accessRestrictedTo: { $elemMatch: { $in: organizationIds } },
       },
     ],
   };
