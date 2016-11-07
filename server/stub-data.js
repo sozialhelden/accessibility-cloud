@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Factory } from 'meteor/factory';
+import { TAPi18n } from 'meteor/tap:i18n';
 
 import { Languages } from '/both/api/languages/languages';
 import { Licenses } from '/both/api/licenses/licenses';
@@ -314,17 +315,23 @@ function createStubData() {
   });
 }
 
+function checkIfAdmin(userId) {
+  if (!userId) {
+    throw new Meteor.Error(401, TAPi18n.__('Please log in first.'));
+  }
+  if (!isAdmin(userId)) {
+    throw new Meteor.Error(403, TAPi18n.__('Not authorized.'));
+  }
+}
+
 Meteor.methods({
   createStubData() {
-    if (!this.userId || !isAdmin(this.userId)) {
-      throw new Meteor.Error(401, 'Not authorized');
-    }
+    checkIfAdmin(this.userId);
     createStubData();
   },
   resetDatabase() {
-    if (!this.userId || !isAdmin(this.userId)) {
-      throw new Meteor.Error(401, 'Not authorized');
-    }
+    checkIfAdmin(this.userId);
+
     const collections = [
       Languages,
       Licenses,

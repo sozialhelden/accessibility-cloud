@@ -3,8 +3,7 @@ import Fiber from 'fibers';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
-import { Sources } from '/both/api/sources/sources';
+import { checkExistenceAndFullAccessToSourceId } from '/both/api/sources/server/privileges';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
 import { createStreamChain } from './stream-chain';
@@ -16,18 +15,11 @@ const sourceIdsToStreamChains = {};
 export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream }) {
   console.log('Requested import for source', sourceId, '…');
 
+  check(userId, String);
   check(sourceId, String);
   check(inputStreamToReplaceFirstStream, Match.Optional(Stream));
 
-  const source = Sources.findOne({ _id: sourceId });
-  if (!source) {
-    throw new Meteor.Error(404, 'Source not found.');
-  }
-
-  const member = OrganizationMembers.find({ userId, organizationId: source.organizationId });
-  if (!member) {
-    throw new Meteor.Error(401, 'Not authorized for given source.');
-  }
+  const source = checkExistenceAndFullAccessToSourceId(userId, sourceId);
 
   const sourceImportId = SourceImports.insert({
     sourceId,

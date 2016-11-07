@@ -1,7 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { Sources } from '../sources';
+import { TAPi18n } from 'meteor/tap:i18n';
 import {
   getOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
+  userHasFullAccessToOrganizationId,
 } from '/both/api/organizations/privileges';
 
 Sources.allow({
@@ -49,3 +53,23 @@ Sources.visibleSelectorForUserId = (userId) => {
     ],
   };
 };
+
+export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
+  check(sourceId, String);
+  check(userId, String);
+
+  if (!userId) {
+    throw new Meteor.Error(401, TAPi18n.__('Please log in first.'));
+  }
+
+  const source = Sources.findOne({ _id: sourceId });
+  if (!source) {
+    throw new Meteor.Error(404, TAPi18n.__('Source not found.'));
+  }
+
+  if (!userHasFullAccessToOrganizationId(userId, source.organizationId)) {
+    throw new Meteor.Error(401, TAPi18n.__('Not authorized.'));
+  }
+
+  return source;
+}

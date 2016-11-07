@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { _ } from 'meteor/underscore';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check } from 'meteor/check';
 
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { Sources } from '/both/api/sources/sources.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { checkExistenceAndFullAccessToSourceId } from '/both/api/sources/server/privileges';
 
 Meteor.methods({
   getSomeGeoJSONPoints() {
@@ -14,43 +14,34 @@ Meteor.methods({
       { type: 'Feature', geometry: { type: 'Point', coordinates: [-123.137, 49.25134] } },
     ];
   },
+
   getPointsForSource(sourceId, limitCount = 1000) {
+    checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
     check(sourceId, String);
     check(limitCount, Number);
-    return _.map(PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch(), (pi) => ({
+
+    return PlaceInfos.find(
+      { 'properties.sourceId': sourceId },
+      { limit: limitCount }
+    ).fetch().map(pi => ({
       type: 'Feature',
       geometry: pi.geometry,
     }));
   },
+
   getPlacesForSource(sourceId, limitCount = 1000) {
     check(sourceId, String);
     check(limitCount, Number);
-    // return _.map(PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch(), (pi) => ({
-    //   type: 'Feature',
-    //   geometry: pi.geometry,
-    // }));
+    checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
+
     return PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch();
   },
+
   updateDataURLForSource(sourceId, url) {
     check(sourceId, String);
     check(url, String);
-
-    const source = Sources.findOne({ _id: sourceId });
-    if (!source) {
-      throw new Meteor.Error(404, 'Source not found.');
-    }
-
-    if (!this.userId) {
-      throw new Meteor.Error(401, 'Please authenticate first.');
-    }
-    const member = OrganizationMembers.find({
-      userId: this.userId,
-      organizationId: source.organizationId,
-    });
-
-    if (!member) {
-      throw new Meteor.Error(401, 'Not authorized for given source.');
-    }
+    check(url, SimpleSchema.RegEx.Url);
+    checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
     Sources.update(sourceId, { $set: {
       'streamChain.0.parameters.sourceUrl': url,
