@@ -66,9 +66,9 @@ export const helpers = {
   cordova() {
     return Meteor.isCordova && 'cordova';
   },
-  emailLocalPart() {
-    const email = Meteor.user().emails[0].address;
-    return email.substring(0, email.indexOf('@'));
+  userEmail() {
+    const user = Meteor.user();
+    return user && user.emails[0] && user.emails[0].address;
   },
   userMenuOpen() {
     const instance = Template.instance();
