@@ -8,6 +8,10 @@
   position:relative;
   height:420px;
 
+  .leaflet-container .leaflet-control-attribution {
+    opacity: 0.5;
+  }
+
   .cover-map {
     position: absolute;
     width:100%;
@@ -51,6 +55,7 @@
       margin-left: 10px;
       .type-light;
       .font-l3;
+      text-shadow: 0 0 1px white;
 
       small {
         padding-left: 93px;
@@ -121,8 +126,9 @@
 
 .account-options {
   position: absolute;
-  top:0;
-  right:0;
+  top: 0;
+  right: 0;
+  padding: 1em 1.5em;
   z-index: 1010;
 
   .btns-group {
@@ -188,16 +194,13 @@ div.area.statistics {
   }
 }
 
-.claim.area{
-  padding-top: 0px;
+.claim.area {
   text-align: center;
 
   h2 {
     .font-l1;
     .type-light;
     line-height: 90%;
-    padding-bottom: 0.2em;
-    margin-bottom: 0;
   }
 }
 
@@ -242,6 +245,7 @@ div.area.statistics {
 }
 
 .page.content.block.actions.area {
+  margin-top: 2em;
   padding-top: 0;
   display:flex;
   justify-content: center;
