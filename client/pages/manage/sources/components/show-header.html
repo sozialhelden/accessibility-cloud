@@ -1,7 +1,11 @@
 <template name="sources_show_header">
   <li>
     {{#with source.getOrganization}}
-      <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+      {{#if activeIfRouteNameMatches "browse"}}
+        <a href='{{pathFor "browse.dashboard" _id=_id}}'>{{name}}</a>
+      {{else}}
+        <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+      {{/if}}
     {{/with}}
   </li>
   <li>

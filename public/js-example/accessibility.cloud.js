@@ -102,7 +102,10 @@
             return source && source.name;
           },
         }));
-        $('li.ac-result').click(function(event) {
+        $('li.ac-result a').click(function (event) {
+          event.stopPropagation();  // prevent slideToggle for link
+        });
+        $('li.ac-result').click(function (event) {
           $(event.target)
             .parent()
             .find('.ac-result-accessibility-details')
