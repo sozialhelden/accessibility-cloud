@@ -58,7 +58,7 @@
   </header>
 
   <div class='page-content centered {{main}}'>
-    {{#if isApproved}}
+    {{#if userCanAccessPageWithCurrentApprovalState main}}
       {{> Template.dynamic template=main}}
     {{else}}
       {{#if Template.subscriptionsReady}}

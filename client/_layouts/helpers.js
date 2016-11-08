@@ -4,6 +4,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { isApproved } from '/both/lib/is-approved';
 
 // A store which is local to this file
 const showConnectionIssue = new ReactiveVar(false);
@@ -117,6 +118,11 @@ export const helpers = {
     'swiperight .cordova'(event, instance) {
       instance.state.set('menuOpen', true);
     },
+  },
+  userCanAccessPageWithCurrentApprovalState(pageName) {
+    const userId = Meteor.userId();
+    const pagesAccessibleWithoutApproval = ['licenses_show_page'];
+    return pagesAccessibleWithoutApproval.includes(pageName) || isApproved(userId);
   },
 };
 
