@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+import { $ } from 'meteor/jquery';
 
 /*
 Planned routes are...
@@ -53,7 +54,11 @@ Planned routes are...
 /imprint
 */
 
-function checkLoggedIn (ctx, redirect) {
+FlowRouter.triggers.enter([() => {
+  $(window).scrollTop(0);
+}]);
+
+function checkLoggedIn(ctx, redirect) {
   if (!Meteor.userId()) {
     redirect('/');
   }
