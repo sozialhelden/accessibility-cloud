@@ -2,6 +2,7 @@
   <div class="form block">
     {{#autoForm collection='Sources' doc=source id="updateSourceForm" type="update"}}
       {{> afQuickField name='name'}}
+      {{> afQuickField name='shortName'}}
       {{> afQuickField name="licenseId" options=licenses noselect="true"}}
       {{> afQuickField name='description'}}
       {{> afQuickField name='originWebsiteURL'}}

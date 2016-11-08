@@ -19,9 +19,9 @@ Licenses.schema = new SimpleSchema({
     },
     max: 1000,
   },
-  shorthand: {
+  shortName: {
     type: String,
-    label: 'Shorthand (optional)',
+    label: 'shortName (optional)',
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. ODBLv1',
@@ -89,7 +89,7 @@ Licenses.attachSchema(Licenses.schema);
 Licenses.publicFields = {
   organizationId: 1,
   name: 1,
-  shorthand: 1,
+  shortName: 1,
   plainTextSummary: 1,
   websiteURL: 1,
   fullTextURL: 1,

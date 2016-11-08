@@ -16,6 +16,7 @@
 
     {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
       {{> afQuickField name='name'}}
+      {{> afQuickField name='shortName'}}
       {{> afQuickField name="licenseId" options=licenses noselect="true"}}
       {{> afQuickField name='description'}}
       {{> afQuickField name='originWebsiteURL'}}

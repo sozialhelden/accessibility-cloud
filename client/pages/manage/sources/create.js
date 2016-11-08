@@ -32,8 +32,8 @@ const _helpers = {
       if (license.version) {
         licenseName += + ' – ' + license.version;
       }
-      if (license.shorthand) {
-        licenseName += ' (' + license.shorthand + ')';
+      if (license.shortName) {
+        licenseName += ' (' + license.shortName + ')';
       }
       return {
         label: licenseName,

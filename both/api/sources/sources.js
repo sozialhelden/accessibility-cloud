@@ -26,9 +26,20 @@ Sources.schema = new SimpleSchema({
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. Places in Europe',
+         autofocus: true,
       },
     },
     type: String,
+  },
+  shortName: {
+    label: 'Short name for backlinks (should include your Organization)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'e.g. ACME',
+      },
+    },
+    type: String,
+    max: 12,
   },
   licenseId: {
     label: 'License',

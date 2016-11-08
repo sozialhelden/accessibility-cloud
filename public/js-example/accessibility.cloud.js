@@ -14,7 +14,7 @@
 
   var formatRating = function (rating) {
     var between0and5 = Math.floor(Math.min(1, Math.max(0, rating)) * 5 );
-    var stars = '*****'.slice(5 - between0and5);
+    var stars = '★★★★★'.slice(5 - between0and5);
     return '<span class="stars">' + stars + '</span> <span class="numeric">' + between0and5 + '/5</span>';
   };
 
@@ -117,12 +117,25 @@
       }
     },
 
+    renderSourcesAndLicenses: function (element, sources, licenses) {
+      // var self = this;
+      var links = Object.values(sources).map(function (source) {
+        var s = '<a href="">' + (source.shortName || source.name) + '</a> '
+              + '(<a href="">' + (licenses[source.licenseId].shortName || licenses[source.licenseId].name) + '</a>)';
+        return s;
+      });
+      if (links.length) {
+        $(element).append('<p class="ac-licenses">Data: ' + links.join(', ') + '</p>');
+      }
+    },
+
     loadAndRenderPlaces: function (element, parameters) {
       var self = this;
 
       return this.getPlacesAround(parameters)
         .done(function handleResponse(response) {
           self.renderPlaces(element, response.features, response.related);
+          self.renderSourcesAndLicenses(element, response.related.Sources, response.related.Licenses);
         })
         .fail(function handleError(error) {
 

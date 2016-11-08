@@ -110,7 +110,7 @@ placeImport: {
 license: {
   _id: "_ODbLv1.0",
   name: "234234e",
-  shorthand: "ODbL",
+  shortName: "ODbL",
   version: "1.0",
   linkURL: "http://opendatacommons.org/licenses/odbl/",
   fullTextURL: "http://opendatacommons.org/licenses/odbl/1.0/",
