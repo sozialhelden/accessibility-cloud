@@ -14,9 +14,11 @@
           </span>
         {{/if}}
       </h2>
-      <div>
-        <a class='edit-link' href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
-      </div>
+      {{#if license.editableBy currentUser._id}}
+        <div>
+          <a class='edit-link' href='{{pathFor "manage.licenses.edit" _id=_id}}'>Edit License</a>
+        </div>
+      {{/if}}
       <div>
         <label>{{_ "plainTextSummary"}}</label>
         <div class='markdown'>

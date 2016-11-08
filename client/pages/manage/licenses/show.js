@@ -13,8 +13,8 @@ Template.licenses_show_page.onCreated(function created() {
 
 Template.licenses_show_page.helpers({
   license() {
-    const orga = Licenses.findOne({ _id: FlowRouter.getParam('_id') });
-    return orga;
+    const license = Licenses.findOne({ _id: FlowRouter.getParam('_id') });
+    return license;
   },
   organizations() {
     const orgCursor = Licenses.find({});

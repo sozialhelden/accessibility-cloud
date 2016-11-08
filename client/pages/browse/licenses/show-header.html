@@ -1,0 +1,20 @@
+<template name="licenses_show_header">
+  <li>
+    {{#with license.getOrganization}}
+      {{#if activeIfRouteNameMatches "browse"}}
+        <a href='{{pathFor "browse.dashboard" _id=_id}}'>{{name}}</a>
+      {{else}}
+        <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+      {{/if}}
+    {{/with}}
+  </li>
+  <li>
+    {{#with license}}
+      {{name}}
+
+      {{#if editableBy currentUser._id}}
+        editable!!!!!!! 222222
+      {{/if}}
+    {{/with}}
+  </li>
+</template>

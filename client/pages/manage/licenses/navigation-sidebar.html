@@ -9,6 +9,8 @@
         </li>
       {{/each}}
     </ul>
-    <a href='{{pathFor "manage.organizations.licenses.create" _id= organization._id}}'>{{_ "Add License"}}</a>
+    {{#if organization.editableBy currentUser._id}}
+      <a href='{{pathFor "manage.organizations.licenses.create" _id= organization._id}}'>{{_ "Add License"}}</a>
+    {{/if}}
   </div>
 </template>

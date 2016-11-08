@@ -18,6 +18,9 @@
     {{else}}
       {{#with source}}
         <h3>About source</h3>
+        <a href='{{pathFor "browse.licenses.show" _id=licenseId}}'>
+          License
+        </a>
         <div class='markdown'>
           {{#markdown}}{{source.description}}{{/markdown}}
         </div>

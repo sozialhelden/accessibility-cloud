@@ -1,3 +1,4 @@
+import { isAdmin } from '/both/lib/is-admin';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources';
@@ -118,6 +119,10 @@ Organizations.schema = new SimpleSchema({
 
 Organizations.schema.messages({
   notAllowed: 'Sorry, but this is not a valid option.',
+});
+
+Organizations.helpers({
+  editableBy: isAdmin,
 });
 
 

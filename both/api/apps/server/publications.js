@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Apps } from '../apps.js';
-import { getOrganizationIdsForRoles } from '/both/api/organizations/privileges';
+import { getAccessibleOrganizationIdsForRoles } from '/both/api/organizations/privileges';
 import { publishPublicFields } from '/server/publish';
 import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
@@ -10,7 +10,7 @@ publishPrivateFieldsForMembers('apps', Apps);
 // Additionally publish app tokens for organization managers
 
 Meteor.publish('apps.private.withToken', function publish() {
-  const organizationIds = getOrganizationIdsForRoles(
+  const organizationIds = getAccessibleOrganizationIdsForRoles(
     this.userId, ['manager', 'developer', 'founder']
   );
   const selector = { organizationId: { $in: organizationIds } };

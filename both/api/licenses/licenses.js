@@ -1,3 +1,4 @@
+import { isAdmin } from '/both/lib/is-admin';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations';
@@ -86,15 +87,9 @@ Licenses.schema = new SimpleSchema({
 
 Licenses.attachSchema(Licenses.schema);
 
-Licenses.publicFields = {
-  organizationId: 1,
-  name: 1,
-  shortName: 1,
-  plainTextSummary: 1,
-  websiteURL: 1,
-  fullTextURL: 1,
-  consideredAs: 1,
-};
+Licenses.helpers({
+  editableBy: isAdmin,
+});
 
 Licenses.helpers({
   getOrganization() {

@@ -43,7 +43,7 @@
         <li class='home-link'>
           <a href='/'> </a>
         </li>
-        {{#if isApproved}}
+        {{#if userCanAccessPageWithCurrentApprovalState main}}
           {{> Template.dynamic template=header_navigation_list}}
         {{else}}
           {{> header_approval_needed }}

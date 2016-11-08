@@ -14,10 +14,12 @@ Planned routes are...
 /browse/sources/:_id/edit
 /browse/organizations/:_id/
 /browse/organizations/:_id/sources ???
+/browse/licenses/_id ???
 
 /browse/categories
 /browse/categories/:_id
 /browse/categories/edit?
+
 
 / <- dashboard
 
@@ -155,6 +157,16 @@ browseRoutes.route('/categories/:_id', {
   },
 });
 
+browseRoutes.route('/licenses/:_id', {
+  name: 'browse.licenses.show',
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'licenses_show_page',
+      header_navigation_list: 'licenses_show_header',
+      // header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
 
 // ========= MANAGE =======================================================
 

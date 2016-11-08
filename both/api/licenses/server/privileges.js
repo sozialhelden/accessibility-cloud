@@ -1,4 +1,3 @@
-import { isAdmin } from '/both/lib/is-admin';
 import { userHasFullAccessToReferencedOrganization } from '/both/api/organizations/privileges';
 import { Licenses } from '../licenses';
 
@@ -17,9 +16,5 @@ Licenses.publicFields = {
   plainTextSummary: 1,
   consideredAs: 1,
 };
-
-Licenses.helpers({
-  editableBy: isAdmin,
-});
 
 Licenses.visibleSelectorForUserId = () => ({});

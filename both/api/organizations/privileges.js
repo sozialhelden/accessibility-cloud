@@ -50,11 +50,6 @@ export function getAccessibleOrganizationIdsForRoles(userId, includedRoles = [])
 }
 
 
-// export function getMyAccessibleOrganizationIdsForRoles(includedRoles = []) {
-//   check(includedRoles, [String]);
-//   return getAccessibleOrganizationIdsForRoles(this.userId, includedRoles);
-// }
-
 
 // Returns true if the user has one of the given roles in the given organization, false otherwise.
 // Admins are considered as having all roles in every organization.
