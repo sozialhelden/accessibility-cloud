@@ -62,6 +62,10 @@ juliancwirko:postcss
 standard-minifier-js@1.2.0_1
 ddp-rate-limiter@1.0.5
 app-prod-security
+meteorhacks:kadira      # Monitoring/Profiling tool
+meteorhacks:kadira-profiler
+kadira:debug            # Allows live CPU profiling on server
+meteorhacks:zones       # Makes async call stacks on Kadira more readable
 
 # rest apis
 simple:rest-accounts-password
