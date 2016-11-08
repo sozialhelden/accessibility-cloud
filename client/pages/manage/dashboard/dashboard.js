@@ -5,7 +5,7 @@ import { Organizations } from '/both/api/organizations/organizations';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members';
 import { Sources } from '/both/api/sources/sources';
 import subsManager from '/client/lib/subs-manager';
-import { getOrganizationIdsForUserId } from '/both/api/organizations/privileges';
+import { getAccessibleOrganizationIdsForUserId } from '/both/api/organizations/privileges';
 
 Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('organizations.public');
@@ -20,13 +20,13 @@ Template.page_dashboard.onCreated(() => {
 
 const helpers = {
   organizations() {
-    return Organizations.find({ _id: { $in: getOrganizationIdsForUserId(Meteor.userId()) } });
+    return Organizations.find({ _id: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
   },
   apps() {
-    return Apps.find({ organizationId: { $in: getOrganizationIdsForUserId(Meteor.userId()) } });
+    return Apps.find({ organizationId: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
   },
   sources() {
-    return Sources.find({ organizationId: { $in: getOrganizationIdsForUserId(Meteor.userId()) } });
+    return Sources.find({ organizationId: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
   },
   firstOrganizationId() {
     const firstMembership = OrganizationMembers.findOne({ userId: Meteor.userId() });

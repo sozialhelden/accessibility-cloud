@@ -1,6 +1,6 @@
 import { Organizations } from '../organizations';
 import {
-  getOrganizationIdsForUserId,
+  getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToOrganization,
 } from '/both/api/organizations/privileges';
 

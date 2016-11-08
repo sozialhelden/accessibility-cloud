@@ -1,6 +1,6 @@
 import { OrganizationMembers } from '../organization-members';
 import {
-  getOrganizationIdsForUserId,
+  getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
 } from '/both/api/organizations/privileges';
 
@@ -30,5 +30,5 @@ OrganizationMembers.helpers({
 });
 
 OrganizationMembers.visibleSelectorForUserId = (userId) => ({
-  organizationId: { $in: getOrganizationIdsForUserId(userId) },
+  organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
 });

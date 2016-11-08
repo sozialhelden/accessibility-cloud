@@ -98,8 +98,8 @@
             return 'NOT accessible with wheelchair';
           },
           sourceName: function () {
-            var source = related.Sources && related.Sources[this.sourceId];
-            return source && source.name;
+            var source = related.sources && related.sources[this.sourceId];
+            return source && (source.shortName || source.name);
           },
         }));
         $('li.ac-result a').click(function (event) {
@@ -135,7 +135,7 @@
       return this.getPlacesAround(parameters)
         .done(function handleResponse(response) {
           self.renderPlaces(element, response.features, response.related);
-          self.renderSourcesAndLicenses(element, response.related.Sources, response.related.Licenses);
+          self.renderSourcesAndLicenses(element, response.related.sources, response.related.licenses);
         })
         .fail(function handleError(error) {
 

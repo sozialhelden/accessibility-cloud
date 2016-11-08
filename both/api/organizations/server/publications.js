@@ -6,7 +6,7 @@ import { check } from 'meteor/check';
 
 import { Organizations } from '../organizations.js';
 
-import { getOrganizationIdsForUserId } from '../privileges';
+import { getAccessibleOrganizationIdsForUserId } from '../privileges';
 import { publishPublicFields, publishPrivateFields } from '/server/publish';
 
 
@@ -15,7 +15,7 @@ publishPublicFields('organizations', Organizations);
 publishPrivateFields(
   'organizations',
   Organizations,
-  userId => ({ _id: { $in: getOrganizationIdsForUserId(userId) } })
+  userId => ({ _id: { $in: getAccessibleOrganizationIdsForUserId(userId) } })
 );
 
 // Publishes private fields for all documents that reference an organization you are member of.
@@ -44,7 +44,7 @@ export function publishPrivateFieldsForMembers(
         return [];
       }
 
-      const organizationIds = getOrganizationIdsForUserId(this.userId);
+      const organizationIds = getAccessibleOrganizationIdsForUserId(this.userId);
 
       const specifiedSelector = selectorFn(this.userId);
       check(specifiedSelector, {});

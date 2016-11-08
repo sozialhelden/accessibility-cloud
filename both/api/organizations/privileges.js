@@ -14,13 +14,16 @@ export function isUserMemberOfOrganizationWithId(userId, organizationId) {
   return OrganizationMembers.find({ userId, organizationId }).count() > 0;
 }
 
-export function getOrganizationIdsForUserId(userId) {
+export function getAccessibleOrganizationIdsForUserId(userId) {
   if (!userId) {
     return [];
   }
   check(userId, String);
+
+  const selector = isAdmin(userId) ? {} : { userId };
+
   return OrganizationMembers
-    .find({ userId }, { fields: { organizationId: 1 } })
+    .find(selector, { fields: { organizationId: 1 } })
     .fetch()
     .map(member => member.organizationId);
 }
@@ -28,7 +31,7 @@ export function getOrganizationIdsForUserId(userId) {
 // Functions for retrieving which roles a user has in which organization.
 // Note that admins are regarded as having all roles in all organizations.
 
-export function getOrganizationIdsForRoles(userId, includedRoles = []) {
+export function getAccessibleOrganizationIdsForRoles(userId, includedRoles = []) {
   if (!userId) {
     return [];
   }
@@ -47,10 +50,10 @@ export function getOrganizationIdsForRoles(userId, includedRoles = []) {
 }
 
 
-export function getMyOrganizationIdsForRoles(includedRoles = []) {
-  check(includedRoles, [String]);
-  return getOrganizationIdsForRoles(this.userId, includedRoles);
-}
+// export function getMyAccessibleOrganizationIdsForRoles(includedRoles = []) {
+//   check(includedRoles, [String]);
+//   return getAccessibleOrganizationIdsForRoles(this.userId, includedRoles);
+// }
 
 
 // Returns true if the user has one of the given roles in the given organization, false otherwise.
@@ -68,7 +71,7 @@ export function userHasRole(userId, organizationId, includedRoles = []) {
     return true;
   }
 
-  const organizationIds = getOrganizationIdsForRoles(userId, includedRoles);
+  const organizationIds = getAccessibleOrganizationIdsForRoles(userId, includedRoles);
   return organizationIds.includes(organizationId);
 }
 

@@ -1,5 +1,5 @@
 import {
-  getOrganizationIdsForUserId,
+  getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
 } from '/both/api/organizations/privileges';
 
@@ -29,7 +29,7 @@ Apps.privateFields = {
 };
 
 Apps.visibleSelectorForUserId = (userId) => ({
-  organizationId: { $in: getOrganizationIdsForUserId(userId) },
+  organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
 });
 
 Apps.helpers({

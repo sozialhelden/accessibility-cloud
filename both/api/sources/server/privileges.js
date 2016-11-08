@@ -4,7 +4,7 @@ import { TAPi18n } from 'meteor/tap:i18n';
 import { Sources } from '../sources';
 import { Organizations } from '/both/api/organizations/organizations';
 import {
-  getOrganizationIdsForUserId,
+  getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
   userHasFullAccessToOrganizationId,
 } from '/both/api/organizations/privileges';
@@ -36,7 +36,7 @@ Sources.helpers({
 });
 
 Sources.visibleSelectorForUserId = (userId) => {
-  const organizationIds = getOrganizationIdsForUserId(userId);
+  const organizationIds = getAccessibleOrganizationIdsForUserId(userId);
   const organizationIdsWithAcceptedToS = Organizations.find(
     { tocForOrganizationsAccepted: true },
     { fields: { _id: 1 } }

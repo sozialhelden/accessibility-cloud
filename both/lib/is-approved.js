@@ -3,5 +3,6 @@ import { check } from 'meteor/check';
 
 export function isApproved(userId) {
   check(userId, String);
-  return Meteor.users.findOne(userId).isApproved;
+  const user = Meteor.users.findOne(userId);
+  return user && user.isApproved;
 }

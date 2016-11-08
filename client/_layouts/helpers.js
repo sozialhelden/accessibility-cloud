@@ -122,7 +122,7 @@ export const helpers = {
   userCanAccessPageWithCurrentApprovalState(pageName) {
     const userId = Meteor.userId();
     const pagesAccessibleWithoutApproval = ['licenses_show_page'];
-    return pagesAccessibleWithoutApproval.includes(pageName) || isApproved(userId);
+    return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
   },
 };
 
