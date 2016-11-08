@@ -44,10 +44,12 @@
   };
 
   window.AccessibilityCloud = {
+    apiDomain: 'http://localhost:3000',
+
     getPlacesAround: function (parameters) {
       return $.ajax({
         dataType: 'json',
-        url: 'http://localhost:3000/place-infos?includeRelated=source',
+        url: this.apiDomain + '/place-infos?includeRelated=source',
         data: parameters,
         headers: {
           Accept: 'application/json',
@@ -118,10 +120,13 @@
     },
 
     renderSourcesAndLicenses: function (element, sources, licenses) {
-      // var self = this;
+      var self = this;
       var links = Object.values(sources).map(function (source) {
-        var s = '<a href="">' + (source.shortName || source.name) + '</a> '
-              + '(<a href="">' + (licenses[source.licenseId].shortName || licenses[source.licenseId].name) + '</a>)';
+        var license = licenses[source.licenseId];
+        var licenseURL = self.apiDomain + '/browse/licenses/' + license._id;
+        var sourceURL = source.originWebsiteURL || (self.apiDomain + '/browse/sources/' + source._id);
+        var s = '<a href="' + sourceURL + '">' + (source.shortName || source.name) + '</a> '
+              + '(<a href="' + licenseURL + '">' + (license.shortName || license.name) + '</a>)';
         return s;
       });
       if (links.length) {
