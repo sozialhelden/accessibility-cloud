@@ -40,7 +40,7 @@ Meteor.methods({
   updateDataURLForSource(sourceId, url) {
     check(sourceId, String);
     check(url, String);
-    check(url, SimpleSchema.RegEx.Url);
+    // check(url, SimpleSchema.RegEx.Url);
     checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
     Sources.update(sourceId, { $set: {

@@ -6,7 +6,7 @@ import { UploadedFiles } from '../uploaded-files';
 // import fs from 'fs';
 import aws from 'aws-sdk';
 import s3Stream from 's3-upload-stream';
-
+import { _ } from 'meteor/underscore';
 
 UploadedFiles.helpers({
   saveUploadFromStream(stream, callback) {
@@ -23,6 +23,7 @@ UploadedFiles.helpers({
     aws.config.accessKeyId = Meteor.settings.aws.accessKeyId;
     aws.config.secretAccessKey = Meteor.settings.aws.secretAccessKey;
     aws.config.sslEnabled = true;
+    console.log('Using aws config:', aws.config);
 
     const s3Params = {
       Bucket: Meteor.settings.public.aws.s3.bucket,
@@ -35,10 +36,13 @@ UploadedFiles.helpers({
     const upload = s3Stream(new aws.S3()).upload(s3Params);
 
     upload.on('error', Meteor.bindEnvironment(error => {
-      UploadedFiles.update({ _id: this._id }, { $set: { s3Error: error } });
       console.error('Our params:', s3Params);
       console.error('Remote path:', this.remotePath);
       console.error('Error:', error);
+      UploadedFiles.update(
+        { _id: this._id },
+        { $set: { s3Error: _.pluck(error, 'message', 'statusCode') } }
+      );
       callback(error);
     }));
 

@@ -11,7 +11,11 @@ export class HTTPDownload {
     check(onDebugInfo, Function);
     check(bytesPerSecond, Match.Optional(Number));
 
-    this.stream = request(sourceUrl);
+    this.stream = request(sourceUrl, {
+      headers: {
+        'User-Agent': 'accessibility.cloud Bot/1.0',
+      },
+    });
 
     const options = {
       time: 1000,
@@ -23,13 +27,17 @@ export class HTTPDownload {
       .then(length => progressStream.setLength(length))
       .catch(error => console.log('Could not find stream length:', error));
 
-    this.stream.once('response', response => {
+    this.stream.on('request', req => {
+      console.log(req);
       onDebugInfo({
         request: {
-          headers: this.stream.headers,
-          host: this.stream.host,
-          path: this.stream.path,
+          headers: req._headers,
+          path: req.path,
         },
+      });
+    });
+    this.stream.once('response', response => {
+      onDebugInfo({
         response: {
           statusCode: response.statusCode,
           headers: response.headers,
