@@ -1,8 +1,8 @@
 # Converting source-data into the accessibility.cloud format
 
-Data sources are currently defined using a JSON string. To make importing data as flexible and efficient as possible, we seperate the process into small processing modules that are linked together through stream pipes. Each module's functionality is customizable using a set of parameters.
+Data sources are currently defined using a JSON string. To make importing data as flexible and efficient as possible, we separate the process into small processing modules that are linked together through stream pipes. Each module's functionality is customizable using a set of parameters. If you have an API, you don't have to change it to make it compatible to accessibility.cloud.
 
-Here is an exemplary stream chain definition to download and process JSON data from a web API:
+Here is an exemplary import process definition to download and process JSON data from a web API:
 
 ```json
 [
