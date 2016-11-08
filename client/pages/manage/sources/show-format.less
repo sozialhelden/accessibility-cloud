@@ -1,0 +1,44 @@
+@import '/client/stylesheets/_util/colors.import.less';
+
+.page-content.sources_show_format_page {
+  flex-direction: column;
+
+  > header button {
+    float: right;
+    margin-left: 1em;
+    margin-top: 0.75em;
+  }
+
+  > section {
+    display: flex;
+    flex-direction: row;
+
+    > section.stream-chain {
+      flex: 2;
+      textarea {
+        background-color: @color-code-area;
+        border: 1px solid @color-code-border;
+        margin: 0;
+      }
+    }
+
+    > aside {
+      flex: 1;
+      padding-left: 1em;
+      section.errors {
+        padding: 1em;
+        margin-bottom: 1em;
+        background-color: white;
+        color: @color-error;
+        font-family: monospace;
+        font-size:14px;
+        ul {
+          li  {
+            margin-left: 2em;
+            margin-bottom:5px;
+          }
+        }
+      }
+    }
+  }
+}

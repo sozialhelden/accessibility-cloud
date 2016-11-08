@@ -1,34 +1,41 @@
 <template name="sources_show_format_page">
   {{#with source}}
-    <div class='stream-chain'>
-      <h2>Import Definition</h2>
-      <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/importing-data.md'>Read Documentation</a>
-      <textarea class='code' id='streamChain'>{{stringify streamChain}}</textarea>
+    <header>
       <button class='btn btn-primary js-save'>Save</button>
       <button class='js-start-import btn btn-primary'>Start Import</button>
-    </div>
-    <div class='centered-content'>
-      <div class='errors'>
-      </div>
-      {{#if lastSourceImport}}
+      <h2>Define your source import process</h2>
+    </header>
+    <section>
+      <section class='stream-chain'>
+        <textarea class='code code-block' id='streamChain'>{{stringify streamChain}}</textarea>
+      </section>
+      <aside>
+        <section class='errors'>
+        </section>
+        {{#if lastSourceImport}}
+          {{#with lastSourceImport}}
+            <h2>{{_"Latest Import"}}</h2>
+            <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>
+            {{> sources_stream_chain}}
+          {{else}}
+            <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
+          {{/with}}
 
-        {{#with lastSourceImport}}
-          <h2>{{_"Latest Import"}}</h2>
-          <p>{{humanReadableStartTimestamp}} / {{_"Updated"}}: {{placesUpdatedCount}} places</p>
-          {{> sources_stream_chain}}
-        {{else}}
-          <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
-        {{/with}}
-
-        <h2>Examples for imported places</h2>
-        {{#each examplePlaceInfos}}
-          <div class='code-block'>
+          <h2>Examples for imported places</h2>
+          {{#each examplePlaceInfos}}
+            <div class='code-block'>
               {{stringify this}}
-          </div>
-        {{/each}}
-      {{else}}
-        <p class='placeholder'>{{_"Please insert import definition into the left side."}}</p>
-      {{/if}}
-    </div>
+            </div>
+          {{/each}}
+        {{else}}
+          <p>
+            Please insert a JSON that describes the data flow from your input source into the accessibility.cloud database on the left side.
+          </p>
+          <p>
+            You can find more information and examples in <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/importing-data.md'>our documentation</a>.
+          </p>
+        {{/if}}
+      </aside>
+    </section>
   {{/with}}
 </template>
