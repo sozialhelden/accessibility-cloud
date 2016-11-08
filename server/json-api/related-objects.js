@@ -40,7 +40,7 @@ function findRelatedDocuments({ collection, documents, fieldName, userId }) {
 
   return {
     foreignDocuments: foreignCollection.find(selector, options).fetch(),
-    foreignCollectionName: foreignCollection._name,
+    foreignCollectionName: foreignCollection._name.toLowerCase(),
     foreignCollection,
   };
 }
