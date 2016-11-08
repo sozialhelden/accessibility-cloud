@@ -21,10 +21,12 @@ Template.sources_show_format_page.onCreated(() => {
   window.Sources = Sources;
 });
 
+function getSource() {
+  return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+}
+
 const helpers = {
-  source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
-  },
+  source: getSource,
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
@@ -35,6 +37,63 @@ const helpers = {
       return latestImport;
     }
     return null;
+  },
+  fileMetadata() {
+    return {
+      sourceId: FlowRouter.getParam('_id'),
+    };
+  },
+  fileCallbacks() {
+    function showError(message) {
+      console.error(message);
+      alert(`Error while uploading: ${message}`);
+    }
+    return {
+      onError(error) {
+        showError(error.message || error.reason);
+      },
+      onUploaded(response) {
+        if (!response.uploadedFile) {
+          return showError('Server did not send uploaded file information.');
+        }
+
+        const source = getSource();
+        if (!source) {
+          return showError(
+            'Please wait until the source is loaded and retry.'
+          );
+        }
+
+        const firstStream = source.streamChain && source.streamChain[0];
+        if (!firstStream || firstStream.type !== 'HTTPDownload') {
+          return showError(
+            'Please setup the source format first so it has a HTTP download stream.'
+          );
+        }
+
+        Meteor.call(
+          'updateDataURLForSource',
+          source._id,
+          response.uploadedFile.storageUrl,
+          (error) => {
+            if (error) {
+              showError(error.message || error.reason);
+              return;
+            }
+            Meteor.call('sources.startImport', source._id);
+          }
+        );
+
+        return true;
+      },
+    };
+  },
+  sourceImport() {
+    const selectedImport = SourceImports.findOne(FlowRouter.getParam('importId'));
+    if (selectedImport) {
+      return selectedImport;
+    }
+    return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
   placesUpdatedCount() {
     const sourceImportId = FlowRouter.getParam('importId');
@@ -53,11 +112,11 @@ const helpers = {
 
 Template.sources_show_format_page.helpers(helpers);
 Template.sources_show_format_page.events({
-  'click button.js-save': function saveButtonClicked(event) {
+  'click button.js-save': function saveButtonClicked(event, instance) {
     event.preventDefault();
 
     const _id = FlowRouter.getParam('_id');
-    const newStreamChainText = $('textarea#streamChain')[0].value;
+    const newStreamChainText = instance.$('textarea#streamChain')[0].value;
     const newStreamChain = JSON.parse(newStreamChainText);
 
     Sources.update(_id, {
@@ -75,8 +134,19 @@ Template.sources_show_format_page.events({
       }
     });
   },
-  'input textarea#streamChain'(event) {
+  'input textarea#streamChain'(event, instance) {
+    const _id = FlowRouter.getParam('_id');
+    const newStreamChainText = instance.$('textarea#streamChain')[0].value;
+    const newStreamChain = JSON.parse(newStreamChainText);
+
+    Sources.update(_id, {
+      $set: { streamChain: newStreamChain },
+    });
+
+
+    // TODO: Refactor this, put this logic into the model validation
     let chain = undefined;
+    $('.errors').removeClass('is-empty');
     try {
       const chainText = $('textarea#streamChain')[0].value;
       chain = JSON.parse(chainText);
@@ -104,10 +174,11 @@ Template.sources_show_format_page.events({
           missingPaths.push(path);
         }
       });
+
       if (missingPaths.length) {
         $('.errors').html('Invalid mapping paths:<ul><li>' + missingPaths.join('</li><li>') + '</li></ul> <a href="https://github.com/sozialhelden/ac-machine/blob/master/docs/ac-format.md">Please see documentation</a>' );
       } else {
-        $('.errors').html('');
+        $('.errors').html('').addClass('is-empty');
       }
     }
   },

@@ -25,7 +25,7 @@ export class HTTPDownload {
 
     streamLength(this.stream)
       .then(length => progressStream.setLength(length))
-      .catch(error => console.log('Could not find stream length:', error));
+      .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
       console.log(req);

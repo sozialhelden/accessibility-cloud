@@ -1,17 +1,47 @@
 <template name="sources_show_format_page">
   {{#with source}}
-    <header>
-      <button class='btn btn-primary js-save'>Save</button>
-      <button class='js-start-import btn btn-primary'>Start Import</button>
-      <h2>Define your source import process</h2>
-    </header>
     <section>
       <section class='stream-chain'>
+        <h2>Define your source import process</h2>
+        <p>
+          The following JSON describes how your data should be imported to accessibility.cloud:
+        </p>
         <textarea class='code code-block' id='streamChain'>{{stringify streamChain}}</textarea>
       </section>
+
       <aside>
-        <section class='errors'>
+        <!-- <button class='btn btn-primary js-save float-right'>Save</button> -->
+        {{#if source.canBeImported}}
+          <p>
+            <button class='btn js-start-import btn btn-primary btn-inline'>Start an Import</button> to test if your process works and get debug information.
+          </p>
+          <p>
+            If you don't have an API, you can also upload a JSON or CSV file:
+
+            {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
+          </p>
+          {{#if source.isDraft}}
+            <p>
+              Your data will only be visible to members of {{source.getOrganization.name}} as your source is set to draft mode.
+            </p>
+          {{/if}}
+        {{else}}
+        <p>
+          Your source import process is still missing a <code>HTTPDownload</code> step. Please add it to enable importing your data.
+        </p>
+        {{/if}}
+
+        <section class='errors is-empty'>
         </section>
+
+        <p>
+          You can find more information and examples in <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/importing-data.md'>our documentation</a>.
+        </p>
+
+        <p>
+          If you feel lost, we are eager to help you! Just <a href='mailto:support@accessibility.cloud'>write us an email</a> and we will help you get started.
+        </p>
+
         {{#if lastSourceImport}}
           {{#with lastSourceImport}}
             <h2>{{_"Latest Import"}}</h2>
@@ -30,9 +60,6 @@
         {{else}}
           <p>
             Please insert a JSON that describes the data flow from your input source into the accessibility.cloud database on the left side.
-          </p>
-          <p>
-            You can find more information and examples in <a href='https://github.com/sozialhelden/ac-machine/blob/master/docs/importing-data.md'>our documentation</a>.
           </p>
         {{/if}}
       </aside>

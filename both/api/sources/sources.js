@@ -46,7 +46,6 @@ Sources.schema = new SimpleSchema({
     type: String,
     regEx: SimpleSchema.RegEx.Id,
   },
-
   description: {
     label: 'Description',
     type: String,
@@ -71,7 +70,7 @@ Sources.schema = new SimpleSchema({
   },
   isDraft: {
     type: Boolean,
-    label: 'Only a draft (not listed in publicly)',
+    label: 'Only a draft (content not available to people outside your organization)',
     defaultValue: true,
     optional: true,
   },
@@ -135,5 +134,11 @@ Sources.helpers({
       case 'text/csv': return 'CSV';
       default: return '(Unknown format)';
     }
+  },
+  canBeImported() {
+    // This should be using SimpleSchema validators on all mappings steps to validate the mappings.
+    const hasDownloadStep = !!this.streamChain.find((step) =>
+      step.type === 'HTTPDownload' && !!step.parameters.sourceUrl);
+    return hasDownloadStep;
   },
 });

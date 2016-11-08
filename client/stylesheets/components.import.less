@@ -2,9 +2,19 @@
 
 a.button,
 button.btn {
-  min-width: 10em;
-  margin: 1em 0;
-  padding: 0.5em 0.75em;
+  &:not(.btn-inline) {
+    min-width: 10em;
+    margin: 1em 0;
+    padding: 0.5em 0.75em;
+  }
+  &.btn-inline {
+    &:first-child {
+      margin-left: 0;
+    }
+    margin: 0.25em;
+    padding: 0.5em 0.75em;
+  }
+
   .font-s3;
   .type-regular;
   text-align: center;
@@ -51,7 +61,6 @@ a.link {
   .font-m2;
   .type-lightitalic;
   color: @color-text-muted;
-  text-align: center;
   margin: 0.5em 0;
 }
 

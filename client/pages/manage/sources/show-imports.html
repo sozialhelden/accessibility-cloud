@@ -1,7 +1,5 @@
 <template name="sources_show_imports_page">
   <div class='sidebar navigation'>
-    <button class='btn js-start-import btn btn-primary'>Start Import</button>
-    {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
     <ul class='with-blocks source-imports'>
       {{#each sourceImports}}
         <li class='item block {{activeIfCurrentImport _id}} {{#if hasError}}has-error{{/if}} {{#if isFinished}}is-finished{{/if}}'>
@@ -16,14 +14,19 @@
       <h2>Import results from {{humanReadableStartTimestamp}}</h2>
       <p>Updated: {{placesUpdatedCount}} places</p>
       {{> sources_stream_chain}}
+    {{else}}
+      <h2>Last import results</h2>
+      <p class='placeholder'>Start an import to see technical stats here.</p>
     {{/with}}
 
     <h2>Examples for imported places</h2>
 
     {{#each examplePlaceInfos}}
       <div class='code-block'>
-          {{stringify this}}
+        {{stringify this}}
       </div>
+    {{else}}
+      <p class='placeholder'>Examples of imported place data will appear here after data import.</p>
     {{/each}}
   </div>
 </template>
