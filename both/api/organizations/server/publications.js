@@ -25,7 +25,8 @@ publishPrivateFields(
 export function publishPrivateFieldsForMembers(
   publicationName,
   collection,
-  selectorFn = () => ({})
+  selectorFn = () => ({}),
+  options = {}
 ) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
@@ -52,7 +53,10 @@ export function publishPrivateFieldsForMembers(
         organizationId: { $in: organizationIds },
       });
 
-      return collection.find(selectorWithOrganizationId, { fields: collection.privateFields });
+      return collection.find(
+        selectorWithOrganizationId,
+        Object.assign({}, options, { fields: collection.privateFields })
+      );
     }
   );
 }
