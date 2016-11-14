@@ -1,5 +1,9 @@
 # Converting source-data into the accessibility.cloud format
 
+This document should give you a general idea how to import data into the accessibility.cloud format.
+
+If you know how to import data already and just need a reference of the whole exchange format's schema, [go here](./exchange-format.md).
+
 Data sources are currently defined using a JSON string. To make importing data as flexible and efficient as possible, we separate the process into small processing modules that are linked together through stream pipes. Each module's functionality is customizable using a set of parameters. If you have an API, you don't have to change it to make it compatible to accessibility.cloud.
 
 Here is an exemplary import process definition to download and process JSON data from a web API:
@@ -84,19 +88,23 @@ Transforms given JSON objects into the [accessibility.cloud format](./exchange-f
 #### Defining mappings
 
 You can use JavaScript functions to convert from your original data into the final format. Note that each POI you import should at least have these properties:
-- `originalId` (to overwrite existing POIs on re-import). This should be an ID string based on your own API's unique POI identifier attribute.
 - `geometry` — so your POIs can be found in location-based search queries to accessibility.cloud. This property follows the [GeoJSON](http://geojson.org/geojson-spec.html) standard specification. It's best to supply a `Point` here, but other geometry types are supported as well. If your API just has longitude and latitude, you have to convert this data into a GeoJSON point structure (see below for an example)
-- `isAccessible` — a Boolean value that is used to mark the POI as accessible in queries.
+- `properties-name` — The name of the imported place.
+- `properties-originalId` — to overwrite existing POIs on re-import. This should be an ID string based on your own API's unique POI identifier attribute.
+- `properties-accessibility-accessibleWith-wheelchair` — a Boolean value that is used to mark the POI as accessible with a wheelchair in queries.
+- `properties-accessibility-accessibleWith-guideDog` — a Boolean value that is used to mark the POI as accessible with a guide dog in queries.
+- `properties-accessibility-accessibleWith-limitedSight` — a Boolean value that is used to mark the POI as accessible with a limited sight in queries.
+
+Note that for properties, you can use key paths to generate nested objects. Path portions are split with `-` dashes. If a portion of path doesn't exist, it's created. A path portion can be numeric, in this case the child is regarded as an array. Arrays are created for missing index properties while objects are created for all other missing properties.
 
 Here is an example:
 
 ```
 "mappings": {
-    "originalId": "''+row.id",
     "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-    "name": "helpers.OSM.fetchNameFromTags(row.tags)",
-    "tags": "row.tags",
-    "isAccessible": "row.tags['wheelchair'] == 'yes'"
+    "properties-originalId": "''+row.id",
+    "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
+    "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
 }
 ```
 
