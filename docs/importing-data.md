@@ -40,9 +40,9 @@ Here is an exemplary import process definition to download and process JSON data
         "parameters": {
             "mappings": {
                 "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "properties.originalId": "''+row.id",
-                "properties.name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "properties.accessibility.accessibleWith.wheelchair": "row.tags['wheelchair'] == 'yes'"
+                "properties-originalId": "''+row.id",
+                "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
+                "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
             }
         }
     },
