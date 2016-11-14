@@ -1,35 +1,63 @@
 <template name="sources_show_page">
   <div class='sidebar with-details'>
     {{#with selectedPlace}}
-      <span class='js-close close-window icon'></span>
-      <h4>{{selectedPlace.properties.name}}</h4>
-      <p>{{uppercase selectedPlace.properties.category}}</p>
-      <pre class='readible json'>{{stringifyHuman selectedPlace.properties.accessibility}}</pre>
+      <section class="selected-place">
+        <span class='js-close close-window icon'></span>
+        <h4>{{selectedPlace.properties.name}}</h4>
+        <p class='category'>{{selectedPlace.properties.category}}</p>
+        <pre class='readible json'>{{stringifyHuman selectedPlace.properties.accessibility}}</pre>
 
-      <hr/>
-      {{#if placeDetailsVisible}}
-        <a href='.' class='js-click-hide-details'>Hide details</a>
+        <hr/>
+        {{#if placeDetailsVisible}}
+        <a href='#' class='js-click-hide-details'>Hide JSON</a>
         <pre class='readible json'>
           {{stringify selectedPlace}}
         </pre>
-      {{else}}
-        <a href='.' class='js-click-show-details'>Show details</a>
-      {{/if}}
+        {{else}}
+        <a href='#' class='js-click-show-details'>Show JSON</a>
+        {{/if}}
+      </section>
     {{else}}
       {{#with source}}
-        <h3>About source</h3>
-        <a href='{{pathFor "browse.licenses.show" _id=licenseId}}'>
-          License
-        </a>
-        <div class='markdown'>
-          {{#markdown}}{{source.description}}{{/markdown}}
-        </div>
+        <section class='source-info'>
+          <div class='description markdown'>
+            {{#markdown}}{{source.description}}{{/markdown}}
+          </div>
 
-        {{#if source.originWebsiteURL}}
-          <p>
-            <a href='{{source.originWebsiteURL}}'>Web-Site with description</a>
-          </p>
-        {{/if}}
+          <dl class='attributes'>
+            <dt>License</dt>
+            <dd><a href='{{pathFor "browse.licenses.show" _id=licenseId}}'>
+              {{getLicense.name}}
+            </a></dd>
+            <dt>Short name</dt>
+            <dd class='short-name'>{{shortName}}</dd>
+            <dt>Published / Draft</dt>
+            <dd>
+              {{#if isDraft}}
+                This source is in draft mode, so it is only visible to members of {{getOrganization.name}}.
+              {{else}}
+                This source is published.
+              {{/if}}
+            </dd>
+
+            <dt>Access</dt>
+            <dd>
+              {{#if isFreelyAccessible}}
+                Freely accessible
+              {{else}}
+                Restricted to specific organizations
+              {{/if}}
+            </dd>
+            <dt>Website</dt>
+            <dd>
+              {{#if source.originWebsiteURL}}
+                <a href='{{source.originWebsiteURL}}'>{{source.originWebsiteURL}}</a>
+              {{else}}
+                <span class='subtle'>None</span>
+              {{/if}}
+            </dd>
+          </dl>
+        </section>
       {{/with}}
     {{/with}}
   </div>
