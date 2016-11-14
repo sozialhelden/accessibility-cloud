@@ -39,11 +39,10 @@ Here is an exemplary import process definition to download and process JSON data
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "''+row.id",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "tags": "row.tags",
-                "isAccessible": "row.tags['wheelchair'] == 'yes'"
+                "properties-originalId": "''+row.id",
+                "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
+                "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
             }
         }
     },
@@ -61,6 +60,9 @@ Currently, we support the following stream modules:
 ### `HTTPDownload`
 Downloads any data from an URL.
 
+### `DebugLog`
+Displays data read from input in the stream chain debugging UI.
+
 ### `ConvertToUTF8`
 Converts downloaded data into UTF8 (the format of the database). [Input formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
 
@@ -68,7 +70,7 @@ Converts downloaded data into UTF8 (the format of the database). [Input formats]
 Splits the incoming string into chunks that can be processed as objects, using a given delimiter.
 
 ### `ParseJSONStream`
-Reads one single JSON string as a stream, scraping all JSON objects or values matching a given path and returning them as JavaScript objects.
+Reads one single JSON string as a stream, scraping all JSON objects or values matching a given `path` parameter and returning them as JavaScript objects. The path is given in [JSONPath format](http://goessner.net/articles/JsonPath/). To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
 
 ### `ParseJSONChunks`
 Reads multiple JSON strings (each representing one JSON object) and converts the incoming text buffers into JavaScript objects. This can be useful for the common case that the input data consists of multiple JSON objects delimited by newlines (or other characters).
