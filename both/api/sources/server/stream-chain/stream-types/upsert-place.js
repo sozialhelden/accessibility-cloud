@@ -49,9 +49,12 @@ export class UpsertPlace {
     });
 
     this.stream.on('end', () => {
-      onDebugInfo({
-        skippedRecordWarning: `Skipped ${skippedRecordCount} PlaceInfo records without originalId.`,
-      });
+      if (skippedRecordCount) {
+        onDebugInfo({
+          skippedRecordWarning:
+            `Skipped ${skippedRecordCount} PlaceInfo records.`,
+        });
+      }
     });
 
     this.progressStream = new ObjectProgressStream(this.stream, onProgress);

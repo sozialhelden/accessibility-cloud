@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { geometrySelector } from './geometry';
+import { sourceFilterSelector } from './source-filter.js';
 import { paginationOptions } from './pagination';
 import { fieldOptions } from './fields';
 import { _ } from 'meteor/underscore';
@@ -12,12 +13,18 @@ export function buildSelectorAndOptions({ req, _id, collection, userId }) {
   }
 
   if (!_.isObject(selector)) {
-    // This means the collection has to have a visibleSelectorForUserIdUserIdUserId() method defined
+    // This means the collection has no a visibleSelectorForUserId() method defined
     // eslint-disable-next-line max-len
     throw new Meteor.Error(401, `${collection._name} collection is accessible over API, but no allowed collection content defined for authenticated user.`);
   }
 
-  Object.assign(selector, geometrySelector(req));
+  selector = {
+    $and: [
+      selector,
+      sourceFilterSelector(req),
+      geometrySelector(req),
+    ],
+  };
 
   if (_id) {
     selector = {

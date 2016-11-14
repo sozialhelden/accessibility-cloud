@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
@@ -14,6 +15,34 @@ Template.sources_show_settings_page.onCreated(function created() {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
   subsManager.subscribe('languages.public');
+});
+
+
+Template.sources_show_settings_page.events({
+  'click .js-delete'() {
+    if (!confirm('Do you really want to delete this source and all of its imported places?')) {
+      return;
+    }
+    const sourceId = FlowRouter.getParam('_id');
+    Meteor.call('deleteSourceWithId', sourceId, (error) => {
+      if (error) {
+        alert('Could not delete source:', error.message);
+      }
+      FlowRouter.go('dashboard');
+    });
+  },
+
+  'click .js-delete-places'() {
+    if (!confirm('Do you really want to delete all imported places for this source?')) {
+      return;
+    }
+    const sourceId = FlowRouter.getParam('_id');
+    Meteor.call('deleteAllPlacesOfSourceWithId', sourceId, (error) => {
+      if (error) {
+        alert('Could not delete places:', error.message);
+      }
+    });
+  },
 });
 
 Template.sources_show_settings_page.helpers({

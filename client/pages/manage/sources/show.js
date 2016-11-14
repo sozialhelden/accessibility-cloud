@@ -13,7 +13,8 @@ Template.sources_show_page.onCreated(() => {
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
-
+  subsManager.subscribe('licenses.public');
+  
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
