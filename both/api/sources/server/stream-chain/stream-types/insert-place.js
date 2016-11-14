@@ -39,4 +39,8 @@ export class InsertPlace {
 
     this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
+
+  static getParameterSchema() {
+    return {};
+  }
 }

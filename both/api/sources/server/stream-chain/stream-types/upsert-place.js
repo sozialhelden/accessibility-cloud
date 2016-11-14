@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { ObjectProgressStream } from '../object-progress-stream';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
   try {
@@ -47,12 +48,18 @@ export class UpsertPlace {
       return placeInfo;
     });
 
-    this.stream.on('finish', () => {
+    this.stream.on('end', () => {
       onDebugInfo({
         skippedRecordWarning: `Skipped ${skippedRecordCount} PlaceInfo records without originalId.`,
       });
     });
 
     this.progressStream = new ObjectProgressStream(this.stream, onProgress);
+  }
+
+  static getParameterSchema() {
+    return new SimpleSchema({
+
+    });
   }
 }

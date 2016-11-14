@@ -46,7 +46,7 @@ function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, in
     SourceImports.update(sourceImportId, modifier);
   }));
 
-  stream.on('finish', Meteor.bindEnvironment(() => {
+  stream.on('end', Meteor.bindEnvironment(() => {
     const modifier = { $set: {
       finishedTimestamp: Date.now(),
     } };
@@ -94,6 +94,9 @@ export function createStreamChain({
       sourceId,
       sourceImportId,
       onProgress: Meteor.bindEnvironment(progress => {
+        if (progress.percentage === 100) {
+          Object.assign(progress, { isFinished: true })
+        }
         const modifier = { $set: { [progressKey]: progress } };
         SourceImports.update(sourceImportId, modifier);
       }),
@@ -132,23 +135,23 @@ export function createStreamChain({
     return runningStreamObserver;
   });
 
-  // console.log('Stream chain:', result);
+  console.log('Stream chain:', result);
 
-  // const firstStream = result[0] && result[0].stream;
-  // const lastStream = result[result.length - 1] && result[result.length - 1].stream;
-  // if (firstStream) {
-  //   const streamReport = (eventName) => () => {
-  //     console.log('------', eventName, '------');
-  //     firstStream.vsWalk(stream => {
-  //       stream.vsDumpDebug(process.stdout)
-  //     });
-  //   };
-  //   firstStream.on('data', streamReport('data'));
-  //   firstStream.on('error', streamReport('error'));
-  //   lastStream.on('finish', streamReport('finish'));
-  //   if (firstStream !== lastStream.vsHead()) {
-  //     throw new Meteor.Error(500, 'Stream chain not correctly built.');
-  //   }
-  // }
+  const firstStream = result[0] && result[0].stream;
+  const lastStream = result[result.length - 1] && result[result.length - 1].stream;
+  if (firstStream) {
+    // const streamReport = (eventName) => () => {
+    //   console.log('------', eventName, '------');
+    //   firstStream.vsWalk(stream => {
+    //     stream.vsDumpDebug(process.stdout);
+    //   });
+    // };
+    // firstStream.on('data', streamReport('data'));
+    // firstStream.on('error', streamReport('error'));
+    // lastStream.on('end', streamReport('end'));
+    if (firstStream !== lastStream.vsHead()) {
+      throw new Meteor.Error(500, 'Stream chain not correctly built.');
+    }
+  }
   return result;
 }

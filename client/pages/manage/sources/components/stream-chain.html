@@ -3,6 +3,22 @@
     {{#each streamChain}}
       <li class='item {{#if debugInfo.error}}has-error{{/if}}'>
         <header class='name'>{{camelize type}}</header>
+        {{#with debugInfo.progress}}
+          <aside class='progress'>
+
+            {{transferred}}
+
+            {{#if length}}
+            of {{length}}
+            {{/if}}
+
+            {{#if unitName}}
+              {{unitName}}
+            {{else}}
+              bytes
+            {{/if}}
+          </aside>
+        {{/with}}
         <dl class='parameters'>
           {{#each keyValue parameters}}
             <dt>{{humanize key}}</dt>
