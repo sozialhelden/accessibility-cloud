@@ -12,7 +12,6 @@ import { ParseJSONStream } from './stream-types/parse-json-stream';
 import { ParseJSONChunks } from './stream-types/parse-json-chunks';
 import { ParseCSVStreamTest } from './stream-types/parse-csv-stream-test';
 import { ParseCSVStream } from './stream-types/parse-csv-stream';
-import { ReadFile } from './stream-types/read-file';
 import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
 import { UpsertPlace } from './stream-types/upsert-place';
@@ -27,7 +26,6 @@ const StreamTypes = {
   ParseJSONChunks,
   ParseCSVStreamTest,
   ParseCSVStream,
-  ReadFile,
   Split,
   TransformData,
   UpsertPlace,
