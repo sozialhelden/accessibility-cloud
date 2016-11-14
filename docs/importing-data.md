@@ -91,6 +91,8 @@ You can use JavaScript functions to convert from your original data into the fin
 - `properties-accessibility-accessibleWith-guideDog` — a Boolean value that is used to mark the POI as accessible with a guide dog in queries.
 - `properties-accessibility-accessibleWith-limitedSight` — a Boolean value that is used to mark the POI as accessible with a limited sight in queries.
 
+Note that for properties, you can use key paths to generate nested objects. Path portions are split with `-` dashes. If a portion of path doesn't exist, it's created. A path portion can be numeric, in this case the child is regarded as an array. Arrays are created for missing index properties while objects are created for all other missing properties.
+
 Here is an example:
 
 ```
