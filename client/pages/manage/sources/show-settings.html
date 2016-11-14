@@ -1,6 +1,7 @@
 <template name="sources_show_settings_page">
-  <div class="form block">
-    {{#autoForm collection='Sources' doc=source id="updateSourceForm" type="update"}}
+  <div class="block">
+    <div class="form">
+      {{#autoForm collection='Sources' doc=source id="updateSourceForm" type="update"}}
       {{> afQuickField name='name'}}
       {{> afQuickField name='shortName'}}
       {{> afQuickField name="licenseId" options=licenses noselect="true"}}
@@ -10,6 +11,11 @@
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
       <button type="submit" class="btn btn-primary">Update</button>
-    {{/autoForm}}
+      {{/autoForm}}
+    </div>
+    <div class="button-group">
+      <button class='js-delete btn btn-danger'>Delete this source</button>
+      <button class='js-delete-places btn btn-danger'>Delete all imported places of this source</button>
+    </div>
   </div>
 </template>
