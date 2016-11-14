@@ -6,4 +6,10 @@ export class ParseJSONStream {
     check(path, String);
     this.stream = JSONStream.parse(path);
   }
+
+  static getParameterSchema() {
+    return {
+
+    };
+  }
 }
