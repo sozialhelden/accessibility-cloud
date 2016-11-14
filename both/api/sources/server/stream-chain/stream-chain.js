@@ -6,8 +6,10 @@ import { SourceImports } from '/both/api/source-imports/source-imports';
 
 import { ConsoleOutput } from './stream-types/console-output';
 import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
+import { DebugLog } from './stream-types/debug-log';
 import { Generic } from './stream-types/generic';
 import { HTTPDownload } from './stream-types/http-download';
+import { MultiHTTPDownload } from './stream-types/multi-http-download';
 import { ParseJSONStream } from './stream-types/parse-json-stream';
 import { ParseJSONChunks } from './stream-types/parse-json-chunks';
 import { ParseCSVStreamTest } from './stream-types/parse-csv-stream-test';
@@ -22,6 +24,7 @@ const StreamTypes = {
   ConvertToUTF8,
   Generic,
   HTTPDownload,
+  MultiHTTPDownload,
   ParseJSONStream,
   ParseJSONChunks,
   ParseCSVStreamTest,
@@ -30,6 +33,7 @@ const StreamTypes = {
   TransformData,
   UpsertPlace,
   InsertPlace,
+  DebugLog,
 };
 
 function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, index }) {

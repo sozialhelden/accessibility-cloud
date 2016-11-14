@@ -5,17 +5,18 @@ import { check, Match } from 'meteor/check';
 import streamLength from 'stream-length';
 
 export class HTTPDownload {
-  constructor({ sourceUrl, onProgress, onDebugInfo, bytesPerSecond }) {
+  constructor({ headers, sourceUrl, onProgress, onDebugInfo, bytesPerSecond }) {
     check(sourceUrl, String);
     check(onProgress, Function);
     check(onDebugInfo, Function);
     check(bytesPerSecond, Match.Optional(Number));
+    check(headers, Match.Optional(Match.ObjectIncluding({})));
 
-    this.stream = request(sourceUrl, {
-      headers: {
-        'User-Agent': 'accessibility.cloud Bot/1.0',
-      },
-    });
+    const headersWithUserAgent = Object.assign({
+      'User-Agent': 'accessibility.cloud Bot/1.0',
+    }, headers);
+
+    this.stream = request(sourceUrl, { headers: headersWithUserAgent });
 
     const options = {
       time: 1000,
