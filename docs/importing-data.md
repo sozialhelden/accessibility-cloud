@@ -60,6 +60,9 @@ Currently, we support the following stream modules:
 ### `HTTPDownload`
 Downloads any data from an URL.
 
+### `DebugLog`
+Displays data read from input in the stream chain debugging UI.
+
 ### `ConvertToUTF8`
 Converts downloaded data into UTF8 (the format of the database). [Input formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
 
