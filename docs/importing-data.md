@@ -84,19 +84,21 @@ Transforms given JSON objects into the [accessibility.cloud format](./exchange-f
 #### Defining mappings
 
 You can use JavaScript functions to convert from your original data into the final format. Note that each POI you import should at least have these properties:
-- `originalId` (to overwrite existing POIs on re-import). This should be an ID string based on your own API's unique POI identifier attribute.
 - `geometry` — so your POIs can be found in location-based search queries to accessibility.cloud. This property follows the [GeoJSON](http://geojson.org/geojson-spec.html) standard specification. It's best to supply a `Point` here, but other geometry types are supported as well. If your API just has longitude and latitude, you have to convert this data into a GeoJSON point structure (see below for an example)
-- `isAccessible` — a Boolean value that is used to mark the POI as accessible in queries.
+- `properties-name` — The name of the imported place.
+- `properties-originalId` — to overwrite existing POIs on re-import. This should be an ID string based on your own API's unique POI identifier attribute.
+- `properties-accessibility-accessibleWith-wheelchair` — a Boolean value that is used to mark the POI as accessible with a wheelchair in queries.
+- `properties-accessibility-accessibleWith-guideDog` — a Boolean value that is used to mark the POI as accessible with a guide dog in queries.
+- `properties-accessibility-accessibleWith-limitedSight` — a Boolean value that is used to mark the POI as accessible with a limited sight in queries.
 
 Here is an example:
 
 ```
 "mappings": {
-    "originalId": "''+row.id",
     "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-    "name": "helpers.OSM.fetchNameFromTags(row.tags)",
-    "tags": "row.tags",
-    "isAccessible": "row.tags['wheelchair'] == 'yes'"
+    "properties-originalId": "''+row.id",
+    "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
+    "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
 }
 ```
 
