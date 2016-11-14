@@ -1,10 +1,11 @@
-import { check } from 'meteor/check';
 import EventStream from 'event-stream';
+import { check } from 'meteor/check';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/stevezhu:lodash';
 import entries from '/both/lib/entries';
 import { ObjectProgressStream } from '../object-progress-stream';
 import { Categories } from '/both/api/categories/categories.js';
 
-import { _ } from 'meteor/stevezhu:lodash';
 
 const categoryIdForSynonyms = {};
 Categories.find({}).fetch().forEach(category => {
@@ -141,4 +142,9 @@ export class TransformData {
     this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
 
+  static getParameterSchema() {
+    return new SimpleSchema({
+
+    });
+  }
 }

@@ -11,4 +11,8 @@ export class ConsoleOutput {
       return data;
     });
   }
+
+  static getParameterSchema() {
+    return {};
+  }
 }

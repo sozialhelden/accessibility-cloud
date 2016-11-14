@@ -137,6 +137,9 @@ Sources.helpers({
   },
   canBeImported() {
     // This should be using SimpleSchema validators on all mappings steps to validate the mappings.
+    if (!this.streamChain) {
+      return false;
+    }
     const hasDownloadStep = !!this.streamChain.find((step) =>
       step.type === 'HTTPDownload' && !!step.parameters.sourceUrl);
     return hasDownloadStep;

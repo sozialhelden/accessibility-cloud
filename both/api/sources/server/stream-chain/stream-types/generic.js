@@ -16,4 +16,8 @@ export class Generic {
       this.stream = this.stream.pipe(progressStream);
     }
   }
+
+  static getParameterSchema() {
+    return {};
+  }
 }

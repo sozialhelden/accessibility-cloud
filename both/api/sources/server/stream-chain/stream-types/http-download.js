@@ -24,7 +24,10 @@ export class HTTPDownload {
     const progressStream = createProgressStream(options, onProgress);
 
     streamLength(this.stream)
-      .then(length => progressStream.setLength(length))
+      .then(length => {
+        progressStream.setLength(length);
+        this.stream.emit('length', length);
+      })
       .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
@@ -51,5 +54,9 @@ export class HTTPDownload {
     }
 
     this.stream = this.stream.pipe(progressStream);
+  }
+
+  static getParameterSchema() {
+    return { sourceUrl: { regEx: SimpleSchema.RegEx.Url } };
   }
 }

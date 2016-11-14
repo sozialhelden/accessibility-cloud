@@ -17,9 +17,10 @@ export class ObjectProgressStream {
       startTimestamp: Date.now(),
       delta: 0,
       speed: 0,
+      unitName: 'objects',
     };
 
-    const timeInterval = 1000;
+    const timeInterval = 5000;
     let lastTransferred = 0;
 
     const sendProgress = () => {
@@ -44,13 +45,17 @@ export class ObjectProgressStream {
       this.progress.length = length;
     });
 
-    stream.on('error', () => {
+    stream.on('error', (error) => {
       clearInterval(interval);
+      if (error) {
+        this.progress.error = { message: error.message, reason: error.reason };
+      }
       sendProgress();
     });
 
-    stream.on('finish', () => {
+    stream.on('end', () => {
       clearInterval(interval);
+      this.progress.finishedTimestamp = Date.now();
       sendProgress();
     });
 
