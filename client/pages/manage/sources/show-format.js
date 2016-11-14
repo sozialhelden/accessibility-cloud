@@ -110,19 +110,25 @@ const helpers = {
   },
 };
 
+function parseStreamChainDefinition(instance) {
+  const newStreamChainText = instance.$('textarea#streamChain')[0].value;
+  let newStreamChain = null;
+  try {
+    newStreamChain = JSON.parse(newStreamChainText);
+  } catch (error) {
+    $('.errors').html(`<strong>Invalid JSON:</strong> ${error.message}`);
+    $('.errors').removeClass('is-empty');
+  }
+  return newStreamChain;
+}
+
+function addError(errorHTML) {
+  $('.errors').append(`<li>${errorHTML}</li>`);
+  $('.errors').removeClass('is-empty');
+}
+
 Template.sources_show_format_page.helpers(helpers);
 Template.sources_show_format_page.events({
-  'click button.js-save': function saveButtonClicked(event, instance) {
-    event.preventDefault();
-
-    const _id = FlowRouter.getParam('_id');
-    const newStreamChainText = instance.$('textarea#streamChain')[0].value;
-    const newStreamChain = JSON.parse(newStreamChainText);
-
-    Sources.update(_id, {
-      $set: { streamChain: newStreamChain },
-    });
-  },
   'click .btn.js-start-import'(event) {
     event.preventDefault();
 
@@ -135,23 +141,30 @@ Template.sources_show_format_page.events({
     });
   },
   'input textarea#streamChain'(event, instance) {
+    $('.errors').html('').addClass('is-empty');
+
     const _id = FlowRouter.getParam('_id');
-    const newStreamChainText = instance.$('textarea#streamChain')[0].value;
-    const newStreamChain = JSON.parse(newStreamChainText);
+    const newStreamChain = parseStreamChainDefinition(instance);
+    if (!newStreamChain) {
+      return;
+    }
 
     Sources.update(_id, {
       $set: { streamChain: newStreamChain },
+    }, (error) => {
+      if (error) {
+        addError(`<strong>Invalid stream chain:</strong> ${error.message}`);
+      }
     });
 
 
     // TODO: Refactor this, put this logic into the model validation
     let chain = undefined;
-    $('.errors').removeClass('is-empty');
     try {
       const chainText = $('textarea#streamChain')[0].value;
       chain = JSON.parse(chainText);
     } catch (e) {
-      $('.errors').html('Invalid json format');
+      addError('Invalid json format');
       return;
     }
     for (let i = 0; i < chain.length; i++) {
@@ -162,12 +175,12 @@ Template.sources_show_format_page.events({
       // console.log(chain[i]);
       const mappings = chainPart.parameters.mappings;
       if (mappings === undefined) {
-        $('.errors').html('No mappings defined');
+        addError('No mappings defined');
         return;
       }
-      let missingPaths = [];
+      const missingPaths = [];
 
-      _.each(mappings, function (obj, key) {
+      _.each(mappings, (obj, key) => {
         const path = key.replace(/-/g, '.');
 
         if (_.get(acFormat, path) === undefined) {
@@ -176,9 +189,7 @@ Template.sources_show_format_page.events({
       });
 
       if (missingPaths.length) {
-        $('.errors').html('Invalid mapping paths:<ul><li>' + missingPaths.join('</li><li>') + '</li></ul> <a href="https://github.com/sozialhelden/ac-machine/blob/master/docs/ac-format.md">Please see documentation</a>' );
-      } else {
-        $('.errors').html('').addClass('is-empty');
+        addError(`Invalid mapping paths:<ul><li>${missingPaths.join('</li><li>')}</li> — <a href="https://github.com/sozialhelden/ac-machine/blob/master/docs/exchange-format.md#a-complete-sample-object">see format documentation</a></ul>`);
       }
     }
   },
