@@ -114,12 +114,19 @@ function compileMappings(mappings) {
 }
 
 export class TransformData {
-  constructor({ mappings, onProgress }) {
+  constructor({ mappings, onProgress, onDebugInfo }) {
     check(mappings, Object);
     check(onProgress, Function);
     const compiledMappings = compileMappings(mappings);
 
+    let firstInputObject = null;
+    let firstOutputObject = null;
+
     this.stream = EventStream.map((data, callback) => {
+      if (!firstInputObject) {
+        firstInputObject = data;
+        onDebugInfo({ firstInputObject });
+      }
       const doc = {};
       for (const [fieldName, fn] of entries(compiledMappings)) {
         const value = fn(data);
@@ -132,6 +139,11 @@ export class TransformData {
         } else {
           doc[fieldName] = value;
         }
+      }
+
+      if (!firstOutputObject) {
+        firstOutputObject = doc;
+        onDebugInfo({ firstOutputObject });
       }
 
       doc.originalProperties = JSON.stringify(data, true, 4);
