@@ -39,11 +39,10 @@ Here is an exemplary import process definition to download and process JSON data
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "originalId": "''+row.id",
                 "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "tags": "row.tags",
-                "isAccessible": "row.tags['wheelchair'] == 'yes'"
+                "properties.originalId": "''+row.id",
+                "properties.name": "helpers.OSM.fetchNameFromTags(row.tags)",
+                "properties.accessibility.accessibleWith.wheelchair": "row.tags['wheelchair'] == 'yes'"
             }
         }
     },
