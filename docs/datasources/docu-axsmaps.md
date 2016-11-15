@@ -1,5 +1,5 @@
-# AXSMaps
-Some notes on the API inport-format of axsmaps
+# AXS Map
+Some notes on the API inport-format of axsmap
 
 ## format v02
 
