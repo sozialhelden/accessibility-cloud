@@ -16,6 +16,7 @@ import { ParseCSVStreamTest } from './stream-types/parse-csv-stream-test';
 import { ParseCSVStream } from './stream-types/parse-csv-stream';
 import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
+import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
 import { InsertPlace } from './stream-types/insert-place';
 
@@ -24,6 +25,7 @@ const StreamTypes = {
   ConvertToUTF8,
   Generic,
   HTTPDownload,
+  TransformScript,
   MultiHTTPDownload,
   ParseJSONStream,
   ParseJSONChunks,
@@ -113,7 +115,7 @@ export function createStreamChain({
     });
 
     if (StreamTypes[type] === undefined) {
-      throw new Error(422, `ERROR: "${type}" is not a valid stream type.`);
+      throw new Meteor.Error(422, `ERROR: "${type}" is not a valid stream type.`);
     }
     const runningStreamObserver = new StreamTypes[type](parameters);
 
