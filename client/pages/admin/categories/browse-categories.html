@@ -7,7 +7,11 @@
 
 <template name="categories_list_page">
   <div class='dashboard widget with-list organisations'>
+
     <h2>Categories</h2>
+    <div class='error-output js-error'></div>
+    <div class='code block js-result'></div>
+
     <ul>
     {{#each categories}}
       <li>
@@ -23,10 +27,6 @@
     <a href='https://docs.google.com/spreadsheets/d/1MCjV0_lHllNjiHrC8iotZX4ZddAR7bOIqmsT3eZRb6I/edit?pli=1#gid=218507801'>Select from here</a>
     <textarea class='code' id='categoriesAsCSV' placeholder='Paste CSV-information here'></textarea>
     <button class='btn-primary js-import'>Import</button>
-    <h2>Result</h2>
-    <div class='code block'>
-      {{stringify importResult}}
-    </div>
   </div>
 
 </template>
