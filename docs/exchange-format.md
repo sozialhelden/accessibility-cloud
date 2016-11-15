@@ -525,8 +525,7 @@ The data-structure for a requirement-catalogue might look like this:
             criteriaList:[
                 {
                     description: {
-                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit.
-    (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
+                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
                     },
                     propertyId: 'accessibility.widthOfAllOpeningsAndAisles',
                     importance: 'required',
