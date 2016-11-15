@@ -64,7 +64,7 @@ Licenses.schema = new SimpleSchema({
         rows: 10,
       },
     },
-    max: 2000,
+    max: 100000,
     optional: true,
   },
   consideredAs: {
