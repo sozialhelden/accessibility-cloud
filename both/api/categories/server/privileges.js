@@ -10,7 +10,7 @@ Categories.allow({
 Categories.publicFields = {
   icon: 1,
   translations: 1,
-  synonums: 1,
+  synonyms: 1,
   parentIds: 1,
 };
 

@@ -35,10 +35,16 @@ function compileMapping(fieldName, javascript) {
           if (tags === undefined) {
             return 'empty';
           }
-          Object.keys(tags).forEach(tag => {
+
+          const matchingTag = _.find(Object.keys(tags), (tag) => {
             const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
             return categoryIdForSynonyms[categoryId];
           });
+
+          if (matchingTag) {
+            const categoryId = `${matchingTag}=${tags[matchingTag]}`.toLowerCase().replace(' ', '_');
+            return categoryIdForSynonyms[categoryId];
+          }
           return 'undefined';
         },
       },

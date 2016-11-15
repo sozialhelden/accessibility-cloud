@@ -15,6 +15,12 @@ Template.categories_list_page.helpers({
   categories() {
     return Categories.find({});
   },
+  splitCommas(d) {
+    return d ? d.replace(/,/g, ', ') : '';
+  },
+  joinList(l) {
+    return l.join(', ');
+  },
 });
 
 Template.categories_list_page.events({

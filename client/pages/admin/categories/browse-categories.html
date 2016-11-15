@@ -12,14 +12,43 @@
     <div class='error-output js-error'></div>
     <div class='code block js-result'></div>
 
-    <ul>
-    {{#each categories}}
-      <li>
-        <img src='/icons/categories/{{icon}}.png'>
-        {{_id}}
-      </li>
-    {{/each}}
-    </ul>
+    <table>
+      <thead>
+          <td>
+          </td>
+          <td>
+            ID
+          </td>
+          <td>
+            Synonyms
+          </td>
+          <td>
+            Translations
+          </td>
+          <td>
+            parentIds
+          </td>
+      </thead>
+      {{#each categories}}
+        <tr>
+          <td>
+            <img src='/icons/categories/{{icon}}.png'>
+          </td>
+          <td>
+            <b>{{_id}}</b>
+          </td>
+          <td>
+            {{joinList synonyms}}
+          </td>
+          <td>
+            {{stringify translations}}
+          </td>
+          <td>
+            {{parentIds}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
   </div>
   <hr>
   <div>
