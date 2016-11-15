@@ -8,13 +8,16 @@ import { Categories } from '/both/api/categories/categories.js';
 
 
 const categoryIdForSynonyms = {};
-Categories.find({}).fetch().forEach(category => {
-  category.synonyms.forEach(s => {
-    if (s) {
-      categoryIdForSynonyms[s] = category._id;
-    }
+function updateCategories() {
+  console.log('Updating categories...');
+  Categories.find({}).fetch().forEach(category => {
+    category.synonyms.forEach(s => {
+      if (s) {
+        categoryIdForSynonyms[s] = category._id;
+      }
+    });
   });
-});
+}
 
 function compileMapping(fieldName, javascript) {
   try {
@@ -121,6 +124,8 @@ export class TransformData {
 
     let firstInputObject = null;
     let firstOutputObject = null;
+
+    updateCategories();
 
     this.stream = EventStream.map((data, callback) => {
       if (!firstInputObject) {
