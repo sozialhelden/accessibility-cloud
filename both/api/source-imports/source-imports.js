@@ -10,13 +10,11 @@ SourceImports.helpers({
   },
   hasError() {
     if (!this.streamChain) return false;
-    return _.any(this.streamChain, streamElement =>
-      streamElement.debugInfo && streamElement.debugInfo.error
-    );
+    return _.any(this.streamChain, streamElement => streamElement.error);
   },
   isFinished() {
     if (!this.streamChain) return false;
     const lastStream = _.last(this.streamChain);
-    return lastStream && lastStream.finishedTimestamp;
+    return lastStream && lastStream.progress && lastStream.progress.isFinished;
   },
 });

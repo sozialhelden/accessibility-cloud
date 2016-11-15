@@ -20,7 +20,7 @@ export class ObjectProgressStream {
       unitName: 'objects',
     };
 
-    const timeInterval = 5000;
+    const timeInterval = 500;
     let lastTransferred = 0;
 
     const sendProgress = () => {
@@ -32,6 +32,7 @@ export class ObjectProgressStream {
       p.percentage = p.length ? 100 * p.transferred / p.length : 0;
       p.eta = p.remaining / p.speed;
       p.runtime = Date.now() - p.startTimestamp;
+      p.unitName = 'objects';
       onProgress(p);
     };
 
@@ -48,7 +49,7 @@ export class ObjectProgressStream {
     stream.on('error', (error) => {
       clearInterval(interval);
       if (error) {
-        this.progress.error = { message: error.message, reason: error.reason };
+        this.progress.hasError = true;
       }
       sendProgress();
     });
@@ -56,6 +57,9 @@ export class ObjectProgressStream {
     stream.on('end', () => {
       clearInterval(interval);
       this.progress.finishedTimestamp = Date.now();
+      if (!this.progress.hasError) {
+        this.progress.isFinished = true;
+      }
       sendProgress();
     });
 

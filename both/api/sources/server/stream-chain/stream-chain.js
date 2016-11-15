@@ -40,15 +40,31 @@ const StreamTypes = {
   TransformJaccedeFormat,
 };
 
-function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, index }) {
+function cleanStackTrace(stackTrace) {
+  return stackTrace
+    .split('\n')
+    .filter(line => !line.match(/node_modules/))
+    .join('\n');
+}
+
+function setupEventHandlersOnStream({
+  errorKey, progressKey, stream, sourceImportId, type, index,
+}) {
   stream.on('error', Meteor.bindEnvironment(error => {
-    console.log('Error on', type, 'stream (#', index, 'in chain):', error, error.stack);
-    const modifier = { $set: { [errorKey]: {
-      reason: error.reason,
-      message: error.message,
-      stack: error.stack,
-      timestamp: Date.now(),
-    } } };
+    console.log(
+      'Error on', type, 'stream (#', index, 'in chain):', error, cleanStackTrace(error.stack)
+    );
+    const modifier = {
+      $set: {
+        [errorKey]: {
+          reason: error.reason,
+          message: error.message,
+          stack: cleanStackTrace(error.stack),
+          timestamp: Date.now(),
+        },
+        [`${progressKey}.hasError`]: true,
+      },
+    };
     SourceImports.update(sourceImportId, modifier);
   }));
 
@@ -91,9 +107,10 @@ export function createStreamChain({
     check(type, String);
     check(parameters, Object);
     console.log('Creating', type, 'stream...');
-    const debugInfoKey = `streamChain.${index}.debugInfo`;
-    const progressKey = `${debugInfoKey}.progress`;
-    const errorKey = `${debugInfoKey}.error`;
+    const streamChainElementKey = `streamChain.${index}`;
+    const debugInfoKey = `${streamChainElementKey}.debugInfo`;
+    const progressKey = `${streamChainElementKey}.progress`;
+    const errorKey = `${streamChainElementKey}.error`;
 
     // Setup parameters for stream object
     Object.assign(parameters, {
@@ -101,7 +118,7 @@ export function createStreamChain({
       sourceImportId,
       onProgress: Meteor.bindEnvironment(progress => {
         if (progress.percentage === 100) {
-          Object.assign(progress, { isFinished: true })
+          Object.assign(progress, { isFinished: true });
         }
         const modifier = { $set: { [progressKey]: progress } };
         SourceImports.update(sourceImportId, modifier);
@@ -126,6 +143,7 @@ export function createStreamChain({
 
     setupEventHandlersOnStream({
       errorKey,
+      progressKey,
       stream: runningStreamObserver.stream,
       sourceImportId,
       type,
@@ -141,7 +159,7 @@ export function createStreamChain({
     return runningStreamObserver;
   });
 
-  console.log('Stream chain:', result);
+  // console.log('Stream chain:', result);
 
   const firstStream = result[0] && result[0].stream;
   const lastStream = result[result.length - 1] && result[result.length - 1].stream;

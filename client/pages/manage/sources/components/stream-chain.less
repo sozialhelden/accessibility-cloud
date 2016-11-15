@@ -7,12 +7,42 @@ ol.stream-chain {
   li.item {
     position: relative;
     margin-bottom: 1px;
-    padding: 5px;
+    padding: 7px;
     background-color: @color-grey085;
+
+    header.name, aside.progress {
+      font-size: 120%;
+      .type-bold;
+    }
+
     &.has-error {
-      background-color: mix(@color-error, @color-grey085, 10%);
-      .name {
+      background-color: mix(@color-error, @color-grey085, 5%);
+      .name, aside.progress, .code-block.error {
         color: @color-error;
+      }
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background-color: @color-primary;
+      opacity: 1;
+      transition: opacity 1s ease-out;
+    }
+
+    aside.progress {
+      float: right;
+    }
+
+    &.is-finished {
+      .progress-bar {
+        opacity: 0;
+      }
+
+      aside.progress, .checkmark {
+        color: @color-positive;
       }
     }
   }
@@ -23,6 +53,8 @@ ol.stream-chain {
 
   dl.parameters {
     display: inline-block;
+    margin-top: 0.5em;
+
     dt, dd {
       float: left;
     }
@@ -36,10 +68,13 @@ ol.stream-chain {
       white-space: pre-wrap;
     }
   }
+
   .code-block {
-    font-size:10px;
-    max-width: 60em;
+    font-size: 10px;
+    width: 100%;
+    max-width: none;
     overflow: scroll;
     background-color: @color-grey091;
+    padding: 7px;
   }
 }

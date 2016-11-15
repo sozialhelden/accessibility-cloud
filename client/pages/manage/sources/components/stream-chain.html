@@ -1,32 +1,46 @@
 <template name="sources_stream_chain">
   <ol class='stream-chain'>
     {{#each streamChain}}
-      <li class='item {{#if debugInfo.error}}has-error{{/if}}'>
-        <header class='name'>{{camelize type}}</header>
-        {{#with debugInfo.progress}}
-          <aside class='progress'>
+      <li class='item {{#if error}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}}'>
+        <div class='progress-bar' style='width: {{progress.percentage}}%'></div>
 
+        {{#with progress}}
+          <aside class='progress' title='after {{runtime}}ms ({{speedString}})'>
             {{transferred}}
 
             {{#if length}}
             of {{length}}
             {{/if}}
 
-            {{#if unitName}}
-              {{unitName}}
-            {{else}}
-              bytes
+            {{unitName}}
+
+            {{#if isFinished}}
+              <span class='checkmark'>✓</span>
+            {{/if}}
+
+            {{#if etaInSeconds}}
+              ({{etaInSeconds}}s left)
             {{/if}}
           </aside>
         {{/with}}
-        <dl class='parameters'>
-          {{#each keyValue parameters}}
-            <dt>{{humanize key}}</dt>
-            <dd>{{stringify value}}</dd>
-          {{/each}}
-        </dl>
+
+        <header class='name'>{{camelize type}}{{#if error}} — {{error.message}}{{/if}}</header>
+
+        {{#if hasParameters}}
+          <dl class='parameters'>
+            {{#each keyValue parameters}}
+              <dt>{{humanize key}}</dt>
+              <dd>{{stringify value}}</dd>
+            {{/each}}
+          </dl>
+        {{/if}}
+
+        {{#with error}}
+          <pre class='code-block error'>{{stack}}</pre>
+        {{/with}}
+        
         {{#with debugInfo}}
-          <div class='code-block'>{{stringify this}}</div>
+          <div class='code-block debug-info'>{{stringify this}}</div>
         {{/with}}
       </li>
     {{else}}
