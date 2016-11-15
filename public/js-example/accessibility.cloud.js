@@ -121,7 +121,8 @@
 
     renderSourcesAndLicenses: function (element, sources, licenses) {
       var self = this;
-      var links = Object.values(sources).map(function (source) {
+      var links = Object.keys(sources).map(function (sourceId) {
+        var source = sources[sourceId];
         var license = licenses[source.licenseId];
         var licenseURL = self.apiDomain + '/browse/licenses/' + license._id;
         var sourceURL = source.originWebsiteURL || (self.apiDomain + '/browse/sources/' + source._id);
