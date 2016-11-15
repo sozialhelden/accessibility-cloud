@@ -1,0 +1,394 @@
+{
+  "accessibility": [
+    {
+      "children": [
+        {
+          "label": "Visible and readable sign"
+        }, 
+        {
+          "label": "The entrance assessed is the main entrance"
+        }, 
+        {
+          "label": "Visitors visible from inside"
+        }, 
+        {
+          "label": "Markings on glazed doors"
+        }, 
+        {
+          "label": "Door opening system", 
+          "value": "Automatic or no door"
+        }, 
+        {
+          "label": "Width of entrance door (cm)", 
+          "value": "90 cm and above"
+        }
+      ], 
+      "label": "Entrance"
+    }, 
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "label": "Near the entrance"
+            }
+          ], 
+          "label": "Reception desk"
+        }, 
+        {
+          "label": "The visual information is readable and understandable"
+        }, 
+        {
+          "label": "Wheelchair access", 
+          "value": "Total"
+        }, 
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "label": "Cabin dimensions", 
+                  "value": "Large"
+                }
+              ], 
+              "label": "Lift(s)"
+            }
+          ], 
+          "label": "There are several levels"
+        }
+      ], 
+      "label": "Indoors"
+    }, 
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "label": "Access", 
+              "value": "Single level and adapted"
+            }
+          ], 
+          "label": "Lavatories"
+        }, 
+        {
+          "children": [
+            {
+              "label": "Walk-in shower"
+            }, 
+            {
+              "label": "Support rail(s) in the shower"
+            }, 
+            {
+              "label": "Shower seat"
+            }
+          ], 
+          "label": "Shower"
+        }, 
+        {
+          "children": [
+            {
+              "label": "Accessible tables"
+            }
+          ], 
+          "label": "Dining room"
+        }
+      ], 
+      "label": "Services and facilities"
+    }, 
+    {
+      "children": [
+        {
+          "label": "Number of accessible rooms advertised", 
+          "value": "2"
+        }, 
+        {
+          "label": "Ease of access to the room"
+        }, 
+        {
+          "label": "Width of door (cm)", 
+          "value": "90 cm and above"
+        }, 
+        {
+          "label": "Lightweight door with ergonomic handle"
+        }, 
+        {
+          "children": [
+            {
+              "label": "In front of the wardrobe"
+            }, 
+            {
+              "label": "In front of the bedroom door"
+            }
+          ], 
+          "label": "Turning space of least 150 cm"
+        }, 
+        {
+          "label": "Width space of at least 90 cm on one side of the bed"
+        }, 
+        {
+          "label": "Height space of at least 20 cm below the bed"
+        }, 
+        {
+          "label": "Bed height in cm (including mattress)", 
+          "value": "50.0"
+        }, 
+        {
+          "children": [
+            {
+              "label": "Level access"
+            }, 
+            {
+              "label": "Width of door (cm)", 
+              "value": "90 cm and above"
+            }, 
+            {
+              "label": "Turning space of least 150 cm"
+            }, 
+            {
+              "label": "Transfer space alongside toilets"
+            }, 
+            {
+              "label": "Height of toilet base", 
+              "value": "High (45+ cm)"
+            }, 
+            {
+              "label": "Support rail(s)"
+            }, 
+            {
+              "label": "Adapted wash basin"
+            }, 
+            {
+              "label": "Base of mirror no more than 1m from the floor"
+            }, 
+            {
+              "children": [
+                {
+                  "label": "Walk-in shower"
+                }, 
+                {
+                  "label": "Support rail(s) in the shower"
+                }, 
+                {
+                  "children": [
+                    {
+                      "label": "folds down"
+                    }
+                  ], 
+                  "label": "Shower seat", 
+                  "value": "fixed"
+                }
+              ], 
+              "label": "Shower"
+            }
+          ], 
+          "label": "Bathroom"
+        }
+      ], 
+      "label": "Room(s)"
+    }, 
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "label": "Wider than regular spaces"
+                }
+              ], 
+              "label": "Near the establishment"
+            }, 
+            {
+              "children": [
+                {
+                  "label": "Wider than regular spaces"
+                }
+              ], 
+              "label": "Within the establishment"
+            }
+          ], 
+          "label": "Disabled parking spaces"
+        }, 
+        {
+          "children": [
+            {
+              "label": "Dropped kerbs nearby"
+            }
+          ], 
+          "label": "Pavements"
+        }
+      ], 
+      "label": "Outside"
+    }
+  ], 
+  "accessible_by_conviction": false, 
+  "address": {
+    "city": "Nuernberg", 
+    "full": "M\u00fcnchener Str. 340, 90471 N\u00fcrnberg, Germany", 
+    "postal_code": "90471"
+  }, 
+  "category": {
+    "icons": {
+      "web": {
+        "marker": [
+          {
+            "filename": "web_marker_lodging.png", 
+            "id": 2229, 
+            "type": "marker", 
+            "url": "https://cdn1.jaccede.com/uploads/categories/imgs/web_marker_lodging.png"
+          }, 
+          {
+            "filename": "web_marker_lodging_off.png", 
+            "id": 2230, 
+            "type": "marker", 
+            "url": "https://cdn1.jaccede.com/uploads/categories/imgs/web_marker_lodging_off.png"
+          }
+        ], 
+        "square": [
+          {
+            "filename": "web_square_lodging_off.png", 
+            "id": 2228, 
+            "type": "square", 
+            "url": "https://cdn1.jaccede.com/uploads/categories/imgs/web_square_lodging_off.png"
+          }, 
+          {
+            "filename": "web_square_lodging.png", 
+            "id": 2227, 
+            "type": "square", 
+            "url": "https://cdn1.jaccede.com/uploads/categories/imgs/web_square_lodging.png"
+          }
+        ]
+      }
+    }, 
+    "id": 54, 
+    "label": "Lodging", 
+    "name": "lodging"
+  }, 
+  "completed": true, 
+  "crt": {}, 
+  "google_photos": [
+    {
+      "height": 5312, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/112227575649781123156/photos\">Die DIY Tester</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAIvXu6qBVf9g0y6mTA5hBsaptSFNDRAjk0ZEdVqtHaWpAAsygsBJqRdi7I2oE52lM3XzbJ3tSfi2-aAww4wwa98AD-oX5SUJWQVPpbC4aydJT-weDePq1qi2hNOUzbFkIw4ZTX9Jm1Lm6s-S_kCWK3qLx-aibF6UyHiUorNHq4cCEhC72uPS8lqh10rW0BEOoHiwGhQ0JPByF8om8e8zJRBpjiOAY5iuDw", 
+      "width": 2988
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAGxi36_5FMOWgd3gcCj3oOLwskHpUJDiZG7PkfkEwvZQFYVo4XV28Ks90qxRre4beW27RVHcE8Sh_a_q8FHwukrMkI_hU51p2tngYH13_aNgyXJV0o2M10OjskNQSsJLzRHgdp3E_BSBc4Zq32OZvh4n45nPL1EnrCct48u8Qs5REhD86QCG8rD_REUU0xW587zTGhThzUXceyUJF0lNYuSuJPAeii5dVw", 
+      "width": 1024
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAMDUAmOA_G4dDIeGbcz8wHTfeR9RYJInPwCpbxc9-mxONgqytyF92xNPhXKIXumbfNjeEidjKQC0LeClvvlpQXSfrJXo2kS2_qdExHtB77zLMT4VEOuPLFU0f7UT87--76UoTRc-PvS0uoiFuMQBFTSRlq_j7sc50zs0W1GGw095EhCmScQ9WEqE4X6jQYsDuylpGhSn87BNImUzdvNBhSQjPMOwKMZsdw", 
+      "width": 1024
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAALhLoZo9FAfNiMQS5FVM9TRoUazkpkAwkdav3O9RPRzSaoqhqpZKdN6No6Lw4zUVz7ZWS-w00FhBtyWkd1_jwf4qRpvK5zqvg5eqCr-v3MTuceQwf81nzHhrtfartbMI_btc_v9CqLQg8SE7wDu4NHVo8N1EjmH43Ll0i6PKrLmYEhClzarPbGqZTEJutuYsFqd9GhR9z2F-gnMXFdJYUeD8RIo1iNwfSQ", 
+      "width": 1024
+    }, 
+    {
+      "height": 2160, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109898104181013518213/photos\">Alex Beardmore</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAIgtztBRZJfnNGg6pBpfKS3bQu9VOwdrlNKGVyxncOm0X6tJRLqxwpZ3WqFhU2G5MSjRuxf9eIXhQ3ommmQvDZsfD3lPTQgh2ZdViI3tR1JttKgp3S_GZy21aQs026-8EcHFeywJON28qrQot_CnSKzKEisKMuZZLkKN-45WOy-YEhDRrvBNAp149Ng98yiyKCK1GhRjMoFelTrbymR03w5mqA3Op5GKdA", 
+      "width": 3840
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAJ8Uv6lnFerEzroJ8AJ7Vatke7lZY1vybamKkIU2aokOLCoNvkxFGJffwdN7sumCl0uVrRmKNnp8Xxw1BPiDIAIOgS1wn280U_u4aBi6BKeEzv8jLLu4CkDJ8nOPIR1YgFqe_1OQx9fVt2DRp-vtnxtFDx9LqvC0oa_1VUDDanb4EhBguQ2g-oWMpgdR0F8N_M17GhQKX9lnSH9FlnOQ2RjbSHuQUOdL5g", 
+      "width": 1024
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAFuyMYmb6zIVacGToR5rnxNkBNN7CVErGWM1wuEDnyrFiP_V_SHUagXvLhb8OojgIIxEKrL_h2bghJ2g9XBsb_VhVtcz4Chl4Aq9KUeRNCcVjBZzw3Gy6IbKW_gc-44tZbK-pr5sqnHapDBuxcgdCJbY65ewb2HI9X5q3egLQO6SEhDs0ktnxZXCsVOI1ZyA0mEFGhRcmzxChlp9j02Fkmfudm6BT9WIsg", 
+      "width": 1024
+    }, 
+    {
+      "height": 4160, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/115488211419324395524/photos\">Matthias_ Koch</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAI0ru2GgIhjh__P9IJxBzKTH_xNyfbrwTEOGqSfoARZMzeNEsTBJafy-YdG9uwhHK-8onHMq_Rf_rUnd8v2hmZ81WFDaIc5C0XotxDgNSSDCZSiLkgxDRQ2puMstNNp0teFaeuJDfDhHdkieajGmPYWInPcT5yIHGIcbg5S2l7JzEhDH5r6wwnBpW39LF0cw8Vg1GhSToYvexGvPnfqlNcjO2rqjvqycVQ", 
+      "width": 3120
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAGrsjn6H4fw5IJ3-8GVnVmIzRaspb6D0-X_1wQJEutb2KQ4xiV7C0CPWeA5mN_ABDNRccBMfDqk3RIHSyxzcMCEeZGetQJFy4isVj3dIyYy1knNJeWlAJtWvGKRmqbAgZgE5esM2w4oE-x1qdwxuIRYhXozkIV5Rye0HCExuRluEEhC8CkryCOhsfURe0ebUfmYIGhQ4qK8xQXI27D6yFxHROGlD393ObQ", 
+      "width": 1024
+    }, 
+    {
+      "height": 768, 
+      "html_attributions": [
+        "<a href=\"https://maps.google.com/maps/contrib/109582440911683331834/photos\">Hotel Novotel Nuernberg Messezentrum</a>"
+      ], 
+      "photo_reference": "CoQBdwAAAOUF9aE8xmW0FXX3OLDQVVXy8Nl5-c13JFPUbM3FZPr7ss9T5Nq6npTcqTBEJBAIwWmiVOfvdBzTGWKTqjQ5bvd68ZbSTVNzbathtkAelQhJRyg0K_4VdvwbsX4BiF2cW6-VQ2j5eq0H3QmJE6eu2gbDXybpUT0p4OSqhb0AIuW-EhCGFmABnCfJpwke3IP2dDSBGhTKTMa8U38cCVSl4Yt-ZQ3e88_nnQ", 
+      "width": 1024
+    }
+  ], 
+  "google_place_id": "ChIJ8ect1eRZn0cRDRnpqH-ZzeI", 
+  "has_category": false, 
+  "has_comment": true, 
+  "hours": null, 
+  "id": 96371, 
+  "is_favorite": false, 
+  "last_editor": {
+    "avatar": {
+      "filename": "sports-canins-logo-320_20160613-4323-my0.png", 
+      "id": 15111, 
+      "type": "image", 
+      "url": "https://cdn1.jaccede.com/uploads/users/imgs/sports-canins-logo-320_20160613-4323-my0.png", 
+      "url_low": "https://cdn1.jaccede.com/uploads/users/imgs/sports-canins-logo-320_20160613-4323-my0_low.png", 
+      "url_thumb": "https://cdn1.jaccede.com/uploads/users/imgs/sports-canins-logo-320_20160613-4323-my0_thumb.png"
+    }, 
+    "pseudo": "Didine", 
+    "slug": "didine-1nm"
+  }, 
+  "latitude": "49.4116903000", 
+  "longitude": "11.1122673000", 
+  "main_image": {
+    "filename": "DSCN1025-1_20160613-0518-uln.jpg", 
+    "id": 16318, 
+    "is_main": false, 
+    "type": "image", 
+    "url": "https://cdn1.jaccede.com/uploads/places/imgs/DSCN1025-1_20160613-0518-uln.jpg", 
+    "url_large": "https://cdn1.jaccede.com/uploads/places/imgs/DSCN1025-1_20160613-0518-uln_large.jpg", 
+    "url_low": "https://cdn1.jaccede.com/uploads/places/imgs/DSCN1025-1_20160613-0518-uln_low.jpg", 
+    "url_standard": "https://cdn1.jaccede.com/uploads/places/imgs/DSCN1025-1_20160613-0518-uln_standard.jpg", 
+    "url_thumb": "https://cdn1.jaccede.com/uploads/places/imgs/DSCN1025-1_20160613-0518-uln_thumb.jpg"
+  }, 
+  "modified": "2016-06-13T11:53:49.881334+00:00", 
+  "name": "Hotel Novotel Nuernberg Messezentrum", 
+  "other_information": null, 
+  "permanently_closed": null, 
+  "phone": "+49 911 81260", 
+  "rating": 5.0, 
+  "slug": "hotel-novotel-nuernberg-messezentrum", 
+  "total_comments": 1, 
+  "total_contributors": 1, 
+  "total_medias": 5, 
+  "url": "https://dev.jaccede.com/en/p/ChIJ8ect1eRZn0cRDRnpqH-ZzeI/hotel-novotel-nuernberg-messezentrum", 
+  "website": "http://www.accorhotels.com/lien_externe.svlt?goto=fiche_hotel&code_hotel=0498&merchantid=seo-maps-DE-0498&sourceid=aw-cen"
+}

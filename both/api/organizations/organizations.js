@@ -1,4 +1,4 @@
-import { isAdmin } from '/both/lib/is-admin';
+import { userHasFullAccessToOrganizationId } from '/both/api/organizations/privileges';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources';
@@ -122,7 +122,9 @@ Organizations.schema.messages({
 });
 
 Organizations.helpers({
-  editableBy: isAdmin,
+  editableBy(userId) {
+    return userHasFullAccessToOrganizationId(userId, this._id);
+  },
 });
 
 

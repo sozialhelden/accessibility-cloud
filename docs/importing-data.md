@@ -8,7 +8,7 @@ Data sources are currently defined using a JSON string. To make importing data a
 
 Here is an exemplary import process definition to download and process JSON data from a web API:
 
-```json
+```javascript
 [
     {
         "type": "HTTPDownload",
@@ -101,7 +101,8 @@ Note that for properties, you can use key paths to generate nested objects. Path
 
 Here is an example:
 
-```
+```json
+{
 "mappings": {
     "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
     "properties-originalId": "''+row.id",

@@ -14,7 +14,7 @@ Template.sources_show_page.onCreated(() => {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('licenses.public');
-  
+
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
@@ -66,7 +66,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
 
   window.map = map;
 
-  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGl4dHVyIiwiYSI6ImNpc2tuMWx1eDAwNHQzMnBremRzNjBqcXIifQ.3jo3ZXnwCVxTkKaw0RPlDg', {
+  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGl4dHVyIiwiYSI6ImNpc2tuMWx1eDAwNHQzMnBremRzNjBqcXIifQ.3jo3ZXnwCVxTkKaw0RPlDg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
     id: 'accesssibility-cloud',

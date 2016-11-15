@@ -4,14 +4,14 @@ import { Licenses } from '/both/api/licenses/licenses.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import subsManager from '/client/lib/subs-manager';
 
-// FIXME: not all required here
-Template.licenses_navigation_sidebar.onCreated(function created() {
+Template.licenses_navigation_sidebar.onCreated(() => {
   subsManager.subscribe('licenses.public');
   subsManager.subscribe('organizations.public');
+  subsManager.subscribe('organizationMembers.public');
   subsManager.subscribe('sources.public');
 });
 
-function getOrganizationForView () {
+function getOrganizationForView() {
   if (FlowRouter._current.route.name === 'manage.organizations.show.licenses') {
     const organizationId = FlowRouter.getParam('_id');
     return Organizations.findOne({ _id: organizationId });

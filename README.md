@@ -24,7 +24,7 @@ Welcome and thank you for reading this.
 
 ### Documentation on data sources
 
-- [AXSMaps](docs/datasources/docu-axsmaps.md)
+- [AXSMap](docs/datasources/docu-axsmaps.md)
 - [Jaccede](docs/datasources/docu-jaccede.md)
 
 

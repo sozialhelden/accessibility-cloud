@@ -34,7 +34,7 @@
             return '<li class="ac-group"><span>' + formatName(key) + '</span> ' + recursivelyRenderProperties(value) + '</li>';
           }
           if (key.startsWith('rating')) {
-            return '<li class="ac-rating">' + formatName(key) + ': ' + formatRating(parseFloat(value)) + '</li>';  
+            return '<li class="ac-rating">' + formatName(key) + ': ' + formatRating(parseFloat(value)) + '</li>';
           }
           return '<li>' + formatName(key) + ': ' + formatValue(value) + '</li>';
         }
@@ -44,7 +44,7 @@
   };
 
   window.AccessibilityCloud = {
-    apiDomain: 'http://localhost:3000',
+    apiDomain: 'https://www.accessibility.cloud',
 
     getPlacesAround: function (parameters) {
       return $.ajax({
@@ -121,7 +121,8 @@
 
     renderSourcesAndLicenses: function (element, sources, licenses) {
       var self = this;
-      var links = Object.values(sources).map(function (source) {
+      var links = Object.keys(sources).map(function (sourceId) {
+        var source = sources[sourceId];
         var license = licenses[source.licenseId];
         var licenseURL = self.apiDomain + '/browse/licenses/' + license._id;
         var sourceURL = source.originWebsiteURL || (self.apiDomain + '/browse/sources/' + source._id);

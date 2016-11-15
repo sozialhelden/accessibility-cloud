@@ -8,13 +8,16 @@ import { Categories } from '/both/api/categories/categories.js';
 
 
 const categoryIdForSynonyms = {};
-Categories.find({}).fetch().forEach(category => {
-  category.synonyms.forEach(s => {
-    if (s) {
-      categoryIdForSynonyms[s] = category._id;
-    }
+function updateCategories() {
+  console.log('Updating categories...');
+  Categories.find({}).fetch().forEach(category => {
+    category.synonyms.forEach(s => {
+      if (s) {
+        categoryIdForSynonyms[s] = category._id;
+      }
+    });
   });
-});
+}
 
 function compileMapping(fieldName, javascript) {
   try {
@@ -122,10 +125,12 @@ export class TransformData {
     let firstInputObject = null;
     let firstOutputObject = null;
 
+    updateCategories();
+
     this.stream = EventStream.map((data, callback) => {
       if (!firstInputObject) {
         firstInputObject = data;
-        onDebugInfo({ firstInputObject });
+        onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
       }
       const doc = {};
       for (const [fieldName, fn] of entries(compiledMappings)) {
@@ -143,7 +148,7 @@ export class TransformData {
 
       if (!firstOutputObject) {
         firstOutputObject = doc;
-        onDebugInfo({ firstOutputObject });
+        onDebugInfo({ firstOutputObject: JSON.stringify(firstOutputObject) });
       }
 
       doc.originalProperties = JSON.stringify(data, true, 4);

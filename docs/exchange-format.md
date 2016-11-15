@@ -60,7 +60,7 @@ The proposal for the overall structure thus looks like this:
 ## A complete sample object
 
 
-```
+```javascript
 {
   _id: 'ttikRCM5Sz2v2m3cZ',
   sourceId: 'BwEuneiKbLGJyEeDE',
@@ -499,7 +499,8 @@ With a clear definition of such a catalogue it would be possible to implement ve
 
 The data-structure for a requirement-catalogue might look like this:
 
-```
+```javascript
+{
     particiallyAccessibleWithWheelchair: {
 
         title: {
@@ -524,8 +525,7 @@ The data-structure for a requirement-catalogue might look like this:
             criteriaList:[
                 {
                     description: {
-                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit.
-    (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
+                        de: 'Alle Durchgänge/Wege sind mindestens 90 cm breit (Weg außen, Tür, Weg innen, Aufzug, Raum, Schlafraum, Küche, Speiseraum, Umkleidekabine)',
                     },
                     propertyId: 'accessibility.widthOfAllOpeningsAndAisles',
                     importance: 'required',
@@ -563,6 +563,7 @@ The data-structure for a requirement-catalogue might look like this:
             ],
         }
     }
+}
 ```
 
 

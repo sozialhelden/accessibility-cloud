@@ -12,6 +12,10 @@
               {{/if}}
 
               {{userEmail}}
+
+              {{#if isAdmin}}
+                ({{_"ADMIN"}})
+              {{/if}}
             </a>
             {{#if userMenuOpen}}
               <div class='user menu'>
@@ -34,7 +38,7 @@
           <a href='{{pathFor "browse.dashboard"}}'  class='{{activeIfRouteNameMatches "browse"}}'>{{_ 'Browse'}}</a>
         </li>
         <li>
-          <a href='https://github.com/sozialhelden/ac-machine/tree/master/docs'>{{_'Learn'}}</a>
+          <a href='https://github.com/sozialhelden/accessibility-cloud/tree/master/docs'>{{_'Learn'}}</a>
         </li>
         {{#if isAdmin}}
           <li>

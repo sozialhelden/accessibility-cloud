@@ -2,8 +2,8 @@
   <fieldset class='{{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}'>
     <label for='at-field-{{_id}}'>
       <input type='checkbox' id='at-field-{{_id}}' name="at-field-{{_id}}">
+      {{_"I agree to the"}} <a href ='https://github.com/sozialhelden//blob/master/docs/terms-for-signup.md'>Terms &amp; Conditions</a>.
     </label>
-    {{_"I agree to the"}} <a href ='https://github.com/sozialhelden/ac-machine/blob/master/docs/terms-for-signup.md'>Terms &amp; Conditions</a>.
     {{#if hasError}}
       <div class="help-block">{{errorText}}</div>
     {{/if}}
