@@ -3,9 +3,15 @@
     {{#with selectedPlace}}
       <section class="selected-place">
         <span class='js-close close-window icon'></span>
+
         <h4>{{selectedPlace.properties.name}}</h4>
         <p class='category'>{{selectedPlace.properties.category}}</p>
         <pre class='readible json'>{{stringifyHuman selectedPlace.properties.accessibility}}</pre>
+        {{#if selectedPlace.properties.infoPageUrl}}
+          <p>
+            <a href='{{selectedPlace.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
+          </p>
+        {{/if}}
 
         <hr/>
         {{#if placeDetailsVisible}}

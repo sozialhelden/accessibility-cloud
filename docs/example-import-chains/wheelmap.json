@@ -2,7 +2,8 @@
     {
         "type": "HTTPDownload",
         "parameters": {
-            "sourceUrl": "http://localhost:3000/data/wheelmap-10000.json"
+            "sourceUrl": "https://dl.dropboxusercontent.com/u/5503063/ac/data/wheelmap-10000.json",
+            "bytesPerSecond": 100000
         }
     },
     {
@@ -28,11 +29,12 @@
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "properties-originalId": "''+row.id",
-                "properties-category": " helpers.OSM.fetchCategoryFromTags(row.tags) ",
-                "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
+                "geometry": "{ type: 'Point', coordinates: [Number(d['lon']), Number(d['lat'])] }",
+                "properties-originalId": "String(d.id)",
+                "properties-infoPageUrl": "'https://wheelmap.org/nodes/' + d.id",
+                "properties-category": " helpers.OSM.fetchCategoryFromTags(d.tags) ",
+                "properties-name": "helpers.OSM.fetchNameFromTags(d.tags)",
+                "properties-accessibility-accessibleWith-wheelchair": "d.tags['wheelchair'] == 'yes'"
             }
         }
     },
