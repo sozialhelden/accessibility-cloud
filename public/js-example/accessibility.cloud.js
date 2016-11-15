@@ -69,7 +69,7 @@
                 <header class="ac-result-name" role="heading">{{name}}</header> \
                 <div class="ac-result-distance">{{formattedDistance}}</div> \
                 <div class="ac-result-category">{{category}}</div> \
-                <a href="{{detailsURL}}" class="ac-result-link">{{sourceName}}</a> \
+                <a href="{{infoPageUrl}}" class="ac-result-link">{{sourceName}}</a> \
                 <div class="ac-result-accessibility-summary">{{accessibilitySummary}}</div> \
                 <div class="ac-result-accessibility-details ac-hidden">{{{formattedAccessibility}}}</div> \
               </div> \

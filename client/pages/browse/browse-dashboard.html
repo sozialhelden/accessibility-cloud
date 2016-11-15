@@ -11,7 +11,6 @@
     <h2>Sources</h2>
     <ul class='with-blocks'>
       {{#each sources}}
-        <!-- <li><a href='./organizations/{{_id}}'>{{name}}</a></li> -->
         <li class='list block'>
           <a href='{{pathFor "browse.sources.show" _id= _id}}'>
             <span class='main'>
@@ -24,30 +23,8 @@
               {{getLicense.shortName}}
             </span>
           </a>
-<!--           <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
-          {{#unless isUserMemberOfOrganizationWithId _id}}
-            <a href='' class='action join organizations' organizationId='{{this._id}}'>Join</a>
-          {{else}}
-            (member)
-          {{/unless}}
- -->        </li>
+        </li>
       {{/each}}
     </ul>
-
-    {{#if isAdmin }}
-      <h2>Administration</h2>
-      <ul>
-        {{#each organizations}}
-          <li>
-            <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
-            {{#if isUserMemberOfOrganizationWithId currentUser._id _id}}
-              (member)
-            {{/if}}
-          </li>
-        {{/each}}
-      </ul>
-      <br>
-      <a href='{{pathFor "browse.categories.list"}}'>{{_'Import Categories'}}</a>
-    {{/if}}
   </div>
 </template>
