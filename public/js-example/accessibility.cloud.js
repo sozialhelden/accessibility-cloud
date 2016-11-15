@@ -34,7 +34,7 @@
             return '<li class="ac-group"><span>' + formatName(key) + '</span> ' + recursivelyRenderProperties(value) + '</li>';
           }
           if (key.startsWith('rating')) {
-            return '<li class="ac-rating">' + formatName(key) + ': ' + formatRating(parseFloat(value)) + '</li>';  
+            return '<li class="ac-rating">' + formatName(key) + ': ' + formatRating(parseFloat(value)) + '</li>';
           }
           return '<li>' + formatName(key) + ': ' + formatValue(value) + '</li>';
         }
@@ -44,7 +44,7 @@
   };
 
   window.AccessibilityCloud = {
-    apiDomain: 'http://localhost:3000',
+    apiDomain: 'https://www.accessibility.cloud',
 
     getPlacesAround: function (parameters) {
       return $.ajax({
