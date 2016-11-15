@@ -3,7 +3,7 @@
 
 ## Running the example
 
-Right now the sourcecode of the example resides inside the [ac-machine repository](https://github.com/sozialhelden/ac-machine/tree/master/public/js-example). Eventually it will be moved into its own little sub-repository. To get it running you have to go through the following steps:
+Right now the sourcecode of the example resides inside the [ repository](https://github.com/sozialhelden//tree/master/public/js-example). Eventually it will be moved into its own little sub-repository. To get it running you have to go through the following steps:
 
 ### Sign up / in
 
@@ -51,7 +51,7 @@ This is a very short file whose main purpose is to execute the following script:
     </script>
 ```
 
-Note that it includes the API token, which you have to replace with the one you get on [accessibility.cloud](https://acloud.eu.meteorapp.com) for your own API client. It also includes an example request (in this case for places in Manhattan). For more information on the available parameters, refer to the [documentation on the API](https://github.com/sozialhelden/ac-machine/blob/master/docs/json-api.md).
+Note that it includes the API token, which you have to replace with the one you get on [accessibility.cloud](https://acloud.eu.meteorapp.com) for your own API client. It also includes an example request (in this case for places in Manhattan). For more information on the available parameters, refer to the [documentation on the API](https://github.com/sozialhelden//blob/master/docs/json-api.md).
 
 ### accessibility.could.js
 
