@@ -134,16 +134,7 @@ browseRoutes.route('/sources/:_id', {
 });
 
 
-browseRoutes.route('/categories/', {
-  name: 'browse.categories.list',
 
-  action() {
-    BlazeLayout.render('app_layout_mapview', {
-      main: 'categories_list_page',
-      header_navigation_list: 'categories_list_head',
-    });
-  },
-});
 
 
 browseRoutes.route('/categories/:_id', {
@@ -167,6 +158,39 @@ browseRoutes.route('/licenses/:_id', {
     });
   },
 });
+
+
+// ========= ADMIN =======================================================
+
+const adminRoutes = FlowRouter.group({
+  name: 'admin',
+  prefix: '/admin',
+  triggersEnter: [
+    checkLoggedIn,  // FIXME: should this be checkIsAdmin?
+  ],
+});
+
+adminRoutes.route('/admin', {
+  name: 'admin.admin_page',
+
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'admin_page',
+      header_navigation_list: 'admin_header_navigation' });
+  },
+});
+
+adminRoutes.route('/categories/', {
+  name: 'admin.categories.list',
+
+  action() {
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'categories_list_page',
+      header_navigation_list: 'categories_list_head',
+    });
+  },
+});
+
 
 // ========= MANAGE =======================================================
 

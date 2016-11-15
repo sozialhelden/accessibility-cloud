@@ -5,51 +5,7 @@
     </div>
   {{/unless}}
   <div class='full-height'>
-    <header class='main-header'>
-      <div class='wrapper header'>
-        <div class='account-options'>
-          {{#if currentUser}}
-            <div class="btns-group-vertical ">
-              <a href="#" class="js-user-menu btn-secondary">
-                {{#if userMenuOpen}}
-                  <span class="icon-arrow-up"></span>
-                  {{else}}
-                  <span class="icon-arrow-down"></span>
-                {{/if}}
-
-                {{userEmail}}
-              </a>
-              {{#if userMenuOpen}}
-                <div class='user menu'>
-                  <a class="js-logout btn-secondary">Logout</a>
-                </div>
-              {{/if}}
-            </div>
-          {{else}}
-            <div class="btns-group">
-              <a href="{{pathFor 'signin'}}" class="btn-secondary">{{_ 'Sign In'}}</a>
-              <a href="{{pathFor 'join'}}" class="btn-secondary">{{_ 'Join'}}</a>
-            </div>
-          {{/if}}
-        </div>
-        <ul class='page-sections'>
-          <li>
-            <a href='{{pathFor "dashboard"}}' class='{{activeIfRouteNameMatches "^dashboard|manage"}}'>{{_ 'Manage'}}</a>
-          </li>
-          <li><a href='{{pathFor "browse.dashboard"}}'  class='{{activeIfRouteNameMatches "browse"}}'>{{_ 'Browse'}}</a></li>
-          <li><a href='https://github.com/sozialhelden//tree/master/docs'>{{_'Learn'}}</a></li>
-        </ul>
-        <ul class='main-navigation'>
-          <li class='home-link'>
-            <a href='/'> </a>
-          </li>
-          {{> Template.dynamic template=header_navigation_list}}
-        </ul>
-        <div class='sub-header'>
-          {{> Template.dynamic template=header_sub}}
-        </div>
-      </div>
-    </header>
+    {{> header_logged_in}}
     <div class='page-content full-width {{main}}'>
       {{> Template.dynamic template=main}}
     </div>

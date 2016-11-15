@@ -9,6 +9,8 @@ import { OrganizationMembers } from '/both/api/organization-members/organization
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Sources } from '/both/api/sources/sources.js';
 import { Apps } from '/both/api/apps/apps.js';
+import { isAdmin } from '/both/lib/is-admin';
+
 
 const helpers = {
   FlowRouter,
@@ -57,6 +59,10 @@ const helpers = {
 
     return Apps.find({ organizationId: { $in: orgaIds } });
   },
+  isAdmin() {
+    return isAdmin(Meteor.userId());
+  },
+
 };
 
 _.each(helpers, (fn, name) => Template.registerHelper(name, fn));
