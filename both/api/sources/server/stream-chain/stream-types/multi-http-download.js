@@ -26,7 +26,7 @@ export class MultiHTTPDownload {
     this.stream = EventStream.map((data, callback) => {
       if (!firstInputObject) {
         firstInputObject = data;
-        onDebugInfo({ firstInputObject });
+        onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
       }
 
       const options = {

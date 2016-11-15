@@ -125,7 +125,7 @@ export class TransformData {
     this.stream = EventStream.map((data, callback) => {
       if (!firstInputObject) {
         firstInputObject = data;
-        onDebugInfo({ firstInputObject });
+        onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
       }
       const doc = {};
       for (const [fieldName, fn] of entries(compiledMappings)) {
@@ -143,7 +143,7 @@ export class TransformData {
 
       if (!firstOutputObject) {
         firstOutputObject = doc;
-        onDebugInfo({ firstOutputObject });
+        onDebugInfo({ firstOutputObject: JSON.stringify(firstOutputObject) });
       }
 
       doc.originalProperties = JSON.stringify(data, true, 4);
