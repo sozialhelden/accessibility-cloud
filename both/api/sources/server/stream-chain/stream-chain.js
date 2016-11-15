@@ -19,10 +19,12 @@ import { TransformData } from './stream-types/transform-data';
 import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
 import { InsertPlace } from './stream-types/insert-place';
+import { TransformJaccedeFormat } from './stream-types/transform-jaccede-format';
 
 const StreamTypes = {
   ConsoleOutput,
   ConvertToUTF8,
+  DebugLog,
   Generic,
   HTTPDownload,
   TransformScript,
@@ -35,7 +37,7 @@ const StreamTypes = {
   TransformData,
   UpsertPlace,
   InsertPlace,
-  DebugLog,
+  TransformJaccedeFormat,
 };
 
 function setupEventHandlersOnStream({ errorKey, stream, sourceImportId, type, index }) {

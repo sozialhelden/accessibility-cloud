@@ -6,7 +6,8 @@ export const acFormat = {
     originalId: '3',
 
     lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
-    detailsURL: 'https://...',
+    infoPageUrl: 'https://...',
+    placeWebsiteUrl: 'https://...',
 
     license: {
       name: 'GPLv3',
@@ -269,7 +270,7 @@ export const acFormat = {
             height: '20 .. 120cm',
           },
 
-          services: {                                     // RFC? do we need to group these 
+          services: {                                     // RFC? do we need to group these
             hasRemovableFurniture: false,
             hasInductionLoop: true,
             hasRemoteControlAudioSigns: true,

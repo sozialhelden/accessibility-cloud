@@ -8,7 +8,7 @@ function compileMappingFunction(javascript) {
   try {
     // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
     // eslint-disable-next-line no-eval
-    return eval(`(inputData) => (${javascript})`);
+    return eval(`(d) => (${javascript})`);
   } catch (error) {
     console.error(`JavaScript compilation error:\n${error}\n${error.stack}\n${error.reason}\n${error.message}`);
     return () => {};
