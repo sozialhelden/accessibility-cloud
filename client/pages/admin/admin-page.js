@@ -8,22 +8,21 @@ import subsManager from '/client/lib/subs-manager';
 import { _ } from 'meteor/underscore';
 
 
-Template.browse_dashboard_page.onCreated(function organizationsShowPageOnCreated() {
+Template.admin_page.onCreated(function organizationsShowPageOnCreated() {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
-
 });
 
 
-Template.browse_dashboard_page.onRendered(function organizationsShowPageOnRendered() {
+Template.admin_page.onRendered(function organizationsShowPageOnRendered() {
   this.autorun(() => {
   });
 });
 
-Template.browse_dashboard_page.helpers(helpers);
+Template.admin_page.helpers(helpers);
 
-Template.browse_dashboard_page.helpers({
+Template.admin_page.helpers({
   isUserMemberOfOrganizationWithId,
   organizations() {
     return Organizations.find({});
@@ -33,7 +32,7 @@ Template.browse_dashboard_page.helpers({
   },
 });
 
-Template.browse_dashboard_page.events({
+Template.admin_page.events({
   'click .join': function (event) {
     event.preventDefault();
 
