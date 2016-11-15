@@ -1,0 +1,53 @@
+[
+    {
+        "type": "HTTPDownload",
+        "parameters": {
+            "sourceUrl": "https://apidev.jaccede.com/v4/places?per_page=50&from_datetime=2014-08-11T05:26:03.86924",
+            "headers": {
+                "X-Api-Key": "..."
+            }
+        }
+    },
+    {
+        "type": "ParseJSONStream",
+        "parameters": {
+            "path": "items.*.google_place_id"
+        }
+    },
+    {
+        "type": "MultiHTTPDownload",
+        "parameters": {
+            "sourceUrl": "https://apidev.jaccede.com/v4/places/{{inputData}}",
+            "headers": {
+                "X-Api-Key": "..."
+            }
+        }
+    },
+    {
+        "type": "TransformJaccedeFormat",
+        "parameters": {}
+    },
+    {
+        "type": "TransformData",
+        "parameters": {
+            "mappings": {
+                "geometry": "{ type: 'Point', coordinates: [Number(d['longitude']), Number(d['latitude'])] }",
+                "properties-category": "helpers.AXSMaps.getCategoryFromList([_.get(d, 'category.name')])",
+                "properties-originalId": "String(d.id)",
+                "properties-infoPageUrl": "d.url",
+                "properties-placeWebsiteUrl": "d.website",
+                "properties-name": "d.name",
+                "properties-address": "d.address",
+                "properties-accessibility-accessibleWith-wheelchair": "d.accessible_by_conviction",
+                "properties-accessibility-areas-0-restrooms-0-entrance-isStepFree": "_.get(d, 'accessibilityFlattened.192.value') || _.get(d, 'accessibilityFlattened.126.value')",
+                "properties-accessibility-areas-0-isWellLit": "_.get(d, 'accessibilityFlattened.42.value')",
+                "properties-accessibility-areas-0-isQuiet": "_.get(d, 'accessibilityFlattened.249.value')",
+                "properties-accessibility-areas-0-entrances-0-hasRemovableRamp": "_.get(d, 'accessibilityFlattened.8.value')"
+            }
+        }
+    },
+    {
+        "type": "UpsertPlace",
+        "parameters": {}
+    }
+]
