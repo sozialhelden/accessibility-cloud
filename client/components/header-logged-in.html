@@ -12,6 +12,9 @@
               {{/if}}
 
               {{userEmail}}
+              {{#if isAdmin}}
+                ({{_"ADMIN"}})
+              {{/if}}
             </a>
             {{#if userMenuOpen}}
               <div class='user menu'>
