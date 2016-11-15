@@ -60,7 +60,7 @@ The proposal for the overall structure thus looks like this:
 ## A complete sample object
 
 
-```
+```json
 {
   _id: 'ttikRCM5Sz2v2m3cZ',
   sourceId: 'BwEuneiKbLGJyEeDE',
@@ -499,7 +499,8 @@ With a clear definition of such a catalogue it would be possible to implement ve
 
 The data-structure for a requirement-catalogue might look like this:
 
-```
+```json
+{
     particiallyAccessibleWithWheelchair: {
 
         title: {
@@ -563,6 +564,7 @@ The data-structure for a requirement-catalogue might look like this:
             ],
         }
     }
+}
 ```
 
 
