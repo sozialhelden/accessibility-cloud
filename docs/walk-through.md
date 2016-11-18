@@ -39,7 +39,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 
 - [x] You learn that you need to define how your data-source is mapped into the ac-format.
 - [x] You learn that there is a generic [ac-format](ac-format.md) and how you can find additional documentation on that topic.
-- [ ] You click a link to find more documentation [on github](https://github.com/sozialhelden//tree/master/docs) and are happy to see that this is a freely accessible open source project.
+- [ ] You click a link to find more documentation [on github](https://github.com/sozialhelden/accessibility-cloud/tree/master/docs) and are happy to see that this is a freely accessible open source project.
 - [x] You learn that you don't have to understand how to map your data – you can always find help from the ac-community through the support-email-address (or other channels like irc?).
 - [x] You can update your data, so some members of the AC-community can then help you converting the data-format.
 - [ ] You can initialize the source-import-definition from a list of templates for importing CSV and JSON.
