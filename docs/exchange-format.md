@@ -66,7 +66,7 @@ The proposal for the overall structure thus looks like this:
   sourceId: 'BwEuneiKbLGJyEeDE',
   acVersion: '1',
   lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
-  detailsURL: 'https://...',
+  
 
   license: {
 
@@ -82,7 +82,7 @@ The proposal for the overall structure thus looks like this:
     address: '',
     originalId: '234234',                             // id within data-source
     category: 'hotel',                                // see [ac-categories]
-    
+    infoPageUrl: 'http://...',
     accessibility: {
       accessibleWith: {
         wheelchair: true,
