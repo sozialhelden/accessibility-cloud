@@ -153,6 +153,10 @@ export class TransformData {
       },
     });
 
+    this.stream.on('pipe', source => {
+      source.on('length', length => this.stream.emit('length', length));
+    });
+
     this.stream.unitName = 'places';
   }
 

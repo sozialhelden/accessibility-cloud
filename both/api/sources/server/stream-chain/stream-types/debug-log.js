@@ -22,6 +22,10 @@ export class DebugLog {
         callback();
       },
     });
+
+    this.stream.on('pipe', source => {
+      source.on('length', length => this.stream.emit('length', length));
+    });
   }
 
   static getParameterSchema() {
