@@ -35,7 +35,16 @@ export function startObservingObjectProgress(stream, onProgress) {
 
   const interval = Meteor.setInterval(sendProgress, timeInterval);
 
-  if (stream.isReadableObjectMode && !(stream instanceof RequestStream)) {
+  if (stream instanceof RequestStream) {
+    stream.on('response', response => {
+      // unmodified http.IncomingMessage object
+      response.on('data', chunk => {
+        // count compressed data as it is received, not uncompressed data
+        progress.transferred += chunk.length;
+      });
+    });
+    progress.unitName = 'bytes';
+  } else if (stream.isReadableObjectMode) {
     stream.on('data', () => {
       progress.transferred++;
     });
