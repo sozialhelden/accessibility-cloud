@@ -1,31 +1,72 @@
 [
     {
         "type": "HTTPDownload",
+        "comment": "Responses from Jaccede are paginated. This step fetches one page of places from Jaccede, which yields the total page count in the 'pages' field of the JSON result.",
         "parameters": {
-            "sourceUrl": "https://apidev.jaccede.com/v4/places?per_page=50&from_datetime=2014-08-11T05:26:03.86924",
+            "sourceUrl": "https://apidev.jaccede.com/v4/places?per_page=50&from_datetime=2016-08-11T05:26:03.86924",
             "headers": {
-                "X-Api-Key": "..."
+                "X-Api-Key": "YOUR_API_KEY"
             }
         }
     },
     {
         "type": "ParseJSONStream",
         "parameters": {
-            "path": "items.*.google_place_id"
+            "path": "pages"
         }
     },
     {
-        "type": "MultiHTTPDownload",
+        "type": "TransformScript",
+        "comment": "Convert page count to an array of page indexes (e.g. `[1, 2, 3]`).",
         "parameters": {
-            "sourceUrl": "https://apidev.jaccede.com/v4/places/{{inputData}}",
+            "javascript": "Array.from({length: d}, (v, k) => k + 1)"
+        }
+    },
+    {
+        "type": "DebugLog"
+    },
+    {
+        "type": "ArrayReadable",
+        "comment": "Convert page index array to streamed single index values."
+    },
+    {
+        "type": "Limit"
+    },
+    {
+        "type": "DebugLog"
+    },
+    {
+        "type": "MultiHTTPDownload",
+        "comment": "Download each page of the place ID list.",
+        "parameters": {
+            "sourceUrl": "https://apidev.jaccede.com/v4/places?page={{inputData}}&per_page=50&from_datetime=2016-08-11T05:26:03.86924",
             "headers": {
-                "X-Api-Key": "..."
+                "X-Api-Key": "YOUR_API_KEY"
             }
         }
     },
     {
-        "type": "SimplifyJaccedeFormat",
-        "parameters": {}
+        "type": "ParseJSONStream",
+        "comment": "Find ids in the results that we can use to fetch the single each single place.",
+        "parameters": {
+            "path": "items.*.google_place_id"
+        }
+    },
+    {
+        "type": "DebugLog"
+    },
+    {
+        "type": "MultiHTTPDownload",
+        "comment": "Download one single place per request",
+        "parameters": {
+            "sourceUrl": "https://apidev.jaccede.com/v4/places/{{inputData}}",
+            "headers": {
+                "X-Api-Key": "YOUR_API_KEY"
+            }
+        }
+    },
+    {
+        "type": "SimplifyJaccedeFormat"
     },
     {
         "type": "TransformData",
@@ -45,6 +86,9 @@
                 "properties-accessibility-areas-0-entrances-0-hasRemovableRamp": "_.get(d, 'accessibilityFlattened.8.value')"
             }
         }
+    },
+    {
+        "type": "DebugLog"
     },
     {
         "type": "UpsertPlace",
