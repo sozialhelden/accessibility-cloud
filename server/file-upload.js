@@ -83,12 +83,12 @@ function handleUploadRequest(req, res) {
       if (error instanceof Meteor.Error) {
         respond(res, 500, error);
       } else {
-        respondWithError(500, 'Internal server error while streaming.');
+        respondWithError(res, 500, 'Internal server error while streaming.');
         console.error('Internal error was:', error, error.stack);
       }
     });
   } catch (error) {
-    respondWithError(500, 'Internal server error while handling upload request.');
+    respondWithError(res, 500, 'Internal server error while handling upload request.');
     console.error('Internal error was:', error, error.stack);
   }
 }
