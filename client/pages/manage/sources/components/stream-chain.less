@@ -7,17 +7,25 @@ div.stream-chain {
 
     li.item {
       position: relative;
-      margin-bottom: 1px;
+      margin-bottom: 0.5rem;
       padding: 7px;
-      background-color: @color-grey085;
+      background-color: @color-grey091;
 
       header.name, aside.progress {
         font-size: 120%;
         .type-bold;
       }
 
+      aside.progress {
+        margin-left: 1rem;
+      }
+
+      header.name {
+        max-width: 75%;
+      }
+
       &.is-skipped, &.is-aborted {
-        background-color: mix(@color-warning, @color-grey085, 5%);
+        background-color: mix(@color-warning, @color-grey091, 5%);
         .name, aside.progress, .code-block.warning {
           color: @color-warning;
         }
@@ -30,7 +38,7 @@ div.stream-chain {
       }
 
       &.has-error {
-        background-color: mix(@color-error, @color-grey085, 5%);
+        background-color: mix(@color-error, @color-grey091, 5%);
         .name, aside.progress, .code-block.error {
           color: @color-error;
         }
@@ -71,10 +79,12 @@ div.stream-chain {
 
       dt, dd {
         float: left;
+        margin-top: 1em;
       }
       dt {
         clear: both;
         width: 7em;
+        .type-bold;
       }
       dd {
         word-break: break-word;
@@ -83,9 +93,14 @@ div.stream-chain {
       }
     }
 
+    .debug-info dt {
+      margin-top: 1em;
+    }
+
     .code-block {
       font-size: 10px;
       width: 100%;
+      max-height: 20.5rem;
       max-width: none;
       overflow: scroll;
       background-color: @color-grey091;
