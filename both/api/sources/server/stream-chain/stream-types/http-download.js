@@ -25,7 +25,6 @@ export class HTTPDownload {
       .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
-      console.log(req);
       onDebugInfo({
         request: {
           headers: req._headers,
