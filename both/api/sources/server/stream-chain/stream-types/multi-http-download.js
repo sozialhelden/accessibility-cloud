@@ -1,7 +1,8 @@
-import EventStream from 'event-stream';
+import request from 'request';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
-const zstreams = Npm.require('zstreams');
+
+const { Transform } = Npm.require('zstreams');
 
 export class MultiHTTPDownload {
   constructor({ headers, sourceUrl, onDebugInfo, bytesPerSecond }) {
@@ -15,41 +16,47 @@ export class MultiHTTPDownload {
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
 
-    let firstInputObject;
+    let loggedFirstRequest = false;
 
-    // eslint-disable-next-line array-callback-return
-    this.stream = EventStream.map((data, callback) => {
-      if (!firstInputObject) {
-        firstInputObject = data;
-        onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
-      }
+    this.stream = new Transform({
+      writableObjectMode: true,
+      readableObjectMode: true,
+      highWaterMark: 4,
+      transform(chunk, encoding, callback) {
+        const options = {
+          url: sourceUrl.replace(/\{\{inputData\}\}/, chunk),
+          method: 'GET',
+          headers: headersWithUserAgent,
+          allowedStatusCodes: [200],
+        };
 
-      const options = {
-        url: sourceUrl.replace(/\{\{inputData\}\}/, data),
-        method: 'GET',
-        headers: headersWithUserAgent,
-        allowedStatusCodes: [200],
-      };
-      this.stream = zstreams.request(options, (error, response, body) => {
-        callback(error, body);
-      })
-      .on('request', (req) => {
-        onDebugInfo({
-          request: {
-            headers: req._headers,
-            path: req.path,
-          },
+        const req = request(options, (error, response, body) => {
+          callback(error, body);
         });
-      })
-      .once('response', response => {
-        onDebugInfo({
-          response: {
-            statusCode: response.statusCode,
-            headers: response.headers,
-          },
-        });
-      });
+
+        if (!loggedFirstRequest) {
+          req.on('request', (request2) => {
+            onDebugInfo({
+              request: {
+                headers: request2._headers,
+                path: request2.path,
+              },
+            });
+          })
+          .once('response', response => {
+            onDebugInfo({
+              response: {
+                statusCode: response.statusCode,
+                headers: response.headers,
+              },
+            });
+          });
+          loggedFirstRequest = true;
+        }
+      },
     });
+
+    this.stream.unitName = 'responses';
   }
 
   static getParameterSchema() {
