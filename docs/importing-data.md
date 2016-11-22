@@ -4,47 +4,47 @@ This document should give you a general idea how to import data into the accessi
 
 If you know how to import data already and just need a reference of the whole exchange format's schema, [go here](./exchange-format.md).
 
-Data sources are currently defined using a JSON string. To make importing data as flexible and efficient as possible, we separate the process into small processing modules that are linked together through stream pipes. Each module's functionality is customizable using a set of parameters. If you have an API, you don't have to change it to make it compatible to accessibility.cloud.
+## Getting started
 
-Here is an exemplary import process definition to download and process JSON data from a web API:
+Data sources are currently defined using JSON (we plan to have a UI for this soon).
+
+Nobody should have to change their data-providing API to connect it to accessibility.cloud, so to make importing data as flexible and efficient as possible, we separate the process into small processing units that are linked together in a data stream. Each unit's functionality is customizable using a set of parameters.
+
+Here is an exemplary import process definition to download and process GeoJSON data from a web API. You can start by copy & pasting this definition into the text area in the 'Format' tab of your source and click the 'Start an import' button to download and process the data.
 
 ```javascript
 [
     {
         "type": "HTTPDownload",
         "parameters": {
-            "sourceUrl": "https://example.com/data/example-pois-YNL-2016-08-10.json"
+            "sourceUrl": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json"
         }
     },
     {
-        "type": "ConvertToUTF8",
+        "type": "ParseJSONStream",
         "parameters": {
-            "fromCharSet": "utf8"
+            "path": "features.*",
+            "lengthPath": "totalFeatures"
         }
     },
     {
-        "type": "Split",
-        "parameters": {
-            "string": "\n"
-        }
-    },
-    {
-        "type": "ParseJSONChunks",
-        "parameters": {
-            "path": "*",
-            "length": "totalFeatures"
-        }
+        "type": "DebugLog"
     },
     {
         "type": "TransformData",
         "parameters": {
             "mappings": {
-                "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-                "properties-originalId": "''+row.id",
-                "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
-                "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
+                "properties-originalId": "d.id",
+                "properties-category": "'toilets'",
+                "properties-name": "'Public Toilet'",
+                "geometry": "d.geometry",
+                "properties-address": "d.properties['STRASSE'] + ', Bezirk ' + d.properties['BEZIRK'] + ', Vienna, Austria'",
+                "properties-accessibility-accessibleWith-wheelchair": "d.properties['KATEGORIE'].includes('Behindertenkabine')"
             }
         }
+    },
+    {
+        "type": "DebugLog"
     },
     {
         "type": "UpsertPlace",
@@ -53,9 +53,9 @@ Here is an exemplary import process definition to download and process JSON data
 ]
 ```
 
-## Stream Chain elements
+## Stream processing units
 
-Currently, we support the following stream modules:
+Currently, we support the following stream processing units:
 
 ### `HTTPDownload`
 Downloads any data from an URL.
