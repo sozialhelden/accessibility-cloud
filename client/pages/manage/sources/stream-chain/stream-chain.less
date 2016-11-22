@@ -24,14 +24,22 @@ div.stream-chain {
         max-width: 75%;
       }
 
-      &.is-skipped, &.is-aborted {
+      section.comment {
+        .type-light;
+      }
+
+      &.is-aborted {
         background-color: mix(@color-warning, @color-grey091, 5%);
         .name, aside.progress, .code-block.warning {
           color: @color-warning;
         }
+        .progress-bar {
+          background-color: mix(transparent, @color-warning, 70%);
+        }
       }
 
       &.is-skipped {
+        opacity: 0.3;
         .name {
           text-decoration: line-through;
         }
@@ -41,6 +49,9 @@ div.stream-chain {
         background-color: mix(@color-error, @color-grey091, 5%);
         .name, aside.progress, .code-block.error {
           color: @color-error;
+        }
+        .progress-bar {
+          background-color: mix(transparent, @color-error, 70%);
         }
       }
 
@@ -93,7 +104,7 @@ div.stream-chain {
       }
     }
 
-    .debug-info dt {
+    dt {
       margin-top: 1em;
     }
 
@@ -103,7 +114,8 @@ div.stream-chain {
       max-height: 20.5rem;
       max-width: none;
       overflow: scroll;
-      background-color: @color-grey091;
+      background-color: rgba(255, 255, 255, 0.3);
+      border: none;
       padding: 7px;
     }
   }

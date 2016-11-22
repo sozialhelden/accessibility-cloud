@@ -33,7 +33,10 @@
       flex: 1;
       padding-left: 1em;
       max-width: 50%;
-      p {
+      p:first-child {
+        margin-top: 0.5em;
+      }
+      p:not(:last-child) {
         margin-bottom: 0.5em;
       }
       ul.errors {

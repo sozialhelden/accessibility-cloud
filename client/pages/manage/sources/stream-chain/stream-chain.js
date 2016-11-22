@@ -27,4 +27,7 @@ Template.sources_stream_chain.helpers({
   isInspectString(key) {
     return !!key.match(/InspectString$/);
   },
+  additionalTemplate() {
+    return `sources_stream_chain_${this.type}`;
+  },
 });
