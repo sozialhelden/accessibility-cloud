@@ -49,28 +49,12 @@ export class TransformJaccedeFormat {
   constructor({ onDebugInfo }) {
 
     check(onDebugInfo, Function);
-
-    let firstInputObject = null;
-    let firstOutputObject = null;
-
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
       transform(input, encoding, callback) {
-        if (!firstInputObject) {
-          firstInputObject = input;
-          onDebugInfo({ firstInputObject });
-        }
-
         const output = convertPlaceDetails(input);
-
-        if (!firstOutputObject) {
-          firstOutputObject = output;
-          onDebugInfo({ firstOutputObject });
-        }
-
         callback(null, output);
-        return null;
       },
     });
   }
