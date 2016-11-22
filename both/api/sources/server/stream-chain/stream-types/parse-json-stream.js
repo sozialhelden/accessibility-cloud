@@ -1,12 +1,11 @@
 import JSONStream from 'JSONStream';
 import { check } from 'meteor/check';
-import { ObjectProgressStream } from '../object-progress-stream';
 
 export class ParseJSONStream {
-  constructor({ path, onProgress }) {
+  constructor({ path }) {
     check(path, String);
     this.stream = JSONStream.parse(path);
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
+    this.stream.on('data', console.log);
   }
 
   static getParameterSchema() {

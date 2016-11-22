@@ -1,17 +1,12 @@
-import request from 'request';
+import zstreams from 'zstreams';
 import EventStream from 'event-stream';
-import { Throttle } from 'stream-throttle';
-
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
 
-import { ObjectProgressStream } from '../object-progress-stream';
-
-
 export class MultiHTTPDownload {
-  constructor({ headers, sourceUrl, onProgress, onDebugInfo, bytesPerSecond }) {
+  constructor({ headers, sourceUrl, onDebugInfo, bytesPerSecond }) {
     check(sourceUrl, String);
-    check(onProgress, Function);
+
     check(onDebugInfo, Function);
     check(bytesPerSecond, Match.Optional(Number));
     check(headers, Match.Optional(Match.ObjectIncluding({})));
@@ -33,8 +28,9 @@ export class MultiHTTPDownload {
         url: sourceUrl.replace(/\{\{inputData\}\}/, data),
         method: 'GET',
         headers: headersWithUserAgent,
+        allowedStatusCodes: [200],
       };
-      const requestStream = request(options, (error, response, body) => {
+      this.stream = zstreams.request(options, (error, response, body) => {
         callback(error, body);
       })
       .on('request', (req) => {
@@ -53,14 +49,7 @@ export class MultiHTTPDownload {
           },
         });
       });
-
-      // Throttle stream when data processing afterwards might overload otherwise
-      if (bytesPerSecond) {
-        requestStream.pipe(new Throttle({ rate: bytesPerSecond }));
-      }
     });
-
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
 
   static getParameterSchema() {

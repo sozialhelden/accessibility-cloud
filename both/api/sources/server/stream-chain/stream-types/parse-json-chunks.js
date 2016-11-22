@@ -1,13 +1,16 @@
-import EventStream from 'event-stream';
-import { check } from 'meteor/check';
-import { ObjectProgressStream } from '../object-progress-stream';
+const { Transform } = Npm.require('zstreams');
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 export class ParseJSONChunks {
-  constructor({ onProgress }) {
-    check(onProgress, Function);
-    this.stream = EventStream.parse();
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
+  constructor() {
+    this.stream = new Transform({
+      writableObjectMode: true,
+      readableObjectMode: true,
+      transform(chunk, encoding, callback) {
+        callback(null, JSON.parse(chunk));
+      },
+    })
+    .setEncoding('utf8');
   }
 
   static getParameterSchema() {

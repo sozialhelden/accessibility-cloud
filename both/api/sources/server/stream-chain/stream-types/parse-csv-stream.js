@@ -15,9 +15,6 @@ export class ParseCSVStream {
     );
 
     this.stream = new FastCSV(csvOptions);
-      // .transform(function(data) {
-      //   console.log(">>>>>>>> Tranform", data);
-      // });
   }
 
   static getParameterSchema() {

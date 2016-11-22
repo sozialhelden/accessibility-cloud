@@ -1,4 +1,4 @@
-import EventStream from 'event-stream';
+import Transform from 'zstreams';
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ObjectProgressStream } from '../object-progress-stream';
@@ -16,31 +16,31 @@ function compileMappingFunction(javascript) {
 }
 
 export class TransformScript {
-  constructor({ javaScript, onProgress, onDebugInfo }) {
+  constructor({ javaScript, onDebugInfo }) {
     check(javaScript, String);
-    check(onProgress, Function);
+
     const compiledScript = compileMappingFunction(javaScript);
 
     let firstInputObject = null;
     let firstOutputObject = null;
 
-    this.stream = EventStream.map((data, callback) => {
-      if (!firstInputObject) {
-        firstInputObject = data;
-        onDebugInfo({ firstInputObject });
-      }
-      const output = compiledScript(data);
+    this.stream = new Transform({
+      transform(data, encoding, callback) {
+        if (!firstInputObject) {
+          firstInputObject = data;
+          onDebugInfo({ firstInputObject });
+        }
+        const output = compiledScript(data);
 
-      if (!firstOutputObject) {
-        firstOutputObject = output;
-        onDebugInfo({ firstOutputObject });
-      }
+        if (!firstOutputObject) {
+          firstOutputObject = output;
+          onDebugInfo({ firstOutputObject });
+        }
 
-      callback(null, output);
-      return null;
+        callback(null, output);
+        return null;
+      },
     });
-
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
 
   static getParameterSchema() {

@@ -5,7 +5,6 @@ import Stream from 'stream';
 export class ObjectProgressStream {
   constructor(stream, onProgress) {
     check(stream, Stream);
-    check(onProgress, Function);
 
     this.progress = {
       percentage: 0,

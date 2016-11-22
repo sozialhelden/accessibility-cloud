@@ -1,11 +1,9 @@
-import EventStream from 'event-stream';
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/stevezhu:lodash';
 import entries from '/both/lib/entries';
-import { ObjectProgressStream } from '../object-progress-stream';
 import { Categories } from '/both/api/categories/categories.js';
-
+const { Transform } = Npm.require('zstreams');
 
 const categoryIdForSynonyms = {};
 function updateCategories() {
@@ -42,7 +40,9 @@ function compileMapping(fieldName, javascript) {
           });
 
           if (matchingTag) {
-            const categoryId = `${matchingTag}=${tags[matchingTag]}`.toLowerCase().replace(' ', '_');
+            const categoryId = `${matchingTag}=${tags[matchingTag]}`
+              .toLowerCase()
+              .replace(' ', '_');
             return categoryIdForSynonyms[categoryId];
           }
           return 'undefined';
@@ -123,9 +123,9 @@ function compileMappings(mappings) {
 }
 
 export class TransformData {
-  constructor({ mappings, onProgress, onDebugInfo }) {
+  constructor({ mappings, shouldWriteOriginalProperties, onDebugInfo }) {
     check(mappings, Object);
-    check(onProgress, Function);
+
     const compiledMappings = compileMappings(mappings);
 
     let firstInputObject = null;
@@ -133,41 +133,45 @@ export class TransformData {
 
     updateCategories();
 
-    this.stream = EventStream.map((data, callback) => {
-      if (!firstInputObject) {
-        firstInputObject = data;
-        onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
-      }
-      const doc = {};
-      for (const [fieldName, fn] of entries(compiledMappings)) {
-        const value = fn(data);
-        if (fieldName.match(/-/)) {
-          // Field name is probably a key path like 'a-b-c'
-          if (value !== undefined && value !== null) {
-            // Don't polute database with undefined properties
-            _.set(doc, fieldName.replace(/-/g, '.'), value);
-          }
-        } else {
-          doc[fieldName] = value;
+    this.stream = new Transform({
+      writableObjectMode: true,
+      readableObjectMode: true,
+      transform(chunk, encoding, callback) {
+        if (!firstInputObject) {
+          firstInputObject = chunk;
+          onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
         }
-      }
 
-      if (!firstOutputObject) {
-        firstOutputObject = doc;
-        onDebugInfo({ firstOutputObject: JSON.stringify(firstOutputObject) });
-      }
+        const output = {};
 
-      doc.originalProperties = JSON.stringify(data, true, 4);
-      callback(null, doc);
-      return null;
+        for (const [fieldName, fn] of entries(compiledMappings)) {
+          const value = fn(chunk);
+          if (fieldName.match(/-/)) {
+            // Field name is probably a key path like 'a-b-c'
+            if (value !== undefined && value !== null) {
+              // Don't polute database with undefined properties
+              _.set(output, fieldName.replace(/-/g, '.'), value);
+            }
+          } else {
+            output[fieldName] = value;
+          }
+        }
+
+        if (!firstOutputObject) {
+          firstOutputObject = output;
+          onDebugInfo({ firstOutputObject: JSON.stringify(firstOutputObject) });
+        }
+
+        if (shouldWriteOriginalProperties) {
+          output.originalProperties = JSON.stringify(chunk, true, 4);
+        }
+
+        callback(null, output);
+      },
     });
-
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
 
   static getParameterSchema() {
-    return new SimpleSchema({
-
-    });
+    return new SimpleSchema({});
   }
 }

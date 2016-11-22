@@ -1,6 +1,5 @@
 import iconv from 'iconv-lite';
 import { check } from 'meteor/check';
-import createProgressStream from 'progress-stream';
 
 iconv.encode('', 'utf8'); // Load all encodings -- iconv-lite has no real interface for this yet.
 if (!iconv.encodings) {
@@ -11,14 +10,9 @@ if (!iconv.encodings) {
 }
 
 export class ConvertToUTF8 {
-  constructor({ fromCharSet = 'utf8', onProgress }) {
+  constructor({ fromCharSet = 'utf8' }) {
     check(fromCharSet, String);
-    const options = {
-      time: 1000,
-      speed: 1000,
-    };
-    const progressStream = createProgressStream(options, onProgress);
-    this.stream = iconv.decodeStream(fromCharSet).pipe(progressStream);
+    this.stream = iconv.decodeStream(fromCharSet);
   }
 
   static getParameterSchema() {

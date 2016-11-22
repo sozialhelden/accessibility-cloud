@@ -1,13 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import Stream from 'stream';
-import vstream from 'vstream';
+import createProgressStream from 'progress-stream';
+import streamLength from 'stream-length';
+
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
 import { ConsoleOutput } from './stream-types/console-output';
 import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
 import { DebugLog } from './stream-types/debug-log';
-import { Generic } from './stream-types/generic';
 import { HTTPDownload } from './stream-types/http-download';
 import { MultiHTTPDownload } from './stream-types/multi-http-download';
 import { ParseJSONStream } from './stream-types/parse-json-stream';
@@ -18,14 +19,14 @@ import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
 import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
-import { InsertPlace } from './stream-types/insert-place';
 import { TransformJaccedeFormat } from './stream-types/transform-jaccede-format';
+
+const zstreams = Npm.require('zstreams');
 
 const StreamTypes = {
   ConsoleOutput,
   ConvertToUTF8,
   DebugLog,
-  Generic,
   HTTPDownload,
   TransformScript,
   MultiHTTPDownload,
@@ -36,7 +37,6 @@ const StreamTypes = {
   Split,
   TransformData,
   UpsertPlace,
-  InsertPlace,
   TransformJaccedeFormat,
 };
 
@@ -85,25 +85,13 @@ export function createStreamChain({
   sourceImportId,
   // Reference to a source that this import belongs to.
   sourceId,
-  // Optional: An input stream that will be used to replace the first stream object
-  inputStreamToReplaceFirstStream,
 }) {
   // console.log('Supported stream types:', StreamTypes);
   check(streamChainConfig, [Object]);
 
-  let previousStream = inputStreamToReplaceFirstStream || null;
-  const skipCount = inputStreamToReplaceFirstStream ? 1 : 0;
-  const modifiedStreamChainConfig = streamChainConfig.splice(skipCount);
-  if (inputStreamToReplaceFirstStream) {
-    modifiedStreamChainConfig.unshift({
-      type: 'Generic',
-      parameters: {
-        stream: inputStreamToReplaceFirstStream,
-      },
-    });
-  }
+  let previousStream = null;
 
-  const result = modifiedStreamChainConfig.map(({ type, parameters }, index) => {
+  const result = streamChainConfig.map(({ type, parameters }, index) => {
     check(type, String);
     check(parameters, Object);
     console.log('Creating', type, 'stream...');
@@ -112,17 +100,18 @@ export function createStreamChain({
     const progressKey = `${streamChainElementKey}.progress`;
     const errorKey = `${streamChainElementKey}.error`;
 
+    const onProgress = Meteor.bindEnvironment(progress => {
+      if (progress.percentage === 100) {
+        Object.assign(progress, { isFinished: true });
+      }
+      const modifier = { $set: { [progressKey]: progress } };
+      SourceImports.update(sourceImportId, modifier);
+    });
+
     // Setup parameters for stream object
     Object.assign(parameters, {
       sourceId,
       sourceImportId,
-      onProgress: Meteor.bindEnvironment(progress => {
-        if (progress.percentage === 100) {
-          Object.assign(progress, { isFinished: true });
-        }
-        const modifier = { $set: { [progressKey]: progress } };
-        SourceImports.update(sourceImportId, modifier);
-      }),
       onDebugInfo: Meteor.bindEnvironment(debugInfo => {
         const debugInfoWithPaths = {};
         Object.keys(debugInfo).forEach(key => {
@@ -150,7 +139,22 @@ export function createStreamChain({
       index,
     });
 
-    const wrappedStream = vstream.wrapStream(runningStreamObserver.stream, type);
+    const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
+
+    // if (wrappedStream.isWritableObjectMode()) {
+    //
+    // } else {
+    //   const options = {
+    //     time: 1000,
+    //     speed: 1000,
+    //   };
+    //   const progressStream = createProgressStream(options, onProgress);
+    //   wrappedStream.pipe(progressStream);
+    // }
+
+    wrappedStream.firstError(error => {
+      console.log(`Error in ${type} stream:`, error);
+    });
 
     // wrappedStream vsCounterBump
     // Connect to previous stream's output if existing
@@ -159,23 +163,11 @@ export function createStreamChain({
     return runningStreamObserver;
   });
 
-  // console.log('Stream chain:', result);
+  console.log('Stream chain:', result[0].stream.getStreamChain());
 
-  const firstStream = result[0] && result[0].stream;
-  const lastStream = result[result.length - 1] && result[result.length - 1].stream;
-  if (firstStream) {
-    // const streamReport = (eventName) => () => {
-    //   console.log('------', eventName, '------');
-    //   firstStream.vsWalk(stream => {
-    //     stream.vsDumpDebug(process.stdout);
-    //   });
-    // };
-    // firstStream.on('data', streamReport('data'));
-    // firstStream.on('error', streamReport('error'));
-    // lastStream.on('end', streamReport('end'));
-    if (firstStream !== lastStream.vsHead()) {
-      throw new Meteor.Error(500, 'Stream chain not correctly built.');
-    }
-  }
+  result[result.length - 1].stream.intoCallback((error) => {
+    console.log('Stream chain ended with error', error);
+  });
+
   return result;
 }

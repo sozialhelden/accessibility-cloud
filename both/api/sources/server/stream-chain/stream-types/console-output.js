@@ -1,15 +1,9 @@
-import EventStream from 'event-stream';
+// import { Npm } from 'meteor/npm';
+const zstreams = Npm.require('zstreams');
 
 export class ConsoleOutput {
   constructor() {
-    this.stream = EventStream.mapSync((data) => {
-      if (data instanceof Buffer) {
-        console.log('Buffer:', data.toString('utf8'));
-      } else {
-        console.log(data);
-      }
-      return data;
-    });
+    this.stream = new zstreams.ConsoleLogStream();
   }
 
   static getParameterSchema() {

@@ -57,6 +57,9 @@
       "airbnb",
       "plugin:meteor/recommended"
     ],
+    "globals": {
+      "Npm": true
+    },
     "rules": {
       "no-underscore-dangle": "off",
       "no-console": "off",

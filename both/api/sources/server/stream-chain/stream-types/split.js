@@ -1,21 +1,27 @@
-import EventStream from 'event-stream';
+const { SplitStream } = Npm.require('zstreams');
 import { check, Match } from 'meteor/check';
 
 export class Split {
   constructor({ string, regExpString }) {
     check(string, Match.Optional(String));
     check(regExpString, Match.Optional(String));
-    const matcher = string || (regExpString ? new RegExp(regExpString) : undefined);
-    this.stream = EventStream.split(matcher);
+    const matcher = string || (regExpString ? new RegExp(regExpString) : undefined) || /\r?\n/;
+    this.stream = new SplitStream(matcher);
   }
 
   static getParameterSchema() {
     return {
       string: {
-        type: 'String',
+        type: String,
         description: 'The string or character that should be used to split the incoming byte stream into string objects.', // eslint-disable-line
-        defaultValue: '\n',
+        optional: true,
       },
+      regExpString: {
+        type: RegExp,
+        description: 'Regexp that should be used to split the incoming byte stream into string objects.', // eslint-disable-line
+        defaultValue: /\r?\n/,
+        optional: true,
+      }
     };
   }
 }

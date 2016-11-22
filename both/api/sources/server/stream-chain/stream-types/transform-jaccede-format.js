@@ -1,8 +1,7 @@
-import EventStream from 'event-stream';
+const { Transform } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ObjectProgressStream } from '../object-progress-stream';
 import { _ } from 'meteor/underscore';
 
 function isPureObject(obj) {
@@ -47,31 +46,33 @@ function convertPlaceDetails(data) {
 }
 
 export class TransformJaccedeFormat {
-  constructor({ onProgress, onDebugInfo }) {
-    check(onProgress, Function);
+  constructor({ onDebugInfo }) {
+
     check(onDebugInfo, Function);
 
     let firstInputObject = null;
     let firstOutputObject = null;
 
-    this.stream = EventStream.map((input, callback) => {
-      if (!firstInputObject) {
-        firstInputObject = input;
-        onDebugInfo({ firstInputObject });
-      }
+    this.stream = new Transform({
+      writableObjectMode: true,
+      readableObjectMode: true,
+      transform(input, encoding, callback) {
+        if (!firstInputObject) {
+          firstInputObject = input;
+          onDebugInfo({ firstInputObject });
+        }
 
-      const output = convertPlaceDetails(input);
+        const output = convertPlaceDetails(input);
 
-      if (!firstOutputObject) {
-        firstOutputObject = output;
-        onDebugInfo({ firstOutputObject });
-      }
+        if (!firstOutputObject) {
+          firstOutputObject = output;
+          onDebugInfo({ firstOutputObject });
+        }
 
-      callback(null, output);
-      return null;
+        callback(null, output);
+        return null;
+      },
     });
-
-    this.progressStream = new ObjectProgressStream(this.stream, onProgress);
   }
 
   static getParameterSchema() {

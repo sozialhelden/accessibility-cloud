@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 import { check } from 'meteor/check';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-function uploadFile({ file, metadata = {}, onUploaded, onProgress, onError }) {
+function uploadFile({ file, metadata = {}, onUploaded, onError }) {
   check(file, File);
   check(onUploaded, Function);
   check(onProgress, Function);
