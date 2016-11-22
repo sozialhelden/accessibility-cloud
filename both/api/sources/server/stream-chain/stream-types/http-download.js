@@ -6,7 +6,7 @@ import { check, Match } from 'meteor/check';
 import streamLength from 'stream-length';
 
 export class HTTPDownload {
-  constructor({ headers, sourceUrl, onDebugInfo, bytesPerSecond }) {
+  constructor({ headers, sourceUrl, onDebugInfo, gzip = true, bytesPerSecond }) {
     check(sourceUrl, String);
     check(onDebugInfo, Function);
     check(bytesPerSecond, Match.Optional(Number));
@@ -16,7 +16,7 @@ export class HTTPDownload {
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
 
-    this.request = this.stream = request(sourceUrl, { headers: headersWithUserAgent });
+    this.request = this.stream = request(sourceUrl, { gzip, headers: headersWithUserAgent });
 
     streamLength(this.stream)
       .then(length => {
@@ -33,6 +33,7 @@ export class HTTPDownload {
         },
       });
     });
+
     this.stream.once('response', response => {
       onDebugInfo({
         response: {
@@ -42,6 +43,18 @@ export class HTTPDownload {
       });
       if (response.statusCode.toString() !== '200') {
         this.stream.emit('error', new Meteor.Error(500, 'Response had an error.'));
+      }
+      if (['gzip', 'deflate'].includes(response.headers['content-encoding'])) {
+        if (!response.headers['content-length']) {
+          const lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
+          .on('response', lengthResponse => {
+            console.log('Got length response', lengthResponse);
+            // if (lengthResponse.statusCode === '200') {
+              this.stream.emit('length', lengthResponse.headers['content-length']);
+            // }
+            lengthRequest.abort();
+          })
+        }
       }
     });
 
