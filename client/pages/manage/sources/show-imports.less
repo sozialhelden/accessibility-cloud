@@ -1,5 +1,17 @@
 @import '/client/stylesheets/_util/colors.import.less';
 
+@keyframes breathing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .page-content.sources_show_imports_page {
   .sidebar {
     .file-upload {
@@ -8,23 +20,29 @@
 
     ul.source-imports {
       > li {
+        span.status {
+          display: inline-block;
+          width: .5em;
+          height: .5em;
+          border: rgba(0, 0, 0, 0.1) solid 1px;
+          border-radius: 1em;
+          color: transparent;
+          vertical-align: middle;
+          margin-left: 0.2em;
+          background-color: white;
+        }
+
         &.is-finished span.status {
           background-color: @color-positive;
+        }
+        &:not(.is-finished):not(.is-aborted) span.status {
+          animation: breathing 1s linear infinite;
         }
         &.is-aborted span.status {
           background-color: @color-warning;
         }
         &.has-error span.status {
           background-color: @color-error;
-        }
-        span.status {
-          display: inline-block;
-          width: .5em;
-          height: .5em;
-          border-radius: 1em;
-          color: transparent;
-          vertical-align: middle;
-          margin-left: 0.2em;
         }
       }
     }
