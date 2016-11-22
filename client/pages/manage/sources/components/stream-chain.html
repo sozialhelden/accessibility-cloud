@@ -8,23 +8,23 @@
           {{#with progress}}
             <aside class='progress' title='{{#if runtime}}after {{humanizedRuntime}} ({{speedString}}){{/if}}'>
               {{#if ../isSkipped}}
-              skipped
+                skipped
               {{else}}
-              {{transferred}}
+                {{transferred}}
 
-              {{#if length}}
-              of {{length}}
-              {{/if}}
+                {{#if length}}
+                  of {{length}}
+                {{/if}}
 
-              {{unitName}}
+                {{unitName}}
 
-              {{#if isFinished}}
-              <span class='checkmark'>✓</span>
-              {{/if}}
+                {{#if isFinished}}
+                  <span class='checkmark'>✓</span>
+                {{/if}}
 
-              {{#if eta}}
-              ({{humanizedEta}} left)
-              {{/if}}
+                {{#if eta}}
+                  ({{humanizedEta}} left)
+                {{/if}}
               {{/if}}
             </aside>
           {{/with}}
@@ -34,8 +34,8 @@
           {{#if hasParameters}}
             <dl class='parameters'>
               {{#each keyValue parameters}}
-              <dt>{{humanize key}}</dt>
-              <dd>{{stringify value}}</dd>
+                <dt>{{humanize key}}</dt>
+                <dd>{{stringify value}}</dd>
               {{/each}}
             </dl>
           {{/if}}
