@@ -3,7 +3,7 @@
     <ul class='with-blocks source-imports'>
       {{#each sourceImports}}
         <li class='item block {{activeIfCurrentImport _id}} {{#if hasError}}has-error{{/if}} {{#if isFinished}}is-finished{{/if}} {{#if isAborted}}is-aborted{{/if}}'>
-          <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>
+          <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}} <span class='status'>•</span></a>
         </li>
       {{/each}}
     </ul>

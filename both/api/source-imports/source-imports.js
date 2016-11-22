@@ -26,7 +26,7 @@ SourceImports.helpers({
   setUnfinishedStreamsToAborted() {
     const modifier = { $set: { } };
     this.streamChain.forEach((stream, index) => {
-      if (stream.progress && !stream.progress.isFinished) {
+      if (!stream.progress || !stream.progress.isFinished) {
         modifier.$set[`streamChain.${index}.progress.isAborted`] = true;
         modifier.$set[`streamChain.${index}.progress.isFinished`] = false;
       }
@@ -36,5 +36,5 @@ SourceImports.helpers({
     if (count) {
       SourceImports.update(this._id, modifier);
     }
-  }
+  },
 });

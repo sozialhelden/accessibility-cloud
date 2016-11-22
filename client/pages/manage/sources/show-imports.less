@@ -1,21 +1,32 @@
 @import '/client/stylesheets/_util/colors.import.less';
 
 .page-content.sources_show_imports_page {
-  .sidebar .file-upload {
-    margin-bottom: 1em;
-  }
-  .sidebar .complete-notice {
-    color: @color-positive;
-    margin-bottom: 1em;
-  }
-  .sidebar ul.source-imports {
-    .item.is-aborted a {
-      color: @color-warning;
+  .sidebar {
+    .file-upload {
+      margin-bottom: 1em;
     }
-  }
-  .sidebar ul.source-imports {
-    .item.has-error a {
-      color: @color-error;
+
+    ul.source-imports {
+      > li {
+        &.is-finished span.status {
+          background-color: @color-positive;
+        }
+        &.is-aborted span.status {
+          background-color: @color-warning;
+        }
+        &.has-error span.status {
+          background-color: @color-error;
+        }
+        span.status {
+          display: inline-block;
+          width: .5em;
+          height: .5em;
+          border-radius: 1em;
+          color: transparent;
+          vertical-align: middle;
+          margin-left: 0.2em;
+        }
+      }
     }
   }
 }
