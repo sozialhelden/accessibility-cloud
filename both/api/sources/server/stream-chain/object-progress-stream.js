@@ -26,10 +26,10 @@ export function startObservingObjectProgress(stream, onProgress) {
     p.remaining = p.length ? p.length - p.transferred : 0;
     p.delta = p.transferred - lastTransferred;
     lastTransferred = p.transferred;
-    p.speed = p.delta / timeInterval;
     p.percentage = p.length ? 100 * p.transferred / p.length : 0;
-    p.eta = p.remaining / p.speed;
     p.runtime = Date.now() - p.startTimestamp;
+    p.speed = p.transferred / p.runtime;
+    p.eta = p.remaining / p.speed;
     onProgress(p);
   };
 
