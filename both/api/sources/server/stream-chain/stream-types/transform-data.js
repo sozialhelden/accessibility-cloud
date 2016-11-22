@@ -152,6 +152,8 @@ export class TransformData {
         callback(null, output);
       },
     });
+
+    this.stream.unitName = 'places';
   }
 
   static getParameterSchema() {

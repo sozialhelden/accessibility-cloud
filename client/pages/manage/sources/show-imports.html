@@ -2,7 +2,7 @@
   <div class='sidebar navigation'>
     <ul class='with-blocks source-imports'>
       {{#each sourceImports}}
-        <li class='item block {{activeIfCurrentImport _id}} {{#if hasError}}has-error{{/if}} {{#if isFinished}}is-finished{{/if}}'>
+        <li class='item block {{activeIfCurrentImport _id}} {{#if hasError}}has-error{{/if}} {{#if isFinished}}is-finished{{/if}} {{#if isAborted}}is-aborted{{/if}}'>
           <a href='{{pathFor "manage.sources.show.import" _id= source._id importId=_id}}'>{{humanReadableStartTimestamp}}</a>
         </li>
       {{/each}}
@@ -12,7 +12,6 @@
   <div class='page content block along-sidebar'>
     {{#with sourceImport}}
       <h2>Import results from {{humanReadableStartTimestamp}}</h2>
-      <p>Updated: {{placesUpdatedCount}} places</p>
       {{> sources_stream_chain}}
     {{else}}
       <h2>Last import results</h2>

@@ -17,4 +17,24 @@ SourceImports.helpers({
     const lastStream = _.last(this.streamChain);
     return lastStream && lastStream.progress && lastStream.progress.isFinished;
   },
+  isAborted() {
+    if (!this.streamChain) return false;
+    return _.any(this.streamChain, stream =>
+      stream && stream.progress && stream.progress.isAborted
+    );
+  },
+  setUnfinishedStreamsToAborted() {
+    const modifier = { $set: { } };
+    this.streamChain.forEach((stream, index) => {
+      if (stream.progress && !stream.progress.isFinished) {
+        modifier.$set[`streamChain.${index}.progress.isAborted`] = true;
+        modifier.$set[`streamChain.${index}.progress.isFinished`] = false;
+      }
+    });
+    const count = Object.keys(modifier.$set).length;
+    console.log('Setting', count, 'streams to aborted for source import', this._id, '...');
+    if (count) {
+      SourceImports.update(this._id, modifier);
+    }
+  }
 });

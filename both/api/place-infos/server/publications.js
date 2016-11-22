@@ -10,7 +10,7 @@ const options = { fields: PlaceInfos.publicFields };
 Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
   check(sourceImportId, String);
 
-  return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 1000 });
+  return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 3 });
 });
 
 console.log('Ensuring geospatial index for PlaceInfos...');

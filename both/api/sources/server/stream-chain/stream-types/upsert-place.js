@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-const { Writable } = Npm.require('zstreams');
+const { Transform } = Npm.require('zstreams');
 
 const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
   try {
@@ -25,9 +25,10 @@ export class UpsertPlace {
 
     let skippedRecordCount = 0;
 
-    this.stream = new Writable({
+    this.stream = new Transform({
       writableObjectMode: true,
-      write(placeInfo, encoding, callback) {
+      readableObjectMode: true,
+      transform(placeInfo, encoding, callback) {
         const originalId = placeInfo.properties.originalId;
 
         if (!originalId) {
@@ -44,7 +45,8 @@ export class UpsertPlace {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, placeInfo);
-        callback();
+
+        callback(null, placeInfo);
       },
     });
 
@@ -56,6 +58,8 @@ export class UpsertPlace {
         });
       }
     });
+
+    this.stream.unitName = 'places';
   }
 
   static getParameterSchema() {

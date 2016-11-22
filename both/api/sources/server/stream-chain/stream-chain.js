@@ -2,7 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
 import createProgressStream from 'progress-stream';
+import { startObservingObjectProgress } from './object-progress-stream';
 import streamLength from 'stream-length';
+import util from 'util';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
@@ -101,8 +103,10 @@ export function createStreamChain({
     if (!Object.keys(StreamTypes).includes(type)) {
       throw new Meteor.Error(422, `Stream type ${type} isn't supported.`);
     }
+
     check(parameters, Match.ObjectIncluding({}));
     check(skip, Boolean);
+
     console.log('Creating', type, 'stream...');
     const streamChainElementKey = `streamChain.${index}`;
     const debugInfoKey = `${streamChainElementKey}.debugInfo`;
@@ -150,23 +154,14 @@ export function createStreamChain({
 
     const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
 
-    // if (wrappedStream.isWritableObjectMode()) {
-    //
-    // } else {
-    //   const options = {
-    //     time: 1000,
-    //     speed: 1000,
-    //   };
-    //   const progressStream = createProgressStream(options, onProgress);
-    //   wrappedStream.pipe(progressStream);
-    // }
+    startObservingObjectProgress(wrappedStream, onProgress);
 
     wrappedStream.firstError(error => {
       console.log(`Error in ${type} stream:`, error);
     });
 
     if (skip) {
-      onProgress({ isSkipped: true });
+      SourceImports.update(sourceImportId, { $set: { isSkipped: true } });
     } else {
       // Connect to previous stream's output if existing
       previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;

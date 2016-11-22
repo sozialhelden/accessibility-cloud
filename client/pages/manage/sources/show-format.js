@@ -95,11 +95,6 @@ const helpers = {
     }
     return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
-  placesUpdatedCount() {
-    const sourceImportId = FlowRouter.getParam('importId');
-
-    return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }).count();
-  },
   examplePlaceInfos() {
     const sourceId = FlowRouter.getParam('_id');
     const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });

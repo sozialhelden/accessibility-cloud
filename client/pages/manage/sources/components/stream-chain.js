@@ -1,12 +1,16 @@
 import { Template } from 'meteor/templating';
 import { _ } from 'meteor/underscore';
+import { moment } from 'meteor/momentjs:moment';
 
 Template.sources_stream_chain.helpers({
   unitName() {
     return this.unitName || 'bytes';
   },
-  etaInSeconds() {
-    return 0.001 * (this.eta || 0);
+  humanizedEta() {
+    return moment.duration(this.eta || 0).humanize();
+  },
+  humanizedRuntime() {
+    return moment.duration(this.runtime || 0).humanize();
   },
   stringify(object) {
     const json = JSON.stringify(object, true, 4);
@@ -18,10 +22,7 @@ Template.sources_stream_chain.helpers({
     return !_.isEmpty(this.parameters);
   },
   speedString() {
-    if (this.unitName) {
-      return `${this.speed / 1000} ${this.unitName}/s`;
-    }
-    return `${this.speed / 1024} kb/s`;
+    return `${this.speed} k${this.unitName}/s`;
   },
   isInspectString(key) {
     return !!key.match(/InspectString$/);

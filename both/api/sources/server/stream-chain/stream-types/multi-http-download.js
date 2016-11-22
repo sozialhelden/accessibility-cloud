@@ -1,7 +1,7 @@
-import zstreams from 'zstreams';
 import EventStream from 'event-stream';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
+const zstreams = Npm.require('zstreams');
 
 export class MultiHTTPDownload {
   constructor({ headers, sourceUrl, onDebugInfo, bytesPerSecond }) {

@@ -1,63 +1,78 @@
 <template name="sources_stream_chain">
-  <ol class='stream-chain'>
-    {{#each streamChain}}
-      <li class='item {{#if error}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}} {{#if progress.isSkipped}}is-skipped{{/if}}'>
+  <div class="stream-chain">
+    <ol>
+      {{#each streamChain}}
+      <li class='item {{#if progress.hasError}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}} {{#if isSkipped}}is-skipped{{/if}} {{#if progress.isAborted}}is-aborted{{/if}}'>
         <div class='progress-bar' style='width: {{progress.percentage}}%'></div>
 
         {{#with progress}}
-          <aside class='progress' title='after {{runtime}}ms ({{speedString}})'>
-            {{#if isSkipped}}
-              skipped
-            {{else}}
-              {{transferred}}
+        <aside class='progress' title='{{#if runtime}}after {{humanizedRuntime}} ({{speedString}}){{/if}}'>
+          {{#if ../isSkipped}}
+          skipped
+          {{else}}
+          {{transferred}}
 
-              {{#if length}}
-              of {{length}}
-              {{/if}}
+          {{#if length}}
+          of {{length}}
+          {{/if}}
 
-              {{unitName}}
+          {{unitName}}
 
-              {{#if isFinished}}
-              <span class='checkmark'>✓</span>
-              {{/if}}
+          {{#if isFinished}}
+          <span class='checkmark'>✓</span>
+          {{/if}}
 
-              {{#if etaInSeconds}}
-              ({{etaInSeconds}}s left)
-              {{/if}}
-            {{/if}}
-          </aside>
+          {{#if eta}}
+          ({{humanizedEta}} left)
+          {{/if}}
+          {{/if}}
+        </aside>
         {{/with}}
 
-        <header class='name'>{{camelize type}}{{#if error}} — {{error.message}}{{/if}}</header>
+        <header class='name'>{{camelize type}}{{#if error}} — {{error.message}}{{/if}} {{#if progress.isAborted}}— aborted{{/if}}</header>
 
         {{#if hasParameters}}
-          <dl class='parameters'>
-            {{#each keyValue parameters}}
-              <dt>{{humanize key}}</dt>
-              <dd>{{stringify value}}</dd>
-            {{/each}}
-          </dl>
+        <dl class='parameters'>
+          {{#each keyValue parameters}}
+          <dt>{{humanize key}}</dt>
+          <dd>{{stringify value}}</dd>
+          {{/each}}
+        </dl>
         {{/if}}
 
         {{#with error}}
-          <pre class='code-block error'>{{stack}}</pre>
+        <pre class='code-block error'>{{stack}}</pre>
         {{/with}}
 
         {{#with debugInfo}}
           <dl class='debug-info'>
             {{#each keyValue this}}
-              <dt>
-                {{humanize key}}
-              </dt>
-              <dd>
-                <div class='code-block debug-info'>{{#if isInspectString key}}{{value}}{{else}}{{stringify value}}{{/if}}</div>
-              </dd>
+            <dt>
+              {{humanize key}}
+            </dt>
+            <dd>
+              <div class='code-block debug-info'>{{#if isInspectString key}}{{value}}{{else}}{{stringify value}}{{/if}}</div>
+            </dd>
             {{/each}}
           </dl>
         {{/with}}
+
+        <!-- {{#with progress}}
+          <dl class='debug-info'>
+            {{#each keyValue this}}
+            <dt>
+              {{humanize key}}
+            </dt>
+            <dd>
+              <div class='code-block debug-info'>{{#if isInspectString key}}{{value}}{{else}}{{stringify value}}{{/if}}</div>
+            </dd>
+            {{/each}}
+          </dl>
+        {{/with}} -->
       </li>
-    {{else}}
+      {{else}}
       <span class='placeholder'>No Input Stream defined</span>
-    {{/each}}
-  </ol>
+      {{/each}}
+    </ol>
+  </div>
 </template>

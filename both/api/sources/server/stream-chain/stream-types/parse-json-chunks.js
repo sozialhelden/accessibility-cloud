@@ -10,6 +10,8 @@ export class ParseJSONChunks {
         callback(null, JSON.parse(chunk));
       },
     });
+
+    this.stream.unitName = 'objects';
   }
 
   static getParameterSchema() {

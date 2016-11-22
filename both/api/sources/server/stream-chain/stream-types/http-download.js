@@ -1,6 +1,9 @@
-import zstreams from 'zstreams';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Meteor } from 'meteor/meteor';
+import { Throttle } from 'stream-throttle';
+import request from 'request';
 import { check, Match } from 'meteor/check';
-import SimpleSchema from 'meteor/aldeed:simple-schema';
+import streamLength from 'stream-length';
 
 export class HTTPDownload {
   constructor({ headers, sourceUrl, onDebugInfo, bytesPerSecond }) {
@@ -13,8 +16,13 @@ export class HTTPDownload {
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
 
-    this.stream = zstreams.request(sourceUrl, { headers: headersWithUserAgent });
+    this.request = this.stream = request(sourceUrl, { headers: headersWithUserAgent });
 
+    streamLength(this.stream)
+      .then(length => {
+        this.stream.emit('length', length);
+      })
+      .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
       console.log(req);
@@ -25,7 +33,6 @@ export class HTTPDownload {
         },
       });
     });
-
     this.stream.once('response', response => {
       onDebugInfo({
         response: {
@@ -33,8 +40,19 @@ export class HTTPDownload {
           headers: response.headers,
         },
       });
+      if (response.statusCode.toString() !== '200') {
+        this.stream.emit('error', new Meteor.Error(500, 'Response had an error.'));
+      }
     });
 
+    // Throttle stream when data processing afterwards might overload otherwise
+    if (bytesPerSecond) {
+      this.stream = this.stream.pipe(new Throttle({ rate: bytesPerSecond }));
+    }
+  }
+
+  abort() {
+    this.request.abort();
   }
 
   static getParameterSchema() {

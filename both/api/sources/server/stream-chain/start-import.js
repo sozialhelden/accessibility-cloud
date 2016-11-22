@@ -11,6 +11,25 @@ import { createStreamChain } from './stream-chain';
 
 const sourceIdsToStreamChains = {};
 
+function abortImport(sourceId) {
+  if (sourceIdsToStreamChains[sourceId]) {
+    sourceIdsToStreamChains[sourceId][0].stream.abortChain();
+    sourceIdsToStreamChains[sourceId].forEach(streamObserver => {
+      const stream = streamObserver.stream;
+      if (typeof streamObserver.abort === 'function') {
+        streamObserver.abort();
+      }
+      if (typeof stream.abort === 'function') {
+        stream.abort();
+      }
+      stream.abortStream();
+      stream.emit('abort');
+      // stream.emit('error', new Error('Stream aborted'));
+    });
+    delete sourceIdsToStreamChains[sourceId];
+    console.log('Aborted streams for source', sourceId);
+  }
+}
 
 export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream }) {
   console.log('Requested import for source', sourceId, '…');
@@ -33,6 +52,7 @@ export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream 
   });
   console.log('Creating stream chain for source import', sourceImportId, '…');
   try {
+    abortImport(sourceId);
     const streamChain = createStreamChain({
       sourceImportId,
       sourceId,

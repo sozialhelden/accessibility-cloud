@@ -1,8 +1,6 @@
-import Transform from 'zstreams';
+const { Transform } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ObjectProgressStream } from '../object-progress-stream';
-
 
 function compileMappingFunction(javascript) {
   try {

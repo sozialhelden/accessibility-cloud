@@ -7,6 +7,7 @@ export class Split {
     check(regExpString, Match.Optional(String));
     const matcher = string || (regExpString ? new RegExp(regExpString) : undefined) || /\r?\n/;
     this.stream = new SplitStream(matcher);
+    this.stream.unitName = 'strings';
   }
 
   static getParameterSchema() {
@@ -21,7 +22,7 @@ export class Split {
         description: 'Regexp that should be used to split the incoming byte stream into string objects.', // eslint-disable-line
         defaultValue: /\r?\n/,
         optional: true,
-      }
+      },
     };
   }
 }
