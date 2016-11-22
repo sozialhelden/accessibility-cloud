@@ -1,10 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
-import createProgressStream from 'progress-stream';
 import { startObservingObjectProgress } from './object-progress-stream';
-import streamLength from 'stream-length';
-import util from 'util';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
 
@@ -18,6 +15,9 @@ import { ParseJSONChunks } from './stream-types/parse-json-chunks';
 import { ParseCSVStreamTest } from './stream-types/parse-csv-stream-test';
 import { ParseCSVStream } from './stream-types/parse-csv-stream';
 import { Split } from './stream-types/split';
+import { Skip } from './stream-types/skip';
+import { Limit } from './stream-types/limit';
+import { ArrayReadable } from './stream-types/array-readable';
 import { TransformData } from './stream-types/transform-data';
 import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
@@ -40,6 +40,9 @@ const StreamTypes = {
   TransformData,
   UpsertPlace,
   SimplifyJaccedeFormat,
+  Skip,
+  Limit,
+  ArrayReadable,
 };
 
 function cleanStackTrace(stackTrace) {
