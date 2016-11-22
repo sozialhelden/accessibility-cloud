@@ -18,122 +18,132 @@ function updateCategories() {
 }
 
 function compileMapping(fieldName, javascript) {
-  try {
-    // eslint-disable-next-line no-unused-vars
-    const helpers = {
-      OSM: {
-        fetchNameFromTags(tags) {
-          if (tags == null) {
-            return '?';
-          }
+  // eslint-disable-next-line no-unused-vars
+  const helpers = {
+    OSM: {
+      fetchNameFromTags(tags) {
+        if (tags == null) {
+          return '?';
+        }
 
-          return tags.name || 'object';
-        },
-        fetchCategoryFromTags(tags) {
-          if (tags === undefined) {
-            return 'empty';
-          }
-
-          const matchingTag = _.find(Object.keys(tags), (tag) => {
-            const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
-            return categoryIdForSynonyms[categoryId];
-          });
-
-          if (matchingTag) {
-            const categoryId = `${matchingTag}=${tags[matchingTag]}`
-              .toLowerCase()
-              .replace(' ', '_');
-            return categoryIdForSynonyms[categoryId];
-          }
-          return 'undefined';
-        },
+        return tags.name || 'object';
       },
-      AXSMaps: {
-        estimateRatingFor(obj, voteCount) {
-          const maxVotes = _.max([
-            obj.spacious,
-            obj.ramp,
-            obj.parking,
-            obj.quiet,
-            obj.secondentrance,
-          ]);
+      fetchCategoryFromTags(tags) {
+        if (tags === undefined) {
+          return 'empty';
+        }
 
-          if (maxVotes === 0) {
-            return undefined;
-          }
+        const matchingTag = _.find(Object.keys(tags), (tag) => {
+          const categoryId = `${tag}=${tags[tag]}`.toLowerCase().replace(' ', '_');
+          return categoryIdForSynonyms[categoryId];
+        });
 
-          return voteCount / maxVotes;
-        },
-        estimateFlagFor(obj, voteCount) {
-          const maxVotes = _.max([
-            obj.spacious,
-            obj.ramp,
-            obj.parking,
-            obj.quiet,
-            obj.secondentrance,
-          ]);
-
-          if (maxVotes === 0) {
-            return undefined;
-          }
-
-          return voteCount / maxVotes > 0.5;
-        },
-        getCategoryFromList(categories) {
-          if (!categories) {
-            return 'undefined';
-          }
-
-          for (let i = 0; i < categories.length; ++i) {
-            const c = categoryIdForSynonyms[categories[i]];
-            if (c) {
-              return c;
-            }
-          }
-          return 'undefined';
-        },
-        guessGeoPoint(lngLat) {
-          if (!lngLat) {
-            return null;
-          }
-          let coordinates = lngLat;
-          if (lngLat[1] < -20 || lngLat[1] > 60) {
-            coordinates = [lngLat[1], lngLat[0]];
-          }
-          return { coordinates, type: 'Point' };
-        },
+        if (matchingTag) {
+          const categoryId = `${matchingTag}=${tags[matchingTag]}`
+            .toLowerCase()
+            .replace(' ', '_');
+          return categoryIdForSynonyms[categoryId];
+        }
+        return 'undefined';
       },
-    };
+    },
+    AXSMaps: {
+      estimateRatingFor(obj, voteCount) {
+        const maxVotes = _.max([
+          obj.spacious,
+          obj.ramp,
+          obj.parking,
+          obj.quiet,
+          obj.secondentrance,
+        ]);
 
-    // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
-    // eslint-disable-next-line no-eval
-    return eval(`(d) => (${javascript})`);
-  } catch (error) {
-    console.error(`Illegal script for ${fieldName}:\n${error}`);
-    return () => {};
-  }
+        if (maxVotes === 0) {
+          return undefined;
+        }
+
+        return voteCount / maxVotes;
+      },
+      estimateFlagFor(obj, voteCount) {
+        const maxVotes = _.max([
+          obj.spacious,
+          obj.ramp,
+          obj.parking,
+          obj.quiet,
+          obj.secondentrance,
+        ]);
+
+        if (maxVotes === 0) {
+          return undefined;
+        }
+
+        return voteCount / maxVotes > 0.5;
+      },
+      getCategoryFromList(categories) {
+        if (!categories) {
+          return 'undefined';
+        }
+
+        for (let i = 0; i < categories.length; ++i) {
+          const c = categoryIdForSynonyms[categories[i]];
+          if (c) {
+            return c;
+          }
+        }
+        return 'undefined';
+      },
+      guessGeoPoint(lngLat) {
+        if (!lngLat) {
+          return null;
+        }
+        let coordinates = lngLat;
+        if (lngLat[1] < -20 || lngLat[1] > 60) {
+          coordinates = [lngLat[1], lngLat[0]];
+        }
+        return { coordinates, type: 'Point' };
+      },
+    },
+  };
+
+  // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
+  // eslint-disable-next-line no-eval
+  return eval(`(d) => (${javascript})`);
 }
 
 function compileMappings(mappings) {
   const result = {};
   for (const [fieldName, javascript] of entries(mappings)) {
-    result[fieldName] = compileMapping(fieldName, javascript);
+    try {
+      result[fieldName] = compileMapping(fieldName, javascript);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        error.message = `${error.message} (in field '${fieldName}')`;
+      }
+      throw error;
+    }
   }
   return result;
 }
 
 export class TransformData {
-  constructor({ mappings }) {
+  constructor({ mappings, onDebugInfo }) {
     check(mappings, Object);
 
-    const compiledMappings = compileMappings(mappings);
-
     updateCategories();
+
+    let compiledMappings;
 
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
       transform(chunk, encoding, callback) {
+        try {
+          compiledMappings = compiledMappings || compileMappings(mappings);
+        } catch (error) {
+          this.emit('error', error);
+          callback(error);
+          return;
+        }
+
         const output = {};
 
         for (const [fieldName, fn] of entries(compiledMappings)) {
