@@ -15,6 +15,16 @@ ol.stream-chain {
       .type-bold;
     }
 
+    &.is-skipped {
+      background-color: mix(@color-warning, @color-grey085, 5%);
+      .name, aside.progress, .code-block.warning {
+        color: @color-warning;
+      }
+      .name {
+        text-decoration: line-through;
+      }
+    }
+
     &.has-error {
       background-color: mix(@color-error, @color-grey085, 5%);
       .name, aside.progress, .code-block.error {

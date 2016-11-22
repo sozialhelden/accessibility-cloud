@@ -1,25 +1,29 @@
 <template name="sources_stream_chain">
   <ol class='stream-chain'>
     {{#each streamChain}}
-      <li class='item {{#if error}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}}'>
+      <li class='item {{#if error}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}} {{#if progress.isSkipped}}is-skipped{{/if}}'>
         <div class='progress-bar' style='width: {{progress.percentage}}%'></div>
 
         {{#with progress}}
           <aside class='progress' title='after {{runtime}}ms ({{speedString}})'>
-            {{transferred}}
+            {{#if isSkipped}}
+              skipped
+            {{else}}
+              {{transferred}}
 
-            {{#if length}}
-            of {{length}}
-            {{/if}}
+              {{#if length}}
+              of {{length}}
+              {{/if}}
 
-            {{unitName}}
+              {{unitName}}
 
-            {{#if isFinished}}
+              {{#if isFinished}}
               <span class='checkmark'>✓</span>
-            {{/if}}
+              {{/if}}
 
-            {{#if etaInSeconds}}
+              {{#if etaInSeconds}}
               ({{etaInSeconds}}s left)
+              {{/if}}
             {{/if}}
           </aside>
         {{/with}}
@@ -38,9 +42,18 @@
         {{#with error}}
           <pre class='code-block error'>{{stack}}</pre>
         {{/with}}
-        
+
         {{#with debugInfo}}
-          <div class='code-block debug-info'>{{stringify this}}</div>
+          <dl class='debug-info'>
+            {{#each keyValue this}}
+              <dt>
+                {{humanize key}}
+              </dt>
+              <dd>
+                <div class='code-block debug-info'>{{#if isInspectString key}}{{value}}{{else}}{{stringify value}}{{/if}}</div>
+              </dd>
+            {{/each}}
+          </dl>
         {{/with}}
       </li>
     {{else}}

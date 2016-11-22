@@ -32,13 +32,21 @@ export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream 
     numberOfPlacesUnchanged: 0,
   });
   console.log('Creating stream chain for source import', sourceImportId, '…');
-  const streamChain = createStreamChain({
-    sourceImportId,
-    sourceId,
-    inputStreamToReplaceFirstStream,
-    streamChainConfig: source.streamChain,
-  });
-  sourceIdsToStreamChains[sourceId] = streamChain;
+  try {
+    const streamChain = createStreamChain({
+      sourceImportId,
+      sourceId,
+      inputStreamToReplaceFirstStream,
+      streamChainConfig: source.streamChain,
+    });
+    sourceIdsToStreamChains[sourceId] = streamChain;
+  } catch (e) {
+    if (e instanceof Meteor.Error) {
+      throw e;
+    }
+    console.log('Error while setting up stream chain:', e, e.stack);
+    throw Meteor.Error(500, 'Could not create stream chain.');
+  }
   return sourceImportId;
 }
 

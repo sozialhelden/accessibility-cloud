@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import Stream from 'stream';
 import createProgressStream from 'progress-stream';
 import streamLength from 'stream-length';
@@ -91,9 +91,18 @@ export function createStreamChain({
 
   let previousStream = null;
 
-  const result = streamChainConfig.map(({ type, parameters }, index) => {
-    check(type, String);
-    check(parameters, Object);
+  const result = streamChainConfig.map(({ type, parameters = {}, skip = false }, index) => {
+    if (!type) {
+      throw new Meteor.Error(422, `Stream chain element at index ${index} must have a type.`);
+    }
+    if (type instanceof String) {
+      throw new Meteor.Error(422, `Stream chain element type at index ${index} must be a String.`);
+    }
+    if (!Object.keys(StreamTypes).includes(type)) {
+      throw new Meteor.Error(422, `Stream type ${type} isn't supported.`);
+    }
+    check(parameters, Match.ObjectIncluding({}));
+    check(skip, Boolean);
     console.log('Creating', type, 'stream...');
     const streamChainElementKey = `streamChain.${index}`;
     const debugInfoKey = `${streamChainElementKey}.debugInfo`;
@@ -156,9 +165,12 @@ export function createStreamChain({
       console.log(`Error in ${type} stream:`, error);
     });
 
-    // wrappedStream vsCounterBump
-    // Connect to previous stream's output if existing
-    previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;
+    if (skip) {
+      onProgress({ isSkipped: true });
+    } else {
+      // Connect to previous stream's output if existing
+      previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;
+    }
 
     return runningStreamObserver;
   });

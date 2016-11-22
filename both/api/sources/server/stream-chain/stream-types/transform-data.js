@@ -123,13 +123,10 @@ function compileMappings(mappings) {
 }
 
 export class TransformData {
-  constructor({ mappings, shouldWriteOriginalProperties, onDebugInfo }) {
+  constructor({ mappings }) {
     check(mappings, Object);
 
     const compiledMappings = compileMappings(mappings);
-
-    let firstInputObject = null;
-    let firstOutputObject = null;
 
     updateCategories();
 
@@ -137,11 +134,6 @@ export class TransformData {
       writableObjectMode: true,
       readableObjectMode: true,
       transform(chunk, encoding, callback) {
-        if (!firstInputObject) {
-          firstInputObject = chunk;
-          onDebugInfo({ firstInputObject: JSON.stringify(firstInputObject) });
-        }
-
         const output = {};
 
         for (const [fieldName, fn] of entries(compiledMappings)) {
@@ -155,15 +147,6 @@ export class TransformData {
           } else {
             output[fieldName] = value;
           }
-        }
-
-        if (!firstOutputObject) {
-          firstOutputObject = output;
-          onDebugInfo({ firstOutputObject: JSON.stringify(firstOutputObject) });
-        }
-
-        if (shouldWriteOriginalProperties) {
-          output.originalProperties = JSON.stringify(chunk, true, 4);
         }
 
         callback(null, output);

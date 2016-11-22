@@ -6,7 +6,6 @@ const { Writable } = Npm.require('zstreams');
 
 const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
   try {
-    console.log('Upserting', ...args);
     PlaceInfos.upsert(...args);
   } catch (error) {
     if (onDebugInfo) {
@@ -33,7 +32,9 @@ export class UpsertPlace {
 
         if (!originalId) {
           skippedRecordCount++;
-          callback(null, placeInfo);
+          onDebugInfo({ placeInfoWithoutOriginalId: placeInfo });
+          callback(new Meteor.Error(422, 'No originalId given in PlaceInfo'));
+          return;
         }
 
         check(originalId, String);
@@ -43,7 +44,7 @@ export class UpsertPlace {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, placeInfo);
-        callback(null, placeInfo);
+        callback();
       },
     });
 

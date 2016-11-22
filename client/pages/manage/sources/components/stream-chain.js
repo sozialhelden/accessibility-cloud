@@ -23,4 +23,7 @@ Template.sources_stream_chain.helpers({
     }
     return `${this.speed / 1024} kb/s`;
   },
+  isInspectString(key) {
+    return !!key.match(/InspectString$/);
+  },
 });
