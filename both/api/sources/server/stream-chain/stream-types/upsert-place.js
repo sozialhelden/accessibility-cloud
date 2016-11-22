@@ -4,9 +4,11 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 const { Transform } = Npm.require('zstreams');
 
-const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
+const upsert = Meteor.bindEnvironment((onDebugInfo, selector, placeInfo, callback) => {
   try {
-    PlaceInfos.upsert(...args);
+    PlaceInfos.upsert(selector, placeInfo, () => {
+      callback(null, placeInfo);
+    });
   } catch (error) {
     if (onDebugInfo) {
       onDebugInfo({
@@ -14,11 +16,14 @@ const upsert = Meteor.bindEnvironment((onDebugInfo, ...args) => {
         stack: error.stack,
       });
     }
+    if (callback) {
+      callback(error);
+    }
   }
 });
 
 export class UpsertPlace {
-  constructor({ sourceId, sourceImportId, onDebugInfo }) {
+  constructor({ sourceId, ignoreSkippedPlaces, sourceImportId, onDebugInfo }) {
     check(sourceId, String);
     check(sourceImportId, String);
     check(onDebugInfo, Function);
@@ -34,7 +39,11 @@ export class UpsertPlace {
         if (!originalId) {
           skippedRecordCount++;
           onDebugInfo({ placeInfoWithoutOriginalId: placeInfo });
-          callback(new Meteor.Error(422, 'No originalId given in PlaceInfo'));
+          if (ignoreSkippedPlaces) {
+            callback(null, null);
+          } else {
+            callback(new Error('No originalId given in PlaceInfo'));
+          }
           return;
         }
 
