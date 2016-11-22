@@ -24,7 +24,7 @@
         }
     },
     {
-        "type": "TransformJaccedeFormat",
+        "type": "SimplifyJaccedeFormat",
         "parameters": {}
     },
     {

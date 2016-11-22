@@ -45,10 +45,11 @@ function convertPlaceDetails(data) {
   return obj;
 }
 
-export class TransformJaccedeFormat {
+export class SimplifyJaccedeFormat {
   constructor({ onDebugInfo }) {
 
     check(onDebugInfo, Function);
+
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
@@ -56,6 +57,10 @@ export class TransformJaccedeFormat {
         const output = convertPlaceDetails(input);
         callback(null, output);
       },
+    });
+    
+    this.stream.on('pipe', source => {
+      source.on('length', length => this.stream.emit('length', length));
     });
   }
 

@@ -21,7 +21,7 @@ import { Split } from './stream-types/split';
 import { TransformData } from './stream-types/transform-data';
 import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
-import { TransformJaccedeFormat } from './stream-types/transform-jaccede-format';
+import { SimplifyJaccedeFormat } from './stream-types/simplify-jaccede-format';
 
 const zstreams = Npm.require('zstreams');
 
@@ -39,7 +39,7 @@ const StreamTypes = {
   Split,
   TransformData,
   UpsertPlace,
-  TransformJaccedeFormat,
+  SimplifyJaccedeFormat,
 };
 
 function cleanStackTrace(stackTrace) {
