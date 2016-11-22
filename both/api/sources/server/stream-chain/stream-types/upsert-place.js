@@ -54,7 +54,7 @@ export class UpsertPlace {
       if (skippedRecordCount) {
         onDebugInfo({
           skippedRecordWarning:
-            `Skipped ${skippedRecordCount} PlaceInfo records.`,
+            `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId.`,
         });
       }
     });
