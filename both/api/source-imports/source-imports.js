@@ -14,8 +14,8 @@ SourceImports.helpers({
   },
   isFinished() {
     if (!this.streamChain) return false;
-    const lastStream = _.last(this.streamChain);
-    return lastStream && lastStream.progress && lastStream.progress.isFinished;
+    return _.all(this.streamChain, stream =>
+      stream && stream.progress && stream.progress.isFinished);
   },
   isAborted() {
     if (!this.streamChain) return false;
