@@ -44,9 +44,9 @@ export class UpsertPlace {
         upsert(onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, placeInfo);
+        }, placeInfo, callback);
 
-        callback(null, placeInfo);
+        // callback(null, placeInfo);
       },
     });
 
