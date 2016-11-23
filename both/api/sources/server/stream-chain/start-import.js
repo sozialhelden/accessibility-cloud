@@ -76,4 +76,12 @@ Meteor.methods({
     this.unblock();
     Fiber(() => startImport({ sourceId, userId: this.userId })).run();
   },
+  'sources.abortImport'(sourceId) {
+    this.unblock();
+    check(this.userId, String);
+    check(sourceId, String);
+    if (checkExistenceAndFullAccessToSourceId(this.userId, sourceId)) {
+      abortImport(sourceId);
+    }
+  },
 });

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { _ } from 'meteor/underscore';
 import { moment } from 'meteor/momentjs:moment';
@@ -29,5 +30,17 @@ Template.sources_stream_chain.helpers({
   },
   additionalTemplate() {
     return `sources_stream_chain_${this.type}`;
+  },
+});
+
+Template.sources_stream_chain.events({
+  'click .btn.js-abort-import'(event) {
+    event.preventDefault();
+    Meteor.call('sources.abortImport', this.sourceId, (err) => {
+      if (err) {
+        console.log(err);
+        alert(err);
+      }
+    });
   },
 });

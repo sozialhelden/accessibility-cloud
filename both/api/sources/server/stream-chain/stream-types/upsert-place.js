@@ -50,6 +50,7 @@ export class UpsertPlace {
         check(originalId, String);
 
         Object.assign(placeInfo.properties, { sourceId, sourceImportId });
+
         upsert(onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,

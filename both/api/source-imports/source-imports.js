@@ -17,6 +17,11 @@ SourceImports.helpers({
     return _.all(this.streamChain, stream =>
       stream && stream.progress && stream.progress.isFinished);
   },
+  isRunning() {
+    if (!this.streamChain) return false;
+    return _.any(this.streamChain, stream =>
+      !stream || !stream.progress || !(stream.progress.isFinished || stream.progress.isAborted));
+  },
   isAborted() {
     if (!this.streamChain) return false;
     return _.any(this.streamChain, stream =>

@@ -44,10 +44,9 @@
 
         {{#if lastSourceImport}}
           {{#with lastSourceImport}}
-            <h2>{{_"Latest Import"}}</h2>
-            <p>{{humanReadableStartTimestamp}}</p>
             {{> sources_stream_chain}}
           {{else}}
+            <h2>{{_"Latest Import"}}</h2>
             <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
           {{/with}}
 
