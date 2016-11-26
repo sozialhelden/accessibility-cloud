@@ -1,4 +1,4 @@
-# Converting source-data into the accessibility.cloud format
+# How to import data
 
 This document should give you a general idea how to import data into the accessibility.cloud format.
 
@@ -6,11 +6,11 @@ If you know how to import data already and just need a reference of the whole ex
 
 ## Getting started
 
-Data sources are currently defined using JSON (we plan to have a UI for this soon).
+Nobody should have to change their data format to import it as accessibility.cloud source, so to make the import flow as flexible and efficient as possible, we separate the process into small, customizable processing units that are linked together in a data stream.
 
-Nobody should have to change their data-providing API to connect it to accessibility.cloud, so to make importing data as flexible and efficient as possible, we separate the process into small processing units that are linked together in a data stream. Each unit's functionality is customizable using a set of parameters.
+Here is an exemplary import flow definition to download and process GeoJSON data from a web API. Currently you have to write import processes in JSON, but we plan to have a UI for this soon.
 
-Here is an exemplary import process definition to download and process GeoJSON data from a web API. You can start by copy & pasting this definition into the text area in the 'Format' tab of your source and click the 'Start an import' button to download and process the data. Each object in the array corresponds to one stream processing unit (see below for an explanation what that means):
+You can start by copy & pasting this definition into the text area in the 'Format' tab of your source and click the 'Start an import' button to download and process the data. Each object in the array corresponds to one stream processing unit (see below for an explanation what that means):
 
 ```javascript
 [
@@ -59,12 +59,12 @@ Here is an exemplary import process definition to download and process GeoJSON d
 
 ## Stream processing units
 
-Stream processing units can transform chunks of binary data or JavaScript objects into new chunks of binary data or JavaScript objects.
+Stream processing units have inputs and outputs. They transform chunks of binary data or JavaScript objects into new chunks of binary data or JavaScript objects.
 
-Each unit JSON object has the following properties:
+Each unit's JSON object definition has the following properties:
 
 - `type`: Type of the stream unit, as String, for instance `"DebugLog"` (all unit types are explained below).
-- `comment` (optional): Shown in the stream unit import results. This is useful for explaining others how your stream chain works. Shown in the results on import.
+- `comment` (optional): Shown in the import results. This is useful for explaining others how your stream chain works. Shown in the results on import.
 - `parameters` (optional): Allows to supply parameters to the unit that specify how it is supposed to work.
 
 Currently, we support the following stream processing units:
