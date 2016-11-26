@@ -6,7 +6,7 @@ import { check, Match } from 'meteor/check';
 const { Transform } = Npm.require('zstreams');
 
 export class MultiHTTPDownload {
-  constructor({ headers, maximalErrorRatio = 0.25, allowedStatusCodes = [200], sourceUrl, onDebugInfo, bytesPerSecond, gzip = true}) {
+  constructor({ headers, maximalErrorRatio = 0.25, allowedStatusCodes = [200], sourceUrl, onDebugInfo, bytesPerSecond, gzip = true, maximalConcurrency = 3}) {
     check(sourceUrl, String);
 
     check(onDebugInfo, Function);
@@ -14,6 +14,7 @@ export class MultiHTTPDownload {
     check(headers, Match.Optional(Match.ObjectIncluding({})));
     check(allowedStatusCodes, [Number]);
     check(maximalErrorRatio, Number);
+    check(maximalConcurrency, Number);
 
     const headersWithUserAgent = Object.assign({
       'User-Agent': 'accessibility.cloud Bot/1.0',
@@ -27,7 +28,7 @@ export class MultiHTTPDownload {
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
-      highWaterMark: 3,
+      highWaterMark: Math.max(0, Math.min(maximalConcurrency, 10)),
       transform(chunk, encoding, callback) {
         const options = {
           gzip,
