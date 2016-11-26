@@ -10,28 +10,32 @@ Data sources are currently defined using JSON (we plan to have a UI for this soo
 
 Nobody should have to change their data-providing API to connect it to accessibility.cloud, so to make importing data as flexible and efficient as possible, we separate the process into small processing units that are linked together in a data stream. Each unit's functionality is customizable using a set of parameters.
 
-Here is an exemplary import process definition to download and process GeoJSON data from a web API. You can start by copy & pasting this definition into the text area in the 'Format' tab of your source and click the 'Start an import' button to download and process the data.
+Here is an exemplary import process definition to download and process GeoJSON data from a web API. You can start by copy & pasting this definition into the text area in the 'Format' tab of your source and click the 'Start an import' button to download and process the data. Each object in the array corresponds to one stream processing unit (see below for an explanation what that means):
 
 ```javascript
 [
     {
         "type": "HTTPDownload",
+        "comment": "Downloads public toilet data from Vienna's open data website as JSON.",
         "parameters": {
             "sourceUrl": "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json"
         }
     },
     {
         "type": "ParseJSONStream",
+        "comment": "Extract all GeoJSON features from the JSON.",
         "parameters": {
             "path": "features.*",
             "lengthPath": "totalFeatures"
         }
     },
     {
-        "type": "DebugLog"
+        "type": "DebugLog",
+        "comment": "Output the extracted data for inspecting."
     },
     {
         "type": "TransformData",
+        "comment": "Transform the data into accessibility.cloud format.",
         "parameters": {
             "mappings": {
                 "properties-originalId": "d.id",
@@ -48,46 +52,108 @@ Here is an exemplary import process definition to download and process GeoJSON d
     },
     {
         "type": "UpsertPlace",
-        "parameters": {}
+        "comment": "Save each transformed data record in the database."
     }
 ]
 ```
 
 ## Stream processing units
 
+Stream processing units can transform chunks of binary data or JavaScript objects into new chunks of binary data or JavaScript objects.
+
+Each unit JSON object has the following properties:
+
+- `type`: Type of the stream unit, as String, for instance `"DebugLog"` (all unit types are explained below).
+- `comment` (optional): Shown in the stream unit import results. This is useful for explaining others how your stream chain works. Shown in the results on import.
+- `parameters` (optional): Allows to supply parameters to the unit that specify how it is supposed to work.
+
+### Implemented stream processing units
+
 Currently, we support the following stream processing units:
 
-### `HTTPDownload`
-Downloads any data from an URL.
+#### `ConvertArrayToStream`
 
-### `DebugLog`
-Displays data read from input in the stream chain debugging UI.
+Reads Array objects on the input, takes their elements and outputs them as single objects.
 
-### `ConvertToUTF8`
+#### `ConvertToUTF8`
+
 Converts downloaded data into UTF8 (the format of the database). [Input formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
 
-### `Split`
-Splits the incoming string into chunks that can be processed as objects, using a given delimiter.
+#### `DebugLog`
 
-### `ParseJSONStream`
-Reads one single JSON string as a stream, scraping all JSON objects or values matching a given `path` parameter and returning them as JavaScript objects. The path is given in [JSONPath format](http://goessner.net/articles/JsonPath/). To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
+Displays the first and the last chunk read from input in the UI.
 
-### `ParseJSONChunks`
-Reads multiple JSON strings (each representing one JSON object) and converts the incoming text buffers into JavaScript objects. This can be useful for the common case that the input data consists of multiple JSON objects delimited by newlines (or other characters).
+#### `HTTPDownload`
 
-### `ParseCSVStream`
+Starts a single HTTP GET request to downloads data from a given URL.
+
+##### Parameters
+
+- `sourceUrl`: URL that should be used. Should start with `http` or `https`.
+- `gzip`: Boolean to switch gzip/deflate support on or off. `true` by default. 
+- `header`: Additional headers for the request, as object.
+
+#### `Limit`
+
+Reads chunks and outputs them without changing them. Stops output after given number of chunks.
+
+##### Parameters
+
+- `limit`: Maximal number of output chunks (Default: `3`)
+
+#### `MultiHTTPDownload`
+
+Starts parallel HTTP GET requests for each input chunk. The URL is generated from the input data.
+
+##### Parameters
+
+- `sourceUrl`: URL from which the data should be downloaded. Should start with `http` or `https`. If you insert the string `{{inputData}}` into the URL, it is replaced with the chunk that is read from the input.
+- `maximalErrorRatio`: If you make many requests to an API, it can be a normal case that some of them fail without making the whole result invalid, for example if the source's underlying database contains invalid records. Use this parameter to specify how many percent of the currently obtained responses can have an error before the whole stream's result is regarded as erroneous. When the threshold is reached, the stream stops processing any further input. Note that if the ratio is less than 1.0 and the first response contains an error, the stream fails. Default is `0.25` (= 25%).
+- `gzip`: Boolean to switch gzip/deflate support on or off. `true` by default. 
+- `header`: Additional headers for the request, as object.
+- `allowedStatusCodes`: Array of [HTTP status code numbers](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) that are regarded as successful. Default is `[200]`.
+- `maximalConcurrency`: Specifies how many requests can be made to the server at the same time. When the maximum is reached, the stream pauses reading from the previous stream unit. Default is `3`.
+
+#### `ParseCSVStream`
+
 Parses a CSV stream and outputs JSON strings for each line, optionally reading the header and using it for the property names. We use the [FastCSV](https://www.npmjs.com/package/fast-csv) module for this. Note that you currently have to use ParseJSONChunks after this module to convert the JSON strings into actual JavaScript objects before further processing.
 
-#### Parameters
-`"objectMode" = true`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer.
-`"headers" = false`: Set to true if you expect the first line of your CSV to contain headers, alternatly you can specify an array of headers to use. You can also specify a sparse array to omit some of the columns.
-`"ignoreEmpty" = false`: If you wish to ignore empty rows.
-`"delimiter" = ","`: If your data uses an alternate delimiter such as ; or \t.
+##### Parameters
 
-### `TransformData`
+`objectMode`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer (Default: `true`)
+`headers`: Set to true if you expect the first line of your CSV to contain headers, alternatly you can specify an array of headers to use. You can also specify a sparse array to omit some of the columns. (Default: `false`)
+`ignoreEmpty`: If you wish to ignore empty rows (Default: `false`)
+`delimiter`: If your data uses an alternate delimiter such as `";"` or `"\t"`. (Default: `","`)
+
+#### `ParseJSONChunks`
+
+Reads each incoming chunk as JSON string and converts it to a JavaScript objects. This can be useful for the common case that the input data consists of multiple JSON strings delimited by newlines (or other characters).
+
+#### `ParseJSONStream`
+
+Reads one single JSON string as a stream, scraping all JSON objects or values matching a given `path` parameter and returning them as JavaScript objects.
+
+##### Parameters
+
+`path`: Path of the resulting objects given in [JSONPath format](http://goessner.net/articles/JsonPath/), for instance `features.*.properties`. To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
+
+#### `Skip`
+
+Skips a given number of input chunks, then outputs the rest without changes.
+
+##### Parameters
+
+`skip`: Number of chunks to skip (Default: `0`)
+
+#### `Split`
+
+Splits the incoming string into chunks that can be processed as objects, using a given delimiter.
+
+#### `TransformData`
+
 Transforms given JSON objects into the [accessibility.cloud format](./exchange-format.md) using mappings and JavaScript.
 
-#### Defining mappings
+##### Defining mappings
 
 You can use JavaScript functions to convert from your original data into the final format. Note that each POI you import should at least have these properties:
 - `geometry` — so your POIs can be found in location-based search queries to accessibility.cloud. This property follows the [GeoJSON](http://geojson.org/geojson-spec.html) standard specification. It's best to supply a `Point` here, but other geometry types are supported as well. If your API just has longitude and latitude, you have to convert this data into a GeoJSON point structure (see below for an example)
@@ -108,10 +174,19 @@ Here is an example:
     "properties-originalId": "''+row.id",
     "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
     "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
+  }
 }
 ```
 
-### `UpsertPlace`
+#### `TransformScript`
+
+Transforms each input chunk or object into something else, using a JavaScript expression.
+
+##### Parameters
+
+`javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES6. `d` is predefined as the input data. The expression is evaluated and its result is written as new chunk/object to the output.
+
+#### `UpsertPlace`
 
 Inserts an object into the database as place. The place will be associated with the source you have created in the accessibility.cloud web UI and will be available over the API users as soon as
 
@@ -119,6 +194,8 @@ Inserts an object into the database as place. The place will be associated with 
 - your data source is not in draft state anymore (see the source's 'Settings' tab in the web UI)
 - the app token that is used to query the API belongs to an app by an organization that is allowed to read your source's data (you can either allow everyone or specific organizations to use your data source in the 'Settings' tab).
 
+
+This is usually the last unit in the stream chain.
 
 
 ## Helper functions
@@ -135,4 +212,3 @@ Converting complex data is—you guessed right—complex :) That's why we includ
 ```
 "data.accessibility.withWheelchair": "_.includes(row.tags['wheelchair'], 'yes','may','toms said so')"
 ```
-
