@@ -6,7 +6,7 @@ If you know how to import data already and just need a reference of the whole ex
 
 ## Getting started
 
-Nobody should have to change their data format to import it as accessibility.cloud source, so to make the import flow as flexible and efficient as possible, we separate the process into small, customizable processing units that are linked together in a data stream.
+Nobody should have to change their data format to import it as accessibility.cloud source, so to make the import flow as flexible and efficient as possible, we separate the process into small, customizable processing units that are linked together in a data flow.
 
 Here is an exemplary import flow definition to download and process GeoJSON data from a web API. Currently you have to write import processes in JSON, but we plan to have a UI for this soon.
 
