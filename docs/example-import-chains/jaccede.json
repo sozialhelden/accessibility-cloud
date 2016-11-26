@@ -26,7 +26,7 @@
         "type": "DebugLog"
     },
     {
-        "type": "ArrayReadable",
+        "type": "ConvertArrayToStream",
         "comment": "Convert page index array to streamed single index values."
     },
     {

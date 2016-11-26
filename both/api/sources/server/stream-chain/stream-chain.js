@@ -17,7 +17,7 @@ import { ParseCSVStream } from './stream-types/parse-csv-stream';
 import { Split } from './stream-types/split';
 import { Skip } from './stream-types/skip';
 import { Limit } from './stream-types/limit';
-import { ArrayReadable } from './stream-types/array-readable';
+import { ConvertArrayToStream } from './stream-types/convert-array-to-stream';
 import { TransformData } from './stream-types/transform-data';
 import { TransformScript } from './stream-types/transform-script';
 import { UpsertPlace } from './stream-types/upsert-place';
@@ -42,7 +42,7 @@ const StreamTypes = {
   SimplifyJaccedeFormat,
   Skip,
   Limit,
-  ArrayReadable,
+  ConvertArrayToStream,
 };
 
 function cleanStackTrace(stackTrace) {

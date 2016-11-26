@@ -1,6 +1,6 @@
 const { Transform } = Npm.require('zstreams');
 
-export class ArrayReadable {
+export class ConvertArrayToStream {
   constructor() {
     this.stream = new Transform({
       writableObjectMode: true,
