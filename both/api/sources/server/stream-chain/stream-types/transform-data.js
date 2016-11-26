@@ -125,7 +125,7 @@ function compileMappings(mappings) {
 }
 
 export class TransformData {
-  constructor({ mappings, onDebugInfo }) {
+  constructor({ mappings }) {
     check(mappings, Object);
 
     updateCategories();
