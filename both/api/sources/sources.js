@@ -1,10 +1,10 @@
+import { _ } from 'meteor/underscore';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
-
-import { _ } from 'meteor/underscore';
+import { SourceImports } from '/both/api/source-imports/source-imports';
 
 export const Sources = new Mongo.Collection('Sources');
 
@@ -143,5 +143,11 @@ Sources.helpers({
     const hasDownloadStep = !!this.streamChain.find((step) =>
       step.type === 'HTTPDownload' && !!step.parameters.sourceUrl);
     return hasDownloadStep;
+  },
+  getLastSuccessfulImport() {
+    return SourceImports
+      .find({ sourceId: this._id }, { sort: { startTimestamp: -1 } })
+      .fetch()
+      .find(i => (i.isFinished() && !i.hasError() && !i.isAborted()));
   },
 });
