@@ -4,10 +4,20 @@ import { Throttle } from 'stream-throttle';
 import request from 'request';
 import { check, Match } from 'meteor/check';
 import streamLength from 'stream-length';
+import { generateDynamicUrl } from '../generate-dynamic-url';
 
 export class HTTPDownload {
-  constructor({ headers, sourceUrl, onDebugInfo, gzip = true, bytesPerSecond }) {
+  constructor({
+    headers,
+    sourceUrl,
+    lastSuccessfulImport,
+    onDebugInfo,
+    allowedStatusCodes = [200],
+    gzip = true,
+    bytesPerSecond,
+  }) {
     check(sourceUrl, String);
+    check(allowedStatusCodes, [Number]);
     check(onDebugInfo, Function);
     check(bytesPerSecond, Match.Optional(Number));
     check(headers, Match.Optional(Match.ObjectIncluding({})));
@@ -16,7 +26,8 @@ export class HTTPDownload {
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
 
-    this.request = this.stream = request(sourceUrl, { gzip, headers: headersWithUserAgent });
+    const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
+    this.request = this.stream = request(url, { gzip, headers: headersWithUserAgent });
 
     streamLength(this.stream)
       .then(length => {
@@ -40,19 +51,17 @@ export class HTTPDownload {
           headers: response.headers,
         },
       });
-      if (response.statusCode.toString() !== '200') {
+      if (!allowedStatusCodes.includes(response.statusCode)) {
         this.stream.emit('error', new Meteor.Error(500, 'Response had an error.'));
       }
       if (['gzip', 'deflate'].includes(response.headers['content-encoding'])) {
         if (!response.headers['content-length']) {
           const lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
-          .on('response', lengthResponse => {
-            console.log('Got length response', lengthResponse);
-            // if (lengthResponse.statusCode === '200') {
+            .on('response', lengthResponse => {
+              console.log('Got length response', lengthResponse);
               this.stream.emit('length', lengthResponse.headers['content-length']);
-            // }
-            lengthRequest.abort();
-          })
+              lengthRequest.abort();
+            });
         }
       }
     });

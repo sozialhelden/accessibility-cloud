@@ -1,12 +1,22 @@
-import { Meteor } from 'meteor/meteor';
 import request from 'request';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
+import { generateDynamicUrl } from '../generate-dynamic-url';
 
 const { Transform } = Npm.require('zstreams');
 
 export class MultiHTTPDownload {
-  constructor({ headers, maximalErrorRatio = 0.25, allowedStatusCodes = [200], sourceUrl, onDebugInfo, bytesPerSecond, gzip = true, maximalConcurrency = 3}) {
+  constructor({
+    headers,
+    maximalErrorRatio = 0.25,
+    allowedStatusCodes = [200],
+    sourceUrl,
+    onDebugInfo,
+    bytesPerSecond,
+    lastSuccessfulImport,
+    gzip = true,
+    maximalConcurrency = 3,
+  }) {
     check(sourceUrl, String);
 
     check(onDebugInfo, Function);
@@ -30,10 +40,14 @@ export class MultiHTTPDownload {
       readableObjectMode: true,
       highWaterMark: Math.max(0, Math.min(maximalConcurrency, 10)),
       transform(chunk, encoding, callback) {
+        const url = generateDynamicUrl({
+          lastSuccessfulImport,
+          sourceUrl: sourceUrl.replace(/\{\{inputData\}\}/, chunk)
+        });
         const options = {
           gzip,
           allowedStatusCodes,
-          url: sourceUrl.replace(/\{\{inputData\}\}/, chunk),
+          url,
           method: 'GET',
           headers: headersWithUserAgent,
         };

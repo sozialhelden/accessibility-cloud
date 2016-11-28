@@ -4,6 +4,7 @@ import Stream from 'stream';
 import { startObservingObjectProgress } from './object-progress-stream';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import { Sources } from '/both/api/sources/sources';
 
 import { ConsoleOutput } from './stream-types/console-output';
 import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
@@ -111,11 +112,13 @@ export function createStreamChain({
     check(skip, Boolean);
 
     console.log('Creating', type, 'stream...');
+
+    const source = Sources.findOne(sourceId);
+    const lastSuccessfulImport = source.getLastSuccessfulImport();
     const streamChainElementKey = `streamChain.${index}`;
     const debugInfoKey = `${streamChainElementKey}.debugInfo`;
     const progressKey = `${streamChainElementKey}.progress`;
     const errorKey = `${streamChainElementKey}.error`;
-
     const onProgress = Meteor.bindEnvironment(progress => {
       if (progress.percentage === 100) {
         Object.assign(progress, { isFinished: true });
@@ -127,6 +130,8 @@ export function createStreamChain({
     // Setup parameters for stream object
     Object.assign(parameters, {
       sourceId,
+      source,
+      lastSuccessfulImport,
       sourceImportId,
       onDebugInfo: Meteor.bindEnvironment(debugInfo => {
         const debugInfoWithPaths = {};
