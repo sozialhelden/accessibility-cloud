@@ -18,6 +18,7 @@ SourceImports.publicFields = {
   numberOfPlacesModified: 1,
   numberOfPlacesRemoved: 1,
   numberOfPlacesUnchanged: 1,
+  error: 1,
 };
 
 SourceImports.helpers({

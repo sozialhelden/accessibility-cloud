@@ -61,11 +61,8 @@ export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream 
     });
     sourceIdsToStreamChains[sourceId] = streamChain;
   } catch (e) {
-    if (e instanceof Meteor.Error) {
-      throw e;
-    }
     console.log('Error while setting up stream chain:', e, e.stack);
-    throw Meteor.Error(500, 'Could not create stream chain.');
+    SourceImports.update(sourceImportId, { $set: { error: { reason: e.reason, message: e.message, errorType: e.errorType } } });
   }
   return sourceImportId;
 }
