@@ -154,6 +154,7 @@ Transforms given JSON objects into the [accessibility.cloud format](./exchange-f
 #### Parameters
 
 `ignoreSkippedPlaces`: If `true`, places without original id are not regarded as errors. If `false` (default), the import will be marked as erroneous when a place without original id is encountered.
+
 `mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. ES6 is supported.
 
 #### Defining mappings
