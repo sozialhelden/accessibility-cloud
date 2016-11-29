@@ -135,15 +135,12 @@ Template.sources_show_format_page.events({
       }
     });
   },
-  'input textarea#streamChain'(event, instance) {
-    $('.errors').html('').addClass('is-empty');
-
-    const _id = FlowRouter.getParam('_id');
+  'blur textarea#streamChain'(event, instance) {
     const newStreamChain = parseStreamChainDefinition(instance);
     if (!newStreamChain) {
       return;
     }
-
+    const _id = FlowRouter.getParam('_id');
     Sources.update(_id, {
       $set: { streamChain: newStreamChain },
     }, (error) => {
@@ -151,7 +148,14 @@ Template.sources_show_format_page.events({
         addError(`<strong>Invalid stream chain:</strong> ${error.message}`);
       }
     });
+  },
+  'input textarea#streamChain'(event, instance) {
+    $('.errors').html('').addClass('is-empty');
 
+    const newStreamChain = parseStreamChainDefinition(instance);
+    if (!newStreamChain) {
+      return;
+    }
 
     // TODO: Refactor this, put this logic into the model validation
     let chain = undefined;
