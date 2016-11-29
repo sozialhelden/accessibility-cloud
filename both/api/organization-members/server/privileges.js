@@ -45,6 +45,8 @@ Meteor.users.publicFields = {
   'services.facebook.id': 1,
   'services.google.picture': 1,
   'services.twitter.profile_image_url_https': 1,
+  isApproved: 1,
+  isAdmin: 1,
   profile: 1,
 };
 

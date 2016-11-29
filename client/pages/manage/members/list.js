@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
@@ -33,6 +34,10 @@ Template.members_list_page.helpers({
       case 'error': return `<span class='error'>error: ${this.invitationError}</span>`;
       default: return null;
     }
+  },
+  isApproved() {
+    const user = Meteor.users.findOne(this.userId);
+    return user && user.isApproved;
   },
   inviteMemberSchema() {
     return OrganizationMembers.schema.pick(['invitationEmailAddress', 'organizationId']);

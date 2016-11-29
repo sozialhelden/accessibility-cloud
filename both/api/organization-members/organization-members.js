@@ -105,7 +105,7 @@ OrganizationMembers.helpers({
   },
   getIconHTML() {
     if (this.userId) {
-      return getIconHTMLForUser(this.getUser())
+      return getIconHTMLForUser(this.getUser());
     }
     return `<img src="${getGravatarImageUrl(this.gravatarHash)}" class='user-icon'>`;
   },

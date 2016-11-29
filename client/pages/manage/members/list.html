@@ -6,7 +6,13 @@
           {{#autoForm class="form-inline" collection=OrganizationMembers schema=memberRoleSchema id=_id type="update" doc=this autosave=true}}
             <div class='name-with-icon'>
               {{{getIconHTML}}} {{getUserName}}
-              <span class='invitation-state'>{{{invitationStateAsHTML}}}</span>
+              {{#if invitationStateAsHTML}}
+                <span class='state'>{{{invitationStateAsHTML}}}</span>
+              {{else}}
+                {{#unless isApproved}}
+                  <span class='state'>needs approval</span>
+                {{/unless}}
+              {{/if}}
             </div>
             <span class='input'>
               {{> afFieldInput name='role' type='select' label=false}}
