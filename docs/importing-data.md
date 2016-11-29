@@ -151,6 +151,11 @@ Splits the incoming string into chunks that can be processed as objects, using a
 
 Transforms given JSON objects into the [accessibility.cloud format](./exchange-format.md) using mappings and JavaScript.
 
+#### Parameters
+
+`ignoreSkippedPlaces`: If `true`, places without original id are not regarded as errors. If `false` (default), the import will be marked as erroneous when a place without original id is encountered.
+`mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. ES6 is supported.
+
 #### Defining mappings
 
 You can use JavaScript functions to convert from your original data into the final format. Note that each POI you import should at least have these properties:
@@ -168,10 +173,10 @@ Here is an example:
 ```json
 {
 "mappings": {
-    "geometry": "{ type: 'Point', coordinates: [Number(row['lon']), Number(row['lat'])] }",
-    "properties-originalId": "''+row.id",
-    "properties-name": "helpers.OSM.fetchNameFromTags(row.tags)",
-    "properties-accessibility-accessibleWith-wheelchair": "row.tags['wheelchair'] == 'yes'"
+    "geometry": "{ type: 'Point', coordinates: [Number(d['lon']), Number(d['lat'])] }",
+    "properties-originalId": "''+d.id",
+    "properties-name": "helpers.OSM.fetchNameFromTags(d.tags)",
+    "properties-accessibility-accessibleWith-wheelchair": "d.tags['wheelchair'] == 'yes'"
   }
 }
 ```
