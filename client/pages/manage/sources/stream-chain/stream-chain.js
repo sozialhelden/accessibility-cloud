@@ -3,6 +3,14 @@ import { Template } from 'meteor/templating';
 import { _ } from 'meteor/underscore';
 import { moment } from 'meteor/momentjs:moment';
 
+function format(n) {
+  const number = Number(n);
+  if (number.toLocaleString) {
+    return number.toLocaleString('en-US');
+  }
+  return number.toString();
+}
+
 Template.sources_stream_chain.helpers({
   unitName() {
     return this.unitName || 'bytes';
@@ -33,6 +41,16 @@ Template.sources_stream_chain.helpers({
   },
   additionalTemplate() {
     return `sources_stream_chain_${this.type}`;
+  },
+  progressString() {
+    const [transferred, length] = this.length ?
+      [this.transferred, this.length] :
+      [this.transferredCompressed || this.transferred, this.lengthCompressed];
+
+    if (length) {
+      return `${format(transferred)} of ${format(length)} ${this.unitName}`;
+    }
+    return `${format(transferred)} ${this.unitName}`;
   },
 });
 

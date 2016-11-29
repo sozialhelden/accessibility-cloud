@@ -22,13 +22,7 @@
               {{#if ../isSkipped}}
                 skipped
               {{else}}
-                {{transferred}}
-
-                {{#if length}}
-                  of {{length}}
-                {{/if}}
-
-                {{unitName}}
+                {{progressString}}
 
                 {{#if isFinished}}
                   <span class='checkmark'>✓</span>
