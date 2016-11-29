@@ -9,6 +9,8 @@ export function startObservingObjectProgress(stream, onProgress) {
   const progress = {
     percentage: 0,
     transferred: 0,
+    transferredCompressed: 0,
+    transferredUncompressed: 0,
     length: 0,
     remaining: 0,
     eta: 0,
@@ -19,50 +21,49 @@ export function startObservingObjectProgress(stream, onProgress) {
   };
 
   const timeInterval = 1000;
-  let lastTransferred = 0;
 
   const sendProgress = () => {
     const p = progress;
-    p.remaining = p.length ? p.length - p.transferred : 0;
-    p.delta = p.transferred - lastTransferred;
-    lastTransferred = p.transferred;
-    p.percentage = p.length ? 100 * p.transferred / p.length : 0;
+    let length = p.length;
+    let transferred = p.transferred;
+    if (!length && p.lengthCompressed) {
+      length = p.lengthCompressed;
+      transferred = p.transferredCompressed;
+    }
+    p.remaining = length ? length - transferred : 0;
+    p.percentage = length ? 100 * transferred / length : 0;
     p.runtime = Date.now() - p.startTimestamp;
-    p.speed = p.transferred / p.runtime;
+    p.speed = transferred / p.runtime;
     p.eta = p.remaining / p.speed;
     onProgress(p);
   };
 
   const interval = Meteor.setInterval(sendProgress, timeInterval);
 
-  if (stream instanceof RequestStream) {
+  if (stream instanceof RequestStream || !stream.isReadableObjectMode) {
     stream.on('response', response => {
-      // unmodified http.IncomingMessage object
+      // `response` is an unmodified http.IncomingMessage object
       response.on('data', chunk => {
-        // count compressed data as it is received, not uncompressed data
-        progress.transferred += chunk.length;
+        progress.transferredCompressed += chunk.length;
       });
     });
-    progress.unitName = 'bytes';
-  } else if (stream.isReadableObjectMode) {
-    stream.on('data', () => {
-      progress.transferred++;
-    });
-    progress.unitName = stream.unitName || 'chunks';
-  } else {
     stream.on('data', (chunk) => {
       progress.transferred += chunk.length;
     });
     progress.unitName = 'bytes';
+  } else {
+    stream.on('data', () => {
+      progress.transferred++;
+    });
+    progress.unitName = stream.unitName || 'chunks';
   }
 
-  stream.on('length', (length) => {
-    progress.length = length;
-  });
-
-  stream.on('response', response => {
-    if (response.headers && response.headers['content-length']) {
-      progress.length = response.headers['content-length'];
+  stream.on('length', (length, isCompressed = false) => {
+    console.log('Got response length', length, '(compressed:', isCompressed, ')');
+    if (isCompressed) {
+      progress.lengthCompressed = length;
+    } else {
+      progress.length = length;
     }
   });
 

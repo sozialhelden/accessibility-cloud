@@ -15,12 +15,10 @@ export class HTTPDownload {
     onDebugInfo,
     allowedStatusCodes = [200],
     gzip = true,
-    bytesPerSecond,
   }) {
     check(sourceUrl, String);
     check(allowedStatusCodes, [Number]);
     check(onDebugInfo, Function);
-    check(bytesPerSecond, Match.Optional(Number));
     check(headers, Match.Optional(Match.ObjectIncluding({})));
 
     const headersWithUserAgent = Object.assign({
@@ -30,11 +28,11 @@ export class HTTPDownload {
     const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
     this.request = this.stream = request(url, { gzip, headers: headersWithUserAgent });
 
-    streamLength(this.stream)
-      .then(length => {
-        this.stream.emit('length', length);
-      })
-      .catch(error => console.log('Warning: Could not find stream length:', error));
+    // streamLength(this.stream)
+    //   .then(length => {
+    //     this.stream.emit('length', length);
+    //   })
+    //   .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
       // console.log('Making request', req);
@@ -54,28 +52,35 @@ export class HTTPDownload {
           headers: response.rawHeaders,
         },
       });
+
       if (!allowedStatusCodes.includes(response.statusCode)) {
         onDebugInfo({
           'response.body': response.body,
         });
         this.stream.emit('error', new Meteor.Error(500, 'Response had an error.'));
       }
-      if (['gzip', 'deflate'].includes(response.headers['content-encoding'])) {
-        if (!response.headers['content-length']) {
-          const lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
-            .on('response', lengthResponse => {
-              console.log('Got length response', lengthResponse);
-              this.stream.emit('length', lengthResponse.headers['content-length']);
-              lengthRequest.abort();
-            });
-        }
+
+      const isCompressed = ['gzip', 'deflate'].includes(response.headers['content-encoding']);
+      const length = response.headers['content-length'];
+      if (length) {
+        this.stream.emit('length', length, isCompressed);
+      }
+
+      if (isCompressed) {
+        const lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
+          .on('response', lengthResponse => {
+            if (lengthResponse.statusCode !== 200) {
+              return;
+            }
+            const uncompressedLength = lengthResponse.headers['content-length'];
+            if (uncompressedLength) {
+              // console.log('Got length response', uncompressedLength);
+              this.stream.emit('length', uncompressedLength, false);
+            }
+            lengthRequest.abort();
+          });
       }
     });
-
-    // Throttle stream when data processing afterwards might overload otherwise
-    if (bytesPerSecond) {
-      this.stream = this.stream.pipe(new Throttle({ rate: bytesPerSecond }));
-    }
   }
 
   abort() {
