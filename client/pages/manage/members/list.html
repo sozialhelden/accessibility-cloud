@@ -26,9 +26,9 @@
     {{#if organization.editableBy currentUser._id}}
       {{#autoForm schema=inviteMemberSchema id="inviteOrganizationMemberForm" type="method" meteormethod="organizationMembers.invite"}}
         <h2>Invite somebody to {{organization.name}}</h2>
-        {{> afQuickField name='invitationEmailAddress'}}
         {{> afQuickField name='organizationId' value=organization._id}}
-        <button type="submit" class="btn btn-primary">Send invitation</button>
+        <span class='input'>{{> afFieldInput name='invitationEmailAddress' label=false}}</span>
+        <button type="submit" class="btn btn-inline btn-primary">Send invitation</button>
       {{/autoForm}}
     {{/if}}
   </div>
@@ -36,8 +36,8 @@
   <div class="hints">
     <h3 class="hint">{{_ "Add members to your organization" }}</h3>
     <ol class="checks">
-      <li>{{_ "Allow your coworkers to manage your organization" }}</li>
-      <li>{{_ "Set roles to define who can edit and who can only see your organization internals" }}</li>
+      <li>{{_ "Allow your coworkers to manage your organization, too" }}</li>
+      <li>{{_ "Change who can edit and who can only see your organization internals: Only managers, founders, and developers can change the organization's data." }}</li>
     </ol>
   </div>
 </template>
