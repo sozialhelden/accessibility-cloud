@@ -2,6 +2,7 @@ import { isAdmin } from '/both/lib/is-admin';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations';
+import { userHasFullAccessToOrganizationId } from '/both/api/organizations/privileges';
 
 export const Licenses = new Mongo.Collection('Licenses');
 
@@ -88,7 +89,9 @@ Licenses.schema = new SimpleSchema({
 Licenses.attachSchema(Licenses.schema);
 
 Licenses.helpers({
-  editableBy: isAdmin,
+  editableBy(userId) {
+    return isAdmin(userId) || userHasFullAccessToOrganizationId(userId, this.organizationId);
+  },
 });
 
 Licenses.helpers({
