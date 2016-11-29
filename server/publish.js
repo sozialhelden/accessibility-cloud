@@ -1,8 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
+import { _ } from 'meteor/underscore';
 
-function publishAndLog(name, publishFunction) {
+export function publishAndLog(name, publishFunction) {
   console.log('Publishing', name, '…');
   Meteor.publish(name, publishFunction);
 }
@@ -34,7 +35,7 @@ export function publishPublicFields(
         const selector = { $and: [givenSelector, visibleSelector] };
         return collection.find(
           selector,
-          Object.assign({}, options, { fields: collection.publicFields })
+          _.extend({}, options, { fields: collection.publicFields })
         );
       });
     }
@@ -63,7 +64,7 @@ export function publishPrivateFields(
         const selector = { $and: [givenSelector, visibleSelector] };
         return collection.find(
           selector,
-          Object.assign({}, options, { fields: collection.publicFields })
+          _.extend({}, options, { fields: collection.publicFields })
         );
       });
     }

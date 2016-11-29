@@ -1,24 +1,15 @@
-import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Sources } from '/both/api/sources/sources.js';
 import { isUserMemberOfOrganizationWithId } from '/both/api/organizations/privileges.js';
 import { helpers } from '/client/_layouts/helpers';
 import subsManager from '/client/lib/subs-manager';
-import { _ } from 'meteor/underscore';
 
 
-Template.browse_dashboard_page.onCreated(function organizationsShowPageOnCreated() {
+Template.browse_dashboard_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
-
-});
-
-
-Template.browse_dashboard_page.onRendered(function organizationsShowPageOnRendered() {
-  this.autorun(() => {
-  });
 });
 
 Template.browse_dashboard_page.helpers(helpers);
@@ -30,15 +21,5 @@ Template.browse_dashboard_page.helpers({
   },
   sources() {
     return Sources.find({});
-  },
-});
-
-Template.browse_dashboard_page.events({
-  'click .join': function (event) {
-    event.preventDefault();
-
-    Meteor.call('organizations.join', this._id, Meteor.userId(), (err, result) => {
-      //debugger;
-    });
   },
 });

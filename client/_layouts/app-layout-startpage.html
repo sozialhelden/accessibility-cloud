@@ -4,6 +4,7 @@
       <span>{{_"Trying to connect..."}}</span>
     </div>
   {{/unless}}
+
   <div class='account-options'>
     {{#if currentUser}}
       <div class="btns-group-vertical ">
@@ -14,7 +15,7 @@
             <span class="icon-arrow-down"></span>
           {{/if}}
 
-          {{userEmail}}
+          {{{getIconHTML}}} {{getUserName}}
         </a>
         {{#if userMenuOpen}}
           <div class='user menu'>

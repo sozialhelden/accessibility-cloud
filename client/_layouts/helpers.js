@@ -5,6 +5,8 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { isApproved } from '/both/lib/is-approved';
+import { getIconHTMLForUser } from '/both/lib/user-icon';
+import { getDisplayedNameForUser } from '/both/lib/user-name';
 
 // A store which is local to this file
 const showConnectionIssue = new ReactiveVar(false);
@@ -67,9 +69,11 @@ export const helpers = {
   cordova() {
     return Meteor.isCordova && 'cordova';
   },
-  userEmail() {
-    const user = Meteor.user();
-    return user && user.emails[0] && user.emails[0].address;
+  getIconHTML() {
+    return getIconHTMLForUser(Meteor.user());
+  },
+  getUserName() {
+    return getDisplayedNameForUser(Meteor.user());
   },
   userMenuOpen() {
     const instance = Template.instance();

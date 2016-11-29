@@ -1,21 +1,34 @@
 @import './utils.import.less';
 
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  &:not(.form-inline) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    fieldset,
+    .form-group,
+    .input {
+      width: 26em;
+      max-width: 90vw;
+      input,
+      select,
+      textarea {
+        width:100%;
+      }
+    }
+  }
 
+  fieldset:not(:first-of-type),
+  .form-group:not(:first-of-type),
+  .input:not(:first-of-type) {
+    margin-top: 2em;
+  }
   fieldset,
   .form-group,
   .input {
-    margin-top: 2em;
-    width: 26em;
-    max-width: 90vv;
-
     input,
     select,
     textarea {
-      width:100%;
       border: 1px solid @color-grey091;
       .font-s3;
       .type-regular;

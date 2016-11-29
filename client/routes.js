@@ -1,4 +1,9 @@
+/* eslint-disable meteor/no-session */
+/* Normally it's not okay to use Session, but router is handling global state. */
+
 import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
+import { Tracker } from 'meteor/tracker';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { $ } from 'meteor/jquery';
@@ -56,6 +61,42 @@ Planned routes are...
 /imprint
 */
 
+function acceptInvitationOnLogin() {
+  Tracker.autorun((c) => {
+    const invitationToken = Session.get('invitationToken');
+    const organizationId = Session.get('organizationId');
+
+    if (!invitationToken || !organizationId) {
+      return;
+    }
+
+    if (!Meteor.userId()) {
+      console.log('Waiting for user to sign in / sign up to accept invitation…');
+      return;
+    }
+
+    console.log('Accepting invitation to collection…');
+
+    Meteor.call(
+      'organizationMembers.acceptInvitation',
+      { organizationId, invitationToken },
+      (error) => {
+        if (error) {
+          alert('Could not accept invitation:', error.reason); // eslint-disable-line no-alert
+          FlowRouter.go('dashboard');
+          return;
+        }
+        Session.set('invitationToken', null);
+        Session.set('organizationId', null);
+        FlowRouter.go('manage.organizations.show', { _id: organizationId });
+      }
+    );
+
+    c.stop();
+  });
+}
+
+
 FlowRouter.triggers.enter([() => {
   $(window).scrollTop(0);
 }]);
@@ -74,11 +115,26 @@ FlowRouter.route('/', {
         main: 'page_dashboard',
         header_navigation_list: 'dashboard_header_navigation',
       });
+      acceptInvitationOnLogin();
     } else {
       BlazeLayout.render('app_layout_start_page', {
         main: 'page_start',
       });
     }
+  },
+});
+
+FlowRouter.route('/organizations/:_id/accept-invitation/:invitationToken', {
+  name: 'organizations.acceptInvitation',
+  action() {
+    Session.set('invitationToken', this.getParam('invitationToken'));
+    Session.set('organizationId', this.getParam('_id'));
+
+    if (!Meteor.userId()) {
+      FlowRouter.go('/join');
+    }
+
+    acceptInvitationOnLogin();
   },
 });
 
@@ -106,9 +162,6 @@ FlowRouter.route('/', {
 const browseRoutes = FlowRouter.group({
   name: 'browse',
   prefix: '/browse',
-  // triggersEnter: [
-  //   checkLoggedIn,
-  // ],
 });
 
 browseRoutes.route('/dashboard', {
@@ -132,9 +185,6 @@ browseRoutes.route('/sources/:_id', {
     });
   },
 });
-
-
-
 
 
 browseRoutes.route('/categories/:_id', {
@@ -255,6 +305,18 @@ manageRoutes.route('/organizations/:_id/licenses', {
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_list_page',
+      header_navigation_list: 'organizations_show_header',
+      header_sub: 'organizations_show_header_sub',
+    });
+  },
+});
+
+manageRoutes.route('/organizations/:_id/members', {
+  name: 'manage.organizations.show.members',
+
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'members_list_page',
       header_navigation_list: 'organizations_show_header',
       header_sub: 'organizations_show_header_sub',
     });

@@ -1,0 +1,30 @@
+@import '/client/stylesheets/_util/colors.import.less';
+
+.page-content.members_list_page .form.block {
+  > ul.members {
+    max-width: 35em;
+    > li {
+      clear: both;
+      margin-bottom: 1em;
+      > form {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        > .name-with-icon {
+          flex: 1;
+          > .invitation-state {
+            margin-left: 0.5em;
+            .error {
+              color: @color-error;
+            }
+          }
+        }
+        > .input {
+          margin-right: 1em;
+        }
+      }
+    }
+  }
+}

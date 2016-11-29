@@ -31,13 +31,3 @@ Template.admin_page.helpers({
     return Sources.find({});
   },
 });
-
-Template.admin_page.events({
-  'click .join': function (event) {
-    event.preventDefault();
-
-    Meteor.call('organizations.join', this._id, Meteor.userId(), (err, result) => {
-      //debugger;
-    });
-  },
-});
