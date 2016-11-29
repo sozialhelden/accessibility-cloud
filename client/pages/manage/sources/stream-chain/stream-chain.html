@@ -26,10 +26,10 @@
 
                 {{#if isFinished}}
                   <span class='checkmark'>✓</span>
-                {{/if}}
-
-                {{#if eta}}
-                  ({{humanizedEta}} left)
+                {{else}}
+                  {{#if eta}}
+                    ({{humanizedEta}} left)
+                  {{/if}}
                 {{/if}}
               {{/if}}
             </aside>
