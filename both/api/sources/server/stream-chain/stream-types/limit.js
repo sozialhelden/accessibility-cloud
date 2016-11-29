@@ -6,7 +6,7 @@ export class Limit {
     check(limit, Number);
     this.stream = new LimitStream(limit, { objectMode: true });
     this.stream.on('pipe', source => {
-      source.on('length', length => this.stream.emit('length', Math.max(length, limit)))
+      source.on('length', length => this.stream.emit('length', Math.max(length, limit)));
     });
   }
 

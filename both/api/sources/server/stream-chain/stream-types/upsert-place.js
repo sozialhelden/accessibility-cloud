@@ -6,19 +6,18 @@ const { Transform } = Npm.require('zstreams');
 
 const upsert = Meteor.bindEnvironment((onDebugInfo, selector, placeInfo, callback) => {
   try {
-    PlaceInfos.upsert(selector, placeInfo, () => {
-      callback(null, placeInfo);
-    });
+    PlaceInfos.upsert(selector, placeInfo, callback);
   } catch (error) {
+    console.log('Error while upserting:', placeInfo, error);
     if (onDebugInfo) {
-      onDebugInfo({
-        reason: error.reason,
-        stack: error.stack,
+      Meteor.defer(() => {
+        onDebugInfo({
+          reason: error.reason,
+          // stack: error.stack,
+        });
       });
     }
-    if (callback) {
-      callback(error);
-    }
+    callback(error);
   }
 });
 
@@ -33,6 +32,7 @@ export class UpsertPlace {
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
+      highWaterMark: 3,
       transform(placeInfo, encoding, callback) {
         const originalId = placeInfo.properties.originalId;
 
@@ -42,7 +42,9 @@ export class UpsertPlace {
           if (ignoreSkippedPlaces) {
             callback(null, null);
           } else {
-            callback(new Error('No originalId given in PlaceInfo'));
+            const error = new Error('No originalId given in PlaceInfo');
+            this.emit('error', error);
+            callback(error);
           }
           return;
         }
@@ -55,8 +57,10 @@ export class UpsertPlace {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, placeInfo, callback);
-
-        // callback(null, placeInfo);
+      },
+      flush(callback) {
+        console.log('Done with upserting!');
+        callback();
       },
     });
 

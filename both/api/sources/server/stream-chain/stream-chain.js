@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
+import { _ } from 'meteor/underscore';
 import { startObservingObjectProgress } from './object-progress-stream';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
@@ -119,6 +120,7 @@ export function createStreamChain({
     const debugInfoKey = `${streamChainElementKey}.debugInfo`;
     const progressKey = `${streamChainElementKey}.progress`;
     const errorKey = `${streamChainElementKey}.error`;
+    const skippedKey = `${streamChainElementKey}.isSkipped`;
     const onProgress = Meteor.bindEnvironment(progress => {
       if (progress.percentage === 100) {
         Object.assign(progress, { isFinished: true });
@@ -139,7 +141,11 @@ export function createStreamChain({
           debugInfoWithPaths[`${debugInfoKey}.${key}`] = debugInfo[key];
         });
         const modifier = { $set: debugInfoWithPaths };
-        SourceImports.update(sourceImportId, modifier);
+        try {
+          SourceImports.update(sourceImportId, modifier);
+        } catch (error) {
+          console.log('Could not write debug info', debugInfo, ':', error);
+        }
       }),
     });
 
@@ -162,6 +168,11 @@ export function createStreamChain({
 
     const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
 
+    wrappedStream.pause();
+    if (wrappedStream.cork) {
+      wrappedStream.cork();
+    }
+
     startObservingObjectProgress(wrappedStream, onProgress);
 
     wrappedStream.firstError(error => {
@@ -169,7 +180,9 @@ export function createStreamChain({
     });
 
     if (skip) {
-      SourceImports.update(sourceImportId, { $set: { isSkipped: true } });
+      console.log('Skipping stream.');
+      runningStreamObserver.isSkipped = true;
+      SourceImports.update(sourceImportId, { $set: { [skippedKey]: true } });
     } else {
       // Connect to previous stream's output if existing
       previousStream = previousStream ? previousStream.pipe(wrappedStream) : wrappedStream;
@@ -178,11 +191,29 @@ export function createStreamChain({
     return runningStreamObserver;
   });
 
-  console.log('Stream chain:', result[0].stream.getStreamChain());
+  // console.log('Stream chain:', result[0].stream.getStreamChain());
 
-  result[result.length - 1].stream.intoCallback((error) => {
-    console.log('Stream chain ended with error', error);
+  const lastStreamObserver = result.reverse().find(s => !s.isSkipped);
+  if (!lastStreamObserver) {
+    console.log('No streams in stream chain found.');
+    return result;
+  }
+
+  lastStreamObserver.stream.intoCallback((error) => {
+    if (error) {
+      console.log('Stream chain ended with error', error);
+    } else {
+      console.log('Import ended without error.');
+    }
   });
 
+  Meteor.setTimeout(() => {
+    result.forEach(observer => {
+      if (observer.stream.uncork) {
+        observer.stream.uncork();
+      }
+      observer.stream.resume();
+    });
+  }, 1000);
   return result;
 }

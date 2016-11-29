@@ -34,6 +34,7 @@ export class MultiHTTPDownload {
     let requestCount = 0;
     let errorCount = 0;
     let lastErroneousResponse = null;
+    let lastErroneousRequest = null;
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -42,7 +43,7 @@ export class MultiHTTPDownload {
       transform(chunk, encoding, callback) {
         const url = generateDynamicUrl({
           lastSuccessfulImport,
-          sourceUrl: sourceUrl.replace(/\{\{inputData\}\}/, chunk)
+          sourceUrl: sourceUrl.replace(/\{\{inputData\}\}/, chunk),
         });
         const options = {
           gzip,
@@ -56,17 +57,22 @@ export class MultiHTTPDownload {
         const req = request(options, (error, response, body) => {
           if (error) {
             this.emit('error', error);
+            callback(error);
             return;
           }
-          if (!allowedStatusCodes.includes(response.statusCode)) {
+          if (allowedStatusCodes.includes(response.statusCode)) {
+            this.push(body);
+          } else {
             errorCount++;
             lastErroneousResponse = response;
+            lastErroneousRequest = req;
             if (errorCount / requestCount > maximalErrorRatio) {
-              this.emit('error', new Error('Error rate too high.'));
+              const rateError = new Error('Error rate too high.');
+              this.emit('error', rateError);
+              callback(rateError);
               return;
             }
           }
-          this.push(body);
           callback();
         });
 
@@ -74,7 +80,7 @@ export class MultiHTTPDownload {
           req.on('request', (request2) => {
             onDebugInfo({
               request: {
-                headers: request2._headers,
+                headers: req.rawHeaders,
                 path: request2.path,
               },
             });
@@ -83,7 +89,7 @@ export class MultiHTTPDownload {
             onDebugInfo({
               response: {
                 statusCode: response.statusCode,
-                headers: response.headers,
+                headers: response.rawHeaders,
               },
             });
           });
@@ -91,9 +97,24 @@ export class MultiHTTPDownload {
         }
       },
       flush(callback) {
-        onDebugInfo({ errorCount, lastErroneousResponse });
+        if (lastErroneousRequest && lastErroneousResponse) {
+          // console.log('Got an error for', lastErroneousRequest);
+          onDebugInfo({ errorCount,
+            response: lastErroneousResponse && {
+              statusCode: lastErroneousResponse.statusCode,
+              headers: lastErroneousResponse.rawHeaders,
+              body: lastErroneousResponse.body,
+            },
+            request: lastErroneousRequest && {
+              sourceUrl: lastErroneousRequest.uri.href,
+              host: lastErroneousRequest.host,
+              path: lastErroneousRequest.path,
+              headers: lastErroneousRequest.rawHeaders,
+            },
+          });
+        }
         callback();
-      }
+      },
     });
 
     this.stream.unitName = 'responses';

@@ -6,10 +6,12 @@ export class ConvertArrayToStream {
       writableObjectMode: true,
       readableObjectMode: true,
       transform(array, encoding, callback) {
-        for (const value of array) {
-          this.push(value);
-        }
-        callback();
+        setImmediate(() => {
+          for (const value of array) {
+            this.push(value);
+          }
+          callback();
+        });
       },
     });
     this.stream.unitName = 'array elements';

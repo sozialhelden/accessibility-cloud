@@ -23,7 +23,10 @@ Template.sources_stream_chain.helpers({
     return !_.isEmpty(this.parameters);
   },
   speedString() {
-    return `${this.speed} k${this.unitName}/s`;
+    if (this.speed > 1) {
+      return `${Math.round(this.speed)} k${this.unitName}/s`;
+    }
+    return `${Math.round(1000 * this.speed)} ${this.unitName}/s`;
   },
   isInspectString(key) {
     return !!key.match(/InspectString$/);

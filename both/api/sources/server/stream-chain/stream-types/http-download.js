@@ -1,9 +1,10 @@
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Meteor } from 'meteor/meteor';
-import { Throttle } from 'stream-throttle';
 import request from 'request';
-import { check, Match } from 'meteor/check';
+import { Throttle } from 'stream-throttle';
 import streamLength from 'stream-length';
+import { Meteor } from 'meteor/meteor';
+import { check, Match } from 'meteor/check';
+import { _ } from 'meteor/underscore';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { generateDynamicUrl } from '../generate-dynamic-url';
 
 export class HTTPDownload {
@@ -36,9 +37,11 @@ export class HTTPDownload {
       .catch(error => console.log('Warning: Could not find stream length:', error));
 
     this.stream.on('request', req => {
+      // console.log('Making request', req);
       onDebugInfo({
         request: {
-          headers: req._headers,
+          sourceUrl: this.request.uri.href,
+          headers: _.flatten(_.pairs(req._headers)),
           path: req.path,
         },
       });
@@ -48,10 +51,13 @@ export class HTTPDownload {
       onDebugInfo({
         response: {
           statusCode: response.statusCode,
-          headers: response.headers,
+          headers: response.rawHeaders,
         },
       });
       if (!allowedStatusCodes.includes(response.statusCode)) {
+        onDebugInfo({
+          'response.body': response.body,
+        });
         this.stream.emit('error', new Meteor.Error(500, 'Response had an error.'));
       }
       if (['gzip', 'deflate'].includes(response.headers['content-encoding'])) {
