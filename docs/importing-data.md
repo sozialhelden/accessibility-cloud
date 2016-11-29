@@ -118,10 +118,10 @@ Parses a CSV stream and outputs JSON strings for each line, optionally reading t
 
 #### Parameters
 
-`objectMode`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer (Default: `true`)
-`headers`: Set to true if you expect the first line of your CSV to contain headers, alternatly you can specify an array of headers to use. You can also specify a sparse array to omit some of the columns. (Default: `false`)
-`ignoreEmpty`: If you wish to ignore empty rows (Default: `false`)
-`delimiter`: If your data uses an alternate delimiter such as `";"` or `"\t"`. (Default: `","`)
+- `objectMode`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer (Default: `true`)
+- `headers`: Set to true if you expect the first line of your CSV to contain headers, alternatly you can specify an array of headers to use. You can also specify a sparse array to omit some of the columns. (Default: `false`)
+- `ignoreEmpty`: If you wish to ignore empty rows (Default: `false`)
+- `delimiter`: If your data uses an alternate delimiter such as `";"` or `"\t"`. (Default: `","`)
 
 ### `ParseJSONChunks`
 
@@ -133,7 +133,7 @@ Reads one single JSON string as a stream, scraping all JSON objects or values ma
 
 #### Parameters
 
-`path`: Path of the resulting objects given in [JSONPath format](http://goessner.net/articles/JsonPath/), for instance `features.*.properties`. To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
+- `path`: Path of the resulting objects given in [JSONPath format](http://goessner.net/articles/JsonPath/), for instance `features.*.properties`. To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
 
 ### `Skip`
 
@@ -141,7 +141,7 @@ Skips a given number of input chunks, then outputs the rest without changes.
 
 #### Parameters
 
-`skip`: Number of chunks to skip (Default: `0`)
+- `skip`: Number of chunks to skip (Default: `0`)
 
 ### `Split`
 
@@ -153,9 +153,8 @@ Transforms given JSON objects into the [accessibility.cloud format](./exchange-f
 
 #### Parameters
 
-`ignoreSkippedPlaces`: If `true`, places without original id are not regarded as errors. If `false` (default), the import will be marked as erroneous when a place without original id is encountered.
-
-`mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. ES6 is supported.
+- `ignoreSkippedPlaces`: If `true`, places without original id are not regarded as errors. If `false` (default), the import will be marked as erroneous when a place without original id is encountered.
+- `mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. ES6 is supported.
 
 #### Defining mappings
 
@@ -188,7 +187,7 @@ Transforms each input chunk or object into something else, using a JavaScript ex
 
 #### Parameters
 
-`javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES6. `d` is predefined as the input data. The expression is evaluated and its result is written as new chunk/object to the output.
+- `javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES6. `d` is predefined as the input data. The expression is evaluated and its result is written as new chunk/object to the output.
 
 ### `UpsertPlace`
 
