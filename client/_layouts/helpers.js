@@ -69,10 +69,10 @@ export const helpers = {
   cordova() {
     return Meteor.isCordova && 'cordova';
   },
-  getIconHTML() {
+  getCurrentUserIconHTML() {
     return getIconHTMLForUser(Meteor.user());
   },
-  getUserName() {
+  getCurrentUserName() {
     return getDisplayedNameForUser(Meteor.user());
   },
   userMenuOpen() {
