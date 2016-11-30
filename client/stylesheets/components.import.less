@@ -71,9 +71,15 @@ ul.with-blocks {
     background-color: white;
     box-shadow: 0 0 2px  rgba(0,0,0, 0.3);
 
-    span.main{
+    span.main {
       font-family: sourcesanspro-regular;
       margin-right: 0.5em;
+      font-size: 18px;
+    }
+    span.secondary {
+      font-family: sourcesanspro-light;
+      font-size: 18px;
+      color: @color-text-muted;
     }
     span.on-right {
       float:right;
@@ -85,16 +91,47 @@ ul.with-blocks {
       margin-bottom:1px;
     }
 
+
     &:hover {
       box-shadow: 0 0 4px  rgba(0,0,0, 0.5);
+    }
+
+    &.is-draft {
+      opacity:0.8;
+      border-left:5px solid @color-grey054;
     }
 
     &.active {// FIXME: please style me
       background-color:#ddd;
       border-left:2px solid black;
     }
+    div.details {
+      font-size:14px;
+      color: @color-text-muted;
+      padding-top: 0.5em;
+    }
   }
 }
+
+
+h2.group-header {
+  a {
+    font-weight: lighter;
+  }
+}
+
+h3.group-header {
+  font-size:14px;
+  line-height:1em;
+
+  color: @color-text;
+  text-transform: uppercase;
+
+  a.action-for-group {
+    float:right;
+  }
+}
+
 
 .dashboard.widget {
   min-width: 29%;
@@ -120,6 +157,9 @@ ul.with-blocks {
     text-align: center;
   }
 }
+
+
+
 
 .dashboard.widget.with-list {
   display: flex;

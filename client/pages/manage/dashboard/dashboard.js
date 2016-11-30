@@ -6,6 +6,7 @@ import { OrganizationMembers } from '/both/api/organization-members/organization
 import { Sources } from '/both/api/sources/sources';
 import subsManager from '/client/lib/subs-manager';
 import { getAccessibleOrganizationIdsForUserId } from '/both/api/organizations/privileges';
+import { _ } from 'meteor/underscore';
 
 Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('organizations.public');
@@ -16,21 +17,39 @@ Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('apps.private');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
+  subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('licenses.public');
 });
 
 const helpers = {
   organizations() {
-    return Organizations.find({ _id: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
+    return Organizations.find({
+      _id: {
+        $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()),
+      } });
   },
   apps() {
-    return Apps.find({ organizationId: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
+    return Apps.find({ organizationId: {
+      $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()),
+    } });
   },
   sources() {
-    return Sources.find({ organizationId: { $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()) } });
+    return Sources.find({
+      organizationId: {
+        $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()),
+      } });
+  },
+  sourcesNotOf(organizations) {
+    console.log(organizations);
+    const ids = _.pluck(organizations.fetch(), '_id');
+    return Sources.find({ organizationId: { $nin: ids }, isDraft: false });
   },
   firstOrganizationId() {
     const firstMembership = OrganizationMembers.findOne({ userId: Meteor.userId() });
     return firstMembership && firstMembership.organizationId;
+  },
+  classIfDraft() {
+    return this.isDraft ? 'is-draft' : '';
   },
 };
 

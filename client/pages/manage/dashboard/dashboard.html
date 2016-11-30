@@ -3,71 +3,116 @@
 </template>
 
 <template name="page_dashboard">
+  <div class='dashboard with-list'>
+    {{#each organizationsForCurrentUser}}
+      <h2 class='group-header'>
+        <a href='{{pathFor "manage.organizations.show" _id=_id}}'>
+          {{name}}
+        </a>
+      </h2>
 
-  <div class='page content block dashboard'>
-    <div class='dashboard widget with-list organisations'>
+      <h3 class='group-header'>
+        {{_"Sources"}}
+        <a class='action-for-group' href='{{pathFor "manage.organizations.sources.create" _id=_id}}'>
+          {{_"add"}}
+        </a>
+      </h3>
+      <ul class='with-blocks'>
+        {{#each getSources}}
+          <li class='list block for-source {{classIfDraft}} '>
+            <a href='{{pathFor "manage.sources.show" _id=_id}}'>
+              {{#if isDraft}}
+                <span class='secondary'>
+                  {{_"Draft: "}}
+                </span>
+              {{/if}}
+
+              <span class='main'>
+                {{name}}
+              </span>
+
+              {{#if getLicense}}
+                <span class='secondary'>
+                  ({{getLicense.shortName}})
+                </span>
+              {{/if}}
+
+              <div class='details'>
+                {{#with this.getLastSuccessfulImport}}
+                  Imported {{agoStartTimestamp}}
+                {{else}}
+                  {{_"No imports yet"}}
+                {{/with}}
+              </div>
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+
+      {{#if getApps}}
+        <h3 class='group-header'>
+          {{_"API-Clients"}}
+          <a class='action-for-group' href='{{pathFor "manage.organizations.apps.create" _id=_id}}'>
+            {{_"add"}}
+          </a>
+        </h3>
+        <ul class='with-blocks'>
+          {{#each getApps}}
+            <li class='list block for-app'>
+              <a href='{{pathFor "manage.apps.show" _id=_id}}'>
+                <span class='main'>
+                  {{name}}
+                </span>
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <h3 class='group-header'>
+          {{_"Add API-clients to access data"}}
+          <a href='.' class='action-for-group'>
+            {{_"add"}}
+          </a>
+        </h3>
+      {{/if}}
+
+
+    {{else}}
       <h2>{{_ "Your Organizations" }}</h2>
-      {{#if organizationsForCurrentUser.count}}
-        <ul class='with-blocks'>
-          {{#each organizationsForCurrentUser}}
-            <li class='list item block'>
-              <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
-            </li>
-          {{/each}}
-        </ul>
-        <a class='add-entry' href='{{pathFor "manage.organizations.create"}}'>{{_ "Create an Organization"}}</a>
-      {{else}}
-        <div class='placeholder'>{{_ "You are not part of an organisation yet." }}</div>
-        <a class='call-to-action button' href='{{pathFor "manage.organizations.create"}}'>
+      <div class='placeholder'>
+        {{_ "You are not part of an organisation yet." }}
+      </div>
+    {{/each}}
+    <div>
+      <br>
+      <a class='call-to-action button' href='{{pathFor "manage.organizations.create"}}'>
+        {{#if organizationsForCurrentUser}}
+          {{_ "Add Organization"}}
+        {{else}}
           {{_ "Create your First Organization"}}
-        </a>
-      {{/if}}
+        {{/if}}
+      </a>
     </div>
+  </div>
 
-    <div class='dashboard widget with-list sources'>
-      <h2>{{_ "Share your data" }}</h2>
-      {{#if sourcesForCurrentUser.count}}
-        <ul class='with-blocks'>
-          {{#each sourcesForCurrentUser}}
-            <li class='list item block'>
-              <a href='{{pathFor "manage.sources.show" _id=_id}}'>{{name}}</a>
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <div class='placeholder'>{{_ "Your data sources will appear here."}}</div>
-      {{/if}}
-      {{#if organizationsForCurrentUser.count}}
-        <a class='call-to-action button' href='{{pathFor "manage.organizations.sources.create" _id=firstOrganizationId}}'>
-          {{_ "Add data source"}}
-        </a>
-        <div class='subtle hint'>{{_ "Creating a data source allows you to access data from other providers via your API or from files you upload."}}</div>
-      {{else}}
-        <div class='subtle hint'>{{_ "Create an organization to add your own data sources."}}</div>
-      {{/if}}
-    </div>
+  <div>
+    <h2>{{_ "Other sources"}}</h2>
+    <ul class='with-blocks'>
+      {{#each sourcesNotOf organizationsForCurrentUser}}
+        <li class='list block for-source'>
+          <a href='{{pathFor "browse.sources.show" _id=_id}}'>
+            <span class='main'>
+              {{getOrganization.name}}
+            </span>
 
-    <div class='dashboard widget with-list'>
-      <h2>{{_ "Access data"}}</h2>
-      {{#if appsForCurrentUser.count}}
-        <ul class='with-blocks'>
-          {{#each appsForCurrentUser}}
-            <li class='list item block'>
-              <a href='{{pathFor "manage.apps.show" _id=_id}}'>{{name}}</a>
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <div class='placeholder'>{{_ "Your apps will appear here."}}</div>
-      {{/if}}
-      {{#if organizationsForCurrentUser.count}}
-        <a class='call-to-action button' href='{{pathFor "manage.organizations.apps.create" _id=firstOrganizationId}}'>
-          {{_ "Register app"}}
-        </a>
-        <div class='subtle hint'>{{_ "Creating an app allows you to access our API."}}</div>
-      {{else}}
-        <div class='subtle hint'>{{_ "Create an organization to add your own apps."}}</div>
-      {{/if}}
-    </div>
+            {{name}}
+
+            <span class='secondary'>
+              ({{getLicense.shortName}})
+            </span>
+          </a>
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </template>

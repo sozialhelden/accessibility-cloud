@@ -6,10 +6,9 @@
 
 
 <template name="admin_page">
-  <div class='dashboard with-list organisations'>
-
-    {{#if isAdmin }}
-      <h2>{{_"Organizations"}}</h2>
+  {{#if isAdmin }}
+    <div class='dashboard with-list organisations'>
+      <h2>{{_"All Organizations"}}</h2>
       <ul>
         {{#each organizations}}
           <li>
@@ -21,22 +20,28 @@
         {{/each}}
       </ul>
       <br>
-
+      <h2>{{_"Categories"}}</h2>
       <a href='{{pathFor "admin.categories.list"}}'>{{_'Import Categories'}}</a>
-    {{/if}}
-  </div>
-  <div class="form block">
-    <h2>{{_"People waiting for approval"}}</h2>
-    <ul class='members'>
-      {{#each usersWaitingForApproval}}
-        <li data-id='{{_id}}'>
-          <div class='name-with-icon'>
-            {{{getIconHTML}}} {{getUserName}}
-          </div>
-          <button class='btn btn-primary js-approve-user'>{{_"Approve"}}</button>
-          <button class='btn btn-danger btn-inline js-remove-user'>{{_"Remove"}}</button>
-        </li>
-      {{/each}}
-    </ul>
-  </div>
+    </div>
+    <div class="form block">
+      <h2>{{_"People waiting for approval"}}</h2>
+      {{#if usersWaitingForApproval}}
+        <ul class='members'>
+          {{#each usersWaitingForApproval}}
+            <li data-id='{{_id}}'>
+              <div class='name-with-icon'>
+                {{{getIconHTML}}} {{getUserName}}
+              </div>
+              <button class='btn btn-primary js-approve-user'>{{_"Approve"}}</button>
+              <button class='btn btn-danger btn-inline js-remove-user'>{{_"Remove"}}</button>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class='placeholder'>
+          {{_"None right now"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

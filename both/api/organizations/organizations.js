@@ -2,6 +2,7 @@ import { userHasFullAccessToOrganizationId } from '/both/api/organizations/privi
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources';
+import { Apps } from '/both/api/apps/apps';
 import { countriesOfTheWorld } from '/both/lib/all-countries';
 
 export const Organizations = new Mongo.Collection('Organizations');
@@ -133,5 +134,8 @@ Organizations.attachSchema(Organizations.schema);
 Organizations.helpers({
   getSources() {
     return Sources.find({ organizationId: this._id });
+  },
+  getApps() {
+    return Apps.find({ organizationId: this._id });
   },
 });

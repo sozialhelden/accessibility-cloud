@@ -8,6 +8,9 @@ SourceImports.helpers({
   humanReadableStartTimestamp() {
     return moment(this.startTimestamp).format('DD.MM.YYYY HH:mm:ss');
   },
+  agoStartTimestamp() {
+    return moment(this.startTimestamp).fromNow();
+  },
   hasError() {
     if (!this.streamChain) return false;
     return _.any(this.streamChain, streamElement => streamElement.error);
