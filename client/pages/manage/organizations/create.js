@@ -1,7 +1,6 @@
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { Organizations } from '/both/api/organizations/organizations.js';
 import { AutoForm } from 'meteor/aldeed:autoform';
 
 AutoForm.addHooks('insertOrganizationForm', {
@@ -11,4 +10,8 @@ AutoForm.addHooks('insertOrganizationForm', {
     this.event.preventDefault();
     return false;
   },
+});
+
+Template.organizations_create_page.helpers({
+  Organizations,
 });
