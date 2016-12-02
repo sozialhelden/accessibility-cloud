@@ -1,11 +1,14 @@
 import { Meteor } from 'meteor/meteor';
+import { isAdmin } from '/both/lib/is-admin';
 
-Meteor.publish('users.needApproval', function () {
-  if (this.userId) {
-    const user = Meteor.users.findOne(this.userId);
-    if (user.isAdmin) {
-      return Meteor.users.find({ isApproved: null });
+Meteor.publish('users.needApproval', function publish() {
+  this.autorun(() => {
+    if (!isAdmin(this.userId)) {
+      return [];
     }
-  }
-  return null;
+    return Meteor.users.find({ $or: [
+      { isApproved: { $exists: false } },
+      { isApproved: false },
+    ] });
+  });
 });

@@ -7,5 +7,7 @@ export function isAdmin(userId) {
   }
 
   check(userId, String);
-  return Meteor.users.findOne(userId).isAdmin;
+
+  const user = Meteor.users.findOne(userId);
+  return user && user.isAdmin;
 }

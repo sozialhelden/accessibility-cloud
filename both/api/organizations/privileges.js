@@ -14,6 +14,8 @@ export function isUserMemberOfOrganizationWithId(userId, organizationId) {
   return OrganizationMembers.find({ userId, organizationId }).count() > 0;
 }
 
+// An organization is accessible for a user when they are a member or when they are admin.
+
 export function getAccessibleOrganizationIdsForUserId(userId) {
   if (!userId) {
     return [];
@@ -48,7 +50,6 @@ export function getAccessibleOrganizationIdsForRoles(userId, includedRoles = [])
     $or: includedRoles.map(role => ({ role })),
   }).map(member => member.organizationId);
 }
-
 
 
 // Returns true if the user has one of the given roles in the given organization, false otherwise.
