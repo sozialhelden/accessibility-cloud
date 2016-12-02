@@ -17,3 +17,4 @@ Languages.helpers({
 });
 
 Languages.visibleSelectorForUserId = () => ({});
+Languages.visibleSelectorForAppId = () => ({});

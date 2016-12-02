@@ -7,11 +7,11 @@ import { _ } from 'meteor/stevezhu:lodash';
 // For each given document in `documents`, look up the related document that is specified by
 // foreign key `fieldName`. Returns all related documents and their collection.
 
-function findRelatedDocuments({ collection, documents, fieldName, userId }) {
+function findRelatedDocuments({ collection, documents, fieldName, appId }) {
   check(documents, [Object]);
   check(collection, Mongo.Collection);
   check(fieldName, String);
-  check(userId, Match.Optional(String));
+  check(appId, Match.Optional(String));
 
   const relation = collection.relationships.belongsTo[fieldName];
   if (!relation) {
@@ -19,20 +19,15 @@ function findRelatedDocuments({ collection, documents, fieldName, userId }) {
   }
   const { foreignCollection, foreignKey } = relation;
 
-  // Allow limiting visible documents dependent on who you are
+  // Allow limiting visible documents dependent on the requesting app
   const visibleSelector = {};
-  if (typeof foreignCollection.visibleSelectorForUserId === 'function') {
-    Object.assign(visibleSelector, foreignCollection.visibleSelectorForUserId(userId) || {});
+  if (typeof foreignCollection.visibleSelectorForAppId === 'function') {
+    Object.assign(visibleSelector, foreignCollection.visibleSelectorForAppId(appId) || {});
   }
   const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
   const selector = { $and: [visibleSelector, { _id: { $in: foreignIds } }] };
 
-  // Allow per-user find options, e.g. limited fields dependent on who you are
   const options = { transform: null, fields: foreignCollection.publicFields };
-  // const options = { transform: null };
-  if (typeof foreignCollection.findOptionsForUserId === 'function') {
-    Object.assign(options, foreignCollection.findOptionsForUserId(userId) || {});
-  }
 
   console.log(
     `Including ${collection._name} → ${fieldName} (${foreignCollection._name})`, selector, options
@@ -65,10 +60,10 @@ function expandFieldPathsToFetch(fieldPaths) {
 // This finds requested related children documents for a given list of documents, indexed by
 // collection name and document `_id`.
 
-export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, userId }) {
+export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, appId }) {
   check(rootDocuments, [Object]);
   check(rootCollection, Mongo.Collection);
-  check(userId, Match.Optional(String));
+  check(appId, String);
 
   const includeRelatedQuery = req.query.includeRelated;
   check(includeRelatedQuery, Match.Optional(String));
@@ -85,7 +80,7 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, us
         collection: parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection,
         documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
         fieldName: fieldName || fieldPath,
-        userId,
+        appId,
       });
   });
 

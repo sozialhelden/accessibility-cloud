@@ -13,8 +13,7 @@ export function publishAndLog(name, publishFunction) {
 // which documents' public fields should be published as third parameter. This function is called
 // with a userId argument and should return a selector.
 // The publication ensures only documents that are visible for the given user are published. To
-// specify what's visible, implement `visibleSelectorForUserId` and `findOptionsForUserId` in your
-// collection.
+// specify what's visible, implement `visibleSelectorForUserId` in your collection.
 
 export function publishPublicFields(
   publicationName,

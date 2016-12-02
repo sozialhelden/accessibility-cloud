@@ -6,12 +6,12 @@ import { findAllRelatedDocuments } from '../related-objects';
 // Handle a GET HTTP request. The following variables are available inside the function:
 //  }
 
-export function GET({ req, collection, _id, userId }) {
+export function GET({ req, collection, _id, appId }) {
   if (!collection) {
     throw new Meteor.Error(404, 'Collection not found.');
   }
 
-  const { selector, options } = buildSelectorAndOptions({ req, collection, _id, userId });
+  const { selector, options } = buildSelectorAndOptions({ req, collection, _id, appId });
 
   console.log(EJSON.stringify({ selector, options }));
 
@@ -25,13 +25,13 @@ export function GET({ req, collection, _id, userId }) {
 
   const related = findAllRelatedDocuments({
     req,
-    userId,
+    appId,
     rootCollection: collection,
     rootDocuments: results,
   });
 
   if (typeof collection.wrapAPIResponse === 'function') {
-    return collection.wrapAPIResponse({ results, req, _id, userId, related });
+    return collection.wrapAPIResponse({ results, req, _id, related });
   }
 
   return {

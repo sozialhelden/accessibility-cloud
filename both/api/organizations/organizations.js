@@ -124,6 +124,7 @@ Organizations.schema.messages({
 
 Organizations.helpers({
   editableBy(userId) {
+    check(userId, String);
     return userHasFullAccessToOrganizationId(userId, this._id);
   },
 });

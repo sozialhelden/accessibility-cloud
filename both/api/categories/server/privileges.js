@@ -19,3 +19,4 @@ Categories.helpers({
 });
 
 Categories.visibleSelectorForUserId = () => ({});
+Categories.visibleSelectorForAppId = () => ({});

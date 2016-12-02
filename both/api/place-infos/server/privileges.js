@@ -20,10 +20,22 @@ PlaceInfos.helpers({
   editableBy: isAdmin,
 });
 
-PlaceInfos.visibleSelectorForUserId = (userId) => {
-  const selector = Sources.visibleSelectorForUserId(userId);
-  check(selector, Object);
+// returns a selector that matches all places that are belonging to sources matched by the given
+// data source selector
+function placeInfoSelectorForSourceSelector(sourceSelector) {
+  check(sourceSelector, Object);
+  console.log('Including sources', JSON.stringify(sourceSelector));
   const options = { transform: null, fields: { _id: 1 } };
-  const sourceIds = Sources.find(selector, options).fetch().map(s => s._id);
+  const sourceIds = Sources.find(sourceSelector, options).fetch().map(s => s._id);
   return { 'properties.sourceId': { $in: sourceIds } };
+}
+
+PlaceInfos.visibleSelectorForUserId = (userId) => {
+  check(userId, String);
+  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
+};
+
+PlaceInfos.visibleSelectorForAppId = (appId) => {
+  check(appId, String);
+  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForAppId(appId));
 };

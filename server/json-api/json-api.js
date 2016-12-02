@@ -8,20 +8,19 @@ import { _ } from 'meteor/underscore';
 
 import httpMethodHandlers from './http-methods';
 import { collectionWithName } from './collections';
-import { callFunctionAsUser } from './call-function-as-user';
-import { userFromRequest } from './user-from-request';
-import { displayedUserName } from './displayed-user-name';
+import { appFromRequest } from './app-from-request';
 import { setAccessControlHeaders } from './set-access-control-headers';
 
 function handleJSONRequest(req, res, next) {
   const { pathname } = url.parse(req.url);
   const [collectionName, _id] = pathname.replace(/^\//, '').split('/');
 
-  let responseData = null;
-  let userId = null;
-  let user = null;
+  let appId = null;
+  let app = null;
+  let responseBody = '{}';
 
   setAccessControlHeaders(res);
+  res.setHeader('Content-Type', 'application/json');
 
   try {
     const handler = httpMethodHandlers[req.method];
@@ -36,42 +35,41 @@ function handleJSONRequest(req, res, next) {
     }
 
     const collection = collectionWithName(collectionName);
-    if (req.method === 'OPTIONS') {
-      if (!collection) {
-        // We don't know if the OPTIONS request was meant for another API, so let another
-        // middleware handle it
-        return next();
-      }
-    } else {
-      user = userFromRequest(req);
-      userId = user && user._id;
+    if (req.method === 'OPTIONS' && !!collection) {
+      // We don't know if the OPTIONS request was meant for another API, so let another
+      // middleware handle it
+      return next();
     }
-    const options = { req, res, collectionName, collection, _id };
+
+    app = appFromRequest(req);
+    appId = app && app._id;
+
+    const options = { req, res, collectionName, collection, _id, appId, app };
     console.log(
-      'User',
-      displayedUserName(user, userId),
-      ':',
+      'Request via',
+      'app',
+      appId,
+      (app && app.name),
+      'by',
+      app.getOrganization().name
+    );
+    console.log(
       req.method,
       req.url,
       EJSON.stringify(req.body)
     );
 
-    responseData = callFunctionAsUser(handler, options, user);
+    responseBody = EJSON.stringify({ result: handler(options) });
   } catch (error) {
     // eslint-disable-next-line no-param-reassign
     res.statusCode = (error.error === 'validation-error') ? 422 : (error.error || 500);
     console.log(
       'Error while handling', req.url,
-      `(requested by ${displayedUserName(user, userId)}):`,
+      ` requested by app id ${appId} (${app && app.name}):`,
       error,
       error.stack
     );
-    responseData = { error: _.pick(error, 'reason', 'details') };
-  }
-
-  const responseBody = EJSON.stringify(responseData);
-  if (responseBody && responseBody.length) {
-    res.setHeader('Content-Type', 'application/json');
+    responseBody = JSON.stringify({ error: _.pick(error, 'reason', 'details') });
   }
 
   return res.end(responseBody);

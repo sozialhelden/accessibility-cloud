@@ -28,12 +28,17 @@ Apps.privateFields = {
   tocForAppsAccepted: 1,
 };
 
-Apps.visibleSelectorForUserId = (userId) => ({
-  organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
-});
+Apps.visibleSelectorForUserId = (userId) => {
+  check(userId, String);
+  return { organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) } };
+};
+
+// Apps can only see themselves
+Apps.visibleSelectorForAppId = (_id) => ({ _id });
 
 Apps.helpers({
   editableBy(userId) {
+    check(userId, String);
     return userHasFullAccessToReferencedOrganization(userId, this);
   },
 });

@@ -3,6 +3,7 @@ import { check } from 'meteor/check';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { Sources } from '../sources';
 import { Organizations } from '/both/api/organizations/organizations';
+import { Apps } from '/both/api/apps/apps';
 import {
   getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
@@ -31,13 +32,15 @@ Sources.publicFields = {
 
 Sources.helpers({
   editableBy(userId) {
+    check(userId, String);
     return userHasFullAccessToReferencedOrganization(userId, this);
   },
 });
 
-Sources.visibleSelectorForUserId = (userId) => {
-  const organizationIds = getAccessibleOrganizationIdsForUserId(userId);
-  const organizationIdsWithAcceptedToS = Organizations.find(
+function sourceSelectorForOrganizationIds(organizationIds) {
+  check(organizationIds, [String]);
+
+  const otherOrganizationIdsWithAcceptedToS = Organizations.find(
     { tocForOrganizationsAccepted: true },
     { fields: { _id: 1 } }
   ).map(organization => organization._id);
@@ -50,19 +53,30 @@ Sources.visibleSelectorForUserId = (userId) => {
       {
         isDraft: false,
         isFreelyAccessible: true,
-        organizationId: { $in: organizationIdsWithAcceptedToS },
+        organizationId: { $in: otherOrganizationIdsWithAcceptedToS },
       },
       // match published restricted-access sources of other organizations that have accepted ToS
       {
         isDraft: false,
         isFreelyAccessible: false,
-        tocForSourcesAccepted: true,
-        organizationId: { $in: organizationIdsWithAcceptedToS },
+        organizationId: { $in: otherOrganizationIdsWithAcceptedToS },
         accessRestrictedTo: { $elemMatch: { $in: organizationIds } },
       },
     ],
   };
+}
+
+Sources.visibleSelectorForUserId = (userId) => {
+  check(userId, String);
+  return sourceSelectorForOrganizationIds(getAccessibleOrganizationIdsForUserId(userId));
 };
+
+Sources.visibleSelectorForAppId = (appId) => {
+  check(appId, String);
+  const app = Apps.findOne(appId);
+  const organizationId = app.organizationId;
+  return sourceSelectorForOrganizationIds([organizationId]);
+}
 
 export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
   check(sourceId, String);

@@ -1,6 +1,6 @@
+import { check } from 'meteor/check';
 import { Organizations } from '../organizations';
 import {
-  getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToOrganization,
 } from '/both/api/organizations/privileges';
 
@@ -25,8 +25,10 @@ Organizations.publicFields = {
 
 Organizations.helpers({
   editableBy(userId) {
+    check(userId, String);
     return userHasFullAccessToOrganization(userId, this);
   },
 });
 
 Organizations.visibleSelectorForUserId = () => ({});
+Organizations.visibleSelectorForAppId = () => ({});

@@ -18,3 +18,4 @@ Licenses.publicFields = {
 };
 
 Licenses.visibleSelectorForUserId = () => ({});
+Licenses.visibleSelectorForAppId = () => ({});

@@ -1,6 +1,8 @@
 import { _ } from 'lodash';
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { OrganizationMembers } from '../organization-members';
+import { Apps } from '/both/api/apps/apps';
 import {
   getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
@@ -31,13 +33,23 @@ OrganizationMembers.publicFields = {
 
 OrganizationMembers.helpers({
   editableBy(userId) {
+    check(userId, String);
     return userHasFullAccessToReferencedOrganization(userId, this);
   },
 });
 
-OrganizationMembers.visibleSelectorForUserId = (userId) => ({
-  organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
-});
+OrganizationMembers.visibleSelectorForUserId = (userId) => {
+  check(userId, String);
+  return {
+    organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
+  };
+};
+
+OrganizationMembers.visibleSelectorForAppId = (appId) => {
+  check(appId, String);
+  const app = Apps.findOne(appId);
+  return { organizationId: app.organizationId };
+};
 
 Meteor.users.publicFields = {
   'emails.address': 1,
@@ -50,10 +62,21 @@ Meteor.users.publicFields = {
   profile: 1,
 };
 
-Meteor.users.visibleSelectorForUserId = (userId) => {
+function getUserSelectorForMemberSelector(selector) {
   const members = OrganizationMembers.find(
-    OrganizationMembers.visibleSelectorForUserId(userId),
+    selector,
     { fields: { userId: 1 }, transform: null }
   ).fetch();
   return { _id: { $in: _.compact(_.uniq(_.map(members, (m => m.userId)))) } };
+}
+
+Meteor.users.visibleSelectorForUserId = (userId) => {
+  check(userId, String);
+  getUserSelectorForMemberSelector(OrganizationMembers.visibleSelectorForUserId(userId));
+};
+
+Meteor.users.visibleSelectorForAppId = (appId) => {
+  check(appId, String);
+  const app = Apps.findOnd(appId);
+  return getUserSelectorForMemberSelector({ organizationId: app.organizationId });
 };
