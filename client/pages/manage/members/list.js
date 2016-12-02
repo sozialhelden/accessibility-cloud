@@ -12,7 +12,7 @@ Template.members_list_page.onCreated(() => {
 });
 
 function getOrganizationForView() {
-  if (FlowRouter._current.route.name === 'manage.organizations.show.members') {
+  if (FlowRouter._current.route.name === 'organizations.show.members') {
     const organizationId = FlowRouter.getParam('_id');
     return Organizations.findOne({ _id: organizationId });
   }

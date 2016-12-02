@@ -5,7 +5,7 @@ import { AutoForm } from 'meteor/aldeed:autoform';
 
 AutoForm.addHooks('insertOrganizationForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('manage.organizations.show', { _id });
+    FlowRouter.go('organizations.show', { _id });
 
     this.event.preventDefault();
     return false;

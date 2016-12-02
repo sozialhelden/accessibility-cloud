@@ -57,7 +57,7 @@ Template.sources_create_page.helpers(_helpers);
 
 AutoForm.addHooks('insertSourceForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('manage.sources.show.format', { _id });
+    FlowRouter.go('sources.show.format', { _id });
 
     this.event.preventDefault();
     return false;

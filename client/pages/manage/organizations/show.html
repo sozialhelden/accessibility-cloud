@@ -4,7 +4,7 @@
     <ul class='with-blocks'>
       {{#each organization.getSources}}
         <li class='list block {{isDraft}}'>
-          <a href='{{pathFor "manage.sources.show" _id=_id}}'>
+          <a href='{{pathFor "sources.show" _id=_id}}'>
             {{name}}
             {{#if isDraft}}
               <span class='muted'>(Draft)</span>
@@ -13,13 +13,18 @@
         </li>
       {{/each}}
     </ul>
-    <a class='add-entry' href='{{pathFor "manage.organizations.sources.create" _id=organization._id}}'>{{_ "Add another Source"}}</a>
+    {{#if organizations.editableBy currentUser._id}}
+      <a class='add-entry' href='{{pathFor "organizations.sources.create" _id=organization._id}}'>{{_ "Add another Source"}}</a>
+    {{/if}}
   </div>
-<!--   <div class='page content block'>
-    <div class='centered-content'>
-      <h2>{{_ "Your Apps"}}</h2>
-      <a href='{{pathFor "manage.organizations.apps.create" _id=organization._id}}'>{{_ "Add another Apps"}}</a>
-    </div>
-  </div> -->
-
+  <div>
+    {{#with organization}}
+      {{#if description}}
+        <div class='markdown'>{{#markdown}}{{description}}{{/markdown}}</div>
+      {{/if}}
+      {{#if webSite}}
+        <a href='{{webSite}}'>Website</a>
+      {{/if}}
+    {{/with}}
+  </div>
 </template>

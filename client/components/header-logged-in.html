@@ -32,17 +32,14 @@
       </div>
       <ul class='page-sections'>
         <li>
-          <a href='{{pathFor "dashboard"}}' class='{{activeIfRouteNameMatches "^dashboard|manage"}}'>{{_ 'Manage'}}</a>
-        </li>
-        <li>
-          <a href='{{pathFor "browse.dashboard"}}'  class='{{activeIfRouteNameMatches "browse"}}'>{{_ 'Browse'}}</a>
+          <a href='{{pathFor "dashboard"}}'  class='{{activeIfRouteGroupNameMatches "data"}}'>{{_ 'Data Sources'}}</a>
         </li>
         <li>
           <a href='https://github.com/sozialhelden/accessibility-cloud/tree/master/docs'>{{_'Learn'}}</a>
         </li>
         {{#if isAdmin}}
           <li>
-            <a href='{{pathFor "admin.admin_page"}}' class='{{activeIfRouteNameMatches "admin"}}'>{{_'Admin'}}</a>
+            <a href='{{pathFor "admin.admin_page"}}' class='{{activeIfRouteGroupNameMatches "admin"}}'>{{_'Admin'}}</a>
           </li>
         {{/if}}
         <li>

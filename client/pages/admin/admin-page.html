@@ -12,7 +12,7 @@
       <ul>
         {{#each organizations}}
           <li>
-            <a href='{{pathFor "manage.organizations.show" _id=_id}}'>{{name}}</a>
+            <a href='{{pathFor "organizations.show" _id=_id}}'>{{name}}</a>
             {{#if isUserMemberOfOrganizationWithId currentUser._id _id}}
               (member)
             {{/if}}

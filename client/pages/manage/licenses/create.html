@@ -12,7 +12,7 @@
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
       <button type="submit" class="btn btn-primary">Create</button>
-      <a href='{{pathFor "manage.organizations.show.licenses" _id=organization._id}}'>Cancel</a>
+      <a href='{{pathFor "organizations.show.licenses" _id=organization._id}}'>Cancel</a>
     {{/autoForm}}
   </div>
 </template>

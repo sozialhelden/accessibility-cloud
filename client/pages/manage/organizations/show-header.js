@@ -14,12 +14,12 @@ Template.organizations_show_header.onCreated(() => {
 Template.organizations_show_header.helpers({
   // FIXME: this sould be reused in header-sub
   organization() {
-    if (FlowRouter._current.route.name.startsWith('manage.organizations.')) {
+    if (FlowRouter._current.route.name.startsWith('organizations.')) {
       const organizationId = FlowRouter.getParam('_id');
       return Organizations.findOne({ _id: organizationId });
     }
 
-    if (FlowRouter._current.route.name.startsWith('manage.apps.')) {
+    if (FlowRouter._current.route.name.startsWith('app.')) {
       const appId = FlowRouter.getParam('_id');
       const app = Apps.findOne({ _id: appId });
       if (app) {
@@ -27,7 +27,7 @@ Template.organizations_show_header.helpers({
       }
     }
 
-    if (FlowRouter._current.route.name.startsWith('manage.licenses.')) {
+    if (FlowRouter._current.route.name.startsWith('licenses.')) {
       const licenseId = FlowRouter.getParam('_id');
       const license = Licenses.findOne({ _id: licenseId });
       if (license) {

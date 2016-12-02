@@ -3,12 +3,12 @@
     <ul class='with-blocks'>
       {{#each apps}}
         <li class='item block {{activeIfCurrentApp _id}}'>
-          <a href='{{pathFor "manage.apps.show" _id=_id}}'>
+          <a href='{{pathFor "app.show" _id=_id}}'>
             {{name}}
           </a>
         </li>
       {{/each}}
     </ul>
-    <a href='{{pathFor "manage.organizations.apps.create" _id= organization._id}}'>{{_ "Add an API client"}}</a>
+    <a href='{{pathFor "organizations.apps.create" _id= organization._id}}'>{{_ "Add an API client"}}</a>
   </div>
 </template>

@@ -35,7 +35,7 @@ Template.sources_show_imports_page.events({
       if (err) {
         console.log(err);
       } else {
-        FlowRouter.go('manage.sources.show.imports', {
+        FlowRouter.go('sources.show.imports', {
           _id: FlowRouter.getParam('_id'),
           importId: result,
         });

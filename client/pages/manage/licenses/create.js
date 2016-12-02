@@ -24,7 +24,7 @@ Template.licenses_create_page.helpers(_helpers);
 
 AutoForm.addHooks('insertLicenseForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('manage.licenses.show', { _id });
+    FlowRouter.go('licenses.show', { _id });
 
     this.event.preventDefault();
     return false;

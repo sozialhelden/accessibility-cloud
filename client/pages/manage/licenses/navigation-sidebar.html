@@ -3,14 +3,14 @@
     <ul class='with-blocks'>
       {{#each licenses}}
         <li class='item block {{activeIfCurrentLicense _id}}'>
-          <a href='{{pathFor "manage.licenses.show" _id=_id}}'>
+          <a href='{{pathFor "licenses.show" _id=_id}}'>
             {{name}}
           </a>
         </li>
       {{/each}}
     </ul>
     {{#if organization.editableBy currentUser._id}}
-      <a href='{{pathFor "manage.organizations.licenses.create" _id= organization._id}}'>{{_ "Add License"}}</a>
+      <a href='{{pathFor "organizations.licenses.create" _id= organization._id}}'>{{_ "Add License"}}</a>
     {{/if}}
   </div>
 </template>

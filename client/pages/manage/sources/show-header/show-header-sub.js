@@ -7,6 +7,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.sources_show_header_sub.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
+  subsManager.subscribe('organizationMembers.public');
 });
 
 
@@ -15,6 +16,7 @@ Template.sources_show_header_sub.helpers({
     return routeName === FlowRouter._current.route.name ? 'active' : '';
   },
   source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    return source;
   },
 });

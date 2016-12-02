@@ -12,7 +12,7 @@ Template.apps_navigation_sidebar.onCreated(function created() {
 });
 
 function getOrganizationForView () {
-  if (FlowRouter._current.route.name === 'manage.organizations.show.apps') {
+  if (FlowRouter._current.route.name === 'organizations.show.apps') {
     const organizationId = FlowRouter.getParam('_id');
     return Organizations.findOne({ _id: organizationId });
   }

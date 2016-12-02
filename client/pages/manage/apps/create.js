@@ -22,7 +22,7 @@ Template.apps_create_page.helpers({
 
 AutoForm.addHooks('insertAppForm', {
   onSuccess(formType, _id) {
-    FlowRouter.go('manage.apps.show', { _id });
+    FlowRouter.go('app.show', { _id });
 
     this.event.preventDefault();
     return false;

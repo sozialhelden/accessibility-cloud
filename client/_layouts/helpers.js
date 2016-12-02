@@ -115,6 +115,14 @@ export const helpers = {
     const currentRouteName = FlowRouter.current().route.name;
     return currentRouteName.match(regex) ? 'active' : '';
   },
+  activeIfRouteGroupNameMatches(regex) {
+    FlowRouter.watchPathChange();
+    if (FlowRouter.current().route.group) {
+      const groupName = FlowRouter.current().route.group.name;
+      return groupName.match(regex) ? 'active' : '';
+    }
+    return false;
+  },
   templateGestures: {
     'swipeleft .cordova'(event, instance) {
       instance.state.set('menuOpen', false);

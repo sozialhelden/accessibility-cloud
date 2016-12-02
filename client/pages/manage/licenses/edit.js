@@ -31,7 +31,7 @@ Template.licenses_edit_page.helpers({
 
 AutoForm.addHooks('updateLicenseForm', {
   onSuccess() {
-    FlowRouter.go('manage.licenses.show', { _id: this.docId });
+    FlowRouter.go('licenses.show', { _id: this.docId });
 
     this.event.preventDefault();
     return false;

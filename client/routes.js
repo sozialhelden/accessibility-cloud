@@ -8,58 +8,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { $ } from 'meteor/jquery';
 
-/*
-Planned routes are...
-
-/welcome
-/browse/:_id/
-/browse/:_id/:_sourceId/
-
-/browse/sources/
-/browse/sources/:_id/edit
-/browse/organizations/:_id/
-/browse/organizations/:_id/sources ???
-/browse/licenses/_id ???
-
-/browse/categories
-/browse/categories/:_id
-/browse/categories/edit?
-
-
-/ <- dashboard
-
-/manage/organizations/create
-/manage/organizations/:_id    <- includes link to delete
-/manage/organizations/:_id/edit
-/manage/organizations/:_id/sources/create
-/manage/organizations/:_id/apps/create
-/manage/organizations/:_id/licences/create
-
-/manage/sources/:_id
-/manage/sources/:_id/imports
-/manage/sources/:_id/format
-/manage/sources/:_id/settings
-/manage/sources/:_id/imports/:importId
-/manage/sources/:_id/access
-
-/manage/licenses/
-/manage/licenses/:_id
-/manage/licenses/:_id/edit
-
-/manage/apps/               <-- DO WE REALLY NEED THIS?
-/manage/apps/:_id
-/manage/apps/:_id/edit
-
-/help
-/signup
-/signin
-/forgot-password
-/reset-password
-/terms-of-service/organizations
-/terms-of-service/people
-/press
-/imprint
-*/
 
 function acceptInvitationOnLogin() {
   Tracker.autorun((c) => {
@@ -88,7 +36,7 @@ function acceptInvitationOnLogin() {
         }
         Session.set('invitationToken', null);
         Session.set('organizationId', null);
-        FlowRouter.go('manage.organizations.show', { _id: organizationId });
+        FlowRouter.go('organizations.show', { _id: organizationId });
       }
     );
 
@@ -107,22 +55,6 @@ function checkLoggedIn(ctx, redirect) {
   }
 }
 
-FlowRouter.route('/', {
-  name: 'dashboard',
-  action() {
-    if (Meteor.userId()) {
-      BlazeLayout.render('app_layout_scrollable', {
-        main: 'page_dashboard',
-        header_navigation_list: 'dashboard_header_navigation',
-      });
-      acceptInvitationOnLogin();
-    } else {
-      BlazeLayout.render('app_layout_start_page', {
-        main: 'page_start',
-      });
-    }
-  },
-});
 
 FlowRouter.route('/organizations/:_id/accept-invitation/:invitationToken', {
   name: 'organizations.acceptInvitation',
@@ -135,77 +67,6 @@ FlowRouter.route('/organizations/:_id/accept-invitation/:invitationToken', {
     }
 
     acceptInvitationOnLogin();
-  },
-});
-
-// ---- Organizations ------------------------------
-// FlowRouter.route('/organizations', {
-//   name: 'organizations.list',
-//   action() {
-//     BlazeLayout.render('app_layout_scrollable', {
-//       main: 'page_orgas_list',
-//       header_navigation_list: 'home_header_navigation' });
-//   },
-// });
-
-// FlowRouter.route('/organizations/:_id', {
-//   name: 'organizations.show',
-//   action() {
-//     BlazeLayout.render('app_layout_scrollable', {
-//       main: 'organizations_show_page',
-//       header_navigation_list: 'organizations_show_page_header_navigation' });
-//   },
-// });
-
-// ========= BROWSE =======================================================
-
-const browseRoutes = FlowRouter.group({
-  name: 'browse',
-  prefix: '/browse',
-});
-
-browseRoutes.route('/dashboard', {
-  name: 'browse.dashboard',
-
-  action() {
-    BlazeLayout.render('app_layout_scrollable', {
-      main: 'browse_dashboard_page',
-      header_navigation_list: 'browse_dashboard_header' });
-  },
-});
-
-browseRoutes.route('/sources/:_id', {
-  name: 'browse.sources.show',
-
-  action() {
-    BlazeLayout.render('app_layout_mapview', {
-      main: 'sources_show_page',
-      header_navigation_list: 'sources_show_header',
-      //header_sub: 'sources_show_header_sub',
-    });
-  },
-});
-
-
-browseRoutes.route('/categories/:_id', {
-  name: 'browse.categories.show',
-
-  action() {
-    BlazeLayout.render('app_layout_mapview', {
-      main: 'categories_show_page',
-      header_navigation_list: 'sources_show_header',
-    });
-  },
-});
-
-browseRoutes.route('/licenses/:_id', {
-  name: 'browse.licenses.show',
-  action() {
-    BlazeLayout.render('app_layout_scrollable', {
-      main: 'licenses_show_page',
-      header_navigation_list: 'licenses_show_header',
-      // header_sub: 'organizations_show_header_sub',
-    });
   },
 });
 
@@ -242,31 +103,33 @@ adminRoutes.route('/categories/', {
 });
 
 
-// ========= MANAGE =======================================================
+// ========= DATA =======================================================
 
-
-const manageRoutes = FlowRouter.group({
-  name: 'manage',
-  prefix: '/manage',
-  triggersEnter: [
-    checkLoggedIn,
-  ],
+const dataRoutes = FlowRouter.group({
+  name: 'data',
+  prefix: '',
 });
 
-// --- organizations ------------------
-
-manageRoutes.route('/organizations', {
-  name: 'manage.organizations.list',
-
+dataRoutes.route('/', {
+  name: 'dashboard',
   action() {
-    BlazeLayout.render('app_layout_scrollable', {
-      main: 'organizations_list_page',
-      header_navigation_list: 'home_header_navigation' });
+    if (Meteor.userId()) {
+      BlazeLayout.render('app_layout_scrollable', {
+        main: 'page_dashboard',
+        header_navigation_list: 'dashboard_header_navigation',
+      });
+      acceptInvitationOnLogin();
+    } else {
+      BlazeLayout.render('app_layout_start_page', {
+        main: 'page_start',
+      });
+    }
   },
 });
 
-manageRoutes.route('/organizations/create', {
-  name: 'manage.organizations.create',
+
+dataRoutes.route('/organizations/create', {
+  name: 'organizations.create',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_create_page',
@@ -275,8 +138,8 @@ manageRoutes.route('/organizations/create', {
   },
 });
 
-manageRoutes.route('/organizations/:_id', {
-  name: 'manage.organizations.show',
+dataRoutes.route('/organizations/:_id', {
+  name: 'organizations.show',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_page',
@@ -286,8 +149,8 @@ manageRoutes.route('/organizations/:_id', {
   },
 });
 
-manageRoutes.route('/organizations/:_id/settings', {
-  name: 'manage.organizations.show.settings',
+dataRoutes.route('/organizations/:_id/settings', {
+  name: 'organizations.show.settings',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_settings_page',
@@ -299,8 +162,8 @@ manageRoutes.route('/organizations/:_id/settings', {
 
 // ---- licenses ----------------------------------------------
 
-manageRoutes.route('/organizations/:_id/licenses', {
-  name: 'manage.organizations.show.licenses',
+dataRoutes.route('/organizations/:_id/licenses', {
+  name: 'organizations.show.licenses',
 
   action() {
     BlazeLayout.render('app_layout_scrollable', {
@@ -311,8 +174,8 @@ manageRoutes.route('/organizations/:_id/licenses', {
   },
 });
 
-manageRoutes.route('/organizations/:_id/members', {
-  name: 'manage.organizations.show.members',
+dataRoutes.route('/organizations/:_id/members', {
+  name: 'organizations.show.members',
 
   action() {
     BlazeLayout.render('app_layout_scrollable', {
@@ -323,8 +186,8 @@ manageRoutes.route('/organizations/:_id/members', {
   },
 });
 
-manageRoutes.route('/organizations/:_id/licenses/create', {
-  name: 'manage.organizations.licenses.create',
+dataRoutes.route('/organizations/:_id/licenses/create', {
+  name: 'organizations.licenses.create',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_create_page',
@@ -334,8 +197,8 @@ manageRoutes.route('/organizations/:_id/licenses/create', {
   },
 });
 
-manageRoutes.route('/licenses/:_id', {
-  name: 'manage.licenses.show',
+dataRoutes.route('/licenses/:_id', {
+  name: 'licenses.show',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_show_page',
@@ -345,8 +208,8 @@ manageRoutes.route('/licenses/:_id', {
   },
 });
 
-manageRoutes.route('/licenses/:_id/edit', {
-  name: 'manage.licenses.edit',
+dataRoutes.route('/licenses/:_id/edit', {
+  name: 'licenses.edit',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_edit_page',
@@ -358,8 +221,8 @@ manageRoutes.route('/licenses/:_id/edit', {
 
 // ---- APPS -------------------------------------------------
 
-manageRoutes.route('/organizations/:_id/apps', {
-  name: 'manage.organizations.show.apps',
+dataRoutes.route('/organizations/:_id/apps', {
+  name: 'organizations.show.apps',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_list_page',
@@ -369,8 +232,8 @@ manageRoutes.route('/organizations/:_id/apps', {
   },
 });
 
-manageRoutes.route('/organizations/:_id/apps/create', {
-  name: 'manage.organizations.apps.create',
+dataRoutes.route('/organizations/:_id/apps/create', {
+  name: 'organizations.apps.create',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_create_page',
@@ -380,8 +243,8 @@ manageRoutes.route('/organizations/:_id/apps/create', {
   },
 });
 
-manageRoutes.route('/apps/:_id', {
-  name: 'manage.apps.show',
+dataRoutes.route('/apps/:_id', {
+  name: 'app.show',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_show_page',
@@ -391,8 +254,8 @@ manageRoutes.route('/apps/:_id', {
   },
 });
 
-manageRoutes.route('/apps/:_id/edit', {
-  name: 'manage.apps.edit',
+dataRoutes.route('/apps/:_id/edit', {
+  name: 'app.edit',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_edit_page',
@@ -405,8 +268,8 @@ manageRoutes.route('/apps/:_id/edit', {
 
 // ---- sources ----------------------------------------------
 
-manageRoutes.route('/organizations/:_id/sources/create', {
-  name: 'manage.organizations.sources.create',
+dataRoutes.route('/organizations/:_id/sources/create', {
+  name: 'organizations.sources.create',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_create_page',
@@ -415,8 +278,8 @@ manageRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
-manageRoutes.route('/sources/:_id', {
-  name: 'manage.sources.show',
+dataRoutes.route('/sources/:_id', {
+  name: 'sources.show',
   action() {
     BlazeLayout.render('app_layout_mapview', {
       main: 'sources_show_page',
@@ -426,8 +289,8 @@ manageRoutes.route('/sources/:_id', {
   },
 });
 
-manageRoutes.route('/sources/:_id/format', {
-  name: 'manage.sources.show.format',
+dataRoutes.route('/sources/:_id/format', {
+  name: 'sources.show.format',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_format_page',
@@ -437,8 +300,8 @@ manageRoutes.route('/sources/:_id/format', {
   },
 });
 
-manageRoutes.route('/sources/:_id/settings', {
-  name: 'manage.sources.show.settings',
+dataRoutes.route('/sources/:_id/settings', {
+  name: 'sources.show.settings',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_settings_page',
@@ -449,8 +312,8 @@ manageRoutes.route('/sources/:_id/settings', {
 });
 
 
-manageRoutes.route('/sources/:_id/access', {
-  name: 'manage.sources.show.access',
+dataRoutes.route('/sources/:_id/access', {
+  name: 'sources.show.access',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_access_page',
@@ -461,8 +324,8 @@ manageRoutes.route('/sources/:_id/access', {
 });
 
 
-manageRoutes.route('/sources/:_id/imports', {
-  name: 'manage.sources.show.imports',
+dataRoutes.route('/sources/:_id/imports', {
+  name: 'sources.show.imports',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',
@@ -473,8 +336,8 @@ manageRoutes.route('/sources/:_id/imports', {
 });
 
 
-manageRoutes.route('/sources/:_id/imports/:importId?', {
-  name: 'manage.sources.show.import',
+dataRoutes.route('/sources/:_id/imports/:importId?', {
+  name: 'sources.show.import',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',

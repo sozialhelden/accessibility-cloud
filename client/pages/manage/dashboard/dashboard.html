@@ -6,26 +6,26 @@
   <div class='dashboard with-list'>
     {{#each organizationsForCurrentUser}}
       <h2 class='group-header'>
-        <a href='{{pathFor "manage.organizations.show" _id=_id}}'>
+        <a href='{{pathFor "organizations.show" _id=_id}}'>
           {{name}}
         </a>
       </h2>
       {{#unless tocForOrganizationsAccepted}}
         <div class='has-error'>
-          Please <a href='{{pathFor "manage.organizations.settings" _id=_id}}'>accept the terms and conditions</a> for this organization.
+          Please <a href='{{pathFor "organizations.settings" _id=_id}}'>accept the terms and conditions</a> for this organization.
         </div>
       {{/unless}}
 
       <h3 class='group-header'>
         {{_"Sources"}}
-        <a class='action-for-group' href='{{pathFor "manage.organizations.sources.create" _id=_id}}'>
+        <a class='action-for-group' href='{{pathFor "organizations.sources.create" _id=_id}}'>
           {{_"add"}}
         </a>
       </h3>
       <ul class='with-blocks'>
         {{#each getSources}}
           <li class='list block for-source {{classIfDraft}} '>
-            <a href='{{pathFor "manage.sources.show" _id=_id}}'>
+            <a href='{{pathFor "sources.show" _id=_id}}'>
               {{#if isDraft}}
                 <span class='secondary'>
                   {{_"Draft: "}}
@@ -63,14 +63,14 @@
       {{#if getApps}}
         <h3 class='group-header'>
           {{_"API-Clients"}}
-          <a class='action-for-group' href='{{pathFor "manage.organizations.apps.create" _id=_id}}'>
+          <a class='action-for-group' href='{{pathFor "organizations.apps.create" _id=_id}}'>
             {{_"add"}}
           </a>
         </h3>
         <ul class='with-blocks'>
           {{#each getApps}}
             <li class='list block for-app'>
-              <a href='{{pathFor "manage.apps.show" _id=_id}}'>
+              <a href='{{pathFor "app.show" _id=_id}}'>
                 <span class='main'>
                   {{name}}
                 </span>
@@ -96,7 +96,7 @@
     {{/each}}
     <div>
       <br>
-      <a class='call-to-action button' href='{{pathFor "manage.organizations.create"}}'>
+      <a class='call-to-action button' href='{{pathFor "organizations.create"}}'>
         {{#if organizationsForCurrentUser}}
           {{_ "Add Organization"}}
         {{else}}
@@ -111,7 +111,7 @@
     <ul class='with-blocks'>
       {{#each sourcesNotOf organizationsForCurrentUser}}
         <li class='list block for-source'>
-          <a href='{{pathFor "browse.sources.show" _id=_id}}'>
+          <a href='{{pathFor "sources.show" _id=_id}}'>
             <span class='main'>
               {{getOrganization.name}}
             </span>

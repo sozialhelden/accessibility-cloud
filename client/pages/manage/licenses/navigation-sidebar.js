@@ -12,7 +12,7 @@ Template.licenses_navigation_sidebar.onCreated(() => {
 });
 
 function getOrganizationForView() {
-  if (FlowRouter._current.route.name === 'manage.organizations.show.licenses') {
+  if (FlowRouter._current.route.name === 'organizations.show.licenses') {
     const organizationId = FlowRouter.getParam('_id');
     return Organizations.findOne({ _id: organizationId });
   }

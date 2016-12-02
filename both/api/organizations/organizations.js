@@ -1,9 +1,14 @@
-import { userHasFullAccessToOrganizationId } from '/both/api/organizations/privileges';
+import {
+  userHasFullAccessToOrganizationId,
+  isUserMemberOfOrganizationWithId,
+} from '/both/api/organizations/privileges';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources';
 import { Apps } from '/both/api/apps/apps';
 import { countriesOfTheWorld } from '/both/lib/all-countries';
+import { isAdmin } from '/both/lib/is-admin';
+
 
 export const Organizations = new Mongo.Collection('Organizations');
 
@@ -133,6 +138,9 @@ Organizations.helpers({
 Organizations.attachSchema(Organizations.schema);
 
 Organizations.helpers({
+  isFullyVisibleForUserId(userId) {
+    return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this._id);
+  },
   getSources() {
     return Sources.find({ organizationId: this._id });
   },

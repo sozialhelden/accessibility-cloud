@@ -1,10 +1,12 @@
 import { _ } from 'meteor/underscore';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { isAdmin } from '/both/lib/is-admin';
 
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import { isUserMemberOfOrganizationWithId } from '/both/api/organizations/privileges.js';
 
 export const Sources = new Mongo.Collection('Sources');
 
@@ -26,7 +28,7 @@ Sources.schema = new SimpleSchema({
     autoform: {
       afFieldInput: {
         placeholder: 'e.g. Places in Europe',
-         autofocus: true,
+        autofocus: true,
       },
     },
     type: String,
@@ -118,6 +120,9 @@ Sources.relationships = {
 };
 
 Sources.helpers({
+  isFullyVisibleForUserId(userId) {
+    return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this.organizationId);
+  },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },
