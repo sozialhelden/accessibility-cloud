@@ -1,6 +1,7 @@
 import { _ } from 'meteor/underscore';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { ValidationError } from 'meteor/mdg:validation-error';
 
 SimpleSchema.messages(
   { invalidFieldReference: '[label] should not contain non-allowed field name `[value]`.' },
@@ -8,41 +9,46 @@ SimpleSchema.messages(
 
 // Returns MongoDB query options for given request
 
-export function orderOptions(req, collection) {
-  const paginationQuery = _.pick(req.query, 'order', 'descending');
+export function sortOptions(req, collection) {
+  const sortQuery = _.pick(req.query, 'sort', 'descending');
 
   check(Object.keys(collection.publicFields), [String]);
   check(Object.values(collection.publicFields), [Match.OneOf(0, 1)]);
   const publicFieldNames = Object.keys(collection.publicFields);
 
-  let context = null;
-
   const schema = new SimpleSchema({
     descending: {
-      type: Boolean,
+      type: Match.OneOf(Boolean, Number),
       optional: true,
     },
-    order: {
+    sort: {
       type: String,
       optional: true,
       custom() {
-        if (this.isSet && !publicFieldNames.includes(this.value)) {
-          // throw new ValidationError(
-          //   { name: 'order', type: 'invalidFieldReference', value: this.value }
-          // )
-          return;
+        if (this.isSet && !_.some(publicFieldNames, n => n.split('.')[0] === n)) {
+          throw new ValidationError(
+            [
+              {
+                name: 'sort',
+                type: 'invalidFieldReference',
+                value: this.value,
+              },
+            ]
+          );
         }
       },
     },
   });
 
-  context = schema.newContext();
-
   // Clean the data to remove whitespaces and have correct types
-  schema.clean(paginationQuery);
+  schema.clean(sortQuery);
 
   // Throw ValidationError if something is wrong
-  schema.validate(paginationQuery);
+  schema.validate(sortQuery);
 
-  return _.extend({}, paginationQuery);
+  const options = sortQuery.sort ? {
+    sort: { [sortQuery.sort]: (sortQuery.descending ? -1 : 1) },
+  } : {};
+
+  return _.extend({}, options);
 }

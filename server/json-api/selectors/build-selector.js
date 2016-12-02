@@ -3,6 +3,7 @@ import { geometrySelector } from './geometry';
 import { sourceFilterSelector } from './source-filter.js';
 import { paginationOptions } from './pagination';
 import { fieldOptions } from './fields';
+import { sortOptions } from './sort';
 import { _ } from 'meteor/underscore';
 
 export function buildSelectorAndOptions({ req, _id, collection, appId }) {
@@ -41,7 +42,8 @@ export function buildSelectorAndOptions({ req, _id, collection, appId }) {
   const options = { transform: null };
 
   Object.assign(options, paginationOptions(req));
-  Object.assign(options, fieldOptions(req));
+  Object.assign(options, fieldOptions(req, collection));
+  Object.assign(options, sortOptions(req, collection));
 
   return { selector, options };
 }

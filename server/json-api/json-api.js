@@ -59,7 +59,7 @@ function handleJSONRequest(req, res, next) {
       EJSON.stringify(req.body)
     );
 
-    responseBody = EJSON.stringify({ result: handler(options) });
+    responseBody = EJSON.stringify(handler(options));
   } catch (error) {
     // eslint-disable-next-line no-param-reassign
     res.statusCode = (error.error === 'validation-error') ? 422 : (error.error || 500);
@@ -69,7 +69,9 @@ function handleJSONRequest(req, res, next) {
       error,
       error.stack
     );
-    responseBody = JSON.stringify({ error: _.pick(error, 'reason', 'details') });
+    const responseData = { error: _.pick(error, 'reason', 'details') };
+    responseData.error.reason = responseData.error.reason || 'Internal server error';
+    responseBody = JSON.stringify(responseData);
   }
 
   return res.end(responseBody);
