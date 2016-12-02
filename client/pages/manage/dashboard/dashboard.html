@@ -38,7 +38,13 @@
 
               {{#if getLicense}}
                 <span class='secondary'>
-                  ({{getLicense.shortName}})
+                  {{#with getLicense}}
+                    {{#if shortName}}
+                      ({{shortName}})
+                    {{else}}
+                      ({{name}})
+                    {{/if}}
+                  {{/with}}
                 </span>
               {{/if}}
 
