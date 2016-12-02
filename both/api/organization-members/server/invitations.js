@@ -119,8 +119,9 @@ export function inviteUserToOrganization(emailAddress, organizationId, role) {
     return member;
   }
 
+  const addressRegExp = invitationEmailAddress.replace(/([^a-zA-Z0-9])/g, '\\$1');
   const user = Meteor.users.findOne(
-    { 'emails.address': { $regex: invitationEmailAddress, $options: 'i' } }
+    { 'emails.address': { $regex: addressRegExp, $options: 'i' } }
   );
 
   if (user) {
