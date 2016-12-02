@@ -10,10 +10,8 @@ PlaceInfos.allow({
 });
 
 PlaceInfos.publicFields = {
-  sourceId: 1,
-  originalId: 1,
-  lastSourceImportId: 1,
-  data: 1,
+  properties: 1,
+  geometry: 1,
 };
 
 PlaceInfos.helpers({

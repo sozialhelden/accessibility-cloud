@@ -278,17 +278,6 @@ dataRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
-dataRoutes.route('/sources/:_id', {
-  name: 'sources.show',
-  action() {
-    BlazeLayout.render('app_layout_mapview', {
-      main: 'sources_show_page',
-      header_navigation_list: 'sources_show_header',
-      header_sub: 'sources_show_header_sub',
-    });
-  },
-});
-
 dataRoutes.route('/sources/:_id/format', {
   name: 'sources.show.format',
   action() {
@@ -341,6 +330,28 @@ dataRoutes.route('/sources/:_id/imports/:importId?', {
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+dataRoutes.route('/sources/:_id', {
+  name: 'sources.show',
+  action() {
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
+  name: 'placeInfos.show',
+  action() {
+    BlazeLayout.render('app_layout_mapview', {
+      main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
     });

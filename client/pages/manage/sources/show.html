@@ -1,15 +1,15 @@
 <template name="sources_show_page">
   <div class='sidebar with-details'>
-    {{#with selectedPlace}}
+    {{#with getCurrentPlaceInfo}}
       <section class="selected-place">
         <span class='js-close close-window icon'></span>
 
-        <h4>{{selectedPlace.properties.name}}</h4>
-        <p class='category'>{{selectedPlace.properties.category}}</p>
-        <pre class='readible json'>{{stringifyHuman selectedPlace.properties.accessibility}}</pre>
-        {{#if selectedPlace.properties.infoPageUrl}}
+        <h4>{{getCurrentPlaceInfo.properties.name}}</h4>
+        <p class='category'>{{getCurrentPlaceInfo.properties.category}}</p>
+        <pre class='readible json'>{{stringifyHuman getCurrentPlaceInfo.properties.accessibility}}</pre>
+        {{#if getCurrentPlaceInfo.properties.infoPageUrl}}
           <p>
-            <a href='{{selectedPlace.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
+            <a href='{{getCurrentPlaceInfo.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
           </p>
         {{/if}}
 
@@ -17,7 +17,7 @@
         {{#if placeDetailsVisible}}
         <a href='#' class='js-click-hide-details'>Hide JSON</a>
         <pre class='readible json'>
-          {{stringify selectedPlace}}
+          {{stringify getCurrentPlaceInfo}}
         </pre>
         {{else}}
         <a href='#' class='js-click-show-details'>Show JSON</a>

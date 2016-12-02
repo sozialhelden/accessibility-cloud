@@ -23,6 +23,9 @@ const helpers = {
     return JSON.stringify(object, true, 4);
   },
   stringifyHuman(object) {
+    if(!object) {
+      return '';
+    }
     return JSON.stringify(object, true, 2).replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '').replace(/\n\s\s/g, '\n');
   },
   _(str) {

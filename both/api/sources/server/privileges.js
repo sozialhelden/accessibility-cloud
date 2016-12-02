@@ -100,3 +100,24 @@ export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
 
   return source;
 }
+
+export function checkExistenceAndVisibilityForSourceId(userId, sourceId) {
+  check(sourceId, String);
+  check(userId, String);
+
+  if (!userId) {
+    throw new Meteor.Error(401, TAPi18n.__('Please log in first.'));
+  }
+
+  const source = Sources.findOne({
+    $and: [
+      Sources.visibleSelectorForUserId(userId),
+      { _id: sourceId },
+    ],
+  });
+  if (!source) {
+    throw new Meteor.Error(404, TAPi18n.__('Source not found or not visible.'));
+  }
+
+  return source;
+}

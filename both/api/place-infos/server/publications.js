@@ -13,5 +13,16 @@ Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
   return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 3 });
 });
 
+Meteor.publish('placeInfos.single', function publish(placeInfoId) {
+  check(placeInfoId, String);
+  const selector = {
+    $and: [
+      { _id: placeInfoId },
+      PlaceInfos.visibleSelectorForUserId(this.userId),
+    ],
+  };
+  return PlaceInfos.find(selector, options);
+});
+
 console.log('Ensuring geospatial index for PlaceInfos...');
 PlaceInfos._ensureIndex({ geometry: '2dsphere' });

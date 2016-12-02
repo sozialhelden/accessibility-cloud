@@ -1,20 +1,33 @@
 import { Meteor } from 'meteor/meteor';
-import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
+import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
 
+function getCurrentPlaceInfo() {
+  FlowRouter.watchPathChange();
+  const placeInfoId = FlowRouter.getParam('placeInfoId');
+  if (!placeInfoId) {
+    return null;
+  }
+  const place = PlaceInfos.findOne({ _id: placeInfoId });
+  return place;
+}
 
-Template.sources_show_page.onCreated(() => {
+Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('licenses.public');
-
+  this.autorun(() => {
+    if (FlowRouter.getParam('placeInfoId')) {
+      subsManager.subscribe('placeInfos.single', FlowRouter.getParam('placeInfoId'));
+    }
+  });
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
@@ -57,9 +70,6 @@ function getColorForWheelchairAccessiblity (placeData) {
 }
 
 Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
-  this.autorun(() => {
-  });
-
   const map = L.map('mapid', {
     doubleClickZoom: false,
   }).setView([49.25044, -123.137], 13);
@@ -73,6 +83,12 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     accessToken: Meteor.settings.public.mapbox || 'your.mapbox.public.access.token',
   }).addTo(map);
 
+  this.autorun(() => {
+    const place = getCurrentPlaceInfo();
+    if (place) {
+      map.setView(place.geometry.coordinates.reverse(), 14);
+    }
+  });
 
   Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
     if (err) {
@@ -98,10 +114,12 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
             className: `ac-marker ${color}`,
             iconSize: [36, 36],
           });
-          const marker = L.marker(latlng, { icon: acIcon })
+          const marker = L.marker(latlng, { icon: acIcon });
           marker.on('click', function(e, o) {
-            console.log('clicked2:', e, o);
-            Session.set('SelectedPlace', e.target.feature.placeData);
+            FlowRouter.go('placeInfos.show', {
+              _id: FlowRouter.getParam('_id'),
+              placeInfoId: feature.placeData._id,
+            });
           });
 
           return marker;
@@ -137,25 +155,18 @@ Template.sources_show_page.helpers({
     }
     return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
-  selectedPlace() {
-    return Session.get('SelectedPlace');
-  },
+  getCurrentPlaceInfo,
   placeDetailsVisible() {
-    return Session.get('PlaceDetailsVisible');
+    FlowRouter.watchPathChange();
+    return !!FlowRouter.getParam('placeInfoId');
   },
 });
 
 Template.sources_show_page.events({
-  'click .js-click-show-details'(event) {
-    Session.set('PlaceDetailsVisible', true);
-    event.preventDefault();
-  },
-  'click .js-click-hide-details'(event) {
-    Session.set('PlaceDetailsVisible', false);
-    event.preventDefault();
-  },
   'click .js-close'(event) {
-    Session.set('SelectedPlace', undefined);
+    FlowRouter.go('sources.show', {
+      _id: FlowRouter.getParam('_id'),
+    });
     event.preventDefault();
   },
 });
