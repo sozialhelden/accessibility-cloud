@@ -31,10 +31,7 @@ export function publishPublicFields(
     function publish() {
       this.autorun(() => {
         const visibleSelector = collection.visibleSelectorForUserId(this.userId);
-        if (!visibleSelector) {
-          return [];
-        }
-        const selector = { $and: [givenSelector, visibleSelector] };
+        const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
           _.extend({}, options, { fields: collection.publicFields })
@@ -63,10 +60,7 @@ export function publishPrivateFields(
     function publish() {
       this.autorun(() => {
         const visibleSelector = collection.visibleSelectorForUserId(this.userId);
-        if (!visibleSelector) {
-          return [];
-        }
-        const selector = { $and: [givenSelector, visibleSelector] };
+        const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
           _.extend({}, options, { fields: collection.publicFields })
