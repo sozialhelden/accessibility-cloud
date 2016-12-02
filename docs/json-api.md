@@ -1,3 +1,32 @@
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Accessibility Cloud API](#accessibility-cloud-api)
+	- [Features](#features)
+	- [Getting started](#getting-started)
+	- [Authentication](#authentication)
+	- [Features for all endpoints](#features-for-all-endpoints)
+		- [Licensing](#licensing)
+		- [Pagination](#pagination)
+		- [Filtering returned fields](#filtering-returned-fields)
+		- [Embedded related resources](#embedded-related-resources)
+		- [Sorting](#sorting)
+		- [Error handling](#error-handling)
+	- [Endpoints](#endpoints)
+		- [GET /place-infos](#get-place-infos)
+			- [Data source filtering](#data-source-filtering)
+			- [Location-based search](#location-based-search)
+			- [Embedding related documents](#embedding-related-documents)
+			- [Example request](#example-request)
+			- [Example response](#example-response)
+		- [GET /apps](#get-apps)
+		- [GET /languages](#get-languages)
+		- [GET /licenses](#get-licenses)
+		- [GET /organizations](#get-organizations)
+		- [GET /source-imports](#get-source-imports)
+		- [GET /sources](#get-sources)
+
+<!-- /TOC -->
+
 # Accessibility Cloud API
 
 Accessibility Cloud allows you to request accessibility data via HTTP in JSON format.
@@ -35,7 +64,7 @@ Your API token allows you to access the following data:
 - Content of other organizations' data sources, if the sources meet the following criteria
   - the source is not in draft mode
   - your organization is allowed to access the data source (or the data source is publicly available)
-  
+
 
 ## Features for all endpoints
 
@@ -50,6 +79,14 @@ API result sets are paginated. On one page, maximally 1000 results are returned.
 ### Filtering returned fields
 
 To get a specific set of returned JSON fields only (e.g. to save bandwidth), you can use the `exclude` and `include` GET query parameters. For both parameters, the server accepts a comma-separated list of field paths, e.g. `include=properties.name,geometry`.
+
+### Embedded related resources
+
+Result list returned via the API often contain references to other documents by ID. See the `/place-infos` endpoint for an example how to embed related documents directly in the result response list.
+
+### Sorting
+
+You can sort results by using the `sort` parameter. For this parameter, the servers accept a field path, e.g. `sort=properties.address`. Sort order is ascending by default. If you want to sort in descending order, add a `descending=1` parameter to your request.
 
 ### Error handling
 
@@ -107,13 +144,60 @@ You can request POIs around a specific map location. For this, you have to suppl
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
 
+#### Embedding related documents
+
+In the same way, the API allows you to get customized additional details for results in a special field named `related` that is embedded in the server response, like this:
+
+```javascript
+{
+  "type": "FeatureCollection",
+  "featureCount": 1,
+  "related": {
+    "licenses": {
+      "4HgSTHdeQMA9pvJNM": {             // license of the source below
+        "_id": "4HgSTHdeQMA9pvJNM",
+        "name": "Public Domain",
+        ...
+      }
+    },
+    "sources": {
+      "eWrPejvNrE5AFB7bx": {
+        "name": "Another data source",
+        "licenseId": "4HgSTHdeQMA9pvJNM", // reference to the license above
+        ...
+      }
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { ... },
+      "properties": {
+        "sourceId": "eWrPejvNrE5AFB7bx", // reference to the source above
+        ...
+      }
+    }
+  ]
+}
+```
+
+The data source document is added to the response after adding the `include=source` parameter.
+
+If given, the `include` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
+
+- `source`
+- `source.organization`
+- `source.license`
+- `sourceImport`
+- `source.language`
+
 #### Example request
 
 ```bash
 curl -v -s \
     -H 'Accept: application/json' \
     -H 'X-Token: YOUR_TOKEN_HERE' \
-    https://www.accessibility.cloud/place-infos\?latitude\=48.24350856260559\&longitude\=16.39748637322089\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm | jq .
+    https://www.accessibility.cloud/place-infos\?latitude\=48.24350856260559\&longitude\=16.39748637322089\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&include=source | jq .
 ```
 
 #### Example response
@@ -126,10 +210,16 @@ curl -v -s \
     "licenses": {
       "ksZeCT5iukcsigZhQ": {
         "_id": "ksZeCT5iukcsigZhQ",
-        "name": "Open Restaurant License",
-        "plainTextSummary": "The open restaurant license allows you to share restaurant data exactly in the time intervals when the restaurant is open. Outside the opening times, sharing is forbidden.",
+        "name": "Accessibility License",
+        "plainTextSummary": "A summary…",
         "consideredAs": "restricted",
         "organizationId": "JvmSCpsocEvDcgfkb"
+      },
+      "sources": {
+        "QGf3sjbSxSpkeNHFm": {
+          "name": "",
+          "licenseId": "ksZeCT5iukcsigZhQ"
+        }
       }
     }
   },
