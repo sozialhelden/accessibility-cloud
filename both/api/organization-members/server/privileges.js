@@ -39,6 +39,10 @@ OrganizationMembers.helpers({
 });
 
 OrganizationMembers.visibleSelectorForUserId = (userId) => {
+  if (!userId) {
+    return null;
+  }
+
   check(userId, String);
   return {
     organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },

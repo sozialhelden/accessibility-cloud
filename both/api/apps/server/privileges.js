@@ -1,3 +1,4 @@
+import { check } from 'meteor/check';
 import {
   getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
@@ -29,6 +30,9 @@ Apps.privateFields = {
 };
 
 Apps.visibleSelectorForUserId = (userId) => {
+  if (!userId) {
+    return null;
+  }
   check(userId, String);
   return { organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) } };
 };

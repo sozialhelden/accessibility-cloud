@@ -67,6 +67,9 @@ function sourceSelectorForOrganizationIds(organizationIds) {
 }
 
 Sources.visibleSelectorForUserId = (userId) => {
+  if (!userId) {
+    return null;
+  }
   check(userId, String);
   return sourceSelectorForOrganizationIds(getAccessibleOrganizationIdsForUserId(userId));
 };
@@ -76,7 +79,7 @@ Sources.visibleSelectorForAppId = (appId) => {
   const app = Apps.findOne(appId);
   const organizationId = app.organizationId;
   return sourceSelectorForOrganizationIds([organizationId]);
-}
+};
 
 export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
   check(sourceId, String);

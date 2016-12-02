@@ -31,6 +31,10 @@ function placeInfoSelectorForSourceSelector(sourceSelector) {
 }
 
 PlaceInfos.visibleSelectorForUserId = (userId) => {
+  if (!userId) {
+    return null;
+  }
+
   check(userId, String);
   return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
 };
