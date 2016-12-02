@@ -10,6 +10,11 @@
           {{name}}
         </a>
       </h2>
+      {{#unless tocForOrganizationsAccepted}}
+        <div class='has-error'>
+          Please <a href='{{pathFor "manage.organizations.settings" _id=_id}}'>accept the terms and conditions</a> for this organization.
+        </div>
+      {{/unless}}
 
       <h3 class='group-header'>
         {{_"Sources"}}

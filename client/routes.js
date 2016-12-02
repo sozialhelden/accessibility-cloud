@@ -484,6 +484,17 @@ manageRoutes.route('/sources/:_id/imports/:importId?', {
   },
 });
 
+
+FlowRouter.route('/imprint', {
+  name: 'imprint',
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'imprint_page',
+      header_navigation_list: 'imprint_header',
+    });
+  },
+});
+
 // === NOT FOUND ===================================
 
 // the App_notFound template is used for unknown routes and missing lists
