@@ -5,7 +5,6 @@
         <li data-id='{{_id}}'>
           {{#autoForm class="form-inline" collection=OrganizationMembers schema=memberRoleSchema id=_id type="update" doc=this autosave=true}}
             <div class='name-with-icon'>
-              {{stringify this}}
               {{{getIconHTML}}} {{getUserName}}
               {{#if invitationStateAsHTML}}
                 <span class='state'>{{{invitationStateAsHTML}}}</span>
