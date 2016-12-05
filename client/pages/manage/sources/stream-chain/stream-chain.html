@@ -8,6 +8,14 @@
 
     <h2>Import results from {{humanReadableStartTimestamp}}</h2>
 
+    <p class='subtle'>
+      {{#if upsertStream}}
+        {{importedPlaceCount}} places imported or updated.
+      {{else}}
+        This import is missing an <code>UpsertPlace</code> stream unit.
+      {{/if}}
+    </p>
+
     {{#if error}}
       <p class='error'>Error while importing: {{error.reason}} {{error.message}}</p>
     {{/if}}

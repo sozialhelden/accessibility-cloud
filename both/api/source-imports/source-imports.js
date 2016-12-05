@@ -45,4 +45,11 @@ SourceImports.helpers({
       SourceImports.update(this._id, modifier);
     }
   },
+  upsertStream() {
+    return this.streamChain.find(stream => stream && stream.type === 'UpsertPlace');
+  },
+  importedPlaceCount() {
+    const upsertStream = this.upsertStream();
+    return upsertStream && upsertStream.progress && upsertStream.progress.transferred || 0;
+  },
 });
