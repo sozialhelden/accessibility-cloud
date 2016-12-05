@@ -104,6 +104,10 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
         placeData: item,
       }));
 
+      if (!geoMarkerData.length) {
+        return;
+      }
+      
       const markers = new L.geoJson(geoMarkerData, {
         pointToLayer(feature, latlng) {
           const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
