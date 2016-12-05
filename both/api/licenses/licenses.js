@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { isAdmin } from '/both/lib/is-admin';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
@@ -100,3 +102,8 @@ Licenses.helpers({
     return Organizations.findOne(this.organizationId);
   },
 });
+
+if (Meteor.isServer) {
+  Licenses._ensureIndex({ organizationId: 1 });
+  Licenses._ensureIndex({ consideredAs: 1 });
+}

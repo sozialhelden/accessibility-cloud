@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { moment } from 'meteor/momentjs:moment';
 import { _ } from 'meteor/underscore';
@@ -53,3 +54,8 @@ SourceImports.helpers({
     return upsertStream && upsertStream.progress && upsertStream.progress.transferred || 0;
   },
 });
+
+if (Meteor.isServer) {
+  SourceImports._ensureIndex({ sourceId: 1 });
+  SourceImports._ensureIndex({ organizationId: 1 });
+}

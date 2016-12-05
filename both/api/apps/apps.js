@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations';
-import { isAdmin } from '/both/lib/is-admin';
 
 export const Apps = new Mongo.Collection('Apps');
 
@@ -68,3 +68,9 @@ Apps.helpers({
     return Organizations.findOne(this.organizationId);
   },
 });
+
+if (Meteor.isServer) {
+  Apps._ensureIndex({ organizationId: 1 });
+  Apps._ensureIndex({ tokenString: 1 });
+  Apps._ensureIndex({ tocForAppsAccepted: 1 });
+}
