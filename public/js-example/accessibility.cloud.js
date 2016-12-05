@@ -65,7 +65,8 @@
           <li class="ac-result" role="gridcell" aria-expanded="false"> \
             {{#properties}} \
               <div class="ac-summary"> \
-                <img src="https://dl.dropboxusercontent.com/u/5503063/ac/icons/{{category}}.png" role="presentation"> \
+                <img src="https://dl.dropboxusercontent.com/u/5503063/ac/icons-maki-ac/{{category}}@2x.png" \
+                     srcset="https://dl.dropboxusercontent.com/u/5503063/ac/icons-maki-ac/{{category}}@4x.png 2x" role="presentation"> \
                 <header class="ac-result-name" role="heading">{{name}}</header> \
                 <div class="ac-result-distance">{{formattedDistance}}</div> \
                 <div class="ac-result-category">{{category}}</div> \

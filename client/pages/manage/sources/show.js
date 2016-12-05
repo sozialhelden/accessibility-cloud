@@ -40,8 +40,8 @@ L.AccessibilityIcon = L.Icon.extend({
   options: {
     number: '',
     shadowUrl: null,
-    iconSize: new L.Point(25, 41),
-    iconAnchor: new L.Point(13, 41),
+    iconSize: new L.Point(27, 27),
+    iconAnchor: new L.Point(13, 25),
     popupAnchor: new L.Point(0, -33),
     className: 'leaflet-div-icon accessiblity',
   },
@@ -120,7 +120,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
           const acIcon = new L.AccessibilityIcon({
             iconUrl: `/icons/categories/${categoryIconName}.png`,
             className: `ac-marker ${color}`,
-            iconSize: [36, 36],
+            // iconSize: [27, 27],
           });
           const marker = L.marker(latlng, { icon: acIcon });
           marker.on('click', function(e, o) {
