@@ -24,39 +24,7 @@
       </h3>
       <ul class='with-blocks'>
         {{#each getSources}}
-          <li class='list block for-source {{classIfDraft}} '>
-            <a href='{{pathFor "sources.show" _id=_id}}'>
-              {{#if isDraft}}
-                <span class='secondary'>
-                  {{_"Draft: "}}
-                </span>
-              {{/if}}
-
-              <span class='main'>
-                {{name}}
-              </span>
-
-              {{#if getLicense}}
-                <span class='secondary'>
-                  {{#with getLicense}}
-                    {{#if shortName}}
-                      ({{shortName}})
-                    {{else}}
-                      ({{name}})
-                    {{/if}}
-                  {{/with}}
-                </span>
-              {{/if}}
-
-              <div class='details'>
-                {{#with this.getLastSuccessfulImport}}
-                  Imported {{agoStartTimestamp}}
-                {{else}}
-                  {{_"No imports yet"}}
-                {{/with}}
-              </div>
-            </a>
-          </li>
+          {{> page_dashboard_source}}
         {{/each}}
       </ul>
 

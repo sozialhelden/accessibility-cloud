@@ -1,4 +1,5 @@
 import { _ } from 'meteor/underscore';
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { isAdmin } from '/both/lib/is-admin';
@@ -156,3 +157,13 @@ Sources.helpers({
       .find(i => (i.isFinished() && !i.hasError() && !i.isAborted()));
   },
 });
+
+if (Meteor.isClient) {
+  export const PlaceInfoCounts = new Meteor.Collection('sourcesPlaceInfoCounts');
+  Sources.helpers({
+    placeInfoCount() {
+      const countDoc = PlaceInfoCounts.findOne(this._id);
+      return countDoc && countDoc.count;
+    },
+  });
+}
