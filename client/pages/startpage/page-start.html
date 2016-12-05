@@ -4,6 +4,7 @@
       <div class='cover-map'></div>
       <div id='mapid'>
       </div>
+
       <div class='header'>
         <ul class='page-sections'>
           <li><a href='.'>Manage</a></li>
@@ -20,6 +21,7 @@
         </div>
  -->      </div>
     </div>
+
     <div class='content'>
 <!--       <div class='area statistics'>
         <a class='number-block' href='/sources'>
@@ -41,39 +43,43 @@
           <footer>countries</footer>
         </a>
       </div>
- -->      <div class='claim area'>
+ -->
+      <div class='claim area'>
         <h2>Let’s collect more accessible places together.</h2>
         <p>
-          accessibility.cloud is an initiative by <a href='https://sozialhelden.de/en/'>SOZIALHELDEN e.V.</a>, a non-profit organization based in Germany and creators of <a href='https://wheelmap.org'>Wheelmap.org</a> – a map for wheelchair accessible places.
-        </p>
-        <p>
-          We believe in an inclusive world and want to make it easy to find accessibility information—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other. As a tool, we suggest accessibility.cloud to share data in a standardized, future-proof, easy-to-use way.
+          We believe in an inclusive world and want to make it easy to find accessibility information—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other. accessibility.cloud simplifies sharing and obtaining data in a standardized, future-proof, easy-to-use way.
         </p>
       </div>
+
       <div class='page content block benefits area'>
         <div class='on-white use-data'>
           <h3>Use our data.</h3>
           <h4>For your app, website or studies: <br> use our free data.</h4>
-          <p>No matter if you are developing an app or do research about accessibility: we provide free-of-charge access to all data sources with open licenses—in a unified data format.</p>
-          <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/json-api.md'>Get started</a>
+          <p>No matter if you are developing an app or do research about accessibility: we provide free-of-charge access to all data sources <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/json-api.md'>via an API</a> with open licenses—in a <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/exchange-format.md'>unified data format</a>.</p>
         </div>
         <div class='on-white share-data'>
           <h3>Share your data.</h3>
-          <h4>You collected accessibility data yourself? <br> We'd love to hear from you!</h4>
+          <h4>You collected accessibility data yourself? We'd love to hear from you!</h4>
           <p>Joining is easy, and we can help you to include your own data, no matter if you just have a file or your own web API.</p>
-          <a href='mailto:support@accessibility.cloud'>Contact us</a>
+          <p><a href='mailto:support@accessibility.cloud'>Contact us</a> if you have something to share!</p>
         </div>
       </div>
+
       <div class='page content block actions area'>
         <div class='wrapper'>
           <a href="{{pathFor 'join'}}" class='call-to-action button big'>
             {{_ "Join now"}}
           </a>
           <div>
-            <p> {{_ "You already have an account?"}}</p>
-            <a href="{{pathFor 'signin'}}" class='link'>{{_"Sign in"}}</a>
+            <p> {{_ "You already have an account?"}} <a href="{{pathFor 'signin'}}" class='link'>{{_"Sign in"}}</a></p>
           </div>
         </div>
+      </div>
+
+      <div class='about area'>
+        <p>
+          accessibility.cloud is an initiative by <a href='https://sozialhelden.de/en/'>SOZIALHELDEN e.V.</a>, a non-profit organization based in Germany and creators of <a href='https://wheelmap.org'>Wheelmap.org</a> – a map for wheelchair accessible places.
+        </p>
       </div>
 
       <div class='partners area'>

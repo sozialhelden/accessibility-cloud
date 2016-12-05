@@ -130,6 +130,7 @@
   right: 0;
   padding: 1em 1.5em;
   z-index: 1010;
+  background-color: rgba(255, 255, 255, 0.7);
 
   .btns-group {
     a {
@@ -194,7 +195,7 @@ div.area.statistics {
   }
 }
 
-.claim.area {
+.claim.area, .about.area {
   text-align: center;
   max-width: 50em;
 
@@ -226,15 +227,16 @@ div.area.statistics {
 
     h3 {
       margin-top: 0;
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
       .font-l1;
       color: @color-grey054;
     }
 
     h4 {
       padding-bottom: 0.5em;
-      border-bottom: 1px solid @color-grey091;
-      text-transform: uppercase;
+      // border-bottom: 1px solid @color-grey091;
+      .type-regular;
+      // text-transform: uppercase;
     }
 
     p {
@@ -242,7 +244,8 @@ div.area.statistics {
       line-height: 1.3em;
       .type-light;
     }
-    a {
+
+    a.prominent-link {
       display: block;
       margin-top: 1em;
       .font-m1;
@@ -281,9 +284,21 @@ div.area.statistics {
   }
 }
 
+.about.area {
+  max-width: 100%;
+  background-color: @color-grey093;
+  margin-top: @page-padding-top;
+  padding: (2 * @page-padding-top) 0;
+
+  > p {
+    max-width: 50em;
+    margin: auto;
+    .type-light;
+  }
+}
+
 .partners.area {
   max-width: 100%;
-  margin-top: @page-padding-top;
   // margin: 0;
   background-color: @color-grey091;
 
