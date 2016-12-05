@@ -31,6 +31,12 @@
           </div>
 
           <dl class='attributes'>
+            <dt>Number of places</dt>
+            {{#with placeInfoCount}}
+              <dd class='badge'>{{this}}</dd>
+            {{else}}
+              <span class='subtle'>No places provided yet.</span>
+            {{/with}}
             <dt>License</dt>
             <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
               {{getLicense.name}}

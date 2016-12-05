@@ -17,7 +17,6 @@ Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('apps.private');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
-  subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('licenses.public');
 });
 
@@ -40,7 +39,7 @@ const helpers = {
       } });
   },
   sourcesNotOf(organizations) {
-    console.log(organizations);
+    // console.log(organizations);
     const ids = _.pluck(organizations.fetch(), '_id');
     return Sources.find({ organizationId: { $nin: ids }, isDraft: false });
   },

@@ -22,9 +22,10 @@
           {{_"add"}}
         </a>
       </h3>
+
       <ul class='with-blocks'>
         {{#each getSources}}
-          {{> page_dashboard_source}}
+          {{> component_source source=this}}
         {{/each}}
       </ul>
 
@@ -78,19 +79,7 @@
     <h2>{{_ "Other sources"}}</h2>
     <ul class='with-blocks'>
       {{#each sourcesNotOf organizationsForCurrentUser}}
-        <li class='list block for-source'>
-          <a href='{{pathFor "sources.show" _id=_id}}'>
-            <span class='main'>
-              {{getOrganization.name}}
-            </span>
-
-            {{name}}
-
-            <span class='secondary'>
-              ({{getLicense.shortName}})
-            </span>
-          </a>
-        </li>
+        {{> component_source source=this shouldShowOrganizationName=true}}
       {{/each}}
     </ul>
   </div>

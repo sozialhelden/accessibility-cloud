@@ -1,20 +1,14 @@
 <template name="organizations_show_page">
-  <div class='dashboard widget with-list single-widget sources'>
+  <div class='dashboard with-list sources'>
     <h2>{{_ "Sources of "}}{{organization.name}}</h2>
     <ul class='with-blocks'>
       {{#each organization.getSources}}
-        <li class='list block {{isDraft}}'>
-          <a href='{{pathFor "sources.show" _id=_id}}'>
-            {{name}}
-            {{#if isDraft}}
-              <span class='muted'>(Draft)</span>
-            {{/if}}
-          </a>
-        </li>
+        {{> component_source source=this}}
       {{/each}}
     </ul>
-    {{#if organizations.editableBy currentUser._id}}
-      <a class='add-entry' href='{{pathFor "organizations.sources.create" _id=organization._id}}'>{{_ "Add another Source"}}</a>
+
+    {{#if organization.editableBy currentUser._id}}
+      <a class='add-entry' href='{{pathFor "organizations.sources.create" _id=organization._id}}'>{{_ "Add another source"}}</a>
     {{/if}}
   </div>
   <div>

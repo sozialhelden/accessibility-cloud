@@ -1,0 +1,45 @@
+<template name="component_source">
+  {{#with source}}
+    <li class='list block for-source {{classIfDraft}} '>
+      <a href='{{pathFor "sources.show" _id=_id}}'>
+        {{#if isDraft}}
+          <span class='secondary'>
+            {{_"Draft: "}}
+          </span>
+        {{/if}}
+
+        <span class='main'>
+          {{name}}
+
+          {{#if shouldShowOrganizationName}}
+            <span class='subtle'>by {{getOrganization.name}}</span>
+          {{/if}}
+
+          {{#with placeInfoCount}}
+            <span class='badge on-right' title={{_ "Number of places provided by this data source"}}>{{this}}</span>
+          {{/with}}
+        </span>
+
+        <div class='details'>
+          {{#with this.getLastSuccessfulImport}}
+            Updated {{agoStartTimestamp}}
+          {{else}}
+            {{_"No updates yet"}}
+          {{/with}}
+
+          {{#if getLicense}}
+            <span class='on-right' title={{_ "License of this source"}}>
+              {{#with getLicense}}
+                {{#if shortName}}
+                  {{shortName}}
+                {{else}}
+                  {{name}}
+                {{/if}}
+              {{/with}}
+            </span>
+          {{/if}}
+        </div>
+      </a>
+    </li>
+  {{/with}}
+</template>

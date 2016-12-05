@@ -81,17 +81,17 @@ ul.with-blocks {
     background-color: white;
     box-shadow: 0 0 2px  rgba(0,0,0, 0.3);
 
-    span.main {
+    .main {
       font-family: sourcesanspro-regular;
       margin-right: 0.5em;
       font-size: 18px;
     }
-    span.secondary {
+    .secondary {
       font-family: sourcesanspro-light;
       font-size: 18px;
       color: @color-text-muted;
     }
-    span.on-right {
+    .on-right {
       float:right;
     }
 
@@ -453,4 +453,19 @@ pre.readible.json {
     vertical-align: bottom;
     line-height: 20px;
   }
+}
+
+.badge {
+  font-size: 75%;
+  line-height: 1.3333;
+  margin: 0;
+  padding: 0.18em 0.5em 0.1em;
+  min-width: 1em;
+  text-align: center;
+  text-shadow: none;
+  .type-bold();
+  color: white;
+  background-color: @color-grey085;
+  border-radius: 1em;
+  text-shadow: 0 -0.04em 0em rgba(0, 0, 0, 0.2);
 }

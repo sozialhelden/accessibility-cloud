@@ -31,6 +31,10 @@ Template.sources_show_page.onCreated(function created() {
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
+Template.sources_show_page.onRendered(() => {
+  subsManager.subscribe('sourcesPlaceInfoCounts', FlowRouter.getParam('_id'));
+});
+
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
   options: {
@@ -107,7 +111,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
       if (!geoMarkerData.length) {
         return;
       }
-      
+
       const markers = new L.geoJson(geoMarkerData, {
         pointToLayer(feature, latlng) {
           const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
