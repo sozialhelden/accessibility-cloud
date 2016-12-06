@@ -1,3 +1,4 @@
+import Future from 'fibers/future';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { check } from 'meteor/check';
@@ -24,11 +25,12 @@ function abortImport(sourceId) {
       }
       stream.abortStream();
       stream.emit('abort');
-      // stream.emit('error', new Error('Stream aborted'));
     });
     delete sourceIdsToStreamChains[sourceId];
-    console.log('Aborted streams for source', sourceId);
   }
+
+  Sources.update(sourceId, { $set: { hasRunningImport: false } });
+  console.log('Aborted streams for source', sourceId);
 }
 
 function startImportStreaming(source) {
@@ -60,7 +62,7 @@ function startImportStreaming(source) {
   }
 }
 
-export function startImport({ userId, sourceId }) {
+export function startImportIfPossible({ userId, sourceId }, callback) {
   console.log('Requested import for source', sourceId, '…');
 
   check(userId, String);
@@ -70,33 +72,46 @@ export function startImport({ userId, sourceId }) {
   console.log('Ensure no other import is running...');
 
   Sources.rawCollection().findAndModify(
-    { _id: sourceId, $or: [{ running: false }, { running: { $exists: false } }] },
+    { _id: sourceId, $or: [{ hasRunningImport: false }, { hasRunningImport: { $exists: false } }] },
     {},
-    { $set: { running: true } },
+    { $set: { hasRunningImport: true } },
     {},
     Meteor.bindEnvironment((error, { lastErrorObject, value, ok }) => {
       if (!ok) {
         console.error('Error after findAndModify:', lastErrorObject);
-        throw error;
+        callback(lastErrorObject);
+        return;
       }
+
       const source = value;
       if (source) {
         console.log('Found non-running source', source);
       } else {
-        throw new Meteor.Error(422, 'Another import is already running.');
+        callback(new Meteor.Error(422, 'Another import is already running.'));
+        return;
       }
 
       startImportStreaming(source);
+
+      callback(null);
     })
   );
-  // return sourceImportId;
 }
 
 Meteor.methods({
   'sources.startImport'(sourceId) {
     check(sourceId, String);
     this.unblock();
-    startImport({ sourceId, userId: this.userId });
+    const future = new Future();
+    startImportIfPossible({ sourceId, userId: this.userId }, error => {
+      if (error) {
+        future.throw(error);
+        return;
+      }
+      console.log('Started import.');
+      future.return();
+    });
+    return future.wait();
   },
   'sources.abortImport'(sourceId) {
     this.unblock();

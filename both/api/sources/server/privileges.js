@@ -28,12 +28,20 @@ Sources.publicFields = {
   streamChain: 1,
   isFreelyAccessible: 1,
   accessRestrictedTo: 1,
+  hasRunningImport: 1,
 };
 
 Sources.helpers({
   editableBy(userId) {
     check(userId, String);
     return userHasFullAccessToReferencedOrganization(userId, this);
+  },
+});
+
+Sources.deny({
+  update(userId, source, fields) {
+    // Don't allow to change this flag on the client
+    return fields.includes('hasRunningImport');
   },
 });
 

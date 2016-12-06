@@ -2,8 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { UploadedFiles } from '../uploaded-files';
 
-// import { startImport } from '/both/api/sources/server/stream-chain/start-import';
-// import fs from 'fs';
 import aws from 'aws-sdk';
 import s3Stream from 's3-upload-stream';
 import { _ } from 'meteor/underscore';

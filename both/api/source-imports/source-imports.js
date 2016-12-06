@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { moment } from 'meteor/momentjs:moment';
 import { _ } from 'meteor/underscore';
+import { Sources } from '/both/api/sources/sources';
 
 export const SourceImports = new Mongo.Collection('SourceImports');
 
@@ -21,7 +22,10 @@ SourceImports.helpers({
     return _.all(this.streamChain, stream =>
       stream && stream.progress && stream.progress.isFinished);
   },
-  isRunning() {
+  getSource() {
+    return Sources.findOne(this.sourceId);
+  },
+  hasRunningStreams() {
     if (!this.streamChain) return false;
     return _.any(this.streamChain, stream =>
       !stream || !stream.progress || !(stream.progress.isFinished || stream.progress.isAborted));

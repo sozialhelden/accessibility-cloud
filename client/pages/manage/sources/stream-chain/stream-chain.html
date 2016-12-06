@@ -1,6 +1,6 @@
 <template name="sources_stream_chain">
   <div class="stream-chain">
-    {{#if isRunning}}
+    {{#if getSource.hasRunningImport}}
       <aside class="actions">
         <button class='btn btn-danger js-abort-import'>Abort</button>
       </aside>

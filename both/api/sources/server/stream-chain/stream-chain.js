@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
-import { _ } from 'meteor/underscore';
 import { startObservingObjectProgress } from './object-progress-stream';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
@@ -168,6 +167,7 @@ export function createStreamChain({
 
     const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
 
+    // Prevent data from flowing before the stream is fully set up
     wrappedStream.pause();
     if (wrappedStream.cork) {
       wrappedStream.cork();
@@ -204,6 +204,7 @@ export function createStreamChain({
       console.log('Stream chain ended with error', error);
     } else {
       console.log('Import ended without error.');
+      Sources.update(sourceId, { $set: { hasRunningImport: false } });
     }
   });
 
@@ -215,5 +216,6 @@ export function createStreamChain({
       observer.stream.resume();
     });
   }, 1000);
+
   return result;
 }

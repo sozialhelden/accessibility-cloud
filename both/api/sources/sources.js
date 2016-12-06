@@ -107,6 +107,16 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  hasRunningImport: {
+    type: Boolean,
+    defaultValue: false,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -141,7 +151,7 @@ Sources.helpers({
       default: return '(Unknown format)';
     }
   },
-  canBeImported() {
+  hasDownloadStep() {
     // This should be using SimpleSchema validators on all mappings steps to validate the mappings.
     if (!this.streamChain) {
       return false;

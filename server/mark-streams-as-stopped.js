@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import { Sources } from '/both/api/sources/sources';
 
 Meteor.startup(() => {
   const selector = { streamChain: { $elemMatch: { 'progress.isFinished': { $exists: false } } } };
@@ -8,4 +9,6 @@ Meteor.startup(() => {
   unfinishedSourceImports.forEach(sourceImport => {
     sourceImport.setUnfinishedStreamsToAborted();
   });
+
+  Sources.update({}, { $set: { hasRunningImport: false } });
 });
