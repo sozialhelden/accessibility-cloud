@@ -1,10 +1,10 @@
-import Stream from 'stream';
-import Fiber from 'fibers';
 import { Meteor } from 'meteor/meteor';
-import { check, Match } from 'meteor/check';
+import { _ } from 'meteor/underscore';
+import { check } from 'meteor/check';
 
 import { checkExistenceAndFullAccessToSourceId } from '/both/api/sources/server/privileges';
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import { Sources } from '/both/api/sources/sources';
 
 import { createStreamChain } from './stream-chain';
 
@@ -31,15 +31,8 @@ function abortImport(sourceId) {
   }
 }
 
-export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream }) {
-  console.log('Requested import for source', sourceId, '…');
-
-  check(userId, String);
-  check(sourceId, String);
-  check(inputStreamToReplaceFirstStream, Match.Optional(Stream));
-
-  const source = checkExistenceAndFullAccessToSourceId(userId, sourceId);
-
+function startImportStreaming(source) {
+  const sourceId = source._id;
   const sourceImportId = SourceImports.insert({
     sourceId,
     organizationId: source.organizationId,
@@ -51,27 +44,59 @@ export function startImport({ userId, sourceId, inputStreamToReplaceFirstStream 
     numberOfPlacesUnchanged: 0,
   });
   console.log('Creating stream chain for source import', sourceImportId, '…');
+
   try {
-    abortImport(sourceId);
     const streamChain = createStreamChain({
       sourceImportId,
       sourceId,
-      inputStreamToReplaceFirstStream,
       streamChainConfig: source.streamChain,
     });
     sourceIdsToStreamChains[sourceId] = streamChain;
-  } catch (e) {
-    console.log('Error while setting up stream chain:', e, e.stack);
-    SourceImports.update(sourceImportId, { $set: { error: { reason: e.reason, message: e.message, errorType: e.errorType } } });
+  } catch (error) {
+    console.log('Error while setting up stream chain:', error, error.stack);
+    SourceImports.update(sourceImportId, {
+      $set: { error: _.pick(error, 'reason', 'message', 'errorType') },
+    });
   }
-  return sourceImportId;
+}
+
+export function startImport({ userId, sourceId }) {
+  console.log('Requested import for source', sourceId, '…');
+
+  check(userId, String);
+  check(sourceId, String);
+  checkExistenceAndFullAccessToSourceId(userId, sourceId);
+
+  console.log('Ensure no other import is running...');
+
+  Sources.rawCollection().findAndModify(
+    { _id: sourceId, $or: [{ running: false }, { running: { $exists: false } }] },
+    {},
+    { $set: { running: true } },
+    {},
+    Meteor.bindEnvironment((error, { lastErrorObject, value, ok }) => {
+      if (!ok) {
+        console.error('Error after findAndModify:', lastErrorObject);
+        throw error;
+      }
+      const source = value;
+      if (source) {
+        console.log('Found non-running source', source);
+      } else {
+        throw new Meteor.Error(422, 'Another import is already running.');
+      }
+
+      startImportStreaming(source);
+    })
+  );
+  // return sourceImportId;
 }
 
 Meteor.methods({
   'sources.startImport'(sourceId) {
     check(sourceId, String);
     this.unblock();
-    Fiber(() => startImport({ sourceId, userId: this.userId })).run();
+    startImport({ sourceId, userId: this.userId });
   },
   'sources.abortImport'(sourceId) {
     this.unblock();

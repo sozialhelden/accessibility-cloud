@@ -127,9 +127,10 @@ Template.sources_show_format_page.events({
   'click .btn.js-start-import'(event) {
     event.preventDefault();
 
-    Meteor.call('sources.startImport', FlowRouter.getParam('_id'), (err, result) => {
-      if (err) {
-        console.log(err);
+    Meteor.call('sources.startImport', FlowRouter.getParam('_id'), (error, result) => {
+      if (error) {
+        console.log(error);
+        alert('Could not start import:', error);
       } else {
         console.log('import finished', result);
       }
