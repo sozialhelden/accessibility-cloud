@@ -20,7 +20,7 @@ Template.apps_edit_page.helpers({
 
 AutoForm.addHooks('updateAppForm', {
   onSuccess() {
-    FlowRouter.go('app.show', { _id: this.docId });
+    FlowRouter.go('apps.show', { _id: this.docId });
 
     this.event.preventDefault();
     return false;

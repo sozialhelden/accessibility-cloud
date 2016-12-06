@@ -3,7 +3,7 @@
     <ul class='with-blocks'>
       {{#each apps}}
         <li class='item block {{activeIfCurrentApp _id}}'>
-          <a href='{{pathFor "app.show" _id=_id}}'>
+          <a href='{{pathFor "apps.show" _id=_id}}'>
             {{name}}
           </a>
         </li>

@@ -14,17 +14,17 @@
         </form>
 
         {{#unless source.isFreelyAccessible}}
-          <h3>Restrict access to the following organizations</h3>
+          <h3>{{_ "Restrict access to the following organizations"}}</h3>
           <ul class='access-list'>
-          {{# each organizations}}
-            <li class=''>
-              <input type='checkbox' id='{{this._id}}' {{checkedIfOrganizationHasAccess _id}}>
-              <label for='{{this._id}}'>
-                {{name}}
-              </label>
-              <a href='{{ pathFor "organizations.show" this._id}}' class='icon-detail'>?</a>
-            </li>
-          {{/each}}
+            {{#each organizations}}
+              <li>
+                <input type='checkbox' id='{{this._id}}' {{checkedIfOrganizationHasAccess _id}}>
+                <label for='{{this._id}}'>
+                  {{name}}
+                </label>
+                <a href='{{ pathFor "organizations.show" this._id}}' class='icon-detail'>?</a>
+              </li>
+            {{/each}}
           </ul>
           <button class='btn btn-primary js-save unchanged'>Save</button>
         {{/unless}}

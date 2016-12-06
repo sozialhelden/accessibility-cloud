@@ -46,10 +46,9 @@ Template.registerHelpers({
     const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page'];
     return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
   },
-  activeIfRouteNameBeginsWith(routeName) {
+  activeIfRouteNameStartsWith(routeName) {
     FlowRouter.watchPathChange();
-    const regExp = new RegExp(`^${routeName.replace(/\./g, '\\.')}`);
-    return FlowRouter.current().route.name.match(regExp) ? 'active' : '';
+    return FlowRouter.current().route.name.startsWith(routeName) ? 'active' : '';
   },
   activeIfRouteNameIs(routeName) {
     FlowRouter.watchPathChange();

@@ -7,7 +7,7 @@ import { Apps } from '/both/api/apps/apps.js';
 import subsManager from '/client/lib/subs-manager';
 
 Template.organizations_show_header.onCreated(() => {
-  
+
   subsManager.subscribe('licenses.public');
 });
 
@@ -19,7 +19,7 @@ Template.organizations_show_header.helpers({
       return Organizations.findOne({ _id: organizationId });
     }
 
-    if (FlowRouter._current.route.name.startsWith('app.')) {
+    if (FlowRouter._current.route.name.startsWith('apps.')) {
       const appId = FlowRouter.getParam('_id');
       const app = Apps.findOne({ _id: appId });
       if (app) {

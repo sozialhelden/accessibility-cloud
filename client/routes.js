@@ -244,7 +244,7 @@ dataRoutes.route('/organizations/:_id/apps/create', {
 });
 
 dataRoutes.route('/apps/:_id', {
-  name: 'app.show',
+  name: 'apps.show',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_show_page',
@@ -255,7 +255,7 @@ dataRoutes.route('/apps/:_id', {
 });
 
 dataRoutes.route('/apps/:_id/edit', {
-  name: 'app.edit',
+  name: 'apps.edit',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_edit_page',
