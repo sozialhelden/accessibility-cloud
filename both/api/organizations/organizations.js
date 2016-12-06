@@ -3,6 +3,7 @@ import { check } from 'meteor/check';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members';
 import { Apps } from '/both/api/apps/apps';
 import { countriesOfTheWorld } from '/both/lib/all-countries';
 import { isAdmin } from '/both/lib/is-admin';
@@ -134,12 +135,6 @@ Organizations.helpers({
     check(userId, String);
     return userHasFullAccessToOrganizationId(userId, this._id);
   },
-});
-
-
-Organizations.attachSchema(Organizations.schema);
-
-Organizations.helpers({
   isFullyVisibleForUserId(userId) {
     return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this._id);
   },
@@ -150,6 +145,15 @@ Organizations.helpers({
     return Apps.find({ organizationId: this._id });
   },
 });
+
+Organizations.whereCurrentUserIsMember = () => {
+  const userId = Meteor.userId();
+  const options = { transform: null, fields: { organizationId: 1 } };
+  const orgIds = OrganizationMembers.find({ userId }, options).fetch().map(m => m.organizationId);
+  return Organizations.find({ _id: { $in: orgIds } });
+};
+
+Organizations.attachSchema(Organizations.schema);
 
 if (Meteor.isServer) {
   Organizations._ensureIndex({ tocForOrganizationsAccepted: 1 });

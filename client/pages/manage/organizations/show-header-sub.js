@@ -15,13 +15,13 @@ Template.organizations_show_header_sub.onCreated(() => {
 
 Template.organizations_show_header_sub.helpers({
   organization() {
+    debugger
     if (FlowRouter._current.route.name.startsWith('organizations.')) {
       const organizationId = FlowRouter.getParam('_id');
       return Organizations.findOne({ _id: organizationId });
     }
 
     if (FlowRouter._current.route.name.startsWith('app.')) {
-
       const appId = FlowRouter.getParam('_id');
       const app = Apps.findOne({ _id: appId });
       if (app) {

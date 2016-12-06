@@ -46,18 +46,20 @@
         <li>
           <a href='{{pathFor "imprint"}}' class='{{activeIfRouteNameMatches "imprint"}}'>{{_'Legal'}}</a>
         </li>
-
       </ul>
+
       <ul class='main-navigation'>
         <li class='home-link'>
           <a href='/'> </a>
         </li>
+
         {{#if userCanAccessPageWithCurrentApprovalState main}}
           {{> Template.dynamic template=header_navigation_list}}
         {{else}}
           {{> header_approval_needed }}
         {{/if}}
       </ul>
+
       <div class='sub-header'>
         {{#if isApproved}}
           {{> Template.dynamic template=header_sub}}

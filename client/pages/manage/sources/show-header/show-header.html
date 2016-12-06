@@ -11,6 +11,9 @@
   <li>
     {{#with source}}
       {{name}}
+      {{#if isDraft}}
+        <span class='subtle'>(Draft)</span>
+      {{/if}}
     {{/with}}
   </li>
 </template>

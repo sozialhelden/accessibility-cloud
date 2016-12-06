@@ -4,7 +4,7 @@
 
 <template name="page_dashboard">
   <div class='dashboard with-list'>
-    {{#each organizationsForCurrentUser}}
+    {{#each Organizations.whereCurrentUserIsMember}}
       <h2 class='group-header'>
         <a href='{{pathFor "organizations.show" _id=_id}}'>
           {{name}}
@@ -66,7 +66,7 @@
     <div>
       <br>
       <a class='call-to-action button' href='{{pathFor "organizations.create"}}'>
-        {{#if organizationsForCurrentUser}}
+        {{#if Organizations.whereCurrentUserIsMember}}
           {{_ "Add Organization"}}
         {{else}}
           {{_ "Create your First Organization"}}
@@ -78,7 +78,7 @@
   <div>
     <h2>{{_ "Other sources"}}</h2>
     <ul class='with-blocks'>
-      {{#each sourcesNotOf organizationsForCurrentUser}}
+      {{#each sourcesNotOf Organizations.whereCurrentUserIsMember}}
         {{> component_source source=this shouldShowOrganizationName=true}}
       {{/each}}
     </ul>

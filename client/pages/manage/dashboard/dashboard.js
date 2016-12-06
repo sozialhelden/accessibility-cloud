@@ -21,6 +21,7 @@ Template.page_dashboard.onCreated(() => {
 });
 
 const helpers = {
+  Organizations,
   organizations() {
     return Organizations.find({
       _id: {
@@ -39,6 +40,9 @@ const helpers = {
       } });
   },
   sourcesNotOf(organizations) {
+    if (!organizations) {
+      return [];
+    }
     // console.log(organizations);
     const ids = _.pluck(organizations.fetch(), '_id');
     return Sources.find({ organizationId: { $nin: ids }, isDraft: false });
