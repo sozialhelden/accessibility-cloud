@@ -14,13 +14,6 @@ Template.organizations_show_header_sub.onCreated(() => {
 
 
 Template.organizations_show_header_sub.helpers({
-  activeIfRouteNameIs(routeName) {
-    return routeName === FlowRouter._current.route.name ? 'active' : '';
-  },
-  activeIfRouteNameMatches(regex) {
-    const currentRouteName = FlowRouter._current.route.name;
-    return currentRouteName.match(regex) ? 'active' : '';
-  },
   organization() {
     if (FlowRouter._current.route.name.startsWith('organizations.')) {
       const organizationId = FlowRouter.getParam('_id');

@@ -98,44 +98,6 @@ export const helpers = {
 
     return true;
   },
-  isAdmin() {
-    const user = Meteor.user();
-    return !!user && user.isAdmin;
-  },
-  isApproved() {
-    const user = Meteor.user();
-    return !!user && user.isApproved;
-  },
-  activeIfRouteNameIs(routeName) {
-    FlowRouter.watchPathChange();
-    return routeName === FlowRouter.current().route.name ? 'active' : '';
-  },
-  activeIfRouteNameMatches(regex) {
-    FlowRouter.watchPathChange();
-    const currentRouteName = FlowRouter.current().route.name;
-    return currentRouteName.match(regex) ? 'active' : '';
-  },
-  activeIfRouteGroupNameMatches(regex) {
-    FlowRouter.watchPathChange();
-    if (FlowRouter.current().route.group) {
-      const groupName = FlowRouter.current().route.group.name;
-      return groupName.match(regex) ? 'active' : '';
-    }
-    return false;
-  },
-  templateGestures: {
-    'swipeleft .cordova'(event, instance) {
-      instance.state.set('menuOpen', false);
-    },
-    'swiperight .cordova'(event, instance) {
-      instance.state.set('menuOpen', true);
-    },
-  },
-  userCanAccessPageWithCurrentApprovalState(pageName) {
-    const userId = Meteor.userId();
-    const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page'];
-    return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
-  },
 };
 
 export function onCreated() {

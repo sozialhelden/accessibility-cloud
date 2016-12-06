@@ -9,8 +9,7 @@ import { OrganizationMembers } from '/both/api/organization-members/organization
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { Sources } from '/both/api/sources/sources.js';
 import { Apps } from '/both/api/apps/apps.js';
-import { isAdmin } from '/both/lib/is-admin';
-
+import { isApproved } from '/both/lib/is-approved';
 
 const helpers = {
   FlowRouter,
@@ -23,7 +22,7 @@ const helpers = {
     return JSON.stringify(object, true, 4);
   },
   stringifyHuman(object) {
-    if(!object) {
+    if (!object) {
       return '';
     }
     return JSON.stringify(object, true, 2).replace(/(\s*\[\n)|([\{\}\[\]",]*)/g, '').replace(/\n\s\s/g, '\n');
@@ -62,10 +61,44 @@ const helpers = {
 
     return Apps.find({ organizationId: { $in: orgaIds } });
   },
+
   isAdmin() {
-    return isAdmin(Meteor.userId());
+    const user = Meteor.user();
+    return !!user && user.isAdmin;
+  },
+  isApproved() {
+    const user = Meteor.user();
+    return !!user && user.isApproved;
+  },
+  userCanAccessPageWithCurrentApprovalState(pageName) {
+    const userId = Meteor.userId();
+    const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page'];
+    return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
   },
 
+  activeIfRouteNameBeginsWith(routeName) {
+    FlowRouter.watchPathChange();
+    const regExp = new RegExp(`^${routeName.replace(/\./g, '\\.')}`);
+    debugger
+    return FlowRouter.current().route.name.match(regExp) ? 'active' : '';
+  },
+  activeIfRouteNameIs(routeName) {
+    FlowRouter.watchPathChange();
+    return routeName === FlowRouter.current().route.name ? 'active' : '';
+  },
+  activeIfRouteNameMatches(regex) {
+    FlowRouter.watchPathChange();
+    const currentRouteName = FlowRouter.current().route.name;
+    return currentRouteName.match(regex) ? 'active' : '';
+  },
+  activeIfRouteGroupNameMatches(regex) {
+    FlowRouter.watchPathChange();
+    if (FlowRouter.current().route.group) {
+      const groupName = FlowRouter.current().route.group.name;
+      return groupName.match(new RegExp(regex, 'ig')) ? 'active' : '';
+    }
+    return false;
+  },
 };
 
 _.each(helpers, (fn, name) => Template.registerHelper(name, fn));
