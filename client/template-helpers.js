@@ -79,7 +79,6 @@ const helpers = {
   activeIfRouteNameBeginsWith(routeName) {
     FlowRouter.watchPathChange();
     const regExp = new RegExp(`^${routeName.replace(/\./g, '\\.')}`);
-    debugger
     return FlowRouter.current().route.name.match(regExp) ? 'active' : '';
   },
   activeIfRouteNameIs(routeName) {
