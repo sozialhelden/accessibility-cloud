@@ -7,6 +7,7 @@ import { Sources } from '/both/api/sources/sources';
 import subsManager from '/client/lib/subs-manager';
 import { getAccessibleOrganizationIdsForUserId } from '/both/api/organizations/privileges';
 import { _ } from 'meteor/underscore';
+import { SEO } from '/client/seo.js';
 
 Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('organizations.public');
@@ -18,6 +19,8 @@ Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('licenses.public');
+
+  SEO.set({ title: 'Dashboard – accessibility.cloud' });
 });
 
 const helpers = {

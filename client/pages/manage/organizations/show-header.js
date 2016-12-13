@@ -4,10 +4,10 @@ import { Organizations } from '/both/api/organizations/organizations.js';
 import { Licenses } from '/both/api/licenses/licenses.js';
 import { Apps } from '/both/api/apps/apps.js';
 
+
 import subsManager from '/client/lib/subs-manager';
 
 Template.organizations_show_header.onCreated(() => {
-
   subsManager.subscribe('licenses.public');
 });
 

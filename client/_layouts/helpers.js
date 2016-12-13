@@ -7,6 +7,8 @@ import { Template } from 'meteor/templating';
 import { isApproved } from '/both/lib/is-approved';
 import { getIconHTMLForUser } from '/both/lib/user-icon';
 import { getDisplayedNameForUser } from '/both/lib/user-name';
+import { SEO } from '/client/seo.js';
+
 
 // A store which is local to this file
 const showConnectionIssue = new ReactiveVar(false);
@@ -107,4 +109,8 @@ export function onCreated() {
     userMenuOpen: false,
   });
   this.subscribe('currentUserData');
+
+  const currentRoute = FlowRouter.current().route;
+  const title = currentRoute.options.title || 'Accessibility Cloud';
+  SEO.set({ title });
 }

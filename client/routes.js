@@ -8,7 +8,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { $ } from 'meteor/jquery';
 
-
 function acceptInvitationOnLogin() {
   Tracker.autorun((c) => {
     const invitationToken = Session.get('invitationToken');
@@ -83,6 +82,7 @@ const adminRoutes = FlowRouter.group({
 
 adminRoutes.route('/admin', {
   name: 'admin.admin_page',
+  title: 'Administrative',
 
   action() {
     BlazeLayout.render('app_layout_scrollable', {
@@ -93,6 +93,7 @@ adminRoutes.route('/admin', {
 
 adminRoutes.route('/categories/', {
   name: 'admin.categories.list',
+  title: 'Import categories',
 
   action() {
     BlazeLayout.render('app_layout_mapview', {
@@ -112,6 +113,7 @@ const dataRoutes = FlowRouter.group({
 
 dataRoutes.route('/', {
   name: 'dashboard',
+  title: 'Dashboard',
   action() {
     if (Meteor.userId()) {
       BlazeLayout.render('app_layout_scrollable', {
@@ -130,6 +132,7 @@ dataRoutes.route('/', {
 
 dataRoutes.route('/organizations/create', {
   name: 'organizations.create',
+  title: 'Create organization',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_create_page',
@@ -140,6 +143,7 @@ dataRoutes.route('/organizations/create', {
 
 dataRoutes.route('/organizations/:_id', {
   name: 'organizations.show',
+  title: 'Organization',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_page',
@@ -151,6 +155,7 @@ dataRoutes.route('/organizations/:_id', {
 
 dataRoutes.route('/organizations/:_id/settings', {
   name: 'organizations.show.settings',
+  title: 'Settings',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_settings_page',
@@ -164,6 +169,7 @@ dataRoutes.route('/organizations/:_id/settings', {
 
 dataRoutes.route('/organizations/:_id/licenses', {
   name: 'organizations.show.licenses',
+  title: 'Licenses',
 
   action() {
     BlazeLayout.render('app_layout_scrollable', {
@@ -176,6 +182,7 @@ dataRoutes.route('/organizations/:_id/licenses', {
 
 dataRoutes.route('/organizations/:_id/members', {
   name: 'organizations.show.members',
+  title: 'Members',
 
   action() {
     BlazeLayout.render('app_layout_scrollable', {
@@ -188,6 +195,8 @@ dataRoutes.route('/organizations/:_id/members', {
 
 dataRoutes.route('/organizations/:_id/licenses/create', {
   name: 'organizations.licenses.create',
+  title: 'Create license',
+
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_create_page',
@@ -199,6 +208,7 @@ dataRoutes.route('/organizations/:_id/licenses/create', {
 
 dataRoutes.route('/licenses/:_id', {
   name: 'licenses.show',
+  title: 'License',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_show_page',
@@ -210,6 +220,7 @@ dataRoutes.route('/licenses/:_id', {
 
 dataRoutes.route('/licenses/:_id/edit', {
   name: 'licenses.edit',
+  title: 'Edit license',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_edit_page',
@@ -223,6 +234,7 @@ dataRoutes.route('/licenses/:_id/edit', {
 
 dataRoutes.route('/organizations/:_id/apps', {
   name: 'organizations.show.apps',
+  title: 'API clients',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_list_page',
@@ -234,6 +246,7 @@ dataRoutes.route('/organizations/:_id/apps', {
 
 dataRoutes.route('/organizations/:_id/apps/create', {
   name: 'organizations.apps.create',
+  title: 'Create API client',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_create_page',
@@ -245,6 +258,7 @@ dataRoutes.route('/organizations/:_id/apps/create', {
 
 dataRoutes.route('/apps/:_id', {
   name: 'apps.show',
+  title: 'API client',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_show_page',
@@ -256,6 +270,7 @@ dataRoutes.route('/apps/:_id', {
 
 dataRoutes.route('/apps/:_id/edit', {
   name: 'apps.edit',
+  title: 'Edit API client',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'apps_edit_page',
@@ -270,6 +285,7 @@ dataRoutes.route('/apps/:_id/edit', {
 
 dataRoutes.route('/organizations/:_id/sources/create', {
   name: 'organizations.sources.create',
+  title: 'Create source',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_create_page',
@@ -280,6 +296,7 @@ dataRoutes.route('/organizations/:_id/sources/create', {
 
 dataRoutes.route('/sources/:_id/format', {
   name: 'sources.show.format',
+  title: 'Format',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_format_page',
@@ -291,6 +308,7 @@ dataRoutes.route('/sources/:_id/format', {
 
 dataRoutes.route('/sources/:_id/settings', {
   name: 'sources.show.settings',
+  title: 'Settings',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_settings_page',
@@ -303,6 +321,7 @@ dataRoutes.route('/sources/:_id/settings', {
 
 dataRoutes.route('/sources/:_id/access', {
   name: 'sources.show.access',
+  title: 'Access',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_access_page',
@@ -315,6 +334,7 @@ dataRoutes.route('/sources/:_id/access', {
 
 dataRoutes.route('/sources/:_id/imports', {
   name: 'sources.show.imports',
+  title: 'Imports',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',
@@ -327,6 +347,7 @@ dataRoutes.route('/sources/:_id/imports', {
 
 dataRoutes.route('/sources/:_id/imports/:importId?', {
   name: 'sources.show.import',
+  title: 'Import',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'sources_show_imports_page',
@@ -338,6 +359,7 @@ dataRoutes.route('/sources/:_id/imports/:importId?', {
 
 dataRoutes.route('/sources/:_id', {
   name: 'sources.show',
+  title: 'Overview',
   action() {
     BlazeLayout.render('app_layout_mapview', {
       main: 'sources_show_page',
@@ -349,6 +371,7 @@ dataRoutes.route('/sources/:_id', {
 
 dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
   name: 'placeInfos.show',
+  title: 'Place',
   action() {
     BlazeLayout.render('app_layout_mapview', {
       main: 'sources_show_page',
@@ -361,6 +384,7 @@ dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
 
 FlowRouter.route('/imprint', {
   name: 'imprint',
+  title: 'About',
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'imprint_page',
