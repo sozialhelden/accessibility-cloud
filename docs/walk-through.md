@@ -4,7 +4,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 
 ## Browsing
 
-- [x] Open [AC](https://acloud.eu.meteorapp.com/) with a modern browser
+- [x] Open [AC](https://accessibility.cloud/) with a modern browser
 - [x] The page loads quickly and without entering a password.
 - [ ] You can read documentation and introductional content about the service.
 - [ ] You can see some markers with colors on the map in the background ()
@@ -29,7 +29,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [ ] You learn that to share data, you need to create *a data source*.
 - [x] You can create *a data source* for your new *Organization*.
 - [ ] In the create data-source form, you see that each data-source requires a license.
-- [ ] You can check the existing *predefined licenses*, but... 
+- [ ] You can check the existing *predefined licenses*, but...
 - [ ] ...you decided to add a new custom license for your data source.
 - [ ] You create a license by filling out the form.
 - [ ] In your data-source-settings you set your custom license.
@@ -70,7 +70,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [x] You open the example in the browser.
 - [ ] You learn that the API tokens are missing.
 - [x] You can copy the API-tokens from Accessibility cloud and quickly find where to insert them into the javascript code
-- [x] You see that the javascript-code ist very small, easy to read and well documented. 
+- [x] You see that the javascript-code ist very small, easy to read and well documented.
 - [ ] You can quickly integrate it into your existing application.
 - [ ] It's easy to adjust the minimal CSS-definitions to integrate the the widget seamlessly into your app
 - [ ] You can extend the original API-example be also showing place-markers on the map and lists of your application.
@@ -88,4 +88,3 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 
 - [ ] After logout I will be forwarded to the start-page
 - [ ] ​
-
