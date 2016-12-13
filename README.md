@@ -12,8 +12,8 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 
 ## How to use the provided data for your own project
 
-- [JavaScript API-client example](public/js-example/README.md) - a sample widget the illustrates an API end-point
-- [JSON-API](docs/json-api.md) - a skelleton for documentation
+- [JavaScript API-client example](public/js-example/README.md) - a sample widget that illustrates an API endpoint
+- [JSON-API](docs/json-api.md) - Reference documentation for all API calls
 
 ## Legal information
 
