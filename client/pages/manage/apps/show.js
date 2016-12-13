@@ -29,3 +29,21 @@ const helpers = {
 
 Template.apps_show_page.helpers(helpers);
 Template.apps_show_header.helpers(helpers);
+
+Template.apps_show_page.events({
+  'click .js-delete'() {
+    if (!confirm('Do you really want to delete this source and all of its imported places?')) {
+      return;
+    }
+    const appId = FlowRouter.getParam('_id');
+    Meteor.call('deleteAppWithId', appId, (error) => {
+      if (error) {
+        alert('Could not delete API client:', error.message);
+      }
+      FlowRouter.go('dashboard');
+    });
+  },
+
+
+});
+

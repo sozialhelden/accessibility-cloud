@@ -3,7 +3,7 @@
 a.button,
 button.btn {
   &:not(.btn-inline) {
-    min-width: 10em;
+    min-width: 8em;
     margin: 1em 0;
     padding: 0.5em 0.75em;
   }
@@ -21,6 +21,20 @@ button.btn {
   text-transform: uppercase;
   cursor: pointer;
 }
+
+div.button-group > *{
+  display:inline-block;
+}
+
+div.sub-header {
+  display:flex;
+  flex-direction:row;
+  h2,h3,h4 {
+    align-self: center;
+    flex: 1em;
+  }
+}
+
 
 a.call-to-action.button,
 button.btn-primary {
@@ -47,6 +61,7 @@ div.markdown {
   }
 }
 
+a.btn-danger,
 button.btn-danger {
   color: white;
   &:hover {
