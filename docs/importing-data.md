@@ -116,6 +116,18 @@ Starts parallel HTTP GET requests for each input chunk. The URL is generated fro
 
 Parses a CSV stream and outputs JSON strings for each line, optionally reading the header and using it for the property names. We use the [FastCSV](https://www.npmjs.com/package/fast-csv) module for this. Note that you currently have to use ParseJSONChunks after this module to convert the JSON strings into actual JavaScript objects before further processing.
 
+An example block looks like this....
+
+```
+    {
+        "type": "ParseCSVStream",
+        "parameters": {
+            "headers": true,
+            "objectMode": true
+        }
+    },
+```
+
 #### Parameters
 
 - `objectMode`: Ensure that data events have an object emitted rather than the stringified version set to false to have a stringified buffer (Default: `true`)
