@@ -18,7 +18,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [ ] you learn that your account is waiting for verification with and also see a contact email-address for support (that will be forwarded to holger)
 - [ ] once an administrator saw your request on the "[pending verfications-list](https://trello.com/c/gEo7n1nJ/210-added-a-pending-user-verifications-list-for-administrators)" and verifies your account, you can login.
 
-## Creating an Orginization
+## Creating an Organization
 
 - [x] You learn that before doing anything meaningful, you have to create or join an *Organizations*
 - [ ] A member can invite/add you to an existing organization (or an entity for a single "individual").
