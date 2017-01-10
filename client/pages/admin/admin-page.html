@@ -8,20 +8,28 @@
 <template name="admin_page">
   {{#if isAdmin }}
     <div class='dashboard with-list organisations'>
-      <h2>{{_"All Organizations"}}</h2>
-      <ul>
-        {{#each organizations}}
+      <section>
+        <h2>{{_"All Organizations"}}</h2>
+        <ul>
+          {{#each organizations}}
           <li>
             <a href='{{pathFor "organizations.show" _id=_id}}'>{{name}}</a>
             {{#if isUserMemberOfOrganizationWithId currentUser._id _id}}
-              (member)
+            (member)
             {{/if}}
           </li>
-        {{/each}}
-      </ul>
-      <br>
-      <h2>{{_"Categories"}}</h2>
-      <a href='{{pathFor "admin.categories.list"}}'>{{_'Import Categories'}}</a>
+          {{/each}}
+        </ul>
+      </section>
+      <section>
+        <h2>{{_"Categories"}}</h2>
+        <a href='{{pathFor "admin.categories.list"}}'>{{_'Import Categories'}}</a>
+      </section>
+      <section>
+        <h2>{{_"Localization"}}</h2>
+        <button class='btn js-sync-translations'>Sync translations</button>
+        <p class='subtle'>Click this button to upload new strings to and download new translations from transifex. Note that for syncing categories, you might have to restart all containers if the app runs multiple containers.</p>
+      </section>
     </div>
     <div class="form block">
       <h2>{{_"People waiting for approval"}}</h2>

@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { geoDistance } from '/both/lib/geo-distance';
 import { Sources } from '/both/api/sources/sources';
+import helpers from './helpers';
 
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 
@@ -11,11 +12,15 @@ if (Meteor.isClient) {
 }
 
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
-function convertToGeoJSONFeature(doc, coordinatesForDistance) {
+function convertToGeoJSONFeature(doc, coordinatesForDistance, locale) {
   const properties = {};
   Object.assign(properties, doc.properties, doc);
   if (coordinatesForDistance && properties.geometry && properties.geometry.coordinates) {
     properties.distance = geoDistance(coordinatesForDistance, properties.geometry.coordinates);
+  }
+  if (locale) {
+    properties.localizedCategory = helpers.getLocalizedCategory.call(doc, locale);
+    properties.accessibility = helpers.getLocalizedAccessibility.call(doc, locale);
   }
   delete properties.properties;
   return {
@@ -32,11 +37,13 @@ PlaceInfos.wrapAPIResponse = ({ results, req, related }) => {
     coordinates = [Number(req.query.longitude), Number(req.query.latitude)];
   }
 
+  const locale = req.query.locale;
+
   return {
     type: 'FeatureCollection',
     featureCount: results.length,
     related,
-    features: results.map(doc => convertToGeoJSONFeature(doc, coordinates)),
+    features: results.map(doc => convertToGeoJSONFeature(doc, coordinates, locale)),
   };
 };
 
@@ -48,6 +55,8 @@ PlaceInfos.relationships = {
     },
   },
 };
+
+PlaceInfos.helpers(helpers);
 
 PlaceInfos.includePathsByDefault = ['source.license'];
 

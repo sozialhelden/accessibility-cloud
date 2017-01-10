@@ -52,4 +52,8 @@ Template.admin_page.events({
     }
     event.preventDefault();
   },
+  'click .js-sync-translations'() {
+    Meteor.call('Categories.syncWithTransifex');
+    Meteor.call('acFormat.syncWithTransifex');
+  },
 });

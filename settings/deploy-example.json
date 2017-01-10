@@ -21,5 +21,10 @@
     "kadira": {
         "appId": "",
         "appSecret": ""
+    },
+    "transifex": {
+      "projectSlug": "accessibility-cloud",
+      "username": "",
+      "password": ""
     }
 }
