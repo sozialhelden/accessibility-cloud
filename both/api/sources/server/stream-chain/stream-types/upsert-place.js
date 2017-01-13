@@ -1,8 +1,14 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { _ } from 'meteor/stevezhu:lodash';
 const { Transform } = Npm.require('zstreams');
+
+
+const CoordinateMatcher = Match.Where(x => _.isNumber(x) && x !== 0);
+const CoordinatesMatcher = [CoordinateMatcher];
+const TwoCoordinatesMatcher = Match.Where(x => Match.test(x, CoordinatesMatcher) && x.length === 2);
 
 const upsert = Meteor.bindEnvironment((onDebugInfo, selector, placeInfo, callback) => {
   try {
@@ -22,7 +28,7 @@ const upsert = Meteor.bindEnvironment((onDebugInfo, selector, placeInfo, callbac
 });
 
 export class UpsertPlace {
-  constructor({ sourceId, ignoreSkippedPlaces, sourceImportId, onDebugInfo }) {
+  constructor({ sourceId, ignoreSkippedPlaces = true, sourceImportId, onDebugInfo }) {
     check(sourceId, String);
     check(sourceImportId, String);
     check(onDebugInfo, Function);
@@ -36,13 +42,22 @@ export class UpsertPlace {
       transform(placeInfo, encoding, callback) {
         const originalId = placeInfo.properties.originalId;
 
+        let error = undefined;
+
         if (!originalId) {
+          error = new Error('No originalId given in PlaceInfo');
+        }
+        else if (!Match.test(placeInfo.geometry &&
+          placeInfo.geometry.coordinates, TwoCoordinatesMatcher)) {
+          error = new Error('Coordinates are undefined');
+        }
+
+        if (error) {
           skippedRecordCount++;
           onDebugInfo({ placeInfoWithoutOriginalId: placeInfo });
           if (ignoreSkippedPlaces) {
             callback(null, null);
           } else {
-            const error = new Error('No originalId given in PlaceInfo');
             this.emit('error', error);
             callback(error);
           }
@@ -72,7 +87,7 @@ export class UpsertPlace {
       if (skippedRecordCount) {
         onDebugInfo({
           skippedRecordWarning:
-            `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId.`,
+            `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId or no valid coordinates.`,
         });
       }
     });

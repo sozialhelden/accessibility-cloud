@@ -139,7 +139,7 @@ The proposal for the overall structure thus looks like this:
             //width: '>150',
             //widthAtObstacles: '>90cm',
             //spaceBetweenExistingBallards: '>90cm',
-            width: '>150',
+            width: '>150cm',
             widthAtObstacles: '>90cm',
             maxLongitudinalSlope: '<6deg',
             maxLateralSlope: '<2.5deg',
@@ -550,7 +550,7 @@ The data-structure for a requirement-catalogue might look like this:
                             },
                         },
                         {
-                            propertyId: 'accessibility.indoors.widthOfAislesAndOpenings',
+                            propertyId: 'accessibility.areas[tag=indoor].pathways.width',
                             importance: 'required',
                             ranges: {
                                 '<90cm': 'not fullfilled',

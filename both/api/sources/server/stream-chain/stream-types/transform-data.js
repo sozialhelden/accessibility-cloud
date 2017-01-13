@@ -102,6 +102,10 @@ function compileMapping(fieldName, javascript) {
         return { coordinates, type: 'Point' };
       },
     },
+    extractNumber(str) {
+      const match = str.match(/-?\d+\.?\d*/);
+      return match && Number(match[0]);
+    },
   };
 
   // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
