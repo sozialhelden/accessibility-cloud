@@ -199,14 +199,14 @@ export function createStreamChain({
     return result;
   }
 
-  lastStreamObserver.stream.intoCallback((error) => {
+  lastStreamObserver.stream.intoCallback(Meteor.bindEnvironment((error) => {
     if (error) {
       console.log('Stream chain ended with error', error);
     } else {
       console.log('Import ended without error.');
       Sources.update(sourceId, { $set: { hasRunningImport: false } });
     }
-  });
+  }));
 
   Meteor.setTimeout(() => {
     result.forEach(observer => {
