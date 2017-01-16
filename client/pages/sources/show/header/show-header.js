@@ -6,7 +6,7 @@ import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import subsManager from '/client/lib/subs-manager';
 import { helpers } from '/client/_layouts/helpers.js';
 
-Template.sources_show_imports_page.onCreated(() => {
+Template.sources_show_header.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sourceImports.public');
