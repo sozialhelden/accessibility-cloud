@@ -92,6 +92,7 @@ Licenses.attachSchema(Licenses.schema);
 
 Licenses.helpers({
   editableBy(userId) {
+    if (!userId) return false;
     check(userId, String);
     return isAdmin(userId) || userHasFullAccessToOrganizationId(userId, this.organizationId);
   },

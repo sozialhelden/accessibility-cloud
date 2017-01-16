@@ -1,75 +1,10 @@
 <template name="sources_show_page">
   <div class='sidebar with-details'>
     {{#with getCurrentPlaceInfo}}
-      <section class="selected-place">
-        <span class='js-close close-window icon'></span>
-
-        <h4>{{getCurrentPlaceInfo.properties.name}}</h4>
-        <p class='category'>{{getCurrentPlaceInfo.properties.category}}</p>
-        <pre class='readible json'>{{stringifyHuman getCurrentPlaceInfo.properties.accessibility}}</pre>
-        {{#if getCurrentPlaceInfo.properties.infoPageUrl}}
-          <p>
-            <a href='{{getCurrentPlaceInfo.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
-          </p>
-        {{/if}}
-
-        <hr/>
-        {{#if placeDetailsVisible}}
-        <a href='#' class='js-click-hide-details'>Hide JSON</a>
-        <pre class='readible json'>
-          {{stringify getCurrentPlaceInfo}}
-        </pre>
-        {{else}}
-        <a href='#' class='js-click-show-details'>Show JSON</a>
-        {{/if}}
-      </section>
+      {{> sources_show_page_place_info}}
     {{else}}
       {{#with source}}
-        <section class='source-info'>
-          <div class='description markdown'>
-            {{#markdown}}{{source.description}}{{/markdown}}
-          </div>
-
-          <dl class='attributes'>
-            <dt>Number of places</dt>
-            {{#with placeInfoCount}}
-              <dd class='badge'>{{this}}</dd>
-            {{else}}
-              <span class='subtle'>No places provided yet.</span>
-            {{/with}}
-            <dt>License</dt>
-            <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
-              {{getLicense.name}}
-            </a></dd>
-            <dt>Short name</dt>
-            <dd class='short-name'>{{shortName}}</dd>
-            <dt>Published / Draft</dt>
-            <dd>
-              {{#if isDraft}}
-                This source is in draft mode, so it is only visible to members of {{getOrganization.name}}.
-              {{else}}
-                This source is published.
-              {{/if}}
-            </dd>
-
-            <dt>Access</dt>
-            <dd>
-              {{#if isFreelyAccessible}}
-                Freely accessible
-              {{else}}
-                Restricted to specific organizations
-              {{/if}}
-            </dd>
-            <dt>Website</dt>
-            <dd>
-              {{#if source.originWebsiteURL}}
-                <a href='{{source.originWebsiteURL}}'>{{source.originWebsiteURL}}</a>
-              {{else}}
-                <span class='subtle'>None</span>
-              {{/if}}
-            </dd>
-          </dl>
-        </section>
+        {{> sources_show_page_source_info}}
       {{/with}}
     {{/with}}
   </div>

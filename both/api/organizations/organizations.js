@@ -132,10 +132,12 @@ Organizations.schema.messages({
 
 Organizations.helpers({
   editableBy(userId) {
+    if (!userId) return false;
     check(userId, String);
     return userHasFullAccessToOrganizationId(userId, this._id);
   },
   isFullyVisibleForUserId(userId) {
+    if (!userId) return false;
     return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this._id);
   },
   getSources() {

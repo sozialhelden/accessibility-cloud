@@ -1,4 +1,4 @@
-<template name="licenses_show_page"> 
+<template name="licenses_show_page">
 
   <div class="sidebar">
     {{> licenses_navigation_sidebar}}
@@ -19,32 +19,40 @@
           <a class='edit-link' href='{{pathFor "licenses.edit" _id=_id}}'>Edit License</a>
         </div>
       {{/if}}
-      <div>
-        <label>{{_ "plainTextSummary"}}</label>
-        <div class='markdown'>
-          {{#markdown}}{{plainTextSummary}}{{/markdown}}
+      {{#if plainTextSummary}}
+        <div>
+          <label>{{_ "Summary"}}</label>
+          <div class='markdown'>
+            {{#markdown}}{{plainTextSummary}}{{/markdown}}
+          </div>
         </div>
-      </div>
-      <div>
-        <label>{{_"websiteURL"}}</label>
-        <a href='{{websiteURL}}'>{{websiteURL}}</a>
-      </div>
-      <div>
-        <label>{{_"fullTextURL"}}</label>
-        <a href='{{fullTextURL}}'>{{fullTextURL}}</a>
-      </div>
-      <div>
-        <label>{{_"Considered As"}}</label>
-        <!-- {{consideredAs}} -->
-      </div>
-      <div>
-        <label>{{_"Requires Attribution"}}</label>
-        {{requiresAttribution}}
-      </div>
-      <div>
-        <label>{{_"Requires Share Alike"}}</label>
-        {{requiresShareAlike}}
-      </div>
+      {{/if}}
+      {{#if websiteURL}}
+        <div>
+          <label>{{_"Website"}}</label>
+          <a href='{{websiteURL}}'>{{websiteURL}}</a>
+        </div>
+      {{/if}}
+      {{#if fullTextURL}}
+        <div>
+          <label>{{_"Full text"}}</label>
+          <a href='{{fullTextURL}}'>{{fullTextURL}}</a>
+        </div>
+      {{/if}}
+      <!-- <div>
+        <label>{{_"Considered as"}}</label>
+        {{consideredAs}}
+      </div> -->
+      {{#if requiresAttribution}}
+        <div>
+          <label>This license requires attribution.</label>
+        </div>
+      {{/if}}
+      {{#if requiresShareAlike}}
+        <div>
+          <label>This license has a share-alike policy.</label>
+        </div>
+      {{/if}}
     {{/with}}
   </div>
 </template>

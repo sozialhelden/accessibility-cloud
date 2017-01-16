@@ -1,3 +1,5 @@
+/* globals L */
+
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -59,18 +61,64 @@ L.AccessibilityIcon = L.Icon.extend({
   },
 });
 
-function getColorForWheelchairAccessiblity (placeData) {
+function getColorForWheelchairAccessiblity(placeData) {
   try {
     if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
       return 'green';
     } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
       return 'red';
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.warn('Failed to get color for', e, placeData);
   }
   return 'grey';
+}
+
+function showPlacesOnMap(map) {
+  Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length === 0) {
+        return;
+      }
+
+      const geoMarkerData = _.map(result, (item) => ({
+        type: 'Feature',
+        geometry: item.geometry,
+        placeData: item,
+      }));
+
+      if (!geoMarkerData.length) {
+        return;
+      }
+
+      const markers = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
+        pointToLayer(feature, latlng) {
+          const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
+          const color = getColorForWheelchairAccessiblity(feature.placeData);
+
+          const acIcon = new L.AccessibilityIcon({
+            iconUrl: `/icons/categories/${categoryIconName}.png`,
+            className: `ac-marker ${color}`,
+            // iconSize: [27, 27],
+          });
+          const marker = L.marker(latlng, { icon: acIcon });
+          marker.on('click', () => {
+            FlowRouter.go('placeInfos.show', {
+              _id: FlowRouter.getParam('_id'),
+              placeInfoId: feature.placeData._id,
+            });
+          });
+
+          return marker;
+        },
+      });
+
+      markers.addTo(map);
+      map.fitBounds(markers.getBounds().pad(0.3));
+    }
+  });
 }
 
 Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
@@ -94,66 +142,16 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     }
   });
 
-  Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      if (result.length === 0) {
-        return;
-      }
-
-      const geoMarkerData = _.map(result, (item) => ({
-        type: 'Feature',
-        geometry: item.geometry,
-        placeData: item,
-      }));
-
-      if (!geoMarkerData.length) {
-        return;
-      }
-
-      const markers = new L.geoJson(geoMarkerData, {
-        pointToLayer(feature, latlng) {
-          const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
-          const color = getColorForWheelchairAccessiblity(feature.placeData);
-
-          const acIcon = new L.AccessibilityIcon({
-            iconUrl: `/icons/categories/${categoryIconName}.png`,
-            className: `ac-marker ${color}`,
-            // iconSize: [27, 27],
-          });
-          const marker = L.marker(latlng, { icon: acIcon });
-          marker.on('click', function(e, o) {
-            FlowRouter.go('placeInfos.show', {
-              _id: FlowRouter.getParam('_id'),
-              placeInfoId: feature.placeData._id,
-            });
-          });
-
-          return marker;
-        },
-      });
-
-      markers.addTo(map);
-      map.fitBounds(markers.getBounds().pad(0.3));
-    }
-  });
+  showPlacesOnMap(map);
 });
 
 
-Template.sources_show_header.helpers({
+const helpers = {
   source() {
     return Sources.findOne({ _id: FlowRouter.getParam('_id') });
   },
-});
-
-
-Template.sources_show_page.helpers({
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
-  },
-  source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
   },
   sourceImport() {
     const selectedImport = SourceImports.findOne({ sourceId: FlowRouter.getParam('importId') });
@@ -168,9 +166,14 @@ Template.sources_show_page.helpers({
     FlowRouter.watchPathChange();
     return !!FlowRouter.getParam('placeInfoId');
   },
-});
+};
 
-Template.sources_show_page.events({
+Template.sources_show_header.helpers(helpers);
+Template.sources_show_page.helpers(helpers);
+Template.sources_show_page_place_info.helpers(helpers);
+Template.sources_show_page_source_info.helpers(helpers);
+
+Template.sources_show_page_place_info.events({
   'click .js-close'(event) {
     FlowRouter.go('sources.show', {
       _id: FlowRouter.getParam('_id'),
