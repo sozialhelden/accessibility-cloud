@@ -142,28 +142,28 @@ export class TransformData {
       transform(chunk, encoding, callback) {
         try {
           compiledMappings = compiledMappings || compileMappings(mappings);
+
+          const output = {};
+
+          for (const [fieldName, fn] of entries(compiledMappings)) {
+            const value = fn(chunk);
+            if (fieldName.match(/-/)) {
+              // Field name is probably a key path like 'a-b-c'
+              if (value !== undefined && value !== null) {
+                // Don't polute database with undefined properties
+                _.set(output, fieldName.replace(/-/g, '.'), value);
+              }
+            } else {
+              output[fieldName] = value;
+            }
+          }
+
+          callback(null, output);
         } catch (error) {
           this.emit('error', error);
           callback(error);
           return;
         }
-
-        const output = {};
-
-        for (const [fieldName, fn] of entries(compiledMappings)) {
-          const value = fn(chunk);
-          if (fieldName.match(/-/)) {
-            // Field name is probably a key path like 'a-b-c'
-            if (value !== undefined && value !== null) {
-              // Don't polute database with undefined properties
-              _.set(output, fieldName.replace(/-/g, '.'), value);
-            }
-          } else {
-            output[fieldName] = value;
-          }
-        }
-
-        callback(null, output);
       },
     });
 
