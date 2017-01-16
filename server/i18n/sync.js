@@ -3,7 +3,7 @@ import { check, Match } from 'meteor/check';
 import { s } from 'meteor/underscorestring:underscore.string';
 import { _ } from 'meteor/stevezhu:lodash';
 import { getLocales, importFromTransifex, exportToTransifex } from './transifex-api';
-
+import { registerLocale, cacheRegisteredLocales } from './locales';
 
 function generateEmptyPoFile(locale) {
   return {
@@ -156,6 +156,7 @@ export function syncWithTransifex({
 
   try {
     getSupportedLocales(resourceSlug, defaultLocale).forEach(locale => {
+      registerLocale(resourceSlug, locale);
       const remotePoFile = returnNullIf404(importFromTransifex)(resourceSlug, locale);
       if (!remotePoFile) {
         console.log('Remote language', locale, 'not existing yet.');
@@ -189,6 +190,8 @@ export function syncWithTransifex({
         isNewResource: false,
       });
     });
+
+    cacheRegisteredLocales(resourceSlug);
   } catch (error) {
     console.error('Error while syncing with transifex:', error, error.stack);
     return false;

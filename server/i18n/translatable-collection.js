@@ -4,6 +4,8 @@ import { check } from 'meteor/check';
 import { addRPCMethodForSyncing } from './rpc-method';
 import { extendCollectionSchema } from './collection-schema';
 import { addTranslationHelper } from './translation-helper';
+import { resourceSlugForCollection } from './resource-slug';
+import { cacheRegisteredLocales } from './locales';
 
 export const defaultLocale = 'en_US';
 
@@ -46,4 +48,5 @@ export function makeCollectionTranslatable(
   addRPCMethodForSyncing({ collection, attributePathFn, defaultLocale, msgidFn });
   addTranslationHelper({ collection, attributeName, attributePathFn, defaultLocale, msgidFn });
   extendCollectionSchema(collection);
+  cacheRegisteredLocales(resourceSlugForCollection(collection));
 }

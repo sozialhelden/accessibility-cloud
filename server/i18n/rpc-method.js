@@ -2,13 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { TAPi18n } from 'meteor/tap:i18n';
-import { s } from 'meteor/underscorestring:underscore.string';
 import { isAdmin } from '/both/lib/is-admin';
 import { syncWithTransifex } from './sync';
+import { resourceSlugForCollection } from './resource-slug';
 
 
 function syncCollectionWithTransifex({ attributePathFn, collection, defaultLocale, msgidFn }) {
-  const resourceSlug = s.decapitalize(collection._name);
+  const resourceSlug = resourceSlugForCollection(collection);
 
   const getTranslationForDocFn = (doc, locale) => doc.translations[locale];
   const updateLocalDocumentFn = ({ doc, locale, msgstr }) => {

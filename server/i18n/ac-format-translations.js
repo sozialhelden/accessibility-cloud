@@ -4,6 +4,8 @@ import { acFormat } from '/both/lib/ac-format';
 import { syncWithTransifex } from './sync';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { isAdmin } from '/both/lib/is-admin';
+import { cacheRegisteredLocales } from './locales';
+import { createTranslationHelper } from './translation-helper';
 
 
 const msgidsToDocs = {};
@@ -14,9 +16,19 @@ function lastPart(path) {
 }
 
 
+const resourceSlug = 'accessibility-attributes';
+
+const translate = createTranslationHelper({
+  resourceSlug,
+  defaultLocale: 'en-US',
+  getTranslationFn(locale, msgid) {
+    return msgidsToDocs[msgid] && msgidsToDocs[msgid][locale];
+  },
+});
+
 export function getTranslationForAccessibilityAttribute(path, locale) {
   const msgid = lastPart(path);
-  return msgidsToDocs[msgid] && msgidsToDocs[msgid][locale];
+  return translate(locale, msgid);
 }
 
 
@@ -48,7 +60,7 @@ function syncPropertyNamesWithTransifex() {
 
   return syncWithTransifex({
     msgidsToDocs,
-    resourceSlug: 'accessibility-attributes',
+    resourceSlug,
     getTranslationForDocFn(doc, locale) {
       return doc[locale];
     },
@@ -61,6 +73,7 @@ function syncPropertyNamesWithTransifex() {
 
 Meteor.startup(() => {
   syncPropertyNamesWithTransifex();
+  cacheRegisteredLocales(resourceSlug);
 });
 
 
