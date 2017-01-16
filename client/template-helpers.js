@@ -43,7 +43,7 @@ Template.registerHelpers({
   },
   userCanAccessPageWithCurrentApprovalState(pageName) {
     const userId = Meteor.userId();
-    const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page'];
+    const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page', 'not_found_page'];
     return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
   },
   activeIfRouteNameStartsWith(routeName) {

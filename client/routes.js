@@ -381,7 +381,6 @@ dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
   },
 });
 
-
 FlowRouter.route('/imprint', {
   name: 'imprint',
   title: 'About',
@@ -397,7 +396,18 @@ FlowRouter.route('/imprint', {
 
 // the App_notFound template is used for unknown routes and missing lists
 FlowRouter.notFound = {
+  name: 'notFound',
+  title: 'Page not found',
   action() {
-    BlazeLayout.render('App_body', { main: 'App_notFound' });
+    // BlazeLayout.render('app_layout_scrollable', {
+    //   main: 'apps_list_page',
+    //   header_navigation_list: 'organizations_show_header',
+    //   header_sub: 'organizations_show_header_sub',
+    // });
+
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'not_found_page',
+      header_navigation_list: 'not_found_header',
+    });
   },
 };
