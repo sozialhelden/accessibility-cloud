@@ -7,7 +7,6 @@ import { getLocales } from './locales';
 function findLocaleWithCountry(resourceSlug, localeWithoutCountry) {
   const regexp = new RegExp(`^${localeWithoutCountry}_`);
   const locales = getLocales(resourceSlug);
-  console.log('Trying', resourceSlug, locales, localeWithoutCountry);
   return locales.find(locale => locale.match(regexp));
 }
 
