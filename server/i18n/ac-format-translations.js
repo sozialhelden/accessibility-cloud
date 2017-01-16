@@ -50,7 +50,7 @@ function syncPropertyNamesWithTransifex() {
   keys.forEach(key => { delete msgidsToDocs[key]; });
 
   const paths = pathsInObject(acFormat);
-  console.log('Paths', paths);
+  // console.log('Paths', paths);
   paths.forEach(path => {
     const msgid = lastPart(path);
     msgidsToDocs[msgid] = {

@@ -7,7 +7,8 @@ import { getLocales } from './locales';
 function findLocaleWithCountry(resourceSlug, localeWithoutCountry) {
   const regexp = new RegExp(`^${localeWithoutCountry}_`);
   const locales = getLocales(resourceSlug);
-  return locales.find(locale => locale.match(regexp));
+  const result = locales.find(locale => locale.match(regexp));
+  return result;
 }
 
 export function createTranslationHelper(
@@ -51,10 +52,15 @@ export function addTranslationHelper(
   const helperName = `getLocalized${_.capitalize(attributeName.replace(/^_/, ''))}`;
   const helper = createTranslationHelper({
     resourceSlug, defaultLocale, attributePathFn, msgidFn,
-    getTranslationFn: (locale, doc) => _.get(doc, attributePathFn(locale)),
+    getTranslationFn(locale, doc) {
+      const path = attributePathFn(locale);
+      const result = _.get(doc, path);
+      return result;
+    },
   });
+
   collection.helpers({
-    [helperName]: locale => helper(locale, this),
+    [helperName](locale) { return helper(locale, this); },
   });
 
   console.log(`Added \`${helperName}\` helper function on ${collection._name} documents.`);
