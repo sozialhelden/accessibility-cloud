@@ -12,7 +12,8 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 
 ## How to use the provided data for your own project
 
-- [JavaScript API-client example](public/js-example/README.md) - a sample widget that illustrates an API endpoint
+- [JavaScript widget code](https://github.com/sozialhelden/accessibility-cloud-js) - a JavaScript sample widget that shows how to integrate the API
+- [JavaScript widget demo](https://sozialhelden.github.io/accessibility-cloud-js/) - shows how the integrated JS widget looks
 - [JSON-API](docs/json-api.md) - Reference documentation for all API calls
 
 ## Legal information
