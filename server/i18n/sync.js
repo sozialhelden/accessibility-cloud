@@ -36,6 +36,7 @@ export function syncStringsWithPOFile({
   const poFileTranslations = newPOFile.translations[context];
 
   const msgids = Object.keys(msgidsToDocs);
+  let updatedLocalStringsCount = 0;
   msgids.forEach(msgid => {
     const poFileTranslation = poFileTranslations[msgid];
     const doc = msgidsToDocs[msgid];
@@ -44,7 +45,8 @@ export function syncStringsWithPOFile({
       const msgstr = poFileTranslation.msgstr[0];
       const existingTranslation = getTranslationForDocFn(doc, locale);
       if (msgstr && existingTranslation !== msgstr) {
-        console.log(`Updating local string ‘${msgstr}’...`);
+        // console.log(`Updating local string ‘${msgstr}’...`);
+        updatedLocalStringsCount++;
         updateLocalDocumentFn({ doc, locale, msgstr });
       }
     } else {
@@ -58,6 +60,8 @@ export function syncStringsWithPOFile({
       };
     }
   });
+
+  console.log(`Updated ${updatedLocalStringsCount} local strings.`);
 
   const translatedMsgids = Object.keys(poFileTranslations);
   const msgidsToDelete = _.without(_.difference(translatedMsgids, msgids), '');
