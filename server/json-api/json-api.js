@@ -8,8 +8,9 @@ import { _ } from 'meteor/underscore';
 
 import httpMethodHandlers from './http-methods';
 import { collectionWithName } from './collections';
-import { appFromRequest } from './app-from-request';
+import { getAppAndUserFromRequest } from './authenticate-request';
 import { setAccessControlHeaders } from './set-access-control-headers';
+import { getDisplayedNameForUser } from '/both/lib/user-name';
 
 function handleJSONRequest(req, res, next) {
   const { pathname } = url.parse(req.url);
@@ -17,6 +18,8 @@ function handleJSONRequest(req, res, next) {
 
   let appId = null;
   let app = null;
+  let user = null;
+  let userId = null;
   let responseBody = '{}';
 
   setAccessControlHeaders(res);
@@ -41,23 +44,30 @@ function handleJSONRequest(req, res, next) {
       return next();
     }
 
-    app = appFromRequest(req);
+    const appAndUser = getAppAndUserFromRequest(req);
+    app = appAndUser.app;
+    user = appAndUser.user;
     appId = app && app._id;
+    userId = user && user._id;
 
-    const options = { req, res, collectionName, collection, _id, appId, app };
+    const options = { req, res, collectionName, collection, _id, appId, app, user, userId };
+    const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
+    const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
     console.log(
-      'Request via',
-      'app',
-      appId,
-      (app && app.name),
-      'by',
-      app.getOrganization().name
-    );
-    console.log(
+      'Request',
+      _.compact([viaAppString, asUserString]).join(' '),
       req.method,
       req.url,
       EJSON.stringify(req.body)
     );
+
+
+    if (!app && !user) {
+      console.warn('No app / user authorized for request.');
+      // eslint-disable-next-line max-len
+      throw new Meteor.Error(401, 'Not authorized.', `One of the tokens you supplied either is too old or was never valid. Log in on ${Meteor.absoluteUrl('')} and obtain a valid token in your app settings.`);
+    }
+
 
     responseBody = EJSON.stringify(handler(options));
   } catch (error) {

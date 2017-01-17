@@ -56,7 +56,7 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 
 ## Authentication
 
-For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-Api-Token: 12345` (replace `12345` with your own API token).
+For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token).
 
 Your API token allows you to access the following data:
 - Your organization's profile data
@@ -196,7 +196,7 @@ If given, the `include` parameter has to be a comma-separated list of relation n
 ```bash
 curl -v -s \
     -H 'Accept: application/json' \
-    -H 'X-Token: YOUR_TOKEN_HERE' \
+    -H 'X-App-Token: YOUR_TOKEN_HERE' \
     https://www.accessibility.cloud/place-infos\?latitude\=48.24350856260559\&longitude\=16.39748637322089\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&include=source | jq .
 ```
 

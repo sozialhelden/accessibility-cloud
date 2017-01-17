@@ -5,12 +5,12 @@ import { Organizations } from '/both/api/organizations/organizations';
 // Returns the app that is authenticated for the given token string, or undefined if the token
 // is not valid / not found.
 
-export function appFromToken(tokenString) {
-  console.log('Trying to find app for token', tokenString, '…');
+export function getAppFromToken(tokenString) {
+  console.log(`Trying to find app for token '${tokenString}'…`);
 
   const app = Apps.findOne({ tokenString });
   if (!app) {
-    throw new Meteor.Error(401, 'Could not find app for given token.');
+    return null;
   }
 
   if (!app.organizationId) {

@@ -7,11 +7,12 @@ import { _ } from 'meteor/stevezhu:lodash';
 // For each given document in `documents`, look up the related document that is specified by
 // foreign key `fieldName`. Returns all related documents and their collection.
 
-function findRelatedDocuments({ collection, documents, fieldName, appId }) {
+function findRelatedDocuments({ collection, documents, fieldName, appId, userId }) {
   check(documents, [Object]);
   check(collection, Mongo.Collection);
   check(fieldName, String);
-  check(appId, Match.Optional(String));
+  check(appId, Match.Maybe(String));
+  check(userId, Match.Maybe(String));
 
   const relation = collection.relationships.belongsTo[fieldName];
   if (!relation) {
@@ -19,13 +20,19 @@ function findRelatedDocuments({ collection, documents, fieldName, appId }) {
   }
   const { foreignCollection, foreignKey } = relation;
 
-  // Allow limiting visible documents dependent on the requesting app
-  const visibleSelector = {};
-  if (typeof foreignCollection.visibleSelectorForAppId === 'function') {
-    Object.assign(visibleSelector, foreignCollection.visibleSelectorForAppId(appId) || {});
+  // Allow limiting visible documents dependent on the requesting app and user
+  const visibleSelectors = [];
+  if (userId && typeof foreignCollection.visibleSelectorForUserId === 'function') {
+    visibleSelectors.push(foreignCollection.visibleSelectorForUserId(userId) || {});
   }
+  if (appId && typeof foreignCollection.visibleSelectorForAppId === 'function') {
+    visibleSelectors.push(foreignCollection.visibleSelectorForAppId(appId) || {});
+  }
+
   const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
-  const selector = { $and: [visibleSelector, { _id: { $in: foreignIds } }] };
+  visibleSelectors.push({ _id: { $in: foreignIds } });
+
+  const selector = { $and: visibleSelectors };
 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
@@ -60,10 +67,11 @@ function expandFieldPathsToFetch(fieldPaths) {
 // This finds requested related children documents for a given list of documents, indexed by
 // collection name and document `_id`.
 
-export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, appId }) {
+export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, appId, userId }) {
   check(rootDocuments, [Object]);
   check(rootCollection, Mongo.Collection);
-  check(appId, String);
+  check(appId, Match.Maybe(String));
+  check(userId, Match.Maybe(String));
 
   const includeRelatedQuery = req.query.includeRelated;
   check(includeRelatedQuery, Match.Optional(String));
@@ -81,6 +89,7 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
         documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
         fieldName: fieldName || fieldPath,
         appId,
+        userId,
       });
   });
 
