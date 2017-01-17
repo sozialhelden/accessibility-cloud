@@ -1,10 +1,13 @@
 /* globals L */
 
 import { Meteor } from 'meteor/meteor';
+import { HTTP } from 'meteor/http';
+import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/stevezhu:lodash';
 import { getCurrentPlaceInfo } from './get-current-place-info';
-
+import { getApiUserToken } from '/client/lib/api-tokens';
 
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
@@ -38,59 +41,69 @@ function getColorForWheelchairAccessiblity(placeData) {
       return 'red';
     }
   } catch (e) {
-    console.warn('Failed to get color for', e, placeData);
+    console.warn('Failed to get color for', placeData, e);
   }
   return 'grey';
 }
 
-function showPlacesOnMap(map) {
-  Meteor.call('getPlacesForSource', FlowRouter.getParam('_id'), (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      if (result.length === 0) {
-        return;
-      }
+function showPlacesOnMap(map, geoMarkerData) {
+  const markers = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
+    pointToLayer(feature, latlng) {
+      const categoryIconName = _.get(feature, 'properties.category') || 'place';
+      const color = getColorForWheelchairAccessiblity(feature);
 
-      const geoMarkerData = _.map(result, (item) => ({
-        type: 'Feature',
-        geometry: item.geometry,
-        placeData: item,
-      }));
-
-      if (!geoMarkerData.length) {
-        return;
-      }
-
-      const markers = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
-        pointToLayer(feature, latlng) {
-          const categoryIconName = _.get(feature, 'placeData.properties.category') || 'place';
-          const color = getColorForWheelchairAccessiblity(feature.placeData);
-
-          const acIcon = new L.AccessibilityIcon({
-            iconUrl: `/icons/categories/${categoryIconName}.png`,
-            className: `ac-marker ${color}`,
-            // iconSize: [27, 27],
-          });
-          const marker = L.marker(latlng, { icon: acIcon });
-          marker.on('click', () => {
-            FlowRouter.go('placeInfos.show', {
-              _id: FlowRouter.getParam('_id'),
-              placeInfoId: feature.placeData._id,
-            });
-          });
-
-          return marker;
-        },
+      const acIcon = new L.AccessibilityIcon({
+        iconUrl: `/icons/categories/${categoryIconName}.png`,
+        className: `ac-marker ${color}`,
+        // iconSize: [27, 27],
+      });
+      const marker = L.marker(latlng, { icon: acIcon });
+      marker.on('click', () => {
+        FlowRouter.go('placeInfos.show', {
+          _id: FlowRouter.getParam('_id'),
+          placeInfoId: feature.properties._id,
+        });
       });
 
-      markers.addTo(map);
-      map.fitBounds(markers.getBounds().pad(0.3));
+      return marker;
+    },
+  });
+
+  markers.addTo(map);
+  if (geoMarkerData.features && geoMarkerData.features.length) {
+    map.fitBounds(markers.getBounds().pad(0.3));
+  }
+}
+
+
+function getPlaces(callback) {
+  getApiUserToken((error, hashedToken) => {
+    if (error) {
+      console.error('Could not get API token for getting place infos over the API.');
+      return;
     }
+
+    const options = {
+      params: {
+        // latitude: 40.728292,
+        // longitude: -73.9875852,
+        // accuracy: 10000,
+        limit: 1000,
+        includeSourceIds: FlowRouter.getParam('_id'),
+      },
+      headers: {
+        Accept: 'application/json',
+        'X-User-Token': hashedToken,
+      },
+    };
+
+    HTTP.get(Meteor.absoluteUrl('place-infos'), options, callback);
   });
 }
 
-Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
+Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
+  check(Meteor.settings.public.mapbox, String);
+
   const map = L.map('mapid', {
     doubleClickZoom: false,
   }).setView([49.25044, -123.137], 13);
@@ -101,7 +114,7 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
     id: 'accesssibility-cloud',
-    accessToken: Meteor.settings.public.mapbox || 'your.mapbox.public.access.token',
+    accessToken: Meteor.settings.public.mapbox,
   }).addTo(map);
 
   this.autorun(() => {
@@ -111,5 +124,13 @@ Template.sources_show_page.onRendered(function sourcesShowPageOnRendered() {
     }
   });
 
-  showPlacesOnMap(map);
+  getPlaces((error, response) => {
+    if (error || response.statusCode !== 200) {
+      const message = 'Could not load places:';
+      alert(message, error);
+      console.error(message, error, error.stack);
+      return;
+    }
+    showPlacesOnMap(map, response.data);
+  });
 });
