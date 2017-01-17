@@ -7,25 +7,25 @@ import { sortOptions } from './sort';
 import { _ } from 'meteor/underscore';
 
 export function buildSelectorAndOptions({ req, _id, collection, appId, userId }) {
-  let selector;
+  const selectors = [];
 
   if (userId && typeof collection.visibleSelectorForUserId === 'function') {
-    selector = collection.visibleSelectorForUserId(userId);
+    selectors.push(collection.visibleSelectorForUserId(userId));
   }
 
   if (appId && typeof collection.visibleSelectorForAppId === 'function') {
-    selector = collection.visibleSelectorForAppId(appId);
+    selectors.push(collection.visibleSelectorForAppId(appId));
   }
 
-  if (!_.isObject(selector)) {
+  if (!selectors.length) {
     // This means the collection has no a visibleSelectorForAppId() method defined
     // eslint-disable-next-line max-len
     throw new Meteor.Error(401, `${collection._name} collection is accessible over API, but no allowed collection content defined for authenticated app / user.`);
   }
 
-  selector = {
+  let selector = {
     $and: [
-      selector,
+      { $or: selectors },
       sourceFilterSelector(req),
       geometrySelector(req),
     ],

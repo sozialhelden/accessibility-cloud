@@ -32,7 +32,7 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
   const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
   visibleSelectors.push({ _id: { $in: foreignIds } });
 
-  const selector = { $and: visibleSelectors };
+  const selector = { $or: visibleSelectors };
 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
