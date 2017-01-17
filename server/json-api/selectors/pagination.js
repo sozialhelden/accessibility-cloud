@@ -15,7 +15,7 @@ export function paginationOptions(req) {
     limit: {
       type: Number,
       min: 0,
-      max: 1000,
+      max: 150000,
       optional: true,
       defaultValue: 1000,
     },
