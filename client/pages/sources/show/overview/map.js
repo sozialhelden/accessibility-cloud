@@ -9,6 +9,12 @@ import { _ } from 'meteor/stevezhu:lodash';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
 
+import 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
   options: {
@@ -47,7 +53,7 @@ function getColorForWheelchairAccessiblity(placeData) {
 }
 
 function showPlacesOnMap(map, geoMarkerData) {
-  const markers = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
+  const geojsonLayer = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
     pointToLayer(feature, latlng) {
       const categoryIconName = _.get(feature, 'properties.category') || 'place';
       const color = getColorForWheelchairAccessiblity(feature);
@@ -69,8 +75,10 @@ function showPlacesOnMap(map, geoMarkerData) {
     },
   });
 
-  markers.addTo(map);
   if (geoMarkerData.features && geoMarkerData.features.length) {
+    const markers = L.markerClusterGroup();
+    markers.addLayer(geojsonLayer);
+    map.addLayer(markers);
     map.fitBounds(markers.getBounds().pad(0.3));
   }
 }
@@ -88,7 +96,7 @@ function getPlaces(callback) {
         // latitude: 40.728292,
         // longitude: -73.9875852,
         // accuracy: 10000,
-        limit: 1000,
+        limit: 150000,
         includeSourceIds: FlowRouter.getParam('_id'),
       },
       headers: {
