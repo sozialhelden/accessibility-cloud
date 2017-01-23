@@ -8,9 +8,22 @@ import {
 
 let storedUserToken = null;
 
-export function getApiUserToken(expirationTimeOrCallback, callback) {
+
+function expireApiTokenIfNecessary() {
+  const now = new Date();
+  if (storedUserToken && storedUserToken.expireDate <= now) {
+    console.log('Expired stored API user token.');
+    storedUserToken = null;
+  }
+}
+
+
+export function getApiUserToken(expirationTimeOrCallback, callbackOrNull) {
+  expireApiTokenIfNecessary();
+
+  const callback = (callbackOrNull || expirationTimeOrCallback);
   if (storedUserToken) {
-    callback(null, storedUserToken);
+    callback(null, storedUserToken.hashedToken);
     return;
   }
 
@@ -23,20 +36,14 @@ export function getApiUserToken(expirationTimeOrCallback, callback) {
       console.error('Could not get API token for getting place infos over the API:', error);
       return;
     }
-    storedUserToken = newUserToken;
     const { clientSalt, token } = newUserToken;
     const hashedToken = SHA256(clientSalt + token); // eslint-disable-line new-cap
-    (callback || expirationTimeOrCallback)(error, hashedToken);
+    storedUserToken = newUserToken;
+    Object.assign(storedUserToken, { hashedToken });
+    callback(error, hashedToken);
   });
 }
 
-function expireApiTokenIfNecessary() {
-  const now = new Date();
-  if (storedUserToken && storedUserToken.expireDate <= now) {
-    console.log('Expired stored API user token.');
-    storedUserToken = null;
-  }
-}
 
 Meteor.startup(() => {
   Meteor.setInterval(expireApiTokenIfNecessary, ExpirationCheckInterval / 2);
