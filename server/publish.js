@@ -63,7 +63,7 @@ export function publishPrivateFields(
         const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
-          _.extend({}, options, { fields: collection.publicFields })
+          _.extend({}, options, { fields: collection.privateFields })
         );
       });
     }

@@ -25,10 +25,13 @@ Sources.publicFields = {
   originWebsiteURL: 1,
   languageId: 1,
   isDraft: 1,
-  // streamChain: 1,
   isFreelyAccessible: 1,
   accessRestrictedTo: 1,
   hasRunningImport: 1,
+};
+
+Sources.privateFields = {
+  streamChain: 1,
 };
 
 Sources.helpers({

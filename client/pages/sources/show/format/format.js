@@ -15,6 +15,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
+  subsManager.subscribe('sources.private');
   subsManager.subscribe('sourceImports.public');
 
   window.SourceImports = SourceImports;
