@@ -4,7 +4,14 @@
   {{#if currentUser}}
     <div class='activity-indicator {{#if isLoading}}is-spinning{{/if}}'>
       <div class='activity-description'>
-        <p>Loading {{currentPlaceCountLimit}} places…</p>
+        <p>
+          Loading
+          {{#if source.placeInfoCount}}
+            {{#if isShowingAllPlaces}}
+              {{source.placeInfoCount}}{{else}}{{currentPlaceCountLimit}}
+            {{/if}}
+          {{/if}}
+          places…</p>
         {{#if shouldShowThisCanTakeAWhileHint}}
           <p class='subtle'>Please be patient, this can take a while.</p>
         {{/if}}
