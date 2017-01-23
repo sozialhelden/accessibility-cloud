@@ -1,0 +1,80 @@
+.page-content.sources_show_page {
+  > .content {
+    position: relative;
+    > .map {
+      transition: opacity 1s ease-out;
+      &.is-loading {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      opacity: 1;
+    }
+  }
+
+  .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+    -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+  }
+
+  .marker-cluster-small {
+    background-color: rgba(31, 171, 217, 0.3);
+    margin-left: -20px !important;
+    margin-top: -20px !important;
+    width: 40px !important;
+    height: 40px !important;
+    > div {
+      background-color: rgba(31, 171, 217, 0.5);
+      font-size: 1em;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .marker-cluster-medium {
+    background-color: rgba(31, 171, 217, 0.3);
+    margin-left: -25px !important;
+    margin-top: -25px !important;
+    width: 50px !important;
+    height: 50px !important;
+    > div {
+      background-color: rgba(19, 159, 206, 0.75);
+      font-size: 1.25em;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+
+  .marker-cluster-large {
+    background-color: rgba(31, 171, 217, 0.3);
+    margin-left: -30px !important;
+    margin-top: -30px !important;
+    width: 60px !important;
+    height: 60px !important;
+    > div {
+      background-color: rgba(12, 122, 158, 0.7);
+      font-size: 1.5em;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+    }
+  }
+
+  .marker-cluster {
+    background-clip: padding-box;
+    border-radius: 500px;
+    div {
+      padding-top: 1px;
+      border-radius: 500px;
+      text-align: center;
+      span {
+        color: white;
+        font-family: 'sourcesanspro-bold';
+        line-height: 30px;
+        text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}

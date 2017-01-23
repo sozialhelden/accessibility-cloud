@@ -57,4 +57,8 @@ Template.sources_show_page_place_info.events({
     });
     event.preventDefault();
   },
+  'click .js-show-all-places'(event) {
+
+    event.preventDefault();
+  },
 });

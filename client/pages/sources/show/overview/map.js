@@ -1,6 +1,7 @@
 /* globals L */
 
 import { Meteor } from 'meteor/meteor';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { HTTP } from 'meteor/http';
 import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
@@ -52,7 +53,14 @@ function getColorForWheelchairAccessiblity(placeData) {
   return 'grey';
 }
 
-function showPlacesOnMap(map, geoMarkerData) {
+function centerOnCurrentPlace(map) {
+  const place = getCurrentPlaceInfo();
+  if (place) {
+    map.setView(place.geometry.coordinates.reverse(), 16);
+  }
+}
+
+function showPlacesOnMap(instance, map, geoMarkerData) {
   const geojsonLayer = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
     pointToLayer(feature, latlng) {
       const categoryIconName = _.get(feature, 'properties.category') || 'place';
@@ -76,15 +84,23 @@ function showPlacesOnMap(map, geoMarkerData) {
   });
 
   if (geoMarkerData.features && geoMarkerData.features.length) {
-    const markers = L.markerClusterGroup();
-    markers.addLayer(geojsonLayer);
+    const markers = L.markerClusterGroup({
+      polygonOptions: {
+        color: '#08c',
+        weight: 1,
+      },
+    });
+    markers.addLayer(geojsonLayer, { chunkedLoading: true });
     map.addLayer(markers);
-    map.fitBounds(markers.getBounds().pad(0.3));
+    map.fitBounds(markers.getBounds().pad(0.02));
+    centerOnCurrentPlace(map);
+    return markers;
   }
+  return null;
 }
 
 
-function getPlaces(callback) {
+function getPlaces(limit, callback) {
   getApiUserToken((error, hashedToken) => {
     if (error) {
       console.error('Could not get API token for getting place infos over the API.');
@@ -96,7 +112,8 @@ function getPlaces(callback) {
         // latitude: 40.728292,
         // longitude: -73.9875852,
         // accuracy: 10000,
-        limit: 150000,
+        // limit: 150000,
+        limit: limit,
         includeSourceIds: FlowRouter.getParam('_id'),
       },
       headers: {
@@ -109,10 +126,38 @@ function getPlaces(callback) {
   });
 }
 
-Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
+Template.sources_show_page_map.onCreated(function created() {
+  this.isLoading = new ReactiveVar(true);
+});
+
+Template.sources_show_page_map.helpers({
+  isLoading() {
+    return Template.instance().isLoading.get();
+  },
+});
+
+function loadPlaces(instance, map, limit) {
+  instance.isLoading.set(true);
+  if (instance.markers) {
+    map.removeLayer(instance.markers);
+    instance.markers = null;
+  }
+  getPlaces(limit, (error, response) => {
+    instance.isLoading.set(false);
+    if (error || response.statusCode !== 200) {
+      const message = 'Could not load places:';
+      alert(message, error);
+      console.error(message, error, error.stack);
+      return;
+    }
+    instance.markers = showPlacesOnMap(instance, map, response.data);
+  });
+}
+
+function initializeMap(instance) {
   check(Meteor.settings.public.mapbox, String);
 
-  const map = L.map('mapid', {
+  const map = L.map(instance.find('.map'), {
     doubleClickZoom: false,
   }).setView([49.25044, -123.137], 13);
 
@@ -125,20 +170,11 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     accessToken: Meteor.settings.public.mapbox,
   }).addTo(map);
 
-  this.autorun(() => {
-    const place = getCurrentPlaceInfo();
-    if (place) {
-      map.setView(place.geometry.coordinates.reverse(), 14);
-    }
-  });
+  return map;
+}
 
-  getPlaces((error, response) => {
-    if (error || response.statusCode !== 200) {
-      const message = 'Could not load places:';
-      alert(message, error);
-      console.error(message, error, error.stack);
-      return;
-    }
-    showPlacesOnMap(map, response.data);
-  });
+Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
+  const map = initializeMap(this);
+  loadPlaces(this, map, 5000);
+  this.autorun(() => centerOnCurrentPlace(map));
 });

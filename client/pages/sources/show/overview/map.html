@@ -1,4 +1,5 @@
 <template name="sources_show_page_map">
-  <div id='mapid'>
+  <div id='mapid' class='map {{#if isLoading}}is-loading{{/if}}'>
   </div>
+  <div class='activity-indicator {{#if isLoading}}is-spinning{{/if}}'></div>
 </template>
