@@ -36,10 +36,12 @@ Template.registerHelpers({
     return result;
   },
   isAdmin() {
-    return isAdmin(Meteor.userId());
+    const userId = Meteor.userId();
+    return userId && isAdmin(userId);
   },
   isApproved() {
-    return isApproved(Meteor.userId());
+    const userId = Meteor.userId();
+    return userId && isApproved(userId);
   },
   userCanAccessPageWithCurrentApprovalState(pageName) {
     const userId = Meteor.userId();
