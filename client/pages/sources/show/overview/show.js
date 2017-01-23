@@ -38,6 +38,12 @@ function canShowMorePlaces() {
     currentSource.placeInfoCount() > currentPlaceCountLimit();
 }
 
+function couldShowAllPlaces() {
+  const currentSource = source();
+  if (!currentSource) { return false; }
+  return serverSidePlaceCountLimit() > currentSource.placeInfoCount();
+}
+
 function sourceImports() {
   return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
 }
@@ -70,6 +76,7 @@ Template.sources_show_page.onRendered(() => {
 
 const helpers = {
   source,
+  couldShowAllPlaces,
   isShowingAllPlaces,
   defaultPlaceCountLimit,
   currentPlaceCountLimit,

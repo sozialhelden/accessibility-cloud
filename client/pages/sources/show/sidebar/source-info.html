@@ -16,7 +16,7 @@
         <span class='reduced-places-hint'>
           {{currentPlaceCountLimit}} shown.
           {{#if canShowMorePlaces}}
-          <a href='#' class='js-show-all-places'>Show {{serverSidePlaceCountLimit}}</a>
+            <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{serverSidePlaceCountLimit}}{{/if}}</a>
           {{/if}}
         </span>
       {{/unless}}
