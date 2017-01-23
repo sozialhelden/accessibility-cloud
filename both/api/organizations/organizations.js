@@ -11,7 +11,7 @@ import {
   userHasFullAccessToOrganizationId,
   isUserMemberOfOrganizationWithId,
 } from '/both/api/organizations/privileges';
-
+import { _ } from 'lodash';
 
 export const Organizations = new Mongo.Collection('Organizations');
 
@@ -141,7 +141,8 @@ Organizations.helpers({
     return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this._id);
   },
   getSources() {
-    return Sources.find({ organizationId: this._id });
+    const sources = Sources.find({ organizationId: this._id }).fetch();
+    return _.sortBy(_.sortBy(sources, (s) => s.placeInfoCount && -s.placeInfoCount()), 'isDraft');
   },
   getApps() {
     return Apps.find({ organizationId: this._id });
