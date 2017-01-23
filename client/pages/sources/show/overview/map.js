@@ -146,7 +146,7 @@ function loadPlaces(instance, map, limit) {
     instance.isLoading.set(false);
     if (error || response.statusCode !== 200) {
       const message = 'Could not load places:';
-      alert(message, error);
+      alert(message, error.reason);
       console.error(message, error, error.stack);
       return;
     }
@@ -175,6 +175,9 @@ function initializeMap(instance) {
 
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const map = initializeMap(this);
-  loadPlaces(this, map, 5000);
+  this.autorun(() => {
+    FlowRouter.watchPathChange();
+    loadPlaces(this, map, FlowRouter.getQueryParam('limit') || 5000);
+  });
   this.autorun(() => centerOnCurrentPlace(map));
 });

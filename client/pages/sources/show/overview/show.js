@@ -5,6 +5,51 @@ import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import subsManager from '/client/lib/subs-manager';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 
+function defaultPlaceCountLimit() {
+  return 5000;
+}
+
+function serverSidePlaceCountLimit() {
+  return 150000;
+}
+
+function source() {
+  return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+}
+
+function currentPlaceCountLimit() {
+  return FlowRouter.getQueryParam('limit') || defaultPlaceCountLimit();
+}
+
+function shouldShowThisCanTakeAWhileHint() {
+  return currentPlaceCountLimit() > 50000;
+}
+
+function isShowingAllPlaces() {
+  const currentSource = source();
+  if (!currentSource) { return true; }
+  return currentPlaceCountLimit() >= currentSource.placeInfoCount();
+}
+
+function canShowMorePlaces() {
+  const currentSource = source();
+  if (!currentSource) { return false; }
+  return currentPlaceCountLimit() < serverSidePlaceCountLimit() &&
+    currentSource.placeInfoCount() > currentPlaceCountLimit();
+}
+
+function sourceImports() {
+  return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
+}
+
+function sourceImport() {
+  const selectedImport = SourceImports.findOne({ sourceId: FlowRouter.getParam('importId') });
+
+  if (selectedImport) {
+    return selectedImport;
+  }
+  return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
+}
 
 Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
@@ -24,20 +69,15 @@ Template.sources_show_page.onRendered(() => {
 });
 
 const helpers = {
-  source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
-  },
-  sourceImports() {
-    return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
-  },
-  sourceImport() {
-    const selectedImport = SourceImports.findOne({ sourceId: FlowRouter.getParam('importId') });
-
-    if (selectedImport) {
-      return selectedImport;
-    }
-    return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
-  },
+  source,
+  isShowingAllPlaces,
+  defaultPlaceCountLimit,
+  currentPlaceCountLimit,
+  shouldShowThisCanTakeAWhileHint,
+  canShowMorePlaces,
+  serverSidePlaceCountLimit,
+  sourceImports,
+  sourceImport,
   getCurrentPlaceInfo,
   placeDetailsVisible() {
     FlowRouter.watchPathChange();
@@ -47,6 +87,7 @@ const helpers = {
 
 Template.sources_show_header.helpers(helpers);
 Template.sources_show_page.helpers(helpers);
+Template.sources_show_page_map.helpers(helpers);
 Template.sources_show_page_place_info.helpers(helpers);
 Template.sources_show_page_source_info.helpers(helpers);
 
@@ -57,8 +98,13 @@ Template.sources_show_page_place_info.events({
     });
     event.preventDefault();
   },
-  'click .js-show-all-places'(event) {
+});
 
+Template.sources_show_page_source_info.events({
+  'click .js-show-all-places'(event) {
+    FlowRouter.withReplaceState(() =>
+      FlowRouter.setQueryParams({ limit: 150000 })
+    );
     event.preventDefault();
   },
 });

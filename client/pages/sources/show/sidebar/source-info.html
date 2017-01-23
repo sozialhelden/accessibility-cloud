@@ -1,8 +1,8 @@
 <template name='sources_show_page_source_info'>
   <section class='source-info'>
-    <div class='description markdown'>
+    <section class='description markdown'>
       {{#markdown}}{{source.description}}{{/markdown}}
-    </div>
+    </section>
 
     <dl class='attributes'>
       <dt>Number of places</dt>
@@ -11,6 +11,16 @@
       {{else}}
         <span class='subtle'>No places provided yet.</span>
       {{/with}}
+
+      {{#unless isShowingAllPlaces}}
+        <span class='reduced-places-hint'>
+          {{currentPlaceCountLimit}} shown.
+          {{#if canShowMorePlaces}}
+          <a href='#' class='js-show-all-places'>Show {{serverSidePlaceCountLimit}}</a>
+          {{/if}}
+        </span>
+      {{/unless}}
+
       <dt>License</dt>
       <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
         {{getLicense.name}}
