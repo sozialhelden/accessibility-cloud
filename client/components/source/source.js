@@ -5,7 +5,7 @@ const subsManager = new SubsManager();
 
 Template.component_source.onRendered(function rendered() {
   if (this.data.source) {
-    subsManager.subscribe('sourcesPlaceInfoCounts', this.data.source._id);
-    subsManager.subscribe('sourceImports.public');
+    this.subscribe('sourcesPlaceInfoCounts', this.data.source._id);
+    this.subscribe('sourceImports.public');
   }
 });

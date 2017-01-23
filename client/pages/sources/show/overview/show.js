@@ -70,8 +70,8 @@ Template.sources_show_page.onCreated(function created() {
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
 
-Template.sources_show_page.onRendered(() => {
-  subsManager.subscribe('sourcesPlaceInfoCounts', FlowRouter.getParam('_id'));
+Template.sources_show_page.onRendered(function rendered() {
+  this.subscribe('sourcesPlaceInfoCounts', FlowRouter.getParam('_id'));
 });
 
 const helpers = {
