@@ -3,8 +3,11 @@
     <span class='js-close close-window icon'></span>
 
     <h4>{{getCurrentPlaceInfo.properties.name}}</h4>
+
     <p class='category'>{{getCurrentPlaceInfo.properties.category}}</p>
+
     <pre class='readible json'>{{stringifyHuman getCurrentPlaceInfo.properties.accessibility}}</pre>
+
     {{#if getCurrentPlaceInfo.properties.infoPageUrl}}
       <p>
         <a href='{{getCurrentPlaceInfo.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
@@ -12,13 +15,14 @@
     {{/if}}
 
     <hr/>
+
     {{#if placeDetailsVisible}}
-    <a href='#' class='js-click-hide-details'>Hide JSON</a>
-    <pre class='readible json'>
-      {{stringify getCurrentPlaceInfo}}
-    </pre>
+      <a href='#' class='js-click-hide-details'>Hide JSON</a>
+      <pre class='readible json'>
+        {{stringify getCurrentPlaceInfo}}
+      </pre>
     {{else}}
-    <a href='#' class='js-click-show-details'>Show JSON</a>
+      <a href='#' class='js-click-show-details'>Show JSON</a>
     {{/if}}
   </section>
 </template>
