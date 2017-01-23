@@ -209,6 +209,7 @@ dataRoutes.route('/organizations/:_id/licenses/create', {
 dataRoutes.route('/licenses/:_id', {
   name: 'licenses.show',
   title: 'License',
+  isAccessibleWithoutApproval: true,
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'licenses_show_page',
@@ -360,6 +361,7 @@ dataRoutes.route('/sources/:_id/imports/:importId?', {
 dataRoutes.route('/sources/:_id', {
   name: 'sources.show',
   title: 'Overview',
+  isAccessibleWithoutApproval: true,
   action() {
     BlazeLayout.render('app_layout_mapview', {
       main: 'sources_show_page',
@@ -384,6 +386,7 @@ dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
 FlowRouter.route('/imprint', {
   name: 'imprint',
   title: 'About',
+  isAccessibleWithoutApproval: true,
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'imprint_page',
@@ -398,6 +401,7 @@ FlowRouter.route('/imprint', {
 FlowRouter.notFound = {
   name: 'notFound',
   title: 'Page not found',
+  isAccessibleWithoutApproval: true,
   action() {
     // BlazeLayout.render('app_layout_scrollable', {
     //   main: 'apps_list_page',

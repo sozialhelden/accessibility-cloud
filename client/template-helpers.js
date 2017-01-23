@@ -43,10 +43,11 @@ Template.registerHelpers({
     const userId = Meteor.userId();
     return userId && isApproved(userId);
   },
-  userCanAccessPageWithCurrentApprovalState(pageName) {
+  userCanAccessPageWithCurrentApprovalState() {
+    FlowRouter.watchPathChange();
     const userId = Meteor.userId();
-    const pagesAccessibleWithoutApproval = ['licenses_show_page', 'imprint_page', 'not_found_page'];
-    return pagesAccessibleWithoutApproval.includes(pageName) || userId && isApproved(userId);
+    return FlowRouter.current().route.options.isAccessibleWithoutApproval ||
+      userId && isApproved(userId);
   },
   activeIfRouteNameStartsWith(routeName) {
     FlowRouter.watchPathChange();
