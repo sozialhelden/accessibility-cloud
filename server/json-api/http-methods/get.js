@@ -26,6 +26,7 @@ export function GET({ req, collection, _id, appId, userId }) {
   const related = findAllRelatedDocuments({
     req,
     appId,
+    userId,
     rootCollection: collection,
     rootDocuments: results,
   });

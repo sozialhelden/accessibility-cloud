@@ -13,6 +13,9 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
   check(fieldName, String);
   check(appId, Match.Maybe(String));
   check(userId, Match.Maybe(String));
+  if (!appId && !userId) {
+    throw new Meteor.Error(401, 'Please log in first.');
+  }
 
   const relation = collection.relationships.belongsTo[fieldName];
   if (!relation) {
@@ -76,6 +79,9 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
   check(rootCollection, Mongo.Collection);
   check(appId, Match.Maybe(String));
   check(userId, Match.Maybe(String));
+  if (!appId && !userId) {
+    throw new Meteor.Error(401, 'Please log in first.');
+  }
 
   const includeRelatedQuery = req.query.includeRelated;
   check(includeRelatedQuery, Match.Optional(String));

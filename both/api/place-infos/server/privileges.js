@@ -22,7 +22,7 @@ PlaceInfos.helpers({
 // data source selector
 function placeInfoSelectorForSourceSelector(sourceSelector) {
   check(sourceSelector, Object);
-  console.log('Including sources', JSON.stringify(sourceSelector));
+  // console.log('Including sources', JSON.stringify(sourceSelector));
   const options = { transform: null, fields: { _id: 1 } };
   const sourceIds = Sources.find(sourceSelector, options).fetch().map(s => s._id);
   return { 'properties.sourceId': { $in: sourceIds } };
