@@ -46,10 +46,11 @@ export class UpsertPlace {
 
         if (!originalId) {
           error = new Error('No originalId given in PlaceInfo');
-        }
-        else if (!Match.test(placeInfo.geometry &&
+        } else if (!Match.test(placeInfo.geometry &&
           placeInfo.geometry.coordinates, TwoCoordinatesMatcher)) {
           error = new Error('Coordinates are undefined');
+        } else if (!Match.test(originalId, String)) {
+          error = new Error('Given originalId was no string');
         }
 
         if (error) {
@@ -63,8 +64,6 @@ export class UpsertPlace {
           }
           return;
         }
-
-        check(originalId, String);
 
         Object.assign(placeInfo.properties, {
           sourceId,
