@@ -75,6 +75,7 @@ function showPlacesOnMap(instance, map, geoMarkerData) {
       marker.on('click', () => {
         FlowRouter.go('placeInfos.show', {
           _id: FlowRouter.getParam('_id'),
+          limit: FlowRouter.getParam('limit'),
           placeInfoId: feature.properties._id,
         });
       });
@@ -109,11 +110,7 @@ function getPlaces(limit, callback) {
 
     const options = {
       params: {
-        // latitude: 40.728292,
-        // longitude: -73.9875852,
-        // accuracy: 10000,
-        // limit: 150000,
-        limit: limit,
+        limit,
         includeSourceIds: FlowRouter.getParam('_id'),
       },
       headers: {
@@ -180,7 +177,12 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
       return;
     }
     FlowRouter.watchPathChange();
-    loadPlaces(this, map, FlowRouter.getQueryParam('limit') || 5000);
+    const limit = FlowRouter.getQueryParam('limit') || 5000;
+    if (!this.currentLimit || limit > this.currentLimit) {
+      this.currentLimit = limit;
+      loadPlaces(this, map, limit);
+      FlowRouter.setQueryParams({ limit });
+    }
   });
   this.autorun(() => centerOnCurrentPlace(map));
 });

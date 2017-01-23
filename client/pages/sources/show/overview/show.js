@@ -102,6 +102,7 @@ Template.sources_show_page_place_info.events({
   'click .js-close'(event) {
     FlowRouter.go('sources.show', {
       _id: FlowRouter.getParam('_id'),
+      limit: FlowRouter.getParam('limit'),
     });
     event.preventDefault();
   },
