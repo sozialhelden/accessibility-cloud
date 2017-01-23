@@ -1,12 +1,18 @@
 <template name="sources_show_page_map">
   <div id='mapid' class='map {{#if isLoading}}is-loading{{/if}}'>
   </div>
-  <div class='activity-indicator {{#if isLoading}}is-spinning{{/if}}'>
-    <div class='activity-description'>
-      <p>Loading {{currentPlaceCountLimit}} places…</p>
-      {{#if shouldShowThisCanTakeAWhileHint}}
-        <p class='subtle'>Please be patient, this can take a while.</p>
-      {{/if}}
+  {{#if currentUser}}
+    <div class='activity-indicator {{#if isLoading}}is-spinning{{/if}}'>
+      <div class='activity-description'>
+        <p>Loading {{currentPlaceCountLimit}} places…</p>
+        {{#if shouldShowThisCanTakeAWhileHint}}
+          <p class='subtle'>Please be patient, this can take a while.</p>
+        {{/if}}
+      </div>
     </div>
-  </div>
+  {{else}}
+    <div class='centered-message'>
+      <p>Please sign up or log in to see this source's places.</p>
+    </div>
+  {{/if}}
 </template>

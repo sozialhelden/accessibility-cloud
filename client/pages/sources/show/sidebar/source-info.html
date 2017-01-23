@@ -12,14 +12,16 @@
         <span class='subtle'>No places provided yet.</span>
       {{/with}}
 
-      {{#unless isShowingAllPlaces}}
-        <span class='reduced-places-hint'>
-          {{currentPlaceCountLimit}} shown.
-          {{#if canShowMorePlaces}}
-            <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{serverSidePlaceCountLimit}}{{/if}}</a>
-          {{/if}}
-        </span>
-      {{/unless}}
+      {{#if currentUser}}
+        {{#unless isShowingAllPlaces}}
+          <span class='reduced-places-hint'>
+            {{currentPlaceCountLimit}} shown.
+            {{#if canShowMorePlaces}}
+              <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{serverSidePlaceCountLimit}}{{/if}}</a>
+            {{/if}}
+          </span>
+        {{/unless}}
+      {{/if}}
 
       <dt>License</dt>
       <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>

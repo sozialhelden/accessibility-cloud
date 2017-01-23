@@ -176,6 +176,9 @@ function initializeMap(instance) {
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const map = initializeMap(this);
   this.autorun(() => {
+    if (!Meteor.userId()) {
+      return;
+    }
     FlowRouter.watchPathChange();
     loadPlaces(this, map, FlowRouter.getQueryParam('limit') || 5000);
   });
