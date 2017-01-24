@@ -2,19 +2,59 @@
 
 .page-content.sources_show_page {
   .sidebar {
+    .number {
+      .type-regular;
+      vertical-align: middle;
+      &.huge {
+        font-size: 3em;
+        line-height: 1em;
+      }
+      &.big {
+        font-size: 2em;
+      }
+      &.middle {
+        font-size: 1.5em;
+      }
+    }
+
     .selected-place {
       .category {
         text-transform: uppercase;
       }
     }
-    .attributes {
-      dt {
-        margin-top: 1em;
-        margin-bottom: 0.25em;
-        font-weight: 200;
-        .type-light;
+
+    dd.number-of-places {
+      text-align: center;
+    }
+    ul.stats-by-accessibility-type {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      li {
+        margin: 0.25em 1em;
       }
-      dd.badge {
+    }
+    dt {
+      .type-light;
+      &.stats {
+        text-align: center;
+      }
+    }
+    dt, header.type {
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+
+    dl.attributes {
+      display: inline-block;
+
+      > dt {
+        clear: both;
+        margin-top: 2em;
+        margin-bottom: 0.25em;
+      }
+      > dd.badge {
         display: inline-block;
         font-size: 120%;
         margin-top: 0.1em;

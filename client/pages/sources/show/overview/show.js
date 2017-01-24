@@ -95,6 +95,8 @@ const helpers = {
 Template.sources_show_header.helpers(helpers);
 Template.sources_show_page.helpers(helpers);
 Template.sources_show_page_map.helpers(helpers);
+Template.sources_show_page_attributes.helpers(helpers);
+Template.sources_show_page_sidebar.helpers(helpers);
 Template.sources_show_page_place_info.helpers(helpers);
 Template.sources_show_page_source_info.helpers(helpers);
 

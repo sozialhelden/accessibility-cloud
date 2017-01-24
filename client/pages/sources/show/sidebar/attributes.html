@@ -1,0 +1,13 @@
+<template name='sources_show_page_attributes'>
+  {{#with getLastSuccessfulImport}}
+    <dl class="attributes">
+      <dt>Structure</dt>
+      <dd>
+        <pre class='readible json'>
+          {{stringifyHuman getCachedAttributeDistribution.properties}}
+          <!-- {{stringifyHuman this}} -->
+        </pre>
+      </dd>
+    </dl>
+  {{/with}}
+</template>

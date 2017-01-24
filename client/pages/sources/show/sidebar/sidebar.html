@@ -1,0 +1,10 @@
+<template name="sources_show_page_sidebar">
+  {{#with getCurrentPlaceInfo}}
+    {{> sources_show_page_place_info}}
+  {{else}}
+    {{#with source}}
+      {{> sources_show_page_source_info}}
+      {{> sources_show_page_attributes}}
+    {{/with}}
+  {{/with}}
+</template>

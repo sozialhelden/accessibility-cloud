@@ -5,23 +5,51 @@
     </section>
 
     <dl class='attributes'>
-      <dt>Number of places</dt>
-      {{#with placeInfoCount}}
-        <dd class='badge'>{{this}}</dd>
-      {{else}}
-        <span class='subtle'>No places provided yet.</span>
-      {{/with}}
-
-      {{#if currentUser}}
-        {{#unless isShowingAllPlaces}}
-          <span class='reduced-places-hint'>
-            {{currentPlaceCountLimit}} shown.
-            {{#if canShowMorePlaces}}
+      <dt class='stats'>Number of places</dt>
+      <dd class='number-of-places'>
+        {{#with placeInfoCount}}
+          <div class='number huge'>{{formatNumber this}}</div>
+        {{else}}
+          <span class='subtle'>No places provided yet.</span>
+        {{/with}}
+        {{#if currentUser}}
+          {{#unless isShowingAllPlaces}}
+            <span class='reduced-places-hint'>
+              {{formatNumber currentPlaceCountLimit}} shown.
+              {{#if canShowMorePlaces}}
               <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{serverSidePlaceCountLimit}}{{/if}}</a>
-            {{/if}}
-          </span>
-        {{/unless}}
-      {{/if}}
+              {{/if}}
+            </span>
+          {{/unless}}
+        {{/if}}
+      </dd>
+
+
+      {{#with getLastSuccessfulImport}}
+        <dt class='stats'>Accessible for people with…</dt>
+        <dd>
+          <ul class='stats-by-accessibility-type'>
+            {{#each placeCountsByAccessibilityType}}
+              <li>
+                <header class='type'>{{humanize name}}</header>
+                <div class='number middle'>{{formatNumber this.true}}</div>
+              </li>
+            {{/each}}
+          </ul>
+        </dd>
+
+        <dt class='stats'>Top categories</dt>
+        <dd>
+          <ul class='categories'>
+            {{#each (mostFrequentCategoryNamesToPlaceCounts 12)}}
+              <li title='{{name}}'>
+                <span class='number'>{{formatNumber count}}</span>
+                <img class='icon' src='/icons/categories/{{name}}@2x.png' alt='{{name}}'>
+              </li>
+            {{/each}}
+          </ul>
+        </dd>
+      {{/with}}
 
       <dt>License</dt>
       <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
@@ -38,7 +66,7 @@
         {{/if}}
       </dd>
 
-      <dt>Access</dt>
+      <dt>Data access</dt>
       <dd>
         {{#if isFreelyAccessible}}
           Freely accessible
@@ -46,6 +74,7 @@
           Restricted to specific organizations
         {{/if}}
       </dd>
+
       <dt>Website</dt>
       <dd>
         {{#if source.originWebsiteURL}}

@@ -70,4 +70,11 @@ Template.registerHelpers({
     }
     return false;
   },
+  formatNumber(n) {
+    const number = Number(n);
+    if (number.toLocaleString) {
+      return number.toLocaleString('en-US');
+    }
+    return number.toString();
+  }
 });

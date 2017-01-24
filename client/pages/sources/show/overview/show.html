@@ -1,12 +1,6 @@
 <template name="sources_show_page">
   <div class='sidebar with-details'>
-    {{#with getCurrentPlaceInfo}}
-      {{> sources_show_page_place_info}}
-    {{else}}
-      {{#with source}}
-        {{> sources_show_page_source_info}}
-      {{/with}}
-    {{/with}}
+    {{> sources_show_page_sidebar}}
   </div>
   <div class='content'>
     {{> sources_show_page_map}}

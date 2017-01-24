@@ -219,6 +219,7 @@ export function createStreamChain({
       result.forEach(observer => {
         if (observer.dispose) { observer.dispose(); }
       });
+      SourceImports.findOne(sourceImportId).generateAndSaveStats();
     }, 1000);
   }));
 

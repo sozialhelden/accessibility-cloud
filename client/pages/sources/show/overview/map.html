@@ -8,7 +8,7 @@
           Loading
           {{#if source.placeInfoCount}}
             {{#if isShowingAllPlaces}}
-              {{source.placeInfoCount}}{{else}}{{currentPlaceCountLimit}}
+              {{formatNumber source.placeInfoCount}}{{else}}{{formatNumber currentPlaceCountLimit}}
             {{/if}}
           {{/if}}
           places…</p>
