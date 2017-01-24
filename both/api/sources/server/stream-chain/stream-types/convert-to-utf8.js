@@ -15,6 +15,10 @@ export class ConvertToUTF8 {
     this.stream = iconv.decodeStream(fromCharSet);
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return {
       fromCharset: {

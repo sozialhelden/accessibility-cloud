@@ -9,6 +9,10 @@ export class Split {
     this.stream = new SplitStream(matcher);
     this.stream.unitName = 'strings';
   }
+  
+  dispose() {
+    delete this.stream;
+  }
 
   static getParameterSchema() {
     return {

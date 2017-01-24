@@ -28,6 +28,10 @@ export class DebugLog {
     });
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return {};
   }

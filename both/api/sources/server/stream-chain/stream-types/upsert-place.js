@@ -82,20 +82,36 @@ export class UpsertPlace {
       },
     });
 
-    this.stream.on('end', () => {
+    this.endListener = () => {
       if (skippedRecordCount) {
         onDebugInfo({
           skippedRecordWarning:
             `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId or no valid coordinates.`,
         });
       }
-    });
+    }
+    this.stream.on('end', this.endListener);
 
-    this.stream.on('pipe', source => {
-      source.on('length', length => this.stream.emit('length', length));
-    });
+    this.lengthListener = length => this.stream.emit('length', length);
+    this.pipeListener = source => {
+      this.source = source;
+      source.on('length', this.lengthListener);
+    };
+    this.stream.on('pipe', this.pipeListener);
 
     this.stream.unitName = 'places';
+  }
+
+  dispose() {
+    this.stream.removeListener('end', this.endListener);
+    delete this.endListener;
+    this.stream.removeListener('pipe', this.pipeListener);
+    delete this.pipeListener;
+    this.source.removeListener('length', this.lengthListener);
+    delete this.source;
+    delete this.lengthListener;
+    delete this.stream;
+    delete this.compiledScript;
   }
 
   static getParameterSchema() {

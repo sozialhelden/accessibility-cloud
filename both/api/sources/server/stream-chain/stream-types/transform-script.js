@@ -32,16 +32,27 @@ export class TransformScript {
       },
     });
 
-    this.stream.on('pipe', source => {
-      source.on('length', length => this.stream.emit('length', length));
-    });
-    
+    this.lengthListener = length => this.stream.emit('length', length);
+    this.pipeListener = source => {
+      this.source = source;
+      source.on('length', this.lengthListener);
+    };
+    this.stream.on('pipe', this.pipeListener);
+
     this.stream.unitName = 'objects';
   }
 
-  static getParameterSchema() {
-    return new SimpleSchema({
+  dispose() {
+    this.stream.removeListener('pipe', this.pipeListener);
+    delete this.pipeListener;
+    this.source.removeListener('length', this.lengthListener);
+    delete this.source;
+    delete this.lengthListener;
+    delete this.stream;
+    delete this.compiledScript;
+  }
 
-    });
+  static getParameterSchema() {
+    return new SimpleSchema({});
   }
 }

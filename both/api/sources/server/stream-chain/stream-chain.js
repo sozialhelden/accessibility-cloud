@@ -215,6 +215,11 @@ export function createStreamChain({
       console.log('Import ended without error.');
       Sources.update(sourceId, { $set: { hasRunningImport: false } });
     }
+    Meteor.setTimeout(() => {
+      result.forEach(observer => {
+        if (observer.dispose) { observer.dispose(); }
+      });
+    }, 1000);
   }));
 
   Meteor.setTimeout(() => {

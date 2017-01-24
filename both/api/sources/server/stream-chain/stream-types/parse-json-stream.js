@@ -7,34 +7,46 @@ export class ParseJSONStream {
   constructor({ path, lengthPath }) {
     check(path, String);
 
-    const jsonStream = JSONStream.parse(path);
+    this.jsonStream = JSONStream.parse(path);
 
     let lengthRecognized = false;
-    const lengthStream = JSONStream.parse(lengthPath);
-    lengthStream.on('data', length => {
+    this.lengthStream = JSONStream.parse(lengthPath);
+    this.lengthListener = length => {
       this.stream.emit('length', length);
       console.log('Recognized stream length', length);
       lengthRecognized = true;
-      lengthStream.destroy();
-    });
+      this.lengthStream.destroy();
+    };
+    this.lengthStream.on('data', this.lengthListener);
 
     this.stream = new Transform({
       writableObjectMode: false,
       readableObjectMode: true,
 
-      transform(chunk, encoding, callback) {
+      transform: (chunk, encoding, callback) => {
         const string = chunk.toString();
-        jsonStream.write(string);
+        this.jsonStream.write(string);
         if (lengthPath && !lengthRecognized) {
-          lengthStream.write(string);
+          this.lengthStream.write(string);
         }
         callback();
       },
     });
 
-    jsonStream.on('data', data => {
-      this.stream.push(data);
-    });
+    this.dataListener = data => this.stream.push(data);
+    this.jsonStream.on('data', this.dataListener);
+  }
+
+  dispose() {
+    this.jsonStream.removeListener('data', this.dataListener);
+    delete this.dataListener;
+    this.jsonStream.destroy();
+    delete this.jsonStream;
+    this.lengthStream.removeListener('length', this.lengthListener);
+    delete this.lengthListener;
+    this.lengthStream.destroy();
+    delete this.lengthStream;
+    delete this.stream;
   }
 
   static getParameterSchema() {

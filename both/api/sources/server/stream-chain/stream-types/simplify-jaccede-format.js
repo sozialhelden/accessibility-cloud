@@ -58,12 +58,17 @@ export class SimplifyJaccedeFormat {
         callback(null, output);
       },
     });
-    
+
     this.stream.on('pipe', source => {
       source.on('length', length => this.stream.emit('length', length));
     });
   }
 
+  dispose() {
+    this.stream.removeListeners('pipe');
+    delete this.stream;
+  }
+  
   static getParameterSchema() {
     return new SimpleSchema({
 

@@ -17,6 +17,10 @@ export class ConvertArrayToStream {
     this.stream.unitName = 'array elements';
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return {};
   }

@@ -17,6 +17,10 @@ export class ParseCSVStream {
     this.stream = new FastCSV(csvOptions);
   }
 
+  dispose() {
+    delete this.stream;
+  }
+  
   static getParameterSchema() {
     return {
       objectMode: {

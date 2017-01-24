@@ -14,6 +14,10 @@ export class ParseJSONChunks {
     this.stream.unitName = 'objects';
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return new SimpleSchema({});
   }

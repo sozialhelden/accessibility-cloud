@@ -34,18 +34,19 @@ export class HTTPDownload {
     //   })
     //   .catch(error => console.log('Warning: Could not find stream length:', error));
 
-    this.stream.on('request', req => {
+    this.requestListener = req => {
       // console.log('Making request', req);
       onDebugInfo({
         request: {
-          sourceUrl: this.request.uri.href,
+          sourceUrl: String(this.request.uri.href),
           headers: _.flatten(_.pairs(req._headers)),
           path: req.path,
         },
       });
-    });
+    };
+    this.stream.on('request', this.requestListener);
 
-    this.stream.once('response', response => {
+    this.responseListener = response => {
       onDebugInfo({
         response: {
           statusCode: response.statusCode,
@@ -67,7 +68,7 @@ export class HTTPDownload {
       }
 
       if (isCompressed) {
-        const lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
+        this.lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
           .on('response', lengthResponse => {
             if (lengthResponse.statusCode !== 200) {
               return;
@@ -77,14 +78,29 @@ export class HTTPDownload {
               // console.log('Got length response', uncompressedLength);
               this.stream.emit('length', uncompressedLength, false);
             }
-            lengthRequest.abort();
+            this.lengthRequest.abort();
           });
       }
-    });
+    };
+    this.stream.once('response', this.responseListener);
   }
 
   abort() {
     this.request.abort();
+  }
+
+  dispose() {
+    this.stream.removeListener('request', this.requestListener);
+    delete this.requestListener;
+    this.stream.removeListener('response', this.responseListener);
+    delete this.responseListener;
+    if (this.lengthRequest) {
+      this.lengthRequest.abort();
+      delete this.lengthRequest;
+    }
+    delete this.stream;
+    this.request.abort();
+    delete this.request;
   }
 
   static getParameterSchema() {

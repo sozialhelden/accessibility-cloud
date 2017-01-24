@@ -120,6 +120,10 @@ export class MultiHTTPDownload {
     this.stream.unitName = 'responses';
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return { sourceUrl: { regEx: SimpleSchema.RegEx.Url } };
   }

@@ -170,15 +170,24 @@ export class TransformData {
       },
     });
 
-    this.stream.on('pipe', source => {
-      source.on('length', length => this.stream.emit('length', length));
-    });
+    this.lengthListener = length => this.stream.emit('length', length);
+    this.pipeListener = source => {
+      this.source = source;
+      source.on('length', this.lengthListener);
+    };
+    this.stream.on('pipe', this.pipeListener);
+
 
     this.stream.unitName = 'places';
   }
 
   dispose() {
     delete this.compiledMappings;
+    this.stream.removeListener('pipe', this.pipeListener);
+    delete this.pipeListener;
+    this.source.removeListener('length', this.lengthListener);
+    delete this.lengthListener;
+    delete this.source;
     delete this.stream;
   }
 

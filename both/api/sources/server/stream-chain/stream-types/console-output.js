@@ -8,6 +8,10 @@ export class ConsoleOutput {
     });
   }
 
+  dispose() {
+    delete this.stream;
+  }
+
   static getParameterSchema() {
     return {};
   }
