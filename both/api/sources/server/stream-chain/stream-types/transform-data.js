@@ -134,18 +134,20 @@ export class TransformData {
 
     updateCategories();
 
-    let compiledMappings;
+    let hadError = false;
 
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
       transform(chunk, encoding, callback) {
         try {
-          compiledMappings = compiledMappings || compileMappings(mappings);
+          if (hadError) { return; }
+
+          this.compiledMappings = this.compiledMappings || compileMappings(mappings);
 
           const output = {};
 
-          for (const [fieldName, fn] of entries(compiledMappings)) {
+          for (const [fieldName, fn] of entries(this.compiledMappings)) {
             const value = fn(chunk);
             if (fieldName.match(/-/)) {
               // Field name is probably a key path like 'a-b-c'
@@ -160,6 +162,7 @@ export class TransformData {
 
           callback(null, output);
         } catch (error) {
+          hadError = true;
           this.emit('error', error);
           callback(error);
           return;
@@ -172,6 +175,11 @@ export class TransformData {
     });
 
     this.stream.unitName = 'places';
+  }
+
+  dispose() {
+    delete this.compiledMappings;
+    delete this.stream;
   }
 
   static getParameterSchema() {

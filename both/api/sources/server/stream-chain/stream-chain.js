@@ -1,7 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
+import { _ } from 'meteor/underscore';
+
 import { startObservingObjectProgress } from './object-progress-stream';
+import { abortImport } from './control-import';
 
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
@@ -54,9 +57,9 @@ function cleanStackTrace(stackTrace) {
 }
 
 function setupEventHandlersOnStream({
-  errorKey, progressKey, stream, sourceImportId, type, index,
+  errorKey, progressKey, stream, sourceImportId, type, index, abortFn,
 }) {
-  stream.on('error', Meteor.bindEnvironment(error => {
+  stream.once('error', Meteor.bindEnvironment(error => {
     console.log(
       'Error on', type, 'stream (#', index, 'in chain):', error, cleanStackTrace(error.stack)
     );
@@ -72,6 +75,7 @@ function setupEventHandlersOnStream({
       },
     };
     SourceImports.update(sourceImportId, modifier);
+    abortFn();
   }));
 
   stream.on('end', Meteor.bindEnvironment(() => {
@@ -156,16 +160,25 @@ export function createStreamChain({
     // Validate setting up Step with parameters worked
     check(runningStreamObserver.stream, Stream);
 
+    const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
+
+    let isAborted = false;
+    const abortFn = () => {
+      if (!isAborted) {
+        abortImport(sourceId);
+        isAborted = true;
+      }
+    };
+
     setupEventHandlersOnStream({
       errorKey,
       progressKey,
-      stream: runningStreamObserver.stream,
+      stream: wrappedStream,
       sourceImportId,
+      abortFn,
       type,
       index,
     });
-
-    const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
 
     // Prevent data from flowing before the stream is fully set up
     wrappedStream.pause();
@@ -174,10 +187,6 @@ export function createStreamChain({
     }
 
     startObservingObjectProgress(wrappedStream, onProgress);
-
-    wrappedStream.firstError(error => {
-      console.log(`Error in ${type} stream:`, error);
-    });
 
     if (skip) {
       console.log('Skipping stream.');

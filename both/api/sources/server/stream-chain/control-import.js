@@ -12,7 +12,7 @@ import { createStreamChain } from './stream-chain';
 
 const sourceIdsToStreamChains = {};
 
-function abortImport(sourceId) {
+export function abortImport(sourceId) {
   if (sourceIdsToStreamChains[sourceId]) {
     sourceIdsToStreamChains[sourceId][0].stream.abortChain();
     sourceIdsToStreamChains[sourceId].forEach(streamObserver => {
