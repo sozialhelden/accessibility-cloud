@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { buildSelectorAndOptions } from '../selectors/build-selector';
 import { findAllRelatedDocuments } from '../related-objects';
+import { _ } from 'meteor/underscore';
 
 // Handle a GET HTTP request. The following variables are available inside the function:
 //  }
@@ -21,6 +22,7 @@ export function GET({ req, collection, _id, appId, userId }) {
   }
 
   // Return array of documents
+  const resultsCount = collection.find(selector, _.omit(options, 'skip', 'limit')).count();
   const results = collection.find(selector, options).fetch();
 
   const related = findAllRelatedDocuments({
@@ -32,11 +34,12 @@ export function GET({ req, collection, _id, appId, userId }) {
   });
 
   if (typeof collection.wrapAPIResponse === 'function') {
-    return collection.wrapAPIResponse({ results, req, _id, related });
+    return collection.wrapAPIResponse({ results, req, _id, related, resultsCount });
   }
 
   return {
     count: results.length,
+    totalCount: resultsCount,
     related,
     results,
   };

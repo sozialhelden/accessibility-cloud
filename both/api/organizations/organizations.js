@@ -111,7 +111,7 @@ Organizations.schema = new SimpleSchema({
     optional: true,
     autoform: {
       afFieldInput: {
-        placeholder: 'e.g. XYZ123 Inc. is a small entity that is often referred to a primary example for...',
+        placeholder: 'e.g. XYZ123 Inc. is a mid-size company that is often referred to as a primary example for...',
         rows: 5,
       },
     },

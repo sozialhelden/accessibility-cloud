@@ -60,7 +60,7 @@ function centerOnCurrentPlace(map) {
   }
 }
 
-function showPlacesOnMap(instance, map, geoMarkerData) {
+function showPlacesOnMap(map, geoMarkerData) {
   const geojsonLayer = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
     pointToLayer(feature, latlng) {
       const categoryIconName = _.get(feature, 'properties.category') || 'place';
@@ -100,56 +100,76 @@ function showPlacesOnMap(instance, map, geoMarkerData) {
   return null;
 }
 
+async function getPlacesBatch(skip, limit) {
+  const hashedToken = await getApiUserToken();
+  const options = {
+    params: {
+      skip,
+      limit,
+      includeSourceIds: FlowRouter.getParam('_id'),
+    },
+    headers: {
+      Accept: 'application/json',
+      'X-User-Token': hashedToken,
+    },
+  };
 
-function getPlaces(limit, callback) {
-  getApiUserToken((error, hashedToken) => {
-    if (error) {
-      console.error('Could not get API token for getting place infos over the API.');
-      return;
-    }
-
-    const options = {
-      params: {
-        limit,
-        includeSourceIds: FlowRouter.getParam('_id'),
-      },
-      headers: {
-        Accept: 'application/json',
-        'X-User-Token': hashedToken,
-      },
-    };
-
-    HTTP.get(Meteor.absoluteUrl('place-infos'), options, callback);
+  return new Promise((resolve, reject) => {
+    HTTP.get(Meteor.absoluteUrl('place-infos'), options, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
   });
+}
+
+function mergeFeatureCollections(featureCollections) {
+  if (!featureCollections || featureCollections.length === 0) {
+    return { type: 'FeatureCollection', features: [] };
+  }
+  const result = featureCollections[0];
+  featureCollections.slice(1)
+    .forEach(c => { result.features = result.features.concat(c.features); });
+  return result;
+}
+
+async function getPlaces(limit, onProgress = () => {}) {
+  const batchSize = 5000;
+  const firstResponseData = (await getPlacesBatch(0, batchSize)).data;
+  const numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
+  let progress = firstResponseData.featureCount;
+  const sendProgress = () => onProgress({ percentage: 100 * progress / numberOfPlacesToFetch });
+  if (numberOfPlacesToFetch > batchSize) {
+    const pageIndexes =
+      Array.from({ length: (numberOfPlacesToFetch / batchSize) - 1 }, (v, k) => k + 1);
+    const promises = pageIndexes.map(index =>
+      getPlacesBatch(index * batchSize, batchSize).then(response => {
+        progress += response.data.featureCount;
+        sendProgress();
+        return response.data;
+      })
+    );
+    const responses = await Promise.all(promises);
+    const result = mergeFeatureCollections([firstResponseData].concat(responses));
+    return result;
+  }
+  return firstResponseData;
 }
 
 Template.sources_show_page_map.onCreated(function created() {
   this.isLoading = new ReactiveVar(true);
+  this.loadError = new ReactiveVar();
+  this.loadProgress = new ReactiveVar();
+  this.isClustering = new ReactiveVar();
 });
 
-Template.sources_show_page_map.helpers({
-  isLoading() {
-    return Template.instance().isLoading.get();
-  },
-});
-
-function loadPlaces(instance, map, limit) {
-  instance.isLoading.set(true);
-  if (instance.markers) {
-    map.removeLayer(instance.markers);
-    instance.markers = null;
-  }
-  getPlaces(limit, (error, response) => {
-    instance.isLoading.set(false);
-    if (error || response.statusCode !== 200) {
-      const message = 'Could not load places:';
-      alert(message, error.reason);
-      console.error(message, error, error.stack);
-      return;
-    }
-    instance.markers = showPlacesOnMap(instance, map, response.data);
-  });
-}
+['isLoading', 'loadError', 'loadProgress', 'isClustering'].forEach(helper =>
+  Template.sources_show_page_map.helpers({
+    [helper]() { return Template.instance()[helper].get(); },
+  })
+);
 
 function initializeMap(instance) {
   check(Meteor.settings.public.mapbox, String);
@@ -172,15 +192,40 @@ function initializeMap(instance) {
 
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const map = initializeMap(this);
-  this.autorun(() => {
-    if (!Meteor.userId()) {
-      return;
+
+  let markers = null;
+  const instance = this;
+
+  async function loadPlaces(limit, onProgress) {
+    instance.isLoading.set(true);
+    instance.loadError.set(null);
+    instance.loadProgress.set({});
+    if (markers) {
+      map.removeLayer(markers);
+      markers = null;
     }
+    return getPlaces(limit, onProgress);
+  }
+
+  this.autorun(() => {
+    if (!Meteor.userId()) { return; }
     FlowRouter.watchPathChange();
     const limit = FlowRouter.getQueryParam('limit') || 5000;
     if (!this.currentLimit || limit > this.currentLimit) {
       this.currentLimit = limit;
-      loadPlaces(this, map, limit);
+      loadPlaces(limit, progress => instance.loadProgress.set(progress))
+        .then(
+          (places) => {
+            instance.isClustering.set(true);
+            markers = showPlacesOnMap(map, places);
+            instance.isClustering.set(false);
+            instance.isLoading.set(false);
+          },
+          (error) => {
+            instance.loadError.set(error);
+            instance.isLoading.set(false);
+          }
+        );
       FlowRouter.setQueryParams({ limit });
     }
   });

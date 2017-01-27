@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Match } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { SHA256 } from 'meteor/sha';
 import {
   ExpirationCheckInterval,
@@ -18,29 +18,28 @@ function expireApiTokenIfNecessary() {
 }
 
 
-export function getApiUserToken(expirationTimeOrCallback, callbackOrNull) {
+export function getApiUserToken(expirationTime = DefaultExpirationTime) {
+  check(expirationTime, Number);
   expireApiTokenIfNecessary();
 
-  const callback = (callbackOrNull || expirationTimeOrCallback);
-  if (storedUserToken) {
-    callback(null, storedUserToken.hashedToken);
-    return;
-  }
-
-  const expirationTime = Match.test(expirationTimeOrCallback, Number) &&
-    expirationTimeOrCallback ||
-    DefaultExpirationTime;
-
-  Meteor.call('getApiUserToken', expirationTime, (error, newUserToken) => {
-    if (error) {
-      console.error('Could not get API token for getting place infos over the API:', error);
+  return new Promise((resolve, reject) => {
+    if (storedUserToken) {
+      resolve(storedUserToken.hashedToken);
       return;
     }
-    const { clientSalt, token } = newUserToken;
-    const hashedToken = SHA256(clientSalt + token); // eslint-disable-line new-cap
-    storedUserToken = newUserToken;
-    Object.assign(storedUserToken, { hashedToken });
-    callback(error, hashedToken);
+
+    Meteor.call('getApiUserToken', expirationTime, (error, newUserToken) => {
+      if (error) {
+        console.error('Could not get API token for getting place infos over the API:', error);
+        reject(error);
+        return;
+      }
+      const { clientSalt, token } = newUserToken;
+      const hashedToken = SHA256(clientSalt + token); // eslint-disable-line new-cap
+      storedUserToken = newUserToken;
+      Object.assign(storedUserToken, { hashedToken });
+      resolve(hashedToken);
+    });
   });
 }
 

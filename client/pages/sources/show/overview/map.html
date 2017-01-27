@@ -2,16 +2,24 @@
   <div id='mapid' class='map {{#if isLoading}}is-loading{{/if}}'>
   </div>
   {{#if currentUser}}
+    {{#if isLoading}}
+      <div class='progress-bar' style='width: {{loadProgress.percentage}}%'></div>
+    {{/if}}
     <div class='activity-indicator {{#if isLoading}}is-spinning{{/if}}'>
       <div class='activity-description'>
         <p>
-          Loading
+          {{#if isClustering}}
+            Clustering
+          {{else}}
+            Loading
+          {{/if}}
           {{#if source.placeInfoCount}}
             {{#if isShowingAllPlaces}}
               {{formatNumber source.placeInfoCount}}{{else}}{{formatNumber currentPlaceCountLimit}}
             {{/if}}
           {{/if}}
-          places…</p>
+          places…
+        </p>
         {{#if shouldShowThisCanTakeAWhileHint}}
           <p class='subtle'>Please be patient, this can take a while.</p>
         {{/if}}
