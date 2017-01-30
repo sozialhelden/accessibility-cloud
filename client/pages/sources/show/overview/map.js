@@ -7,8 +7,10 @@ import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/stevezhu:lodash';
+import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
+import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -214,12 +216,30 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     FlowRouter.watchPathChange();
     const limit = FlowRouter.getQueryParam('limit') || 5000;
 
-    if (this.currentLimit && limit <= this.currentLimit) {
-      return;
+
+    const routeName = FlowRouter.getRouteName();
+    const isShowingASinglePlace = routeName === 'placeInfos.show';
+    let placesPromise;
+
+    if (isShowingASinglePlace) {
+      const placeInfoId = FlowRouter.getParam('placeInfoId');
+      const doc = PlaceInfos.findOne({
+        _id: placeInfoId,
+      });
+      const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
+      const featureCollection = buildFeatureCollectionFromArray([place]);
+      placesPromise = Promise.resolve(featureCollection);
+    } else {
+      const isDisplayingFewerMarkersThanBefore = this.currentLimit && limit <= this.currentLimit;
+      if (isDisplayingFewerMarkersThanBefore) {
+        return;
+      }
+
+      this.currentLimit = limit;
+      placesPromise = loadPlaces(limit, progress => instance.loadProgress.set(progress));
     }
 
-    this.currentLimit = limit;
-    loadPlaces(limit, progress => instance.loadProgress.set(progress))
+    placesPromise
       .then(
         (places) => {
           instance.isClustering.set(true);
