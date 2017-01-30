@@ -1,0 +1,55 @@
+<template name='sources_show_page_recursive_attributes'>
+  {{#if isRating}}
+    <dt class='attribute-name rating'><code>.{{key}}</code></dt>
+    <dd class='rating'>
+      {{> sources_show_page_rating_chart
+        attributeName=attributeName
+        attributeDistribution=attributeDistribution}}
+    </dd>
+  {{else}}
+    {{#if isBoolean}}
+      <dt class='attribute-name boolean'><code>.{{key}}</code></dt>
+      <dd class='boolean'>
+        {{#if placeInfoCount}}
+          {{> sources_show_page_boolean_chart
+            attributeName=attributeName
+            placeInfoCount=placeInfoCount
+            attributeDistribution=attributeDistribution}}
+        {{/if}}
+      </dd>
+    {{else}}
+      {{#if isArray}}
+        <dt class='attribute-name array'>{{#if key}}<code>.{{key}}[]</code>{{/if}}</dt>
+        <dd class='array'>
+          <ol class='attributes'>
+            {{#each this.properties}}
+              <li>
+                {{> sources_show_page_recursive_attributes
+                  attributeName=(joinPath ../attributeName @index)
+                  properties=this
+                  placeInfoCount=../placeInfoCount
+                  attributeDistribution=../attributeDistribution}}
+              </li>
+            {{/each}}
+          </ol>
+        </dd>
+      {{else}}
+        <dt class='attribute-name attributes'>{{#if key}}<code>.{{key}}</code>{{/if}}</dt>
+        <dd class='attributes'>
+          <dl class='attributes'>
+            {{#each keyValues properties}}
+              {{#unless attributeIsHidden (joinPath ../attributeName key)}}
+                {{> sources_show_page_recursive_attributes
+                  key=key
+                  attributeName=(joinPath ../attributeName key)
+                  placeInfoCount=../placeInfoCount
+                  properties=value
+                  attributeDistribution=../attributeDistribution}}
+              {{/unless}}
+            {{/each}}
+          </dl>
+        </dd>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+</template>
