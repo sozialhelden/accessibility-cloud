@@ -14,7 +14,7 @@
 
 ## Development
 
-The project uses ECMAScript6 and contains a configuration for Sublime Edit + ESLint. [Setting up ESLint](https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48) is a bit tedious, but worth it, as it gives you static analysis, notifies you about potential logic issues, JS-typical pitfalls and enforces a styleguide. The configuration is derived from [AirBnb's ESLint configuration](https://github.com/airbnb/javascript/blob/master/es5).
+The project uses ECMAScript6 and contains a configuration for Sublime Edit / Atom + ESLint. [Setting up ESLint with Sublime Edit](https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48) is a bit tedious, but worth it, as it gives you static analysis, notifies you about potential logic issues, JS-typical pitfalls and enforces a styleguide. The configuration is derived from [AirBnb's ESLint configuration](https://github.com/airbnb/javascript/blob/master/es5). With Atom, just install the linter-eslint package and you're good to go.
 
 Please work on the `development` branch and only merge it into `master` after a QA of the deployed `development` branch on the development/staging server.
 
