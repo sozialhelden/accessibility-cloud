@@ -16,6 +16,8 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+const PLACES_BATCH_SIZE = 5000;
+
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
   options: {
@@ -136,16 +138,15 @@ function mergeFeatureCollections(featureCollections) {
 }
 
 async function getPlaces(limit, onProgress = () => {}) {
-  const batchSize = 5000;
-  const firstResponseData = (await getPlacesBatch(0, batchSize)).data;
+  const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE)).data;
   const numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
   let progress = firstResponseData.featureCount;
   const sendProgress = () => onProgress({ percentage: 100 * progress / numberOfPlacesToFetch });
-  if (numberOfPlacesToFetch > batchSize) {
+  if (numberOfPlacesToFetch > PLACES_BATCH_SIZE) {
     const pageIndexes =
-      Array.from({ length: (numberOfPlacesToFetch / batchSize) - 1 }, (v, k) => k + 1);
+      Array.from({ length: (numberOfPlacesToFetch / PLACES_BATCH_SIZE) - 1 }, (v, k) => k + 1);
     const promises = pageIndexes.map(index =>
-      getPlacesBatch(index * batchSize, batchSize).then(response => {
+      getPlacesBatch(index * PLACES_BATCH_SIZE, PLACES_BATCH_SIZE).then(response => {
         progress += response.data.featureCount;
         sendProgress();
         return response.data;
