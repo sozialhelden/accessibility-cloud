@@ -1,56 +1,14 @@
 <template name='sources_show_page_source_info'>
   <section class='source-info'>
-    <section class='description markdown'>
-      {{#markdown}}{{source.description}}{{/markdown}}
-    </section>
+    <dl class='source-attributes'>
+      {{> sources_show_page_source_top_stats}}
 
-    <dl class='attributes'>
-      <dt class='stats'>Number of places</dt>
-      <dd class='number-of-places'>
-        {{#with placeInfoCount}}
-          <div class='number huge'>{{formatNumber this}}</div>
-        {{else}}
-          <span class='subtle'>No places provided yet.</span>
-        {{/with}}
-        {{#if currentUser}}
-          {{#unless isShowingAllPlaces}}
-            <span class='reduced-places-hint'>
-              {{formatNumber currentPlaceCountLimit}} shown.
-              {{#if canShowMorePlaces}}
-              <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{serverSidePlaceCountLimit}}{{/if}}</a>
-              {{/if}}
-            </span>
-          {{/unless}}
-        {{/if}}
+      <dt>Description</dt>
+      <dd>
+        <section class='description markdown'>
+          {{#markdown}}{{source.description}}{{/markdown}}
+        </section>
       </dd>
-
-
-      {{#with getLastSuccessfulImport}}
-        <dt class='stats'>Accessible with…</dt>
-        <dd>
-          <ul class='stats-by-accessibility-type'>
-            {{#each placeCountsByAccessibilityType}}
-              <li>
-                <header class='type'>{{humanize name}}</header>
-                <div class='number middle'>{{formatNumber this.true}}</div>
-              </li>
-            {{/each}}
-          </ul>
-        </dd>
-
-        <dt class='stats'>Top categories</dt>
-        <dd>
-          <ul class='categories'>
-            {{#each (mostFrequentCategoryNamesToPlaceCounts 12)}}
-              <li title='{{name}}'>
-                <span class='number'>{{formatNumber count}}</span>
-                <img class='icon' src='/icons/categories/{{name}}@2x.png' alt='{{name}}'>
-              </li>
-            {{/each}}
-          </ul>
-        </dd>
-      {{/with}}
-
       <dt>License</dt>
       <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
         {{getLicense.name}}
@@ -83,6 +41,8 @@
           <span class='subtle'>None</span>
         {{/if}}
       </dd>
+
+      {{> sources_show_page_attributes}}
     </dl>
   </section>
 </template>

@@ -42,18 +42,53 @@
         text-align: center;
       }
     }
-    dt, header.type {
+
+    dl.source-attributes > dt, header.type {
       text-transform: uppercase;
       font-size: 0.8em;
     }
 
-    dl.attributes {
+    dt.attribute-name {
+      code {
+        color: @color-grey030;
+      }
+      font-size: 13px;
+      line-height: 22px;
+      float: left;
+      clear: both;
+    }
+
+    dd .chart {
+      clear: right;
+      float: right;
+    }
+
+    dd.attributes {
+      dl {
+        margin-left: 1em;
+      }
+    }
+
+    ol.attributes dl {
+      dt {
+        clear: both;
+        display: inline-block;
+      }
+      dd {
+        float: right;
+      }
+    }
+
+    dl.place-info-attributes, dl.source-attributes {
       display: inline-block;
 
       > dt {
         clear: both;
         margin-top: 2em;
         margin-bottom: 0.25em;
+      }
+      > dd {
+        word-break: break-word;
       }
       > dd.badge {
         display: inline-block;
