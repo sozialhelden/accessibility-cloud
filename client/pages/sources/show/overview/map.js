@@ -210,25 +210,30 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
 
   this.autorun(() => {
     if (!Meteor.userId()) { return; }
+
     FlowRouter.watchPathChange();
     const limit = FlowRouter.getQueryParam('limit') || 5000;
-    if (!this.currentLimit || limit > this.currentLimit) {
-      this.currentLimit = limit;
-      loadPlaces(limit, progress => instance.loadProgress.set(progress))
-        .then(
-          (places) => {
-            instance.isClustering.set(true);
-            markers = showPlacesOnMap(map, places);
-            instance.isClustering.set(false);
-            instance.isLoading.set(false);
-          },
-          (error) => {
-            instance.loadError.set(error);
-            instance.isLoading.set(false);
-          }
-        );
-      FlowRouter.setQueryParams({ limit });
+
+    if (this.currentLimit && limit <= this.currentLimit) {
+      return;
     }
+
+    this.currentLimit = limit;
+    loadPlaces(limit, progress => instance.loadProgress.set(progress))
+      .then(
+        (places) => {
+          instance.isClustering.set(true);
+          markers = showPlacesOnMap(map, places);
+          instance.isClustering.set(false);
+          instance.isLoading.set(false);
+        },
+        (error) => {
+          instance.loadError.set(error);
+          instance.isLoading.set(false);
+        }
+      );
+    FlowRouter.setQueryParams({ limit });
   });
+
   this.autorun(() => centerOnCurrentPlace(map));
 });
