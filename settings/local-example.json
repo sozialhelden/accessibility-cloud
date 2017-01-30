@@ -1,0 +1,24 @@
+{
+    "public": {
+      "aws": {
+        "region": "eu-central-1",
+        "s3": {
+          "bucket": "accessibility-cloud-uploads"
+        }
+      },
+      "mapbox": ""
+    },
+    "aws": {
+      "accessKeyId": "…",
+      "secretAccessKey": "…"
+    },
+    "kadira": {
+        "appId": "",
+        "appSecret": ""
+    },
+    "transifex": {
+      "projectSlug": "accessibility-cloud",
+      "username": "…",
+      "password": "…"
+    }
+}
