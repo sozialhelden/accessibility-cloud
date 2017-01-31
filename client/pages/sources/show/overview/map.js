@@ -7,14 +7,18 @@ import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/stevezhu:lodash';
+import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
+import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
+const PLACES_BATCH_SIZE = 5000;
 
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
@@ -136,16 +140,15 @@ function mergeFeatureCollections(featureCollections) {
 }
 
 async function getPlaces(limit, onProgress = () => {}) {
-  const batchSize = 5000;
-  const firstResponseData = (await getPlacesBatch(0, batchSize)).data;
+  const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE)).data;
   const numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
   let progress = firstResponseData.featureCount;
   const sendProgress = () => onProgress({ percentage: 100 * progress / numberOfPlacesToFetch });
-  if (numberOfPlacesToFetch > batchSize) {
+  if (numberOfPlacesToFetch > PLACES_BATCH_SIZE) {
     const pageIndexes =
-      Array.from({ length: (numberOfPlacesToFetch / batchSize) - 1 }, (v, k) => k + 1);
+      Array.from({ length: (numberOfPlacesToFetch / PLACES_BATCH_SIZE) - 1 }, (v, k) => k + 1);
     const promises = pageIndexes.map(index =>
-      getPlacesBatch(index * batchSize, batchSize).then(response => {
+      getPlacesBatch(index * PLACES_BATCH_SIZE, PLACES_BATCH_SIZE).then(response => {
         progress += response.data.featureCount;
         sendProgress();
         return response.data;
@@ -209,25 +212,48 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
 
   this.autorun(() => {
     if (!Meteor.userId()) { return; }
+
     FlowRouter.watchPathChange();
     const limit = FlowRouter.getQueryParam('limit') || 5000;
-    if (!this.currentLimit || limit > this.currentLimit) {
+
+
+    const routeName = FlowRouter.getRouteName();
+    const isShowingASinglePlace = routeName === 'placeInfos.show';
+    let placesPromise;
+
+    if (isShowingASinglePlace) {
+      const placeInfoId = FlowRouter.getParam('placeInfoId');
+      const doc = PlaceInfos.findOne({
+        _id: placeInfoId,
+      });
+      const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
+      const featureCollection = buildFeatureCollectionFromArray([place]);
+      placesPromise = Promise.resolve(featureCollection);
+    } else {
+      const isDisplayingFewerMarkersThanBefore = this.currentLimit && limit <= this.currentLimit;
+      if (isDisplayingFewerMarkersThanBefore) {
+        return;
+      }
+
       this.currentLimit = limit;
-      loadPlaces(limit, progress => instance.loadProgress.set(progress))
-        .then(
-          (places) => {
-            instance.isClustering.set(true);
-            markers = showPlacesOnMap(map, places);
-            instance.isClustering.set(false);
-            instance.isLoading.set(false);
-          },
-          (error) => {
-            instance.loadError.set(error);
-            instance.isLoading.set(false);
-          }
-        );
-      FlowRouter.setQueryParams({ limit });
+      placesPromise = loadPlaces(limit, progress => instance.loadProgress.set(progress));
     }
+
+    placesPromise
+      .then(
+        (places) => {
+          instance.isClustering.set(true);
+          markers = showPlacesOnMap(map, places);
+          instance.isClustering.set(false);
+          instance.isLoading.set(false);
+        },
+        (error) => {
+          instance.loadError.set(error);
+          instance.isLoading.set(false);
+        }
+      );
+    FlowRouter.setQueryParams({ limit });
   });
+
   this.autorun(() => centerOnCurrentPlace(map));
 });

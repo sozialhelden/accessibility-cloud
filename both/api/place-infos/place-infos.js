@@ -12,7 +12,7 @@ if (Meteor.isClient) {
 }
 
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
-function convertToGeoJSONFeature(doc, coordinatesForDistance, locale) {
+PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
   const properties = {};
   Object.assign(properties, doc.properties, doc);
   if (coordinatesForDistance && properties.geometry && properties.geometry.coordinates) {
@@ -28,7 +28,7 @@ function convertToGeoJSONFeature(doc, coordinatesForDistance, locale) {
     geometry: properties.geometry,
     properties: _.omit(properties, 'geometry', 'originalData'),
   };
-}
+};
 
 PlaceInfos.wrapAPIResponse = ({ results, req, related, resultsCount }) => {
   // This is checked in buildSelectorAndOptions already, so no extra check here
@@ -44,7 +44,7 @@ PlaceInfos.wrapAPIResponse = ({ results, req, related, resultsCount }) => {
     featureCount: results.length,
     totalFeatureCount: resultsCount,
     related,
-    features: results.map(doc => convertToGeoJSONFeature(doc, coordinates, locale)),
+    features: results.map(doc => PlaceInfos.convertToGeoJSONFeature(doc, coordinates, locale)),
   };
 };
 
