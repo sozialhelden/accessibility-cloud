@@ -80,7 +80,6 @@ function filterShownMarkers(featureCollection) {
 function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
   const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
 
-  // console.log('Adding', featureCollection.features.length, 'new places to map...');
   if (featureCollection.features && featureCollection.features.length) {
     const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
       pointToLayer(feature, latlng) {
@@ -125,7 +124,6 @@ function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
 }
 
 async function getPlacesBatch(skip, limit, sendProgress) {
-  // console.log('Get places batch, skip', skip, 'limit', limit);
   const hashedToken = await getApiUserToken();
   const options = {
     params: { skip, limit, includeSourceIds: FlowRouter.getParam('_id') },
@@ -160,7 +158,6 @@ async function getPlaces(limit, onProgress = () => {}) {
   const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE, sendProgress)).data;
   progress = firstResponseData.featureCount;
   numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
-  // console.log('We have to fetch', numberOfPlacesToFetch, 'places.');
 
   // Allow only 3 running requests at the same time. Without this, all requests
   // would be started at the same time leading to timeouts.
@@ -217,7 +214,6 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   let currentSourceId = null;
 
   function removeMarkers() {
-    // console.log('Removing marker clusters.');
     Object.keys(idsToShownMarkers).forEach(key => delete idsToShownMarkers[key]);
     if (markerClusterGroup) {
       map.removeLayer(markerClusterGroup);
@@ -226,7 +222,6 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   }
 
   async function loadPlaces(limit, onProgress) {
-    // console.log('Loading places...');
     instance.isLoading.set(true);
     instance.loadError.set(null);
     instance.loadProgress.set({});
@@ -250,7 +245,6 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     let placesPromise;
 
     if (isShowingASinglePlace) {
-      // console.log('Showing a single place...');
       const placeInfoId = FlowRouter.getParam('placeInfoId');
       const doc = PlaceInfos.findOne(placeInfoId);
       const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
