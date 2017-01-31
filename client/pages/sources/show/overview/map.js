@@ -80,47 +80,48 @@ function filterShownMarkers(featureCollection) {
 function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
   const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
 
-  if (featureCollection.features && featureCollection.features.length) {
-    const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
-      pointToLayer(feature, latlng) {
-        const id = feature.properties._id;
-        if (idsToShownMarkers[id]) {
-          return idsToShownMarkers[id];
-        }
-        const categoryIconName = _.get(feature, 'properties.category') || 'place';
-        const color = getColorForWheelchairAccessiblity(feature);
-
-        const acIcon = new L.AccessibilityIcon({
-          iconUrl: `/icons/categories/${categoryIconName}.png`,
-          className: `ac-marker ${color}`,
-          // iconSize: [27, 27],
-        });
-        const marker = L.marker(latlng, { icon: acIcon });
-        marker.on('click', () => {
-          FlowRouter.go('placeInfos.show', {
-            _id: FlowRouter.getParam('_id'),
-            limit: FlowRouter.getParam('limit'),
-            placeInfoId: feature.properties._id,
-          });
-        });
-        idsToShownMarkers[id] = marker;
-        return marker;
-      },
-    });
-
-    const markers = markerClusterGroup || L.markerClusterGroup({
-      polygonOptions: {
-        color: '#08c',
-        weight: 1,
-      },
-    });
-    markers.addLayer(geojsonLayer, { chunkedLoading: true });
-    map.addLayer(markers);
-    map.fitBounds(markers.getBounds().pad(0.02));
-    centerOnCurrentPlace(map);
-    return markers;
+  if (!featureCollection.features || !featureCollection.features.length) {
+    return null;
   }
-  return null;
+
+  const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
+    pointToLayer(feature, latlng) {
+      const id = feature.properties._id;
+      if (idsToShownMarkers[id]) {
+        return idsToShownMarkers[id];
+      }
+      const categoryIconName = _.get(feature, 'properties.category') || 'place';
+      const color = getColorForWheelchairAccessiblity(feature);
+
+      const acIcon = new L.AccessibilityIcon({
+        iconUrl: `/icons/categories/${categoryIconName}.png`,
+        className: `ac-marker ${color}`,
+        // iconSize: [27, 27],
+      });
+      const marker = L.marker(latlng, { icon: acIcon });
+      marker.on('click', () => {
+        FlowRouter.go('placeInfos.show', {
+          _id: FlowRouter.getParam('_id'),
+          limit: FlowRouter.getParam('limit'),
+          placeInfoId: feature.properties._id,
+        });
+      });
+      idsToShownMarkers[id] = marker;
+      return marker;
+    },
+  });
+
+  const markers = markerClusterGroup || L.markerClusterGroup({
+    polygonOptions: {
+      color: '#08c',
+      weight: 1,
+    },
+  });
+  markers.addLayer(geojsonLayer, { chunkedLoading: true });
+  map.addLayer(markers);
+  map.fitBounds(markers.getBounds().pad(0.02));
+  centerOnCurrentPlace(map);
+  return markers;
 }
 
 async function getPlacesBatch(skip, limit, sendProgress) {
