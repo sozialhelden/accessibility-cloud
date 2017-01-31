@@ -10,6 +10,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
+import PromisePool from 'es6-promise-pool';
 import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 
 import 'leaflet';
@@ -18,8 +19,9 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
-const PLACES_BATCH_SIZE = 5000;
-const DEFAULT_NUMBER_OF_PLACES_FETCHED = 5000;
+const PLACES_BATCH_SIZE = 2000;
+const CONCURRENCY_LIMIT = 3;
+const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
 
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
@@ -61,13 +63,33 @@ function getColorForWheelchairAccessiblity(placeData) {
 function centerOnCurrentPlace(map) {
   const place = getCurrentPlaceInfo();
   if (place) {
-    map.setView(place.geometry.coordinates.reverse(), 16);
+    map.setView(place.geometry.coordinates.reverse(), 18);
   }
 }
 
-function showPlacesOnMap(map, geoMarkerData) {
-  const geojsonLayer = new L.geoJson(geoMarkerData, { // eslint-disable-line new-cap
+const idsToShownMarkers = {};
+
+function filterShownMarkers(featureCollection) {
+  const result = {};
+  result.features = featureCollection.features
+    .filter(feature => !idsToShownMarkers[feature.properties._id]);
+  result.featureCount = result.features.length;
+  return result;
+}
+
+function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
+  const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
+
+  if (!featureCollection.features || !featureCollection.features.length) {
+    return null;
+  }
+
+  const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
     pointToLayer(feature, latlng) {
+      const id = feature.properties._id;
+      if (idsToShownMarkers[id]) {
+        return idsToShownMarkers[id];
+      }
       const categoryIconName = _.get(feature, 'properties.category') || 'place';
       const color = getColorForWheelchairAccessiblity(feature);
 
@@ -84,39 +106,29 @@ function showPlacesOnMap(map, geoMarkerData) {
           placeInfoId: feature.properties._id,
         });
       });
-
+      idsToShownMarkers[id] = marker;
       return marker;
     },
   });
 
-  if (geoMarkerData.features && geoMarkerData.features.length) {
-    const markers = L.markerClusterGroup({
-      polygonOptions: {
-        color: '#08c',
-        weight: 1,
-      },
-    });
-    markers.addLayer(geojsonLayer, { chunkedLoading: true });
-    map.addLayer(markers);
-    map.fitBounds(markers.getBounds().pad(0.02));
-    centerOnCurrentPlace(map);
-    return markers;
-  }
-  return null;
+  const markers = markerClusterGroup || L.markerClusterGroup({
+    polygonOptions: {
+      color: '#08c',
+      weight: 1,
+    },
+  });
+  markers.addLayer(geojsonLayer, { chunkedLoading: true });
+  map.addLayer(markers);
+  map.fitBounds(markers.getBounds().pad(0.02));
+  centerOnCurrentPlace(map);
+  return markers;
 }
 
-async function getPlacesBatch(skip, limit) {
+async function getPlacesBatch(skip, limit, sendProgress) {
   const hashedToken = await getApiUserToken();
   const options = {
-    params: {
-      skip,
-      limit,
-      includeSourceIds: FlowRouter.getParam('_id'),
-    },
-    headers: {
-      Accept: 'application/json',
-      'X-User-Token': hashedToken,
-    },
+    params: { skip, limit, includeSourceIds: FlowRouter.getParam('_id') },
+    headers: { Accept: 'application/json', 'X-User-Token': hashedToken },
   };
 
   return new Promise((resolve, reject) => {
@@ -124,42 +136,42 @@ async function getPlacesBatch(skip, limit) {
       if (error) {
         reject(error);
       } else {
+        sendProgress(response.data);
         resolve(response);
       }
     });
   });
 }
 
-function mergeFeatureCollections(featureCollections) {
-  if (!featureCollections || featureCollections.length === 0) {
-    return { type: 'FeatureCollection', features: [] };
-  }
-  const result = featureCollections[0];
-  featureCollections.slice(1)
-    .forEach(c => { result.features = result.features.concat(c.features); });
-  return result;
-}
-
 async function getPlaces(limit, onProgress = () => {}) {
-  const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE)).data;
-  const numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
-  let progress = firstResponseData.featureCount;
-  const sendProgress = () => onProgress({ percentage: 100 * progress / numberOfPlacesToFetch });
-  if (numberOfPlacesToFetch > PLACES_BATCH_SIZE) {
-    const pageIndexes =
-      Array.from({ length: (numberOfPlacesToFetch / PLACES_BATCH_SIZE) - 1 }, (v, k) => k + 1);
-    const promises = pageIndexes.map(index =>
-      getPlacesBatch(index * PLACES_BATCH_SIZE, PLACES_BATCH_SIZE).then(response => {
-        progress += response.data.featureCount;
-        sendProgress();
-        return response.data;
-      })
-    );
-    const responses = await Promise.all(promises);
-    const result = mergeFeatureCollections([firstResponseData].concat(responses));
-    return result;
+  let progress = 0;
+  let numberOfPlacesToFetch = 0;
+  const sendProgress = (responseData) => {
+    progress += responseData.featureCount;
+    onProgress({
+      featureCollection: responseData,
+      percentage: numberOfPlacesToFetch ? 100 * progress / numberOfPlacesToFetch : 0,
+    });
+    return responseData;
+  };
+
+  // The first batch's response contains the total number of features to fetch.
+  const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE, sendProgress)).data;
+  progress = firstResponseData.featureCount;
+  numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
+
+  // Allow only 3 running requests at the same time. Without this, all requests
+  // would be started at the same time leading to timeouts.
+  function *generatePromises() {
+    if (numberOfPlacesToFetch <= PLACES_BATCH_SIZE) {
+      return;
+    }
+    for (let i = 1; i < (numberOfPlacesToFetch / PLACES_BATCH_SIZE); i++) {
+      yield getPlacesBatch(i * PLACES_BATCH_SIZE, PLACES_BATCH_SIZE, sendProgress);
+    }
   }
-  return firstResponseData;
+  const pool = new PromisePool(generatePromises(), CONCURRENCY_LIMIT);
+  return pool.start();
 }
 
 Template.sources_show_page_map.onCreated(function created() {
@@ -169,7 +181,7 @@ Template.sources_show_page_map.onCreated(function created() {
   this.isClustering = new ReactiveVar();
 });
 
-['isLoading', 'loadError', 'loadProgress', 'isClustering'].forEach(helper =>
+['isLoading', 'loadError', 'loadProgress'].forEach(helper =>
   Template.sources_show_page_map.helpers({
     [helper]() { return Template.instance()[helper].get(); },
   })
@@ -194,25 +206,37 @@ function initializeMap(instance) {
   return map;
 }
 
+let markerClusterGroup = null;
+
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const map = initializeMap(this);
 
-  let markers = null;
   const instance = this;
+  let currentSourceId = null;
+
+  function removeMarkers() {
+    Object.keys(idsToShownMarkers).forEach(key => delete idsToShownMarkers[key]);
+    if (markerClusterGroup) {
+      map.removeLayer(markerClusterGroup);
+      markerClusterGroup = null;
+    }
+  }
 
   async function loadPlaces(limit, onProgress) {
     instance.isLoading.set(true);
     instance.loadError.set(null);
     instance.loadProgress.set({});
-    if (markers) {
-      map.removeLayer(markers);
-      markers = null;
-    }
     return getPlaces(limit, onProgress);
   }
 
   this.autorun(() => {
     if (!Meteor.userId()) { return; }
+
+    const newSourceId = FlowRouter.getParam('_id');
+    if (newSourceId !== currentSourceId) {
+      removeMarkers();
+      currentSourceId = newSourceId;
+    }
 
     FlowRouter.watchPathChange();
     const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
@@ -223,12 +247,11 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
 
     if (isShowingASinglePlace) {
       const placeInfoId = FlowRouter.getParam('placeInfoId');
-      const doc = PlaceInfos.findOne({
-        _id: placeInfoId,
-      });
+      const doc = PlaceInfos.findOne(placeInfoId);
       const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
       const featureCollection = buildFeatureCollectionFromArray([place]);
-      placesPromise = Promise.resolve(featureCollection);
+      markerClusterGroup = showPlacesOnMap(markerClusterGroup, map, featureCollection);
+      placesPromise = Promise.resolve();
     } else {
       const isDisplayingFewerMarkersThanBefore = this.currentLimit && limit <= this.currentLimit;
       if (isDisplayingFewerMarkersThanBefore) {
@@ -236,15 +259,16 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
       }
 
       this.currentLimit = limit;
-      placesPromise = loadPlaces(limit, progress => instance.loadProgress.set(progress));
+
+      placesPromise = loadPlaces(limit, ({ featureCollection, percentage }) => {
+        markerClusterGroup = showPlacesOnMap(markerClusterGroup, map, featureCollection);
+        instance.loadProgress.set({ percentage });
+      });
     }
 
     placesPromise
       .then(
-        (places) => {
-          instance.isClustering.set(true);
-          markers = showPlacesOnMap(map, places);
-          instance.isClustering.set(false);
+        () => {
           instance.isLoading.set(false);
         },
         (error) => {
