@@ -19,6 +19,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 const PLACES_BATCH_SIZE = 5000;
+const DEFAULT_NUMBER_OF_PLACES_FETCHED = 5000;
 
 // Extend Leaflet-icon to support colors and category-images
 L.AccessibilityIcon = L.Icon.extend({
@@ -214,8 +215,7 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     if (!Meteor.userId()) { return; }
 
     FlowRouter.watchPathChange();
-    const limit = FlowRouter.getQueryParam('limit') || 5000;
-
+    const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
 
     const routeName = FlowRouter.getRouteName();
     const isShowingASinglePlace = routeName === 'placeInfos.show';
