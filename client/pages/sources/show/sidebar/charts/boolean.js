@@ -7,6 +7,10 @@ const MARGIN = { top: 0, right: 25, bottom: 0, left: 5 };
 const WIDTH = 80 - MARGIN.left - MARGIN.right;
 const HEIGHT = 16 - MARGIN.top - MARGIN.bottom;
 
+const GREEN = '#addc72';
+const NEUTRAL_GRAY = '#ff6b7b';
+const RED = '#dee1e7';
+
 Template.sources_show_page_boolean_chart.onRendered(function rendered() {
   const chart = d3.select(this.find('svg.chart'))
     .attr('width', WIDTH + MARGIN.left + MARGIN.right)
@@ -27,9 +31,9 @@ Template.sources_show_page_boolean_chart.onRendered(function rendered() {
 
   let offsetX = 0; // For positioning stacked bars
   const distributionAsArray = [
-    { name: 'true', value: distributionAsObject.true, color: 'rgb(173, 220, 114)' },
-    { name: 'unknown', value: numberOfPlacesWithoutKnownValue, color: '#dee1e7' },
-    { name: 'false', value: distributionAsObject.false, color: '#ff6b7b' },
+    { name: 'true', value: distributionAsObject.true, color: GREEN },
+    { name: 'unknown', value: numberOfPlacesWithoutKnownValue, color: NEUTRAL_GRAY },
+    { name: 'false', value: distributionAsObject.false, color: RED },
   ].map(d => {
     const result = Object.assign({ offsetX }, d);
     offsetX += d.value;
