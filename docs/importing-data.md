@@ -77,6 +77,10 @@ Reads Array objects on the input, takes their elements and outputs them as singl
 
 Converts downloaded data into UTF8 (the format of the database). [Input formats](https://github.com/bnoordhuis/node-iconv) can be things like `ASCII`, `utf16`, `ISO-8859-1`.
 
+#### Parameters
+
+- `fromCharset`: name of the character set used on the input.
+
 ### `DebugLog`
 
 Displays the first and the last chunk read from input in the UI.
