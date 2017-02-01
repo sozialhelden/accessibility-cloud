@@ -159,7 +159,8 @@ export class TransformData {
               output[fieldName] = value;
             }
           }
-
+          output.properties = output.properties || {};
+          output.properties.originalData = JSON.stringify(chunk);
           callback(null, output);
         } catch (error) {
           hadError = true;

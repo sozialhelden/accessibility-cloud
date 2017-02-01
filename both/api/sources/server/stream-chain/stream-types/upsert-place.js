@@ -68,7 +68,6 @@ export class UpsertPlace {
         Object.assign(placeInfo.properties, {
           sourceId,
           sourceImportId,
-          originalData: JSON.stringify(placeInfo),
         });
 
         upsert(onDebugInfo, {
