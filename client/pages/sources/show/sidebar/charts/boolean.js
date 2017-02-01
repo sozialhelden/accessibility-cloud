@@ -8,8 +8,8 @@ const WIDTH = 80 - MARGIN.left - MARGIN.right;
 const HEIGHT = 16 - MARGIN.top - MARGIN.bottom;
 
 const GREEN = '#addc72';
-const NEUTRAL_GRAY = '#ff6b7b';
-const RED = '#dee1e7';
+const NEUTRAL_GRAY = '#dee1e7';
+const RED = '#ff6b7b';
 
 Template.sources_show_page_boolean_chart.onRendered(function rendered() {
   const chart = d3.select(this.find('svg.chart'))
