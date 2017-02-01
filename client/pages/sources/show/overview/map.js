@@ -77,11 +77,11 @@ function filterShownMarkers(featureCollection) {
   return result;
 }
 
-function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
+function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
   const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
 
   if (!featureCollection.features || !featureCollection.features.length) {
-    return null;
+    return;
   }
 
   const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
@@ -92,18 +92,17 @@ function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
       }
       const categoryIconName = _.get(feature, 'properties.category') || 'place';
       const color = getColorForWheelchairAccessiblity(feature);
-
       const acIcon = new L.AccessibilityIcon({
         iconUrl: `/icons/categories/${categoryIconName}.png`,
         className: `ac-marker ${color}`,
-        // iconSize: [27, 27],
       });
       const marker = L.marker(latlng, { icon: acIcon });
       marker.on('click', () => {
         FlowRouter.go('placeInfos.show', {
           _id: FlowRouter.getParam('_id'),
-          limit: FlowRouter.getParam('limit'),
           placeInfoId: feature.properties._id,
+        }, {
+          limit: FlowRouter.getQueryParam('limit'),
         });
       });
       idsToShownMarkers[id] = marker;
@@ -111,17 +110,10 @@ function showPlacesOnMap(markerClusterGroup, map, unfilteredFeatureCollection) {
     },
   });
 
-  const markers = markerClusterGroup || L.markerClusterGroup({
-    polygonOptions: {
-      color: '#08c',
-      weight: 1,
-    },
-  });
-  markers.addLayer(geojsonLayer, { chunkedLoading: true });
-  map.addLayer(markers);
-  map.fitBounds(markers.getBounds().pad(0.02));
+  instance.markerClusterGroup.addLayer(geojsonLayer);
+  map.addLayer(instance.markerClusterGroup);
+  map.fitBounds(instance.markerClusterGroup.getBounds().pad(0.02));
   centerOnCurrentPlace(map);
-  return markers;
 }
 
 async function getPlacesBatch(skip, limit, sendProgress) {
@@ -206,20 +198,27 @@ function initializeMap(instance) {
   return map;
 }
 
-let markerClusterGroup = null;
-
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const map = initializeMap(this);
-
   const instance = this;
   let currentSourceId = null;
 
-  function removeMarkers() {
+  function createMarkerClusters() {
+    instance.markerClusterGroup = instance.markerClusterGroup || L.markerClusterGroup({
+      polygonOptions: {
+        color: '#08c',
+        weight: 1,
+      },
+    });
+  }
+
+  function resetMarkers() {
     Object.keys(idsToShownMarkers).forEach(key => delete idsToShownMarkers[key]);
-    if (markerClusterGroup) {
-      map.removeLayer(markerClusterGroup);
-      markerClusterGroup = null;
+    if (instance.markerClusterGroup) {
+      map.removeLayer(instance.markerClusterGroup);
+      instance.markerClusterGroup = null;
     }
+    createMarkerClusters();
   }
 
   async function loadPlaces(limit, onProgress) {
@@ -234,15 +233,16 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
 
     const newSourceId = FlowRouter.getParam('_id');
     if (newSourceId !== currentSourceId) {
-      removeMarkers();
+      resetMarkers();
       currentSourceId = newSourceId;
     }
 
     FlowRouter.watchPathChange();
-    const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
 
+    const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
     const routeName = FlowRouter.getRouteName();
     const isShowingASinglePlace = routeName === 'placeInfos.show';
+
     let placesPromise;
 
     if (isShowingASinglePlace) {
@@ -250,7 +250,7 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
       const doc = PlaceInfos.findOne(placeInfoId);
       const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
       const featureCollection = buildFeatureCollectionFromArray([place]);
-      markerClusterGroup = showPlacesOnMap(markerClusterGroup, map, featureCollection);
+      showPlacesOnMap(instance, map, featureCollection);
       placesPromise = Promise.resolve();
     } else {
       const isDisplayingFewerMarkersThanBefore = this.currentLimit && limit <= this.currentLimit;
@@ -261,7 +261,7 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
       this.currentLimit = limit;
 
       placesPromise = loadPlaces(limit, ({ featureCollection, percentage }) => {
-        markerClusterGroup = showPlacesOnMap(markerClusterGroup, map, featureCollection);
+        showPlacesOnMap(instance, map, featureCollection);
         instance.loadProgress.set({ percentage });
       });
     }
