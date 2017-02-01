@@ -1,28 +1,30 @@
 <template name='sources_show_page_place_info'>
-  <section class="selected-place">
+  <section class="place-info">
     <span class='js-close close-window icon'></span>
 
-    <h4>{{getCurrentPlaceInfo.properties.name}}</h4>
+    {{#with getCurrentPlaceInfo}}
+      <h4>{{properties.name}}</h4>
 
-    <p class='category'>{{getCurrentPlaceInfo.properties.category}}</p>
+      <dl class='place-info-attributes'>
+        <dt>Category</dt>
+        <dd><code>"{{properties.category}}"</code></dd>
 
-    <pre class='readible json'>{{stringifyHuman getCurrentPlaceInfo.properties.accessibility}}</pre>
+        {{#if properties.infoPageUrl}}
+          <dt>Web page</dt>
+          <dd>
+            <a href='{{properties.infoPageUrl}}'>{{properties.infoPageUrl}}</a>
+          </dd>
+        {{/if}}
 
-    {{#if getCurrentPlaceInfo.properties.infoPageUrl}}
-      <p>
-        <a href='{{getCurrentPlaceInfo.properties.infoPageUrl}}'>{{_"Details on"}} {{source.name}}</a>
-      </p>
-    {{/if}}
+        <dt>Accessibility information</dt>
+        <dd><p class='readible json code-block'>{{stringify properties.accessibility}}</p></dd>
 
-    <hr/>
+        <dt>Original data</dt>
+        <dd><p class='readible json code-block'>{{beautifyJSON getCurrentPlaceInfo.properties.originalData}}</p></dd>
 
-    {{#if placeDetailsVisible}}
-      <a href='#' class='js-click-hide-details'>Hide JSON</a>
-      <pre class='readible json'>
-        {{stringify getCurrentPlaceInfo}}
-      </pre>
-    {{else}}
-      <a href='#' class='js-click-show-details'>Show JSON</a>
-    {{/if}}
+        <dt>As JSON</dt>
+        <dd><p class='readible json code-block'>{{stringify getCurrentPlaceInfo}}</p></dd>
+      </dl>
+    {{/with}}
   </section>
 </template>

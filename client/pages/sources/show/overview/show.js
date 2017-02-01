@@ -86,10 +86,6 @@ const helpers = {
   sourceImports,
   sourceImport,
   getCurrentPlaceInfo,
-  placeDetailsVisible() {
-    FlowRouter.watchPathChange();
-    return !!FlowRouter.getParam('placeInfoId');
-  },
 };
 
 Template.sources_show_header.helpers(helpers);

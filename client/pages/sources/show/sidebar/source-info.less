@@ -1,6 +1,23 @@
+@import "/client/stylesheets/_util/colors.import.less";
+
 .page-content.sources_show_page .sidebar .source-info {
   dd > .badge, dd dd.badge {
     font-size: 0.75em;
+  }
+
+  dd.number-of-places {
+    text-align: center;
+  }
+
+  ul.stats-by-accessibility-type {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    li {
+      text-align: center;
+      margin: 0.25em 1em;
+    }
   }
 
   ul.categories {
@@ -18,6 +35,42 @@
         vertical-align: middle;
         margin-left: 3%
       }
+    }
+  }
+
+  header.type {
+    text-transform: uppercase;
+    font-size: 0.8em;
+  }
+
+  dt.attribute-name {
+    code {
+      color: @color-grey030;
+    }
+    font-size: 13px;
+    line-height: 22px;
+    float: left;
+    clear: both;
+  }
+
+  dd .chart {
+    clear: right;
+    float: right;
+  }
+
+  dd.attributes {
+    dl {
+      margin-left: 1em;
+    }
+  }
+
+  ol.attributes dl {
+    dt {
+      clear: both;
+      display: inline-block;
+    }
+    dd {
+      float: right;
     }
   }
 }

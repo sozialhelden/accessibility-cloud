@@ -1,0 +1,54 @@
+@import "/client/stylesheets/utils.import.less";
+
+.page-content.sources_show_page {
+  .sidebar {
+    .number {
+      .type-regular;
+      vertical-align: middle;
+      &.huge {
+        font-size: 3em;
+        line-height: 1em;
+      }
+      &.big {
+        font-size: 2em;
+      }
+      &.middle {
+        font-size: 1.5em;
+      }
+    }
+
+    dt {
+      .type-light;
+      &.stats {
+        text-align: center;
+      }
+    }
+
+    dl.place-info-attributes, dl.source-attributes {
+      display: inline-block;
+      max-width: 100%;
+
+      > dt {
+        clear: both;
+        margin-top: 2em;
+        margin-bottom: 0.25em;
+        text-transform: uppercase;
+        font-size: 0.8em;
+      }
+      > dd {
+        word-break: break-word;
+      }
+      > dd.badge {
+        display: inline-block;
+        font-size: 120%;
+        margin-top: 0.1em;
+        margin-bottom: 0.25em;
+      }
+    }
+
+    .code-block {
+      white-space: pre;
+      overflow: scroll;
+    }
+  }
+}

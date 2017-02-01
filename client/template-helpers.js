@@ -18,6 +18,13 @@ Template.registerHelpers({
   stringify(object) {
     return JSON.stringify(object, true, 4);
   },
+  beautifyJSON(jsonString) {
+    try {
+      return JSON.stringify(JSON.parse(jsonString), true, 4);
+    } catch (error) {
+      return `(${error})`;
+    }
+  },
   stringifyHuman(object) {
     if (!object) {
       return '';
