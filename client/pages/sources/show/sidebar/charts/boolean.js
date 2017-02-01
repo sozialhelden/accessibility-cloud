@@ -56,5 +56,5 @@ Template.sources_show_page_boolean_chart.onRendered(function rendered() {
     .attr('height', HEIGHT)
     .attr('width', d => (d.value ? x(d.value) : 0))
     .append('title')
-    .text(d => `${d.value} places have this attribute set to #{d.name}.`);
+    .text(d => `${d.value} places have this attribute set to '${d.name}'.`);
 });
