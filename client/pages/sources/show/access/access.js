@@ -1,6 +1,8 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
+import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { $ } from 'meteor/jquery';
 import subsManager from '/client/lib/subs-manager';
@@ -12,8 +14,10 @@ Template.sources_show_access_page.onCreated(() => {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('organizations.public');
+  subsManager.subscribe('users.public');
+  subsManager.subscribe('sourceAccessRequests.forSource', FlowRouter.getParam('_id'));
 
-  window.Sources = Sources; // FIXME: we don't need that only for debugging
+  window.Sources = Sources; // FIXME: we don't need this, it's only for debugging
 });
 
 
@@ -42,6 +46,21 @@ const helpers = {
       return 'selected';
     }
     return '';
+  },
+  pendingRequests() {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    const requestsArray = SourceAccessRequests.find({
+      sourceId: source._id,
+      requestState: 'sent',
+    }).fetch();
+
+    return requestsArray.map(request => {
+      const requester = Meteor.users.findOne(request.requesterId);
+
+      return Object.assign({}, request, {
+        email: requester.emails[0].address,
+      });
+    });
   },
 };
 
