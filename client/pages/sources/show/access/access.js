@@ -31,6 +31,11 @@ const helpers = {
     }
     return '';
   },
+  checkedIfAccessToSourceCanBeRequested() {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+
+    return source.isRequestable ? 'checked' : '';
+  },
   selectedIfAccessibleToAll() {
     const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
     if (source.isFreelyAccessible) {
@@ -65,9 +70,14 @@ Template.sources_show_access_page.events({
         idsOfOrganizationsWithAccess.push(element.id);
       }
     });
+
     Sources.update(_id, {
-      $set: { accessRestrictedTo: idsOfOrganizationsWithAccess },
+      $set: {
+        accessRestrictedTo: idsOfOrganizationsWithAccess,
+        isRequestable: $('.js-source-access-request-checkbox').is(':checked'),
+      },
     });
+
     $('button.js-save').addClass('unchanged');
   },
 });
