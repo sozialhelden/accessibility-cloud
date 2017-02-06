@@ -34,6 +34,9 @@ export class UpsertPlace {
     check(onDebugInfo, Function);
 
     let skippedRecordCount = 0;
+    let insertedCount = 0;
+    let updatedCount = 0;
+
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -73,7 +76,14 @@ export class UpsertPlace {
         upsert(onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, placeInfo, callback);
+        }, placeInfo, (upsertError, result) => {
+          if (result && result.insertedId) {
+            insertedCount++;
+          } else if (result && result.numberAffected) {
+            updatedCount++;
+          }
+          callback(upsertError, result);
+        });
       },
       flush(callback) {
         console.log('Done with upserting!');
@@ -88,7 +98,8 @@ export class UpsertPlace {
             `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId or no valid coordinates.`,
         });
       }
-    }
+      onDebugInfo({ insertedCount, updatedCount });
+    };
     this.stream.on('end', this.endListener);
 
     this.lengthListener = length => this.stream.emit('length', length);
