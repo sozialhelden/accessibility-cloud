@@ -71,11 +71,25 @@ SourceImports.helpers({
     //   'attributeDistribution:', util.inspect(attributeDistribution, { depth: 10, colors: true })
     // );
 
+    const attributesToSet = {
+      attributeDistribution: JSON.stringify(attributeDistribution),
+      placeInfoCountAfterImport: placeInfoCount,
+    };
+
+    const upsertStream = this.upsertStream();
+    if (upsertStream) {
+      if (upsertStream.debugInfo) {
+        ['insertedPlaceInfoCount', 'updatedPlaceInfoCount'].forEach(attributeName => {
+          attributesToSet[attributeName] = upsertStream.debugInfo[attributeName];
+        });
+      }
+      if (upsertStream.progress) {
+        attributesToSet.processedPlaceInfoCount = upsertStream.progress.transferred;
+      }
+    }
+
     SourceImports.update(this._id, {
-      $set: {
-        attributeDistribution: JSON.stringify(attributeDistribution),
-        placeInfoCountAfterImport: placeInfoCount,
-      },
+      $set: attributesToSet,
     });
 
     Sources.update(this.sourceId, { $set: { placeInfoCount } });

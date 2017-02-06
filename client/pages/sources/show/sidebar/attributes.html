@@ -1,20 +1,29 @@
 <template name='sources_show_page_attributes'>
+  <dt>Activity</dt>
+  <dd>
+    <header>
+      {{#with getLastSuccessfulImport}}
+        Last imported {{agoStartTimestamp}}.
+      {{/with}}
+    </header>
+
+    {{> sources_show_page_activity_chart}}
+  </dd>
+
   {{#if placeInfoCount}}
     {{#with getLastSuccessfulImport}}
-      <dl class="source-attributes">
-        <dt>Structure</dt>
-        <dd>
-          <dl>
-            {{#if ../placeInfoCount}}
-              {{> sources_show_page_recursive_attributes
-                attributeName='properties'
-                placeInfoCount=../placeInfoCount
-                attributeDistribution=getCachedAttributeDistribution.properties
-                properties=getCachedAttributeDistribution.properties.properties}}
-            {{/if}}
-          </dl>
-        </dd>
-      </dl>
+      <dt>Structure</dt>
+      <dd>
+        <dl>
+          {{#if ../placeInfoCount}}
+            {{> sources_show_page_recursive_attributes
+              attributeName='properties'
+              placeInfoCount=../placeInfoCount
+              attributeDistribution=getCachedAttributeDistribution.properties
+              properties=getCachedAttributeDistribution.properties.properties}}
+          {{/if}}
+        </dl>
+      </dd>
     {{/with}}
   {{/if}}
 </template>

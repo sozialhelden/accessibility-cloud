@@ -2,14 +2,11 @@ import { Template } from 'meteor/templating';
 import './boolean.html';
 import { _ } from 'lodash';
 import * as d3 from 'd3';
+import { GREEN, NEUTRAL_GRAY, RED } from './colors';
 
 const MARGIN = { top: 0, right: 25, bottom: 0, left: 5 };
 const WIDTH = 80 - MARGIN.left - MARGIN.right;
 const HEIGHT = 16 - MARGIN.top - MARGIN.bottom;
-
-const GREEN = '#addc72';
-const NEUTRAL_GRAY = '#dee1e7';
-const RED = '#ff6b7b';
 
 Template.sources_show_page_boolean_chart.onRendered(function rendered() {
   const chart = d3.select(this.find('svg.chart'))
