@@ -2,46 +2,49 @@
   {{#with source}}
     <section>
       <section class='stream-chain'>
-        <p>
-          This JSON defines where your data comes from and how it is formatted:
-        </p>
         <textarea class='code code-block' id='streamChain'>{{stringify streamChain}}</textarea>
       </section>
 
       <aside>
-        <ul class='errors is-empty'>
-        </ul>
+        <header>
+          <ul class='errors is-empty'>
+          </ul>
 
-        <p>
-          You can find more information and examples in <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/importing-data.md'>our documentation</a>.
-        </p>
+          <p>
+            The JSON block on the left defines where your data comes from and how it is formatted:
+          </p>
 
-        <p>
-          If you feel lost, we are eager to help you! Just <a href='mailto:support@accessibility.cloud'>write us an email</a> and we will help you get started.
-        </p>
+          <p>
+            You can find more information and examples in <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/importing-data.md'>our documentation</a>.
+          </p>
 
-        {{#unless source.hasRunningImport}}
-          {{#if source.hasDownloadStep}}
-            <p>
-              <button class='btn js-start-import btn btn-primary btn-inline'>Start</button> to test if your flow works and get debug information.
-            </p>
+          <p>
+            If you feel lost, we are eager to help you! Just <a href='mailto:support@accessibility.cloud'>write us an email</a> and we will help you get started.
+          </p>
 
-            <p>
-              If you don't have an API, you can also upload a JSON or CSV file:
-              {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
-            </p>
-
-            {{#if source.isDraft}}
+          {{#unless source.hasRunningImport}}
+            {{#if source.hasDownloadStep}}
               <p>
-                Your data will only be visible to members of {{source.getOrganization.name}} as your source is set to draft mode.
+                <button class='btn js-start-import btn btn-primary btn-inline'>Start</button> to test if your flow works and get debug information.
+              </p>
+
+              <p>
+                If you don't have an API, you can also upload a JSON or CSV file:
+                {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
+              </p>
+
+              {{#if source.isDraft}}
+                <p>
+                  Your data will only be visible to members of {{source.getOrganization.name}} as your source is set to draft mode.
+                </p>
+              {{/if}}
+            {{else}}
+              <p>
+                Your source import flow is still missing a <code>HTTPDownload</code> step. Please add it to enable importing your data.
               </p>
             {{/if}}
-          {{else}}
-            <p>
-              Your source import flow is still missing a <code>HTTPDownload</code> step. Please add it to enable importing your data.
-            </p>
-          {{/if}}
-        {{/unless}}
+          {{/unless}}
+        </header>
 
         {{#if lastSourceImport}}
           {{#with lastSourceImport}}

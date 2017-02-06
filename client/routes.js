@@ -96,7 +96,7 @@ adminRoutes.route('/categories/', {
   title: 'Import categories',
 
   action() {
-    BlazeLayout.render('app_layout_mapview', {
+    BlazeLayout.render('app_layout_full_size', {
       main: 'categories_list_page',
       header_navigation_list: 'categories_list_head',
     });
@@ -299,7 +299,7 @@ dataRoutes.route('/sources/:_id/format', {
   name: 'sources.show.format',
   title: 'Format',
   action() {
-    BlazeLayout.render('app_layout_scrollable', {
+    BlazeLayout.render('app_layout_full_size', {
       main: 'sources_show_format_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -363,7 +363,7 @@ dataRoutes.route('/sources/:_id', {
   title: 'Overview',
   isAccessibleWithoutApproval: true,
   action() {
-    BlazeLayout.render('app_layout_mapview', {
+    BlazeLayout.render('app_layout_full_size', {
       main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -375,7 +375,7 @@ dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
   name: 'placeInfos.show',
   title: 'Place',
   action() {
-    BlazeLayout.render('app_layout_mapview', {
+    BlazeLayout.render('app_layout_full_size', {
       main: 'sources_show_page',
       header_navigation_list: 'sources_show_header',
       header_sub: 'sources_show_header_sub',
@@ -403,12 +403,6 @@ FlowRouter.notFound = {
   title: 'Page not found',
   isAccessibleWithoutApproval: true,
   action() {
-    // BlazeLayout.render('app_layout_scrollable', {
-    //   main: 'apps_list_page',
-    //   header_navigation_list: 'organizations_show_header',
-    //   header_sub: 'organizations_show_header_sub',
-    // });
-
     BlazeLayout.render('app_layout_scrollable', {
       main: 'not_found_page',
       header_navigation_list: 'not_found_header',
