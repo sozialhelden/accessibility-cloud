@@ -94,6 +94,11 @@ Sources.schema = new SimpleSchema({
     label: 'Data is available to everybody',
     defaultValue: true,
   },
+  isRequestable: {
+    type: Boolean,
+    label: 'Access to this data source can be requested',
+    defaultValue: false,
+  },
   accessRestrictedTo: {
     type: [String],
     label: 'Data is available to everybody',

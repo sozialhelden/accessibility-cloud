@@ -26,6 +26,7 @@ Sources.publicFields = {
   languageId: 1,
   isDraft: 1,
   isFreelyAccessible: 1,
+  isRequestable: 1,
   accessRestrictedTo: 1,
   hasRunningImport: 1,
   placeInfoCount: 1,
