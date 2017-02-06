@@ -39,6 +39,7 @@ function startImportStreaming(source) {
     sourceId,
     organizationId: source.organizationId,
     streamChain: source.streamChain,
+    originalStreamChain: source.streamChain,
     startTimestamp: Date.now(),
     insertedPlaceInfoCount: 0,
     updatedPlaceInfoCount: 0,

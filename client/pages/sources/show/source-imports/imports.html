@@ -12,6 +12,8 @@
   <div class='page content block along-sidebar'>
     {{#with sourceImport}}
       {{> sources_stream_chain}}
+      <h2>Used stream chain code</h2>
+      <p class='code-block'>{{stringify originalStreamChain}}</p>
     {{else}}
       <h2>Last import results</h2>
       <p class='placeholder'>Start an import to see technical stats here.</p>
