@@ -35,6 +35,34 @@
             </label>
           </div>
 
+          {{#if pendingRequests}}
+            <br>
+
+            <table class="access-requests-table">
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th>Message</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody class="zebra-striped-list">
+                {{#each pendingRequests}}
+                  <tr>
+                    <td>{{email}}</td>
+                    <td>
+                      <pre>{{message}}</pre>
+                    </td>
+                    <td>
+                      <a class="call-to-action">Accept</a>
+                      <a class="call-to-action">Ignore</a>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+
           <button class='btn btn-primary js-save unchanged'>Save</button>
         {{/unless}}
       {{/with}}

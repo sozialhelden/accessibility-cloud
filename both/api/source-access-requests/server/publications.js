@@ -11,3 +11,11 @@ Meteor.publish('sourceAccessRequests.single', requesterId => {
 
   return SourceAccessRequests.find(selector, options);
 });
+
+Meteor.publish('sourceAccessRequests.forSource', sourceId => {
+  check(sourceId, String);
+
+  const selector = { sourceId };
+
+  return SourceAccessRequests.find(selector, options);
+});

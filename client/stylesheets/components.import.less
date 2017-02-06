@@ -567,3 +567,13 @@ pre.readible.json {
   opacity: 1;
   transition: opacity 1s ease-out, width 2s ease-out;
 }
+
+.zebra-striped-list {
+  > *:nth-child(odd) {
+     background-color: transparent;
+  }
+
+  > *:nth-child(even) {
+     background-color: #fff;
+  }
+}
