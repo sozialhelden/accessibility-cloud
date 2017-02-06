@@ -34,8 +34,8 @@ export class UpsertPlace {
     check(onDebugInfo, Function);
 
     let skippedRecordCount = 0;
-    let insertedCount = 0;
-    let updatedCount = 0;
+    let insertedPlaceInfoCount = 0;
+    let updatedPlaceInfoCount = 0;
 
     let firstPlaceWithoutOriginalId = null;
 
@@ -82,9 +82,9 @@ export class UpsertPlace {
           'properties.originalId': originalId,
         }, placeInfo, (upsertError, result) => {
           if (result && result.insertedId) {
-            insertedCount++;
+            insertedPlaceInfoCount++;
           } else if (result && result.numberAffected) {
-            updatedCount++;
+            updatedPlaceInfoCount++;
           }
           callback(upsertError, result);
         });
@@ -102,7 +102,7 @@ export class UpsertPlace {
             `Skipped ${skippedRecordCount} PlaceInfo records that had no originalId or no valid coordinates.`,
         });
       }
-      onDebugInfo({ insertedCount, updatedCount });
+      onDebugInfo({ insertedPlaceInfoCount, updatedPlaceInfoCount });
     };
     this.stream.on('end', this.endListener);
 

@@ -9,11 +9,13 @@
     <h2>Import results from {{humanReadableStartTimestamp}}</h2>
 
     <p class='subtle'>
-      {{#if upsertStream}}
-        {{importedPlaceCount}} places imported or updated.
+      {{#with upsertStream}}
+        {{#if ../isFinished}}
+          {{debugInfo.insertedPlaceInfoCount}} places imported, {{debugInfo.updatedPlaceInfoCount}} updated.
+        {{/if}}
       {{else}}
         This import is missing an <code>UpsertPlace</code> stream unit.
-      {{/if}}
+      {{/with}}
     </p>
 
     {{#if error}}
