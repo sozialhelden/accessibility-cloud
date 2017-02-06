@@ -28,20 +28,20 @@ function shouldShowThisCanTakeAWhileHint() {
 function isShowingAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return true; }
-  return currentPlaceCountLimit() >= currentSource.placeInfoCount();
+  return currentPlaceCountLimit() >= currentSource.placeInfoCount;
 }
 
 function canShowMorePlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
   return currentPlaceCountLimit() < serverSidePlaceCountLimit() &&
-    currentSource.placeInfoCount() > currentPlaceCountLimit();
+    currentSource.placeInfoCount > currentPlaceCountLimit();
 }
 
 function couldShowAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
-  return serverSidePlaceCountLimit() > currentSource.placeInfoCount();
+  return serverSidePlaceCountLimit() > currentSource.placeInfoCount;
 }
 
 function sourceImports() {
@@ -68,10 +68,6 @@ Template.sources_show_page.onCreated(function created() {
     }
   });
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
-});
-
-Template.sources_show_page.onRendered(function rendered() {
-  this.subscribe('sourcesPlaceInfoCounts', FlowRouter.getParam('_id'));
 });
 
 const helpers = {
