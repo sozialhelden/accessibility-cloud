@@ -1,18 +1,20 @@
 <template name='sources_show_page_attributes'>
-  {{#with getLastSuccessfulImport}}
-    <dl class="source-attributes">
-      <dt>Structure</dt>
-      <dd>
-        <dl>
-          {{#if ../placeInfoCount}}
-            {{> sources_show_page_recursive_attributes
-              attributeName='properties'
-              placeInfoCount=../placeInfoCount
-              attributeDistribution=getCachedAttributeDistribution.properties
-              properties=getCachedAttributeDistribution.properties.properties}}
-          {{/if}}
-        </dl>
-      </dd>
-    </dl>
-  {{/with}}
+  {{#if placeInfoCount}}
+    {{#with getLastSuccessfulImport}}
+      <dl class="source-attributes">
+        <dt>Structure</dt>
+        <dd>
+          <dl>
+            {{#if ../placeInfoCount}}
+              {{> sources_show_page_recursive_attributes
+                attributeName='properties'
+                placeInfoCount=../placeInfoCount
+                attributeDistribution=getCachedAttributeDistribution.properties
+                properties=getCachedAttributeDistribution.properties.properties}}
+            {{/if}}
+          </dl>
+        </dd>
+      </dl>
+    {{/with}}
+  {{/if}}
 </template>
