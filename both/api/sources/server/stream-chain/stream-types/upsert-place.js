@@ -37,6 +37,7 @@ export class UpsertPlace {
     let insertedCount = 0;
     let updatedCount = 0;
 
+    let firstPlaceWithoutOriginalId = null;
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -58,7 +59,10 @@ export class UpsertPlace {
 
         if (error) {
           skippedRecordCount++;
-          onDebugInfo({ placeInfoWithoutOriginalId: placeInfo });
+          if (!firstPlaceWithoutOriginalId) {
+            firstPlaceWithoutOriginalId = placeInfo;
+            onDebugInfo({ placeInfoWithoutOriginalId: placeInfo });
+          }
           if (ignoreSkippedPlaces) {
             callback(null, null);
           } else {
