@@ -96,14 +96,6 @@ const helpers = {
     }
     return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
-  examplePlaceInfos() {
-    const sourceId = FlowRouter.getParam('_id');
-    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
-    if (latestImport) {
-      return PlaceInfos.find({ 'properties.sourceImportId': latestImport._id }, { limit: 3 });
-    }
-    return null;
-  },
 };
 
 function parseStreamChainDefinition(instance) {

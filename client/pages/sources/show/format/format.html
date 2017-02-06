@@ -50,13 +50,6 @@
             <h2>{{_"Latest Import"}}</h2>
             <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
           {{/with}}
-
-          <h2>Examples for imported places</h2>
-          {{#each examplePlaceInfos}}
-            <div class='code-block'>
-              {{stringify this}}
-            </div>
-          {{/each}}
         {{else}}
           <p>
             Please insert a JSON that describes the data flow from your input source into the accessibility.cloud database on the left side.

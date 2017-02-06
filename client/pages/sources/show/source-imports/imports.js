@@ -67,10 +67,6 @@ Template.sources_show_imports_page.helpers({
 
     return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }).count();
   },
-  examplePlaceInfos() {
-    const sourceImportId = FlowRouter.getParam('importId');
-    return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 3 });
-  },
   sourceImport() {
     const selectedImport = SourceImports.findOne(FlowRouter.getParam('importId'));
     if (selectedImport) {
