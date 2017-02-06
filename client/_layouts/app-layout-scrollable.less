@@ -21,7 +21,6 @@ header .user.menu {
 
 header.main-header {
   width: 100%;
-  height: 110px;
   background-color: @color-grey091;
 
   .wrapper.header {
@@ -30,6 +29,7 @@ header.main-header {
     margin-right: auto;
     padding: 0.6em @page-horizontal-padding 0 0;
 
+    a {
     .account-options {
       padding-right: 0;
       padding-top: 0;
@@ -70,16 +70,12 @@ header.main-header {
       }
     }
 
-    a {
       .font-s2;
       .type-light;
       color: @color-text;
-      letter-spacing: 0.02em;
-
 
       &:hover {
         .type-bold;
-        letter-spacing: -0.015em;
         color: @color-text;
       }
     }
@@ -96,11 +92,10 @@ header.main-header {
           .font-s2;
           .type-light;
           text-transform: uppercase;
+          letter-spacing: 0.05em;
 
-          &:hover {
-            letter-spacing: 0.02em;
-          }
           &.active {
+            letter-spacing: 0.04em;
             font-weight: bold;
           }
         }
@@ -108,6 +103,7 @@ header.main-header {
     }
 
     ul.main-navigation {
+      margin-top: 6px;
       padding-left: 53px;
       position: relative;
 
@@ -118,7 +114,7 @@ header.main-header {
 
         .font-l1;
         .type-light;
-        line-height: 1.27em;
+        line-height: 48px;
         letter-spacing: -0.03em;
 
         &:after {
@@ -176,29 +172,29 @@ header.main-header {
 }
 
 header.main-header .sub-header {
+  display: inline-block;
+  margin-top: 8px;
   padding-left: @page-horizontal-padding;
-  //padding-top:10px;
 
   .sub-pages {
-
-    a{
-      padding-bottom: 5px;
-      margin-top: -10px;
+    a {
+      display: inline-block;
       margin-right: 2em;
+      border-bottom: 3px solid transparent;
+      transition: border-bottom 0.3s ease-out;
       .font-s3;
-      .type-light;
+      .type-bold;
       color: @color-text;
-      letter-spacing: 0.02em;
+      opacity: 0.7;
 
       &:hover {
-        letter-spacing: -0.01em;
+        opacity: 1;
       }
 
-    }
-    a.active {
-      .type-bold;
-      letter-spacing: -0.015em;
-      border-bottom: 1px solid @color-primary;
+      &.active {
+        border-bottom: 3px solid @color-primary;
+        opacity: 1;
+      }
     }
   }
 }
