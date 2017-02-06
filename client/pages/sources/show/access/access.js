@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
-
+import { $ } from 'meteor/jquery';
 import subsManager from '/client/lib/subs-manager';
 
 
@@ -42,7 +42,7 @@ const helpers = {
 
 
 Template.sources_show_access_page.events({
-  'change select': function (event) {
+  'change select': (event) => {
     event.preventDefault();
 
     const isFreelyAccessible = event.currentTarget.value === 'isFreelyAccessible';
@@ -51,16 +51,16 @@ Template.sources_show_access_page.events({
       $set: { isFreelyAccessible },
     });
   },
-  'change input[type=checkbox]': function (event) {
+  'change input[type=checkbox]': () => {
     $('button.js-save').removeClass('unchanged');
   },
-  'click button.js-save': function (event) {
+  'click button.js-save': (event) => {
     event.preventDefault();
 
     const _id = FlowRouter.getParam('_id');
     const idsOfOrganizationsWithAccess = [];
 
-    $('ul.access-list input[type=checkbox]').each(function (index, element) {
+    $('ul.access-list input[type=checkbox]').each((index, element) => {
       if (element.checked) {
         idsOfOrganizationsWithAccess.push(element.id);
       }
