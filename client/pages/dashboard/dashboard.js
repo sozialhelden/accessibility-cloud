@@ -17,6 +17,7 @@ Template.page_dashboard.onCreated(() => {
   subsManager.subscribe('apps.public');
   subsManager.subscribe('apps.private');
   subsManager.subscribe('sources.public');
+  subsManager.subscribe('sources.requestable.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('licenses.public');
 
@@ -40,7 +41,8 @@ const helpers = {
     return Sources.find({
       organizationId: {
         $in: getAccessibleOrganizationIdsForUserId(Meteor.userId()),
-      } });
+      },
+    });
   },
   sourcesNotOf(organizations) {
     if (!organizations) {
