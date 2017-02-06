@@ -19,7 +19,8 @@ export function publishPublicFields(
   publicationName,
   collection,
   selectorFunction = () => ({}),
-  options = {}
+  options = {},
+  visibleSelectorOrNull = null
 ) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
@@ -30,7 +31,7 @@ export function publishPublicFields(
     `${publicationName}.public`,
     function publish() {
       this.autorun(() => {
-        const visibleSelector = collection.visibleSelectorForUserId(this.userId);
+        const visibleSelector = visibleSelectorOrNull || collection.visibleSelectorForUserId(this.userId);
         const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
