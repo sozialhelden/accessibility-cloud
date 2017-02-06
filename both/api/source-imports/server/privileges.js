@@ -20,6 +20,7 @@ SourceImports.publicFields = {
   numberOfPlacesModified: 1,
   numberOfPlacesRemoved: 1,
   numberOfPlacesUnchanged: 1,
+  placeInfoCountAfterImport: 1,
   error: 1,
 };
 

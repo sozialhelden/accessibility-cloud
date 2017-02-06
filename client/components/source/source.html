@@ -15,9 +15,7 @@
             <span class='subtle'>by {{getOrganization.name}}</span>
           {{/if}}
 
-          {{#with placeInfoCount}}
-            <span class='badge on-right' title={{_ "Number of places provided by this data source"}}>{{this}}</span>
-          {{/with}}
+          <span class='badge on-right' title={{_ "Number of places provided by this data source"}}>{{this.placeInfoCount}}</span>
         </span>
 
         <div class='details'>

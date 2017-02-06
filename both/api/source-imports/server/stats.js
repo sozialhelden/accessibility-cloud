@@ -1,6 +1,7 @@
-import util from 'util';
+// import util from 'util';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
+import { Sources } from '/both/api/sources/sources.js';
 import { _ } from 'lodash';
 
 const attributeBlacklist = {
@@ -50,8 +51,8 @@ SourceImports.helpers({
       { transform: null }
     );
 
-    const numberOfPlaces = placeInfos.count();
-    console.log('Analysing', numberOfPlaces, 'PoIs...');
+    const placeInfoCount = placeInfos.count();
+    console.log('Analysing', placeInfoCount, 'PoIs...');
     const startDate = new Date();
 
     placeInfos.forEach(placeInfo => {
@@ -61,8 +62,8 @@ SourceImports.helpers({
     const seconds = 0.001 * (new Date() - startDate);
     console.log(
       'Analysed',
-      numberOfPlaces,
-      `PoIs in ${seconds} seconds (${numberOfPlaces / seconds} PoIs/second).`
+      placeInfoCount,
+      `PoIs in ${seconds} seconds (${placeInfoCount / seconds} PoIs/second).`
     );
 
     // Uncomment this for debugging
@@ -73,9 +74,11 @@ SourceImports.helpers({
     SourceImports.update(this._id, {
       $set: {
         attributeDistribution: JSON.stringify(attributeDistribution),
+        placeInfoCountAfterImport: placeInfoCount,
       },
     });
 
+    Sources.update(this.sourceId, { $set: { placeInfoCount } });
     return attributeDistribution;
   },
 });

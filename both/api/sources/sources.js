@@ -117,6 +117,16 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  placeInfoCount: {
+    type: Number,
+    defaultValue: 0,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -167,16 +177,6 @@ Sources.helpers({
       .find(i => (i.isFinished() && !i.hasError() && !i.isAborted()));
   },
 });
-
-if (Meteor.isClient) {
-  export const PlaceInfoCounts = new Meteor.Collection('sourcesPlaceInfoCounts');
-  Sources.helpers({
-    placeInfoCount() {
-      const countDoc = PlaceInfoCounts.findOne(this._id);
-      return countDoc && countDoc.count;
-    },
-  });
-}
 
 if (Meteor.isServer) {
   SourceImports._ensureIndex({ licenseId: 1 });

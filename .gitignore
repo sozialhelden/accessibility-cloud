@@ -1,3 +1,5 @@
 node_modules/
 settings/*
 !settings/*-example.json
+.DS_Store
+.meteor/local/
