@@ -18,6 +18,13 @@ Meteor.methods({
     return PlaceInfos.find({ 'properties.sourceId': sourceId }, { limit: limitCount }).fetch();
   },
 
+  cachePlaceCountForSource(sourceId) {
+    check(sourceId, String);
+    checkExistenceAndVisibilityForSourceId(this.userId, sourceId);
+    const placeInfoCount = PlaceInfos.find({ 'properties.sourceId': sourceId }).count();
+    Sources.update(sourceId, { $set: { placeInfoCount } });
+  },
+
   updateDataURLForSource(sourceId, url) {
     check(sourceId, String);
     check(url, String);

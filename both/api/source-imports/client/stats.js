@@ -30,7 +30,7 @@ SourceImports.helpers({
     if (!source) {
       return [];
     }
-    const totalCount = this.getSource().placeInfoCount();
+    const totalCount = this.getSource().placeInfoCount;
     const typeNamesToCounts =
       _.get(attributeDistribution, 'properties.properties.accessibility.accessibleWith');
     return Object.keys(typeNamesToCounts)
