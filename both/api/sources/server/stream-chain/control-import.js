@@ -40,10 +40,8 @@ function startImportStreaming(source) {
     organizationId: source.organizationId,
     streamChain: source.streamChain,
     startTimestamp: Date.now(),
-    numberOfPlacesAdded: 0,
-    numberOfPlacesModified: 0,
-    numberOfPlacesRemoved: 0,
-    numberOfPlacesUnchanged: 0,
+    insertedPlaceInfoCount: 0,
+    updatedPlaceInfoCount: 0,
   });
   console.log('Creating stream chain for source import', sourceImportId, '…');
 
