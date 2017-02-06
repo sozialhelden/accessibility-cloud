@@ -149,6 +149,14 @@ Sources.helpers({
   isFullyVisibleForUserId(userId) {
     return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this.organizationId);
   },
+  hasRestrictedAccessForUserId(userId) {
+    const allowedOrganizationIDs = this.accessRestrictedTo || [];
+    const userBelongsToAnAllowedOrganization = allowedOrganizationIDs.some(
+      organizationId => isUserMemberOfOrganizationWithId(userId, organizationId)
+    );
+
+    return !this.isFreelyAccessible && userBelongsToAnAllowedOrganization;
+  },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },
