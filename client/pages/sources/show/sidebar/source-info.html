@@ -9,12 +9,15 @@
           {{#markdown}}{{source.description}}{{/markdown}}
         </section>
       </dd>
+
       <dt>License</dt>
       <dd><a href='{{pathFor "licenses.show" _id=licenseId}}'>
         {{getLicense.name}}
       </a></dd>
+
       <dt>Short name</dt>
       <dd class='short-name'>{{shortName}}</dd>
+
       <dt>Published / Draft</dt>
       <dd>
         {{#if isDraft}}
