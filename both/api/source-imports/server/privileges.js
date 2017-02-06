@@ -19,6 +19,7 @@ SourceImports.publicFields = {
   insertedPlaceInfoCount: 1,
   updatedPlaceInfoCount: 1,
   placeInfoCountAfterImport: 1,
+  processedPlaceInfoCount: 1,
   error: 1,
 };
 
