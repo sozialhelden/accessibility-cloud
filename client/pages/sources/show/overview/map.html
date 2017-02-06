@@ -52,11 +52,15 @@
               </a>
             </div>
           {{else}}
-            You do not have permission to access this source.
-            <br>
-            <a class="call-to-action button js-request-access-to-source">
-              Request Access
-            </a>
+            {{#if hasAlreadyRequestedAccessToSource}}
+              You have a request for access to this source which is pending review.
+            {{else}}
+              You do not have permission to access this source.
+              <br>
+              <a class="call-to-action button js-request-access-to-source">
+                Request Access
+              </a>
+            {{/if}}
           {{/if}}
         </div>
       {{/if}}
