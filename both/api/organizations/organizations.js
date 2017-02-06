@@ -13,6 +13,13 @@ import {
 } from '/both/api/organizations/privileges';
 import { _ } from 'lodash';
 
+const ACCESS_REQUEST_APPROVING_ROLES = [
+  'developer',
+  'manager',
+  'founder',
+  'member',
+];
+
 export const Organizations = new Mongo.Collection('Organizations');
 
 Organizations.schema = new SimpleSchema({
@@ -146,6 +153,20 @@ Organizations.helpers({
   },
   getApps() {
     return Apps.find({ organizationId: this._id });
+  },
+  getMostAuthoritativeUserThatCanApproveAccessRequests() {
+    for (const role of ACCESS_REQUEST_APPROVING_ROLES) {
+      const result = OrganizationMembers.findOne({
+        organizationId: this._id,
+        role,
+      });
+
+      if (result) {
+        return Meteor.users.findOne(result.userId);
+      }
+    }
+
+    return null;
   },
 });
 
