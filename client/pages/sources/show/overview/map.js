@@ -13,6 +13,7 @@ import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
 import PromisePool from 'es6-promise-pool';
 import { Sources } from '/both/api/sources/sources.js';
+import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
 import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 import subsManager from '/client/lib/subs-manager';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
@@ -178,6 +179,7 @@ Template.sources_show_page_map.onCreated(function created() {
   this.isShowingRequestForm = new ReactiveVar(false);
 
   subsManager.subscribe('sources.requestable.public');
+  subsManager.subscribe('sourceAccessRequests.single', Meteor.userId());
 });
 
 const reactiveVariables = [
@@ -214,6 +216,19 @@ Template.sources_show_page_map.helpers({
     }
 
     return !source.isFreelyAccessible && source.isRequestable;
+  },
+  hasAlreadyRequestedAccessToSource() {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+
+    if (!source) {
+      return false;
+    }
+
+    return Boolean(SourceAccessRequests.findOne({
+      requesterId: Meteor.userId(),
+      sourceId: source._id,
+      requestState: 'sent',
+    }));
   },
   email() {
     return Meteor.user().emails[0].address;
