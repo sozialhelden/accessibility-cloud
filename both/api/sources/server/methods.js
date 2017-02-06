@@ -53,5 +53,6 @@ Meteor.methods({
     checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
+    Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
   },
 });
