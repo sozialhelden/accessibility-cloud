@@ -1,6 +1,7 @@
 /* globals L */
 
 import { Meteor } from 'meteor/meteor';
+import { $ } from 'meteor/jquery';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { HTTP } from 'meteor/http';
 import { check } from 'meteor/check';
@@ -11,7 +12,10 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
 import PromisePool from 'es6-promise-pool';
+import { Sources } from '/both/api/sources/sources.js';
 import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
+import subsManager from '/client/lib/subs-manager';
+import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -171,13 +175,80 @@ Template.sources_show_page_map.onCreated(function created() {
   this.loadError = new ReactiveVar();
   this.loadProgress = new ReactiveVar();
   this.isClustering = new ReactiveVar();
+  this.isShowingRequestForm = new ReactiveVar(false);
+
+  subsManager.subscribe('sources.requestable.public');
 });
 
-['isLoading', 'loadError', 'loadProgress'].forEach(helper =>
+const reactiveVariables = [
+  'isLoading',
+  'loadError',
+  'loadProgress',
+  'isClustering',
+  'isShowingRequestForm',
+];
+
+reactiveVariables.forEach(helper =>
   Template.sources_show_page_map.helpers({
     [helper]() { return Template.instance()[helper].get(); },
   })
 );
+
+Template.sources_show_page_map.helpers({
+  hasAccessToSource() {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+
+    if (!source) {
+      return false;
+    }
+
+    const userId = Meteor.userId();
+
+    return source.isFullyVisibleForUserId(userId) || source.hasRestrictedAccessForUserId(userId);
+  },
+  canRequestAccessToSource() {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+
+    if (!source) {
+      return false;
+    }
+
+    return !source.isFreelyAccessible && source.isRequestable;
+  },
+  email() {
+    return Meteor.user().emails[0].address;
+  },
+});
+
+Template.sources_show_page_map.events({
+  'click .js-request-access-to-source': (event, instance) => {
+    instance.isShowingRequestForm.set(true);
+  },
+  'click .js-close-access-request-form': (event, instance) => {
+    instance.isShowingRequestForm.set(false);
+  },
+  'click .js-confirm-access-request': (event, instance) => {
+    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    const message = $('.js-access-request-message').val();
+
+    Meteor.call('sourceAccessRequests.askForAccess', {
+      requesterId: Meteor.userId(),
+      sourceId: source._id,
+      message,
+    }, err => {
+      if (err) {
+        showErrorNotification({ error: err });
+        return;
+      }
+
+      instance.isShowingRequestForm.set(false);
+      showNotification({
+        title: 'Request sent',
+        message: 'The admin of this source will be notified.',
+      });
+    });
+  },
+});
 
 function initializeMap(instance) {
   check(Meteor.settings.public.mapbox, String);
