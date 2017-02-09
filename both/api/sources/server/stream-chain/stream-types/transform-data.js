@@ -186,7 +186,9 @@ export class TransformData {
     delete this.compiledMappings;
     this.stream.removeListener('pipe', this.pipeListener);
     delete this.pipeListener;
-    this.source.removeListener('length', this.lengthListener);
+    if (this.source) {
+      this.source.removeListener('length', this.lengthListener);
+    }
     delete this.lengthListener;
     delete this.source;
     delete this.stream;
