@@ -6,7 +6,7 @@ import { SourceAccessRequests } from '/both/api/source-access-requests/source-ac
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { $ } from 'meteor/jquery';
 import subsManager from '/client/lib/subs-manager';
-
+import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
 Template.sources_show_access_page.onCreated(() => {
   subsManager.subscribe('sourceImports.public');
@@ -100,6 +100,21 @@ Template.sources_show_access_page.events({
     });
 
     $('button.js-save').addClass('unchanged');
+  },
+  'click .js-accept-access-request': (event) => {
+    const requestId = $(event.currentTarget).data('requestId');
+
+    Meteor.call('sourceAccessRequests.approve', { requestId }, err => {
+      if (err) {
+        showErrorNotification({ error: err });
+        return;
+      }
+
+      showNotification({
+        title: 'Request accepted',
+        message: 'The requester will be notified.',
+      });
+    });
   },
 });
 // Template.sources_show_header.helpers(helpers);
