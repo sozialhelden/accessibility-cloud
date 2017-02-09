@@ -13,12 +13,18 @@ export const askForAccess = new ValidatedMethod({
   name: 'sourceAccessRequests.askForAccess',
   validate: SourceAccessRequests.simpleSchema()
     .pick([
-      'sourceId',
       'requesterId',
+      'organizationId',
+      'sourceId',
       'message',
     ])
     .validator(),
-  run({ requesterId, sourceId, message }) {
+  run({
+    requesterId,
+    organizationId,
+    sourceId,
+    message,
+  }) {
     if (!this.userId) {
       throw new Meteor.Error(401, TAPi18n.__('Please log in first.'));
     }
@@ -34,8 +40,8 @@ export const askForAccess = new ValidatedMethod({
         TAPi18n.__('You cannot request access to this source.'));
     }
 
-    const organizationId = source.organizationId;
-    const organization = Organizations.findOne({ _id: organizationId });
+    const approverOrganizationId = source.organizationId;
+    const organization = Organizations.findOne({ _id: approverOrganizationId });
     const approver = organization.getMostAuthoritativeUserThatCanApproveAccessRequests();
 
     if (!approver) {
@@ -48,6 +54,7 @@ export const askForAccess = new ValidatedMethod({
 
     requestAccessToSource({
       requesterId,
+      organizationId,
       approverId: approver._id,
       sourceId,
       message,

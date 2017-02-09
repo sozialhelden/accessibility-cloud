@@ -56,9 +56,11 @@ const helpers = {
 
     return requestsArray.map(request => {
       const requester = Meteor.users.findOne(request.requesterId);
+      const requesterOrganization = Organizations.findOne(request.organizationId).name;
 
       return Object.assign({}, request, {
         email: requester.emails[0].address,
+        requesterOrganization,
       });
     });
   },

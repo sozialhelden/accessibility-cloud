@@ -4,10 +4,18 @@ import { SourceAccessRequests } from '../../source-access-requests';
 import { Organizations } from '/both/api/organizations/organizations';
 import { Sources } from '/both/api/sources/sources';
 
-const invitationEmailBody = ({ requesterEmailAddress, sourceId, sourceName, organizationName }) =>
+const invitationEmailBody = ({
+  requesterEmailAddress,
+  sourceId,
+  sourceName,
+  approverOrganizationName,
+  requesterOrganizationName,
+}) =>
 `Hi,
 
-${requesterEmailAddress} has requested access to “${organizationName}/${sourceName}” on accessibility.cloud.
+${requesterEmailAddress}, a member of organization “${requesterOrganizationName}”
+on accessibility.cloud, has requested access for their organization
+to “${approverOrganizationName}/${sourceName}” .
 
 Use this link to see pending access requests for this source:
 
@@ -24,18 +32,22 @@ Your accessibility.cloud team.
 
 function sendAccessRequestEmailTo({
   requesterId,
+  organizationId,
   approverId,
   source,
   message,
 }) {
   const approver = Meteor.users.findOne(approverId);
   const requester = Meteor.users.findOne(requesterId);
+
+  const requesterOrganization = Organizations.findOne(organizationId);
+  const approverOrganization = Organizations.findOne(source.organizationId);
+
   const approverEmailAddress = approver.emails[0].address;
   const requesterEmailAddress = requester.emails[0].address;
-  const organization = Organizations.findOne(source.organizationId);
 
   const requestId = SourceAccessRequests.insert({
-    organizationId: source.organizationId,
+    organizationId: organizationId,
     sourceId: source._id,
     requesterId,
     message,
@@ -52,7 +64,8 @@ function sendAccessRequestEmailTo({
         requesterEmailAddress,
         sourceId: source._id,
         sourceName: source.name,
-        organizationName: organization.name,
+        approverOrganizationName: approverOrganization.name,
+        requesterOrganizationName: requesterOrganization.name,
       }),
     });
 
@@ -71,7 +84,13 @@ function sendAccessRequestEmailTo({
   }
 }
 
-export default function requestAccessToSource({ requesterId, approverId, sourceId, message }) {
+export default function requestAccessToSource({
+  requesterId,
+  organizationId,
+  approverId,
+  sourceId,
+  message,
+}) {
   const source = Sources.findOne({ _id: sourceId });
   const thereIsNoNeedForRequestingAccess = source.isFullyVisibleForUserId(requesterId)
                                             || source.hasRestrictedAccessForUserId(requesterId);
@@ -83,6 +102,7 @@ export default function requestAccessToSource({ requesterId, approverId, sourceI
 
   sendAccessRequestEmailTo({
     requesterId,
+    organizationId,
     approverId,
     source,
     message,
