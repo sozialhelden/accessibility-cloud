@@ -3,15 +3,12 @@
 import { Meteor } from 'meteor/meteor';
 import { $ } from 'meteor/jquery';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { HTTP } from 'meteor/http';
 import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/stevezhu:lodash';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
-import { getApiUserToken } from '/client/lib/api-tokens';
-import PromisePool from 'es6-promise-pool';
 import { Sources } from '/both/api/sources/sources.js';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
@@ -20,14 +17,14 @@ import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-
 import subsManager from '/client/lib/subs-manager';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
+import getPlaces from './get-places';
+
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
-const PLACES_BATCH_SIZE = 2000;
-const CONCURRENCY_LIMIT = 3;
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
 
 // Extend Leaflet-icon to support colors and category-images
@@ -123,55 +120,6 @@ function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
   centerOnCurrentPlace(map);
 }
 
-async function getPlacesBatch(skip, limit, sendProgress) {
-  const hashedToken = await getApiUserToken();
-  const options = {
-    params: { skip, limit, includeSourceIds: FlowRouter.getParam('_id') },
-    headers: { Accept: 'application/json', 'X-User-Token': hashedToken },
-  };
-
-  return new Promise((resolve, reject) => {
-    HTTP.get(Meteor.absoluteUrl('place-infos'), options, (error, response) => {
-      if (error) {
-        reject(error);
-      } else {
-        sendProgress(response.data);
-        resolve(response);
-      }
-    });
-  });
-}
-
-async function getPlaces(limit, onProgress = () => {}) {
-  let progress = 0;
-  let numberOfPlacesToFetch = 0;
-  const sendProgress = (responseData) => {
-    progress += responseData.featureCount;
-    onProgress({
-      featureCollection: responseData,
-      percentage: numberOfPlacesToFetch ? 100 * progress / numberOfPlacesToFetch : 0,
-    });
-    return responseData;
-  };
-
-  // The first batch's response contains the total number of features to fetch.
-  const firstResponseData = (await getPlacesBatch(0, PLACES_BATCH_SIZE, sendProgress)).data;
-  progress = firstResponseData.featureCount;
-  numberOfPlacesToFetch = Math.min(firstResponseData.totalFeatureCount, limit);
-
-  // Allow only 3 running requests at the same time. Without this, all requests
-  // would be started at the same time leading to timeouts.
-  function *generatePromises() {
-    if (numberOfPlacesToFetch <= PLACES_BATCH_SIZE) {
-      return;
-    }
-    for (let i = 1; i < (numberOfPlacesToFetch / PLACES_BATCH_SIZE); i++) {
-      yield getPlacesBatch(i * PLACES_BATCH_SIZE, PLACES_BATCH_SIZE, sendProgress);
-    }
-  }
-  const pool = new PromisePool(generatePromises(), CONCURRENCY_LIMIT);
-  return pool.start();
-}
 
 Template.sources_show_page_map.onCreated(function created() {
   this.isLoading = new ReactiveVar(true);
