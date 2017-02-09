@@ -44,7 +44,7 @@ export class UpsertPlace {
       readableObjectMode: true,
       highWaterMark: 3,
       transform(placeInfo, encoding, callback) {
-        const originalId = placeInfo.properties.originalId;
+        const originalId = placeInfo && placeInfo.properties && placeInfo.properties.originalId;
 
         let error = undefined;
 
