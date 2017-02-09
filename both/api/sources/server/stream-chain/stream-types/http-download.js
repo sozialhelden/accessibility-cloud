@@ -28,12 +28,6 @@ export class HTTPDownload {
     const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
     this.request = this.stream = request(url, { gzip, headers: headersWithUserAgent });
 
-    // streamLength(this.stream)
-    //   .then(length => {
-    //     this.stream.emit('length', length);
-    //   })
-    //   .catch(error => console.log('Warning: Could not find stream length:', error));
-
     this.requestListener = req => {
       // console.log('Making request', req);
       onDebugInfo({
