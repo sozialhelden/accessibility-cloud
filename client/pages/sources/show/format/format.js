@@ -142,6 +142,22 @@ Template.sources_show_format_page.events({
       }
     });
   },
+  'keydown textarea#streamChain'(event) {
+    // idea borrowed from https://stackoverflow.com/a/6637396/387719
+    const textArea = $(event.target);
+    const keyCode = event.keyCode || event.which;
+    if (keyCode === 9) {
+      event.preventDefault();
+      const start = textArea.get(0).selectionStart;
+      const end = textArea.get(0).selectionEnd;
+
+      // set textarea value to: text before caret + tab + text after caret
+      textArea.val(`${textArea.val().substring(0, start)}\t${textArea.val().substring(end)}`);
+
+      // put caret at right position again
+      textArea.get(0).selectionStart = textArea.get(0).selectionEnd = start + 1;
+    }
+  },
   'input textarea#streamChain'(event, instance) {
     $('.errors').html('').addClass('is-empty');
 
