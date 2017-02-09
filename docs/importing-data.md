@@ -48,7 +48,8 @@ You can start by copy & pasting this definition into the text area in the 'Forma
         }
     },
     {
-        "type": "DebugLog"
+        "type": "DebugLog",
+        "skip": true
     },
     {
         "type": "UpsertPlace",
@@ -66,6 +67,7 @@ Each unit's JSON object definition has the following properties:
 - `type`: Type of the stream unit, as String, for instance `"DebugLog"` (all unit types are explained below).
 - `comment` (optional): Shown in the import results. This is useful for explaining others how your stream chain works. Shown in the results on import.
 - `parameters` (optional): Allows to supply parameters to the unit that specify how it is supposed to work.
+- `skip` (optional): Connect output of the previous unit to the following unit of this stream unit, skipping this unit. Helpful for debugging or drafting stream chains.
 
 Currently, we support the following stream processing units:
 
