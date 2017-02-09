@@ -12,8 +12,11 @@ Template.registerHelpers({
   FlowRouter,
   humanize: s.humanize,
   camelize: s.camelize,
+  lowercase(str) {
+    return String(str).toLowerCase();
+  },
   uppercase(str) {
-    return str.toUpperCase();
+    return String(str).toUpperCase();
   },
   stringify(object) {
     return JSON.stringify(object, true, 4);

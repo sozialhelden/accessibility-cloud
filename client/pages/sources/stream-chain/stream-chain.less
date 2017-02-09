@@ -26,6 +26,13 @@ div.stream-chain {
       header.name, aside.progress {
         font-size: 120%;
         .type-bold;
+        a {
+          .type-bold;
+          color: mix(@color-primary, @color-grey030);
+          &:hover {
+            color: mix(@color-primary, @color-grey030, 25%);
+          }
+        }
       }
 
       aside.progress {

@@ -11,6 +11,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
 
+const TAB_KEY_CODE = 9;
 
 Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
@@ -141,6 +142,23 @@ Template.sources_show_format_page.events({
         addError(`<strong>Invalid stream chain:</strong> ${error.message}`);
       }
     });
+  },
+  'keydown textarea#streamChain'(event) {
+    // Ensure tab key presses generate tabs instead of blurring the text area
+    // idea borrowed from https://stackoverflow.com/a/6637396/387719
+    const textArea = $(event.target);
+    const keyCode = event.keyCode || event.which;
+    if (keyCode === TAB_KEY_CODE && !event.shiftKey) {
+      event.preventDefault();
+      const start = textArea.get(0).selectionStart;
+      const end = textArea.get(0).selectionEnd;
+
+      // set textarea value to: text before caret + tab + text after caret
+      textArea.val(`${textArea.val().substring(0, start)}\t${textArea.val().substring(end)}`);
+
+      // put caret at right position again
+      textArea.get(0).selectionStart = textArea.get(0).selectionEnd = start + 1;
+    }
   },
   'input textarea#streamChain'(event, instance) {
     $('.errors').html('').addClass('is-empty');
