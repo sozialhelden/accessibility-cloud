@@ -72,6 +72,6 @@ Template.sources_show_imports_page.helpers({
     if (selectedImport) {
       return selectedImport;
     }
-    return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
+    return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') }, { sort: { startTimestamp: -1 }});
   },
 });
