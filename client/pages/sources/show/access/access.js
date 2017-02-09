@@ -116,6 +116,20 @@ Template.sources_show_access_page.events({
       });
     });
   },
+  'click .js-ignore-access-request': (event) => {
+    const requestId = $(event.currentTarget).data('requestId');
+
+    Meteor.call('sourceAccessRequests.ignore', { requestId }, err => {
+      if (err) {
+        showErrorNotification({ error: err });
+        return;
+      }
+
+      showNotification({
+        title: 'Request ignored',
+      });
+    });
+  },
 });
 // Template.sources_show_header.helpers(helpers);
 Template.sources_show_access_page.helpers(helpers);
