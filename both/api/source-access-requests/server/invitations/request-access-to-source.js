@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
-import { SourceAccessRequests } from '../source-access-requests';
+import { SourceAccessRequests } from '../../source-access-requests';
 import { Organizations } from '/both/api/organizations/organizations';
 import { Sources } from '/both/api/sources/sources';
 
@@ -71,7 +71,7 @@ function sendAccessRequestEmailTo({
   }
 }
 
-export function requestAccessToSource({ requesterId, approverId, sourceId, message }) {
+export default function requestAccessToSource({ requesterId, approverId, sourceId, message }) {
   const source = Sources.findOne({ _id: sourceId });
   const thereIsNoNeedForRequestingAccess = source.isFullyVisibleForUserId(requesterId)
                                             || source.hasRestrictedAccessForUserId(requesterId);
