@@ -75,16 +75,19 @@ const idsToShownMarkers = {};
 
 function filterShownMarkers(featureCollection) {
   const result = {};
+
   result.features = featureCollection.features
     .filter(feature => !idsToShownMarkers[feature.properties._id]);
+
   result.featureCount = result.features.length;
+
   return result;
 }
 
 function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
   const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
 
-  if (!featureCollection.features || !featureCollection.features.length) {
+  if (!featureCollection.featureCount) {
     return;
   }
 
@@ -268,11 +271,20 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     createMarkerClusters();
   }
 
-  async function loadPlaces(limit, onProgress) {
+  async function loadPlaces({
+    sourceId,
+    limit,
+    onProgress,
+  }) {
     instance.isLoading.set(true);
     instance.loadError.set(null);
     instance.loadProgress.set({});
-    return getPlaces(limit, onProgress);
+
+    return getPlaces({
+      sourceId,
+      limit,
+      onProgress,
+    });
   }
 
   this.autorun(() => {
@@ -307,9 +319,13 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
 
       this.currentLimit = limit;
 
-      placesPromise = loadPlaces(limit, ({ featureCollection, percentage }) => {
-        showPlacesOnMap(instance, map, featureCollection);
-        instance.loadProgress.set({ percentage });
+      placesPromise = loadPlaces({
+        sourceId: currentSourceId,
+        limit,
+        onProgress: ({ featureCollection, percentage }) => {
+          showPlacesOnMap(instance, map, featureCollection);
+          instance.loadProgress.set({ percentage });
+        },
       });
     }
 
