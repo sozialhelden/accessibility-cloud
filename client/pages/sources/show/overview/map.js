@@ -13,6 +13,8 @@ import { getCurrentPlaceInfo } from './get-current-place-info';
 import { getApiUserToken } from '/client/lib/api-tokens';
 import PromisePool from 'es6-promise-pool';
 import { Sources } from '/both/api/sources/sources.js';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { Organizations } from '/both/api/organizations/organizations.js';
 import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
 import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 import subsManager from '/client/lib/subs-manager';
@@ -233,6 +235,15 @@ Template.sources_show_page_map.helpers({
   email() {
     return Meteor.user().emails[0].address;
   },
+  requesterOrganizations() {
+    return OrganizationMembers
+            .find({
+              userId: Meteor.userId(),
+            })
+            .fetch()
+            .map(({ organizationId }) => Organizations.findOne(organizationId))
+            .filter(Boolean);
+  },
 });
 
 Template.sources_show_page_map.events({
@@ -245,11 +256,13 @@ Template.sources_show_page_map.events({
   'click .js-confirm-access-request': (event, instance) => {
     const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
     const message = $('.js-access-request-message').val();
+    const organizationId = $('.js-requester-organization-menu').val();
 
     Meteor.call('sourceAccessRequests.askForAccess', {
       requesterId: Meteor.userId(),
       sourceId: source._id,
       message,
+      organizationId,
     }, err => {
       if (err) {
         showErrorNotification({ error: err });

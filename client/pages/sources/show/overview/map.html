@@ -34,7 +34,17 @@
             <div class="access-request-form">
               <span class="close-window icon js-close-access-request-form"></span>
               <p>
-                Why are you requesting access to this source?
+                On behalf of which organization are you requesting access?
+              </p>
+
+              <select class="js-requester-organization-menu">
+                {{#each requesterOrganizations}}
+                  <option value="{{_id}}">{{name}}</option>
+                {{/each}}
+              </select>
+
+              <p>
+                Why would you like to have access to this source?
               </p>
 
               <textarea class="js-access-request-message"></textarea>

@@ -4,6 +4,10 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 export const SourceAccessRequests = new Mongo.Collection('SourceAccessRequests');
 
 SourceAccessRequests.schema = new SimpleSchema({
+  organizationId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
   sourceId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,

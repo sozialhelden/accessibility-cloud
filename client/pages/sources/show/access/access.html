@@ -49,7 +49,12 @@
               <tbody class="zebra-striped-list">
                 {{#each pendingRequests}}
                   <tr>
-                    <td>{{email}}</td>
+                    <td>
+                      {{email}}
+                      <br>
+
+                      for <em>“{{requesterOrganization}}”</em>
+                    </td>
                     <td>
                       <pre>{{message}}</pre>
                     </td>
