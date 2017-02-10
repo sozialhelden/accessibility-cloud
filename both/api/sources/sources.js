@@ -147,7 +147,9 @@ Sources.relationships = {
 
 Sources.helpers({
   isFullyVisibleForUserId(userId) {
-    return isAdmin(userId) || isUserMemberOfOrganizationWithId(userId, this.organizationId);
+    return isAdmin(userId)
+            || isUserMemberOfOrganizationWithId(userId, this.organizationId)
+            || this.isFreelyAccessible;
   },
   hasRestrictedAccessForUserId(userId) {
     const allowedOrganizationIDs = this.accessRestrictedTo || [];
@@ -156,6 +158,9 @@ Sources.helpers({
     );
 
     return !this.isFreelyAccessible && userBelongsToAnAllowedOrganization;
+  },
+  isVisibleForUserId(userId) {
+    return this.isFullyVisibleForUserId(userId) || this.hasRestrictedAccessForUserId(userId);
   },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
