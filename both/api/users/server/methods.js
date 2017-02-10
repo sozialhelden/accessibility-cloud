@@ -1,10 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check } from 'meteor/check';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { isAdmin } from '/both/lib/is-admin';
-
-SimpleSchema.debug = true;
 
 Meteor.methods({
   'users.approve'(_id) {

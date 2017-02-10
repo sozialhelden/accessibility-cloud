@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { userHasFullAccessToOrganization } from '/both/api/organizations/privileges';
 import { OrganizationMembers } from '../organization-members.js';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { acceptInvitation, inviteUserToOrganization } from './invitations';
-
-SimpleSchema.debug = true;
 
 export const insert = new ValidatedMethod({
   name: 'organizationMembers.invite',
