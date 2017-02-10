@@ -3,66 +3,17 @@
 import { Meteor } from 'meteor/meteor';
 import { $ } from 'meteor/jquery';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { check } from 'meteor/check';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { _ } from 'meteor/stevezhu:lodash';
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import { Sources } from '/both/api/sources/sources.js';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
-import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 import subsManager from '/client/lib/subs-manager';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
-
-import getPlaces from './get-places';
-
-import 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-
-const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
-
-// Extend Leaflet-icon to support colors and category-images
-L.AccessibilityIcon = L.Icon.extend({
-  options: {
-    number: '',
-    shadowUrl: null,
-    iconSize: new L.Point(27, 27),
-    iconAnchor: new L.Point(13, 25),
-    popupAnchor: new L.Point(0, -33),
-    className: 'leaflet-div-icon accessiblity',
-  },
-
-  createIcon() {
-    const div = document.createElement('div');
-    const img = this._createImg(this.options.iconUrl);
-    div.appendChild(img);
-    this._setIconStyles(div, 'icon');
-    return div;
-  },
-
-  createShadow() {
-    return null;
-  },
-});
-
-function getColorForWheelchairAccessiblity(placeData) {
-  try {
-    if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
-      return 'green';
-    } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
-      return 'red';
-    }
-  } catch (e) {
-    console.warn('Failed to get color for', placeData, e);
-  }
-  return 'grey';
-}
+import initializeMap from './initialize-map';
+import renderMap from './render-map';
 
 function centerOnCurrentPlace(map) {
   const place = getCurrentPlaceInfo();
@@ -70,59 +21,6 @@ function centerOnCurrentPlace(map) {
     map.setView(place.geometry.coordinates.reverse(), 18);
   }
 }
-
-const idsToShownMarkers = {};
-
-function filterShownMarkers(featureCollection) {
-  const result = {};
-
-  result.features = featureCollection.features
-    .filter(feature => !idsToShownMarkers[feature.properties._id]);
-
-  result.featureCount = result.features.length;
-
-  return result;
-}
-
-function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
-  const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
-
-  if (!featureCollection.featureCount) {
-    return;
-  }
-
-  const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
-    pointToLayer(feature, latlng) {
-      const id = feature.properties._id;
-      if (idsToShownMarkers[id]) {
-        return idsToShownMarkers[id];
-      }
-      const categoryIconName = _.get(feature, 'properties.category') || 'place';
-      const color = getColorForWheelchairAccessiblity(feature);
-      const acIcon = new L.AccessibilityIcon({
-        iconUrl: `/icons/categories/${categoryIconName}.png`,
-        className: `ac-marker ${color}`,
-      });
-      const marker = L.marker(latlng, { icon: acIcon });
-      marker.on('click', () => {
-        FlowRouter.go('placeInfos.show', {
-          _id: FlowRouter.getParam('_id'),
-          placeInfoId: feature.properties._id,
-        }, {
-          limit: FlowRouter.getQueryParam('limit'),
-        });
-      });
-      idsToShownMarkers[id] = marker;
-      return marker;
-    },
-  });
-
-  instance.markerClusterGroup.addLayer(geojsonLayer);
-  map.addLayer(instance.markerClusterGroup);
-  map.fitBounds(instance.markerClusterGroup.getBounds().pad(0.02));
-  centerOnCurrentPlace(map);
-}
-
 
 Template.sources_show_page_map.onCreated(function created() {
   this.isLoading = new ReactiveVar(true);
@@ -229,118 +127,10 @@ Template.sources_show_page_map.events({
   },
 });
 
-function initializeMap(instance) {
-  check(Meteor.settings.public.mapbox, String);
-
-  const map = L.map(instance.find('.map'), {
-    doubleClickZoom: false,
-  }).setView([49.25044, -123.137], 13);
-
-  window.map = map;
-
-  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGl4dHVyIiwiYSI6ImNpc2tuMWx1eDAwNHQzMnBremRzNjBqcXIifQ.3jo3ZXnwCVxTkKaw0RPlDg', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'accesssibility-cloud',
-    accessToken: Meteor.settings.public.mapbox,
-  }).addTo(map);
-
-  return map;
-}
-
 Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
-  const map = initializeMap(this);
   const instance = this;
-  let currentSourceId = null;
+  const map = initializeMap(this);
 
-  function createMarkerClusters() {
-    instance.markerClusterGroup = instance.markerClusterGroup || L.markerClusterGroup({
-      polygonOptions: {
-        color: '#08c',
-        weight: 1,
-      },
-    });
-  }
-
-  function resetMarkers() {
-    Object.keys(idsToShownMarkers).forEach(key => delete idsToShownMarkers[key]);
-    if (instance.markerClusterGroup) {
-      map.removeLayer(instance.markerClusterGroup);
-      instance.markerClusterGroup = null;
-    }
-    createMarkerClusters();
-  }
-
-  async function loadPlaces({
-    sourceId,
-    limit,
-    onProgress,
-  }) {
-    instance.isLoading.set(true);
-    instance.loadError.set(null);
-    instance.loadProgress.set({});
-
-    return getPlaces({
-      sourceId,
-      limit,
-      onProgress,
-    });
-  }
-
-  this.autorun(() => {
-    if (!Meteor.userId()) { return; }
-
-    const newSourceId = FlowRouter.getParam('_id');
-    if (newSourceId !== currentSourceId) {
-      resetMarkers();
-      currentSourceId = newSourceId;
-    }
-
-    FlowRouter.watchPathChange();
-
-    const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
-    const routeName = FlowRouter.getRouteName();
-    const isShowingASinglePlace = routeName === 'placeInfos.show';
-
-    let placesPromise;
-
-    if (isShowingASinglePlace) {
-      const placeInfoId = FlowRouter.getParam('placeInfoId');
-      const doc = PlaceInfos.findOne(placeInfoId);
-      const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
-      const featureCollection = buildFeatureCollectionFromArray([place]);
-      showPlacesOnMap(instance, map, featureCollection);
-      placesPromise = Promise.resolve();
-    } else {
-      const isDisplayingFewerMarkersThanBefore = this.currentLimit && limit <= this.currentLimit;
-      if (isDisplayingFewerMarkersThanBefore) {
-        return;
-      }
-
-      this.currentLimit = limit;
-
-      placesPromise = loadPlaces({
-        sourceId: currentSourceId,
-        limit,
-        onProgress: ({ featureCollection, percentage }) => {
-          showPlacesOnMap(instance, map, featureCollection);
-          instance.loadProgress.set({ percentage });
-        },
-      });
-    }
-
-    placesPromise
-      .then(
-        () => {
-          instance.isLoading.set(false);
-        },
-        (error) => {
-          instance.loadError.set(error);
-          instance.isLoading.set(false);
-        }
-      );
-    FlowRouter.setQueryParams({ limit });
-  });
-
+  this.autorun(() => renderMap(map, instance));
   this.autorun(() => centerOnCurrentPlace(map));
 });
