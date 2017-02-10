@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { _ } from 'lodash';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
@@ -20,10 +21,9 @@ Template.sources_show_access_page.onCreated(() => {
   window.Sources = Sources; // FIXME: we don't need this, it's only for debugging
 });
 
-
 const helpers = {
   source() {
-    return Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    return Sources.findOne(FlowRouter.getParam('_id'));
   },
   organizations() {
     return Organizations.find({});
@@ -48,24 +48,14 @@ const helpers = {
     return '';
   },
   pendingRequests() {
-    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
-    const requestsArray = SourceAccessRequests.find({
-      sourceId: source._id,
+    const source = Sources.findOne(FlowRouter.getParam('_id'));
+
+    return SourceAccessRequests.find({
+      sourceId: _.get(source, '_id'),
       requestState: 'sent',
-    }).fetch();
-
-    return requestsArray.map(request => {
-      const requester = Meteor.users.findOne(request.requesterId);
-      const requesterOrganization = Organizations.findOne(request.organizationId).name;
-
-      return Object.assign({}, request, {
-        email: requester.emails[0].address,
-        requesterOrganization,
-      });
     });
   },
 };
-
 
 Template.sources_show_access_page.events({
   'change select': (event) => {
