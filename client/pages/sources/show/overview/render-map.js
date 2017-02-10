@@ -10,6 +10,8 @@ import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-
 import getPlaces from './get-places';
 
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
+const PADDING = 0.02;
+
 const idsToShownMarkers = {};
 let currentSourceId = null;
 let currentLimit;
@@ -30,6 +32,10 @@ function resetMarkers(instance, map) {
     instance.markerClusterGroup = null;
   }
   createMarkerClusters(instance);
+}
+
+function fitBounds(instance, map) {
+  map.fitBounds(instance.markerClusterGroup.getBounds().pad(PADDING));
 }
 
 async function loadPlaces({
@@ -122,7 +128,7 @@ function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
 
   instance.markerClusterGroup.addLayer(geojsonLayer);
   map.addLayer(instance.markerClusterGroup);
-  map.fitBounds(instance.markerClusterGroup.getBounds().pad(0.02));
+  fitBounds(instance, map);
   centerOnCurrentPlace(map);
 }
 
@@ -155,6 +161,7 @@ export default function renderMap(map, instance) {
     const isDisplayingFewerMarkersThanBefore = currentLimit && limit <= currentLimit;
 
     if (isDisplayingFewerMarkersThanBefore) {
+      fitBounds(instance, map);
       return;
     }
 
