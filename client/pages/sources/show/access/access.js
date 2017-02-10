@@ -36,9 +36,9 @@ const helpers = {
     return '';
   },
   checkedIfAccessToSourceCanBeRequested() {
-    const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
+    const source = Sources.findOne(FlowRouter.getParam('_id'));
 
-    return source.isRequestable ? 'checked' : '';
+    return source && source.isRequestable ? 'checked' : '';
   },
   selectedIfAccessibleToAll() {
     const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });
