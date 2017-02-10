@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
 import { Email } from 'meteor/email';
 import { SourceAccessRequests } from '../../source-access-requests';
 import { Organizations } from '/both/api/organizations/organizations';
@@ -47,7 +48,7 @@ function sendAccessRequestEmailTo({
   const requesterEmailAddress = requester.emails[0].address;
 
   const requestId = SourceAccessRequests.insert({
-    organizationId: organizationId,
+    organizationId,
     sourceId: source._id,
     requesterId,
     message,
@@ -78,7 +79,7 @@ function sendAccessRequestEmailTo({
     SourceAccessRequests.update(selector, {
       $set: {
         requestState: 'error',
-        requestError: error,
+        requestError: _.pick(error, 'message'),
       },
     });
   }
