@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Sources } from '/both/api/sources/sources.js';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { SourceAccessRequests } from '../../source-access-requests.js';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { requestAccessToSource } from '../invitations';
-
-SimpleSchema.debug = true;
 
 export const askForAccess = new ValidatedMethod({
   name: 'sourceAccessRequests.askForAccess',
