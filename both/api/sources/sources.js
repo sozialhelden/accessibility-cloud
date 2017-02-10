@@ -159,6 +159,9 @@ Sources.helpers({
 
     return !this.isFreelyAccessible && userBelongsToAnAllowedOrganization;
   },
+  isVisibleForUserId(userId) {
+    return this.isFullyVisibleForUserId(userId) || this.hasRestrictedAccessForUserId(userId);
+  },
   getOrganization() {
     return Organizations.findOne(this.organizationId);
   },
