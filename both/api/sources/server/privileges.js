@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { Sources } from '../sources';
 import { Organizations } from '/both/api/organizations/organizations';
@@ -80,10 +80,7 @@ function sourceSelectorForOrganizationIds(organizationIds) {
 }
 
 Sources.visibleSelectorForUserId = (userId) => {
-  if (!userId) {
-    return null;
-  }
-  check(userId, String);
+  check(userId, Match.Maybe(String));
   return sourceSelectorForOrganizationIds(getAccessibleOrganizationIdsForUserId(userId));
 };
 
