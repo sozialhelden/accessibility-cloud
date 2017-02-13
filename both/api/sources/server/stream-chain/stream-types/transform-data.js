@@ -134,6 +134,8 @@ export class TransformData {
 
     updateCategories();
 
+    const compiledMappings = this.compiledMappings = compileMappings(mappings);
+
     let hadError = false;
 
     this.stream = new Transform({
@@ -143,11 +145,9 @@ export class TransformData {
         try {
           if (hadError) { return; }
 
-          this.compiledMappings = this.compiledMappings || compileMappings(mappings);
-
           const output = {};
 
-          for (const [fieldName, fn] of entries(this.compiledMappings)) {
+          for (const [fieldName, fn] of entries(compiledMappings)) {
             const value = fn(chunk);
             if (fieldName.match(/-/)) {
               // Field name is probably a key path like 'a-b-c'
@@ -177,8 +177,6 @@ export class TransformData {
       source.on('length', this.lengthListener);
     };
     this.stream.on('pipe', this.pipeListener);
-
-
     this.stream.unitName = 'places';
   }
 
