@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Sources } from '/both/api/sources/sources';
+import subsManager from '/client/lib/subs-manager';
 
 Template.component_source.onRendered(function rendered() {
   if (this.data.source) {
-    this.subscribe('sourceImports.public');
+    subsManager.subscribe('sourceImports.public');
+    subsManager.subscribe('sourceImports.private');
   }
 });
 

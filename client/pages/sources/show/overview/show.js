@@ -59,6 +59,7 @@ function sourceImport() {
 
 Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('sourceImports.private');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('licenses.public');
