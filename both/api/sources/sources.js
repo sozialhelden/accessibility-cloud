@@ -197,9 +197,9 @@ Sources.helpers({
   },
   getLastSuccessfulImport() {
     return SourceImports
-      .find({ sourceId: this._id }, { sort: { startTimestamp: -1 } })
+      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
       .fetch()
-      .find(i => (i.isFinished() && !i.hasError() && !i.isAborted()));
+      .find(i => (!i.hasError() && !i.isAborted()));
   },
 });
 

@@ -20,11 +20,6 @@ SourceImports.helpers({
     if (!this.streamChain) return false;
     return _.any(this.streamChain, streamElement => streamElement.error);
   },
-  isFinished() {
-    if (!this.streamChain) return false;
-    return _.all(this.streamChain, stream =>
-      stream && stream.progress && stream.progress.isFinished);
-  },
   getSource() {
     return Sources.findOne(this.sourceId);
   },

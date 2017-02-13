@@ -214,6 +214,7 @@ export function createStreamChain({
     } else {
       console.log('Import ended without error.');
       Sources.update(sourceId, { $set: { hasRunningImport: false } });
+      SourceImports.update(sourceImportId, { $set: { isFinished: true } });
     }
     Meteor.setTimeout(() => {
       result.forEach(observer => {
