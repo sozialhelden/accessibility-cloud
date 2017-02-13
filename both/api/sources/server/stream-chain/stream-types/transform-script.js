@@ -9,7 +9,13 @@ function compileMappingFunction(javascript, onDebugInfo) {
     return eval(`(d) => (${javascript})`);
   } catch (error) {
     onDebugInfo({
-      compilationError: `JavaScript compilation error:\n${error}\n${error.stack}\n${error.reason}\n${error.message}`
+      compilationError: [
+        'JavaScript compilation error:',
+        error,
+        error.stack,
+        error.reason,
+        error.message,
+      ].join('\n'),
     });
     return () => {};
   }
