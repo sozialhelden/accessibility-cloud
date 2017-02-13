@@ -84,7 +84,7 @@ export function startImportIfPossible({ userId, sourceId }, callback) {
 
       const source = value;
       if (source) {
-        console.log('Found non-running source', source);
+        console.log('Found non-running source with id', sourceId);
       } else {
         callback(new Meteor.Error(422, 'Another import is already running.'));
         return;
