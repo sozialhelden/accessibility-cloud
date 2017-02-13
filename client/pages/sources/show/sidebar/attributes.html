@@ -1,14 +1,16 @@
 <template name='sources_show_page_attributes'>
-  <dt>Activity</dt>
-  <dd>
-    <header>
-      {{#with getLastSuccessfulImport}}
-        Last imported {{agoStartTimestamp}}.
-      {{/with}}
-    </header>
+  {{#if getLastSuccessfulImport}}
+    <dt>Activity</dt>
+    <dd>
+      <header>
+        {{#with getLastSuccessfulImport}}
+          Last imported {{agoStartTimestamp}}.
+        {{/with}}
+      </header>
 
-    {{> sources_show_page_activity_chart}}
-  </dd>
+      {{> sources_show_page_activity_chart}}
+    </dd>
+  {{/if}}
 
   {{#if placeInfoCount}}
     {{#with getLastSuccessfulImport}}

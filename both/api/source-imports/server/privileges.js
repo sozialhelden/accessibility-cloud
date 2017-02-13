@@ -16,6 +16,7 @@ SourceImports.publicFields = {
   sourceId: 1,
   streamChain: 1,
   originalStreamChain: 1,
+  isFinished: 1,
   startTimestamp: 1,
   insertedPlaceInfoCount: 1,
   updatedPlaceInfoCount: 1,
