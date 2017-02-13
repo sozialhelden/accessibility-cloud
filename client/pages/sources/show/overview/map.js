@@ -30,7 +30,11 @@ Template.sources_show_page_map.onCreated(function created() {
   this.isShowingRequestForm = new ReactiveVar(false);
 
   subsManager.subscribe('sources.requestable.public');
-  subsManager.subscribe('sourceAccessRequests.single', Meteor.userId());
+  this.autorun(() => {
+    if (Meteor.userId()) {
+      subsManager.subscribe('sourceAccessRequests.single', Meteor.userId());
+    }
+  });
 });
 
 const reactiveVariables = [
