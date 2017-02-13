@@ -1,12 +1,13 @@
 const { Transform } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import vm from 'vm';
 
-function compileMappingFunction(javascript, onDebugInfo) {
+function compileMappingFunction(javascript, context, onDebugInfo) {
   try {
-    // Should be moved to a sandbox at some point. https://nodejs.org/api/vm.html
-    // eslint-disable-next-line no-eval
-    return eval(`(d) => (${javascript})`);
+    const code = `(d) => (${javascript})`;
+
+    return vm.runInContext(code, context);
   } catch (error) {
     onDebugInfo({
       compilationError: [
@@ -25,7 +26,9 @@ export class TransformScript {
   constructor({ javascript, onDebugInfo }) {
     check(javascript, String);
 
-    const compiledScript = compileMappingFunction(javascript, onDebugInfo);
+    const globalObject = Object.freeze({});
+    const context = this.context = vm.createContext(globalObject);
+    const compiledScript = compileMappingFunction(javascript, context, onDebugInfo);
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -56,6 +59,7 @@ export class TransformScript {
     delete this.lengthListener;
     delete this.stream;
     delete this.compiledScript;
+    delete this.context;
   }
 
   static getParameterSchema() {
