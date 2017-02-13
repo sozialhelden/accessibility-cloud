@@ -14,14 +14,27 @@ SourceImports.allow({
 
 SourceImports.publicFields = {
   sourceId: 1,
-  streamChain: 1,
-  originalStreamChain: 1,
   isFinished: 1,
+};
+
+SourceImports.statsFields = {
   startTimestamp: 1,
   insertedPlaceInfoCount: 1,
   updatedPlaceInfoCount: 1,
   placeInfoCountAfterImport: 1,
   processedPlaceInfoCount: 1,
+  attributeDistribution: 1,
+};
+
+SourceImports.privateFields = {
+  startTimestamp: 1,
+  originalStreamChain: 1,
+  insertedPlaceInfoCount: 1,
+  updatedPlaceInfoCount: 1,
+  placeInfoCountAfterImport: 1,
+  processedPlaceInfoCount: 1,
+  attributeDistribution: 1,
+  streamChain: 1,
   error: 1,
 };
 
@@ -46,6 +59,17 @@ SourceImports.visibleSelectorForUserId = (userId) => {
 SourceImports.visibleSelectorForAppId = (appId) => {
   check(appId, String);
   return {
-    _id: { $in: Sources.visibleSelectorForAppId(appId) },
+    sourceId: { $in: Sources.visibleSelectorForAppId(appId) },
+  };
+};
+
+SourceImports.fromFreelyAccessibleSourcesSelector = () => {
+  const freelyAccessibleSourceIds = Sources.find(
+    { isFreelyAccessible: 1 },
+    { fields: { _id: 1 } }
+  ).fetch().map(source => source._id);
+
+  return {
+    _id: { $in: freelyAccessibleSourceIds },
   };
 };
