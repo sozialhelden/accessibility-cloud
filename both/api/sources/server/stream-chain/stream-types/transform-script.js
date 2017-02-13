@@ -2,12 +2,13 @@ const { Transform } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import vm from 'vm';
+import vmScriptsOptions from './vm-scripts-options';
 
 function compileMappingFunction(javascript, context, onDebugInfo) {
   try {
     const code = `(d) => (${javascript})`;
 
-    return vm.runInContext(code, context);
+    return vm.runInContext(code, context, vmScriptsOptions);
   } catch (error) {
     onDebugInfo({
       compilationError: [

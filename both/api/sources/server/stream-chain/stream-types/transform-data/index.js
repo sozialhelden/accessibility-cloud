@@ -4,6 +4,7 @@ import { _ } from 'lodash';
 import entries from '/both/lib/entries';
 import getVMContext from './get-vm-context';
 import vm from 'vm';
+import vmScriptsOptions from '../vm-scripts-options';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -33,7 +34,7 @@ export class TransformData {
     check(mappings, Object);
 
     const context = this.context = getVMContext();
-    const compiledMappings = this.compiledMappings = compileMappings(mappings, context);
+    const compiledMappings = this.compiledMappings = compileMappings(mappings, context, vmScriptsOptions);
 
     let hadError = false;
 
