@@ -144,6 +144,7 @@ dataRoutes.route('/organizations/create', {
 dataRoutes.route('/organizations/:_id', {
   name: 'organizations.show',
   title: 'Organization',
+  isAccessibleWithoutApproval: true,
   action() {
     BlazeLayout.render('app_layout_scrollable', {
       main: 'organizations_show_page',
