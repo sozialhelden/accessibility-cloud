@@ -1,39 +1,42 @@
-import fs from 'fs';
-import path from 'path';
+/* global Assets: true */
 
-const basePath = path.join(process.env.PWD, __dirname, 'helpers');
-const SOURCE_FILE_REGEX = /\.js$/;
-const FUNCTION_NAME_REGEX = /function\s+(\w+)\(.*\)\s*\{/;
+/*
+ * This configuration needs to match the directory structure in
+ * /private/transform-helpers.
+ */
+const AVAILABLE_HELPERS = {
+  AXSMaps: {
+    estimateFlagFor: 'estimate-flag-for.js',
+    estimateRatingFor: 'estimate-rating-for.js',
+    fetchNameFromTags: 'fetch-name-from-tags.js',
+    getCategoryFromList: 'get-category-from-list.js',
+    guessGeoPoint: 'guess-geo-point.js',
+  },
 
-const getFunctionNameAndContent = filePath => {
-  const content = fs.readFileSync(filePath, {
-    encoding: 'utf8',
-  });
-  const name = FUNCTION_NAME_REGEX.exec(content)[1];
+  OSM: {
+    fetchCategoryFromTags: 'fetch-category-from-tags.js',
+  },
 
-  return { name, content };
+  extractNumber: 'extract-number.js',
 };
+const HELPERS_BASE_PATH = 'transform-helpers';
 
-const getDirContents = (dirPath) => {
-  const entries = fs.readdirSync(dirPath);
+const readAsset = relativePath => Assets.getText(`${HELPERS_BASE_PATH}${relativePath}`);
 
-  return entries.reduce((acc, entryName) => {
-    const entryPath = `${dirPath}/${entryName}`;
-    const isDir = fs.statSync(entryPath).isDirectory();
+const getContents = (basePath, dirMap) => {
+  const entries = Object.keys(dirMap);
 
-    if (isDir) {
+  return entries.reduce((acc, key) => {
+    const value = dirMap[key];
+
+    if (typeof value === 'string') {
       return Object.assign({}, acc, {
-        entryName: getDirContents(entryPath),
+        [key]: readAsset(`${basePath}/${value}`),
       });
     }
 
-    if (!SOURCE_FILE_REGEX.test(entryName)) {
-      return null; // ignore non-js files
-    }
-    const { name, content } = getFunctionNameAndContent(entryPath);
-
     return Object.assign({}, acc, {
-      [name]: content,
+      [key]: getContents(`${basePath}/${key}`, value),
     });
   }, {});
 };
@@ -51,7 +54,6 @@ const turnObjectIntoString = obj => `{
 }`;
 
 export default function getHelpersContent() {
-  const helpersObj = getDirContents(basePath);
+  const helpersObj = getContents('', AVAILABLE_HELPERS);
   return turnObjectIntoString(helpersObj);
 }
-
