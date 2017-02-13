@@ -1,9 +1,0 @@
-This directory contains a number of helpers which are dynamically injected
-into the context in which the functions of TransformData streams run.
-
-The helpers are available as an object under the `helpers` property of the global object.
-The object is hierarchical and its structure reflects that of this directory.
-
-If you want to add a helper, create a file which contains *a single named function*
-and save it in an appropriate place in a directory, then simply access it as a property
-of the `helpers` variable in your `TransformData` stream function.
