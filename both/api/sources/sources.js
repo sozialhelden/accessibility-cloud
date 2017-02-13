@@ -151,6 +151,13 @@ Sources.helpers({
             || isUserMemberOfOrganizationWithId(userId, this.organizationId)
             || this.isFreelyAccessible;
   },
+  isEditableBy(userId) {
+    if (!userId) {
+      return false;
+    }
+    return isAdmin(userId)
+            || isUserMemberOfOrganizationWithId(userId, this.organizationId);
+  },
   hasRestrictedAccessForUserId(userId) {
     const allowedOrganizationIDs = this.accessRestrictedTo || [];
     const userBelongsToAnAllowedOrganization = allowedOrganizationIDs.some(
