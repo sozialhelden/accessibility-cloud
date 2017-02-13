@@ -1,9 +1,9 @@
 import { isAdmin } from '/both/lib/is-admin';
 import { isApproved } from '/both/lib/is-approved';
-import { check, Match } from 'meteor/check';
+import { check } from 'meteor/check';
 import { OrganizationMembers } from '/both/api/organization-members/organization-members';
 import { Organizations } from '/both/api/organizations/organizations';
-
+import uniq from 'lodash/uniq';
 
 export function isUserMemberOfOrganizationWithId(userId, organizationId) {
   if (!userId || !organizationId) {
@@ -24,10 +24,10 @@ export function getAccessibleOrganizationIdsForUserId(userId) {
 
   const selector = isAdmin(userId) ? {} : { userId };
 
-  return OrganizationMembers
+  return uniq(OrganizationMembers
     .find(selector, { fields: { organizationId: 1 } })
     .fetch()
-    .map(member => member.organizationId);
+    .map(member => member.organizationId));
 }
 
 // Functions for retrieving which roles a user has in which organization.
@@ -45,10 +45,10 @@ export function getAccessibleOrganizationIdsForRoles(userId, includedRoles = [])
     return Organizations.find({}, { transform: null, fields: { _id: 1 } }).fetch().map(o => o._id);
   }
 
-  return OrganizationMembers.find({
+  return uniq(OrganizationMembers.find({
     userId,
     $or: includedRoles.map(role => ({ role })),
-  }).map(member => member.organizationId);
+  }).map(member => member.organizationId));
 }
 
 
