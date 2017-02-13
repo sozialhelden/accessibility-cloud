@@ -18,11 +18,13 @@ const getLibsContent = () => {
   `, '');
 };
 
-export default function getContext() {
+export default function getVMContext() {
   const globalObject = Object.freeze({});
   const helpersContent = getHelpersContent();
   const categoriesJSON = JSON.stringify(getCategories());
   const helpersSetupScript = `
+    'use strict';
+
     ${getLibsContent()};
     var categoryIdForSynonyms = ${categoriesJSON};
     var helpers = ${helpersContent};

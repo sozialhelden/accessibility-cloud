@@ -2,7 +2,7 @@ import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'lodash';
 import entries from '/both/lib/entries';
-import getContext from './get-context';
+import getVMContext from './get-vm-context';
 import vm from 'vm';
 
 const { Transform } = Npm.require('zstreams');
@@ -32,7 +32,7 @@ export class TransformData {
   constructor({ mappings }) {
     check(mappings, Object);
 
-    const context = this.context = getContext();
+    const context = this.context = getVMContext();
     const compiledMappings = this.compiledMappings = compileMappings(mappings, context);
 
     let hadError = false;
