@@ -1,10 +1,17 @@
 import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
 import * as d3 from 'd3';
-import subsManager from '/client/lib/subs-manager';
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import subsManager from '/client/lib/subs-manager';
 import './activity.html';
+
 import { GREEN, YELLOW, NEUTRAL_GRAY } from './colors';
+
+const TYPES_TO_COLORS = {
+  processed: NEUTRAL_GRAY,
+  inserted: GREEN,
+  updated: YELLOW,
+};
 
 const MARGIN = { top: 10, right: 25, bottom: 20, left: 60 };
 const WIDTH = 280 - MARGIN.left - MARGIN.right;
@@ -12,7 +19,10 @@ const HEIGHT = 80 - MARGIN.top - MARGIN.bottom;
 const BAR_WIDTH = 6;
 
 Template.sources_show_page_activity_chart.onCreated(() => {
+  const source = Template.instance().data;
   subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('sourceImports.private');
+  subsManager.subscribe('sourceImports.stats.public', source._id);
 });
 
 Template.sources_show_page_activity_chart.onRendered(function rendered() {
@@ -28,6 +38,11 @@ Template.sources_show_page_activity_chart.onRendered(function rendered() {
 
   this.autorun(() => {
     const imports = SourceImports.find({ sourceId: this.data._id }).fetch();
+
+    if (!subsManager.ready()) {
+      return;
+    }
+
     if (!imports.length) {
       return;
     }
@@ -36,6 +51,7 @@ Template.sources_show_page_activity_chart.onRendered(function rendered() {
       new Date(d3.min(imports, d => d.startTimestamp)),
       new Date(),
     ];
+
     const x = d3.scaleTime()
       .domain(timeExtent)
       .range([0, WIDTH]);
@@ -53,42 +69,39 @@ Template.sources_show_page_activity_chart.onRendered(function rendered() {
     chart.select('g.axis-x').call(d3.axisBottom(x).ticks(2));
     chart.select('g.axis-y').call(d3.axisLeft(y).ticks(3));
 
-    const bar = chart.selectAll('.bar')
+    const enteringBar = chart.selectAll('.bar')
       .data(imports)
       .enter()
     .append('g')
-      .attr('class', 'bar')
-      .attr('transform', d => `translate(${x(new Date(d.startTimestamp))},0)`);
+      .attr('class', 'bar');
 
-    bar.append('rect')
-      .attr('class', 'processed')
-      .attr('x', 0.5 * BAR_WIDTH)
-      .attr('y', d => y(d.processedPlaceInfoCount))
-      .attr('width', BAR_WIDTH)
-      .attr('height', d => HEIGHT - y(d.processedPlaceInfoCount))
-      .attr('fill', NEUTRAL_GRAY)
-    .append('title')
-      .text(d => `${d.processedPlaceInfoCount} input records processed ${moment(d.startTimestamp).fromNow()}`);
+    ['inserted', 'processed', 'updated'].forEach(type => {
+      enteringBar.append('rect')
+        .attr('class', type)
+        .attr('x', -0.5 * BAR_WIDTH)
+        .attr('width', BAR_WIDTH)
+        .attr('fill', TYPES_TO_COLORS[type])
+      .append('title');
+    });
 
-    bar.append('rect')
-      .attr('class', 'inserted')
-      .attr('x', 0.5 * BAR_WIDTH)
-      .attr('y', d => y(d.insertedPlaceInfoCount))
-      .attr('width', BAR_WIDTH)
-      .attr('height', d => HEIGHT - y(d.insertedPlaceInfoCount))
-      .attr('fill', GREEN)
-    .append('title')
-      .text(d => `${d.insertedPlaceInfoCount} places inserted ${moment(d.startTimestamp).fromNow()}`);
+    const bar = chart.selectAll('.bar')
+      .data(imports);
 
-    bar.append('rect')
-      .attr('class', 'updated')
-      .attr('x', 0.5 * BAR_WIDTH)
-      .attr('y', d => y(d.updatedPlaceInfoCount + d.insertedPlaceInfoCount))
-      .attr('width', BAR_WIDTH)
-      .attr('height', d => HEIGHT - y(d.updatedPlaceInfoCount))
-      .attr('fill', YELLOW)
-    .append('title')
-      .text(d => `${d.updatedPlaceInfoCount} places updated ${moment(d.startTimestamp).fromNow()}`);
+    bar.attr('transform', d => d.startTimestamp && `translate(${x(new Date(d.startTimestamp))},0)`);
 
+    ['inserted', 'processed', 'updated'].forEach(type => {
+      bar.selectAll(`.${type}`)
+        .attr('y', d => d[`${type}PlaceInfoCount`] && y(d[`${type}PlaceInfoCount`]))
+        .attr('height', d => d[`${type}PlaceInfoCount`] && (HEIGHT - y(d[`${type}PlaceInfoCount`])))
+      .selectAll('title')
+        .text(d =>
+          `${d[`${type}PlaceInfoCount`]} records processed ${moment(d.startTimestamp).fromNow()}`
+        );
+    });
+
+    bar.selectAll('.updated')
+      .attr('y',
+        d => d.updatedPlaceInfoCount && y(d.updatedPlaceInfoCount + (d.insertedPlaceInfoCount || 0))
+      );
   });
 });
