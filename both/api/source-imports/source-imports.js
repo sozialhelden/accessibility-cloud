@@ -14,6 +14,9 @@ SourceImports.helpers({
     return moment(this.startTimestamp).fromNow();
   },
   hasError() {
+    if (this.error) {
+      return true;
+    }
     if (!this.streamChain) return false;
     return _.any(this.streamChain, streamElement => streamElement.error);
   },
