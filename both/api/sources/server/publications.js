@@ -5,5 +5,6 @@ import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/p
 publishPublicFields('sources', Sources);
 publishPublicFields('sources.requestable', Sources, () => ({}), {}, {
   isRequestable: true,
+  isDraft: false,
 });
 publishPrivateFieldsForMembers('sources', Sources);
