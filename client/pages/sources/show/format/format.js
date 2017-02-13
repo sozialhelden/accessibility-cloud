@@ -18,6 +18,7 @@ Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('sourceImports.private');
 
   window.SourceImports = SourceImports;
   window.Sources = Sources;

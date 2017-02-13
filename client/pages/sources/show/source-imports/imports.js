@@ -12,6 +12,7 @@ Template.sources_show_imports_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sourceImports.public');
+  subsManager.subscribe('sourceImports.private');
 
   const importId = FlowRouter.getParam('importId');
   if (importId) {
