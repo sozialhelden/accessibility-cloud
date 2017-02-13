@@ -54,6 +54,9 @@ SourceImports.helpers({
     }
   },
   upsertStream() {
+    if (!this.streamChain) {
+      return;
+    }
     return this.streamChain.find(stream => stream && stream.type === 'UpsertPlace');
   },
 });
