@@ -92,3 +92,6 @@ shell-server
 jparker:crypto-md5
 tomwasd:flow-router-seo
 themeteorchef:bert
+practicalmeteor:mocha
+practicalmeteor:chai
+dispatch:mocha-phantomjs

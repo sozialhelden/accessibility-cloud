@@ -26,5 +26,8 @@
       "projectSlug": "accessibility-cloud",
       "username": "",
       "password": ""
+    },
+    "scripts": {
+      "timeoutMs": 10000
     }
 }

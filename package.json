@@ -2,12 +2,12 @@
   "scripts": {
     "start": "meteor --settings deploy/local.json",
     "pretest": "npm run lint --silent",
-    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs",
-    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs",
-    "test-watch": "meteor test --driver-package practicalmeteor:mocha",
-    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha",
-    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs",
-    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs",
+    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
+    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
+    "test-watch": "meteor test --driver-package practicalmeteor:mocha --settings settings/local.json",
+    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json",
+    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
+    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "gettext-parser": "^1.2.1",
     "iconv-lite": "^0.4.13",
     "lodash": "^4.17.4",
+    "meteor-node-stubs": "^0.2.5",
     "mime-types": "^2.1.12",
     "progress-stream": "^1.2.0",
     "request": "^2.75.0",
@@ -48,7 +49,8 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-meteor": "^3.6.0",
     "eslint-plugin-react": "^5.2.2",
-    "shell-source": "^1.1.0"
+    "shell-source": "^1.1.0",
+    "sinon": "^1.17.7"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
