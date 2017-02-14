@@ -98,6 +98,8 @@ export const acFormat = {
               slopeAngle: '6%',                       //
               hasVisualSign: true,                    // needs review
               hasBrailleSign: true,
+              needsRadarKey: true,
+              needsEuroKey: true,
 
               intercom: {
                 isAvailable: true,
@@ -129,6 +131,11 @@ export const acFormat = {
           ],
           restrooms: [
             {
+              signage: {
+                unisex: true,
+                male: true,
+                female: true,
+              },
               ratingForWheelchair: 0.3,
               turningSpaceInside: '>150cm',
               hasBathTub: true,
@@ -139,7 +146,6 @@ export const acFormat = {
               hasSpaceAlongsideToilet: true,
               washBasinAccessibleWithWheelchair: true,
               shampooAccessibleWithWheelchair: true,
-
               entrance: {
                 isAutomatic: false,
                 doorWidth: '85cm',
@@ -149,6 +155,8 @@ export const acFormat = {
                 isStepFree: true,
                 turningSpaceInFront: '>150cm',
                 doorOpensToOutside: true,
+                needsRadarKey: true,
+                needsEuroKey: true,
               },
               toilet: {
                 heightOfBase: '40 .. 45cm',
