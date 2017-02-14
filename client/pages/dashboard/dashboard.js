@@ -9,9 +9,9 @@ import { getAccessibleOrganizationIdsForUserId } from '/both/api/organizations/p
 import { _ } from 'meteor/underscore';
 import { SEO } from '/client/seo.js';
 
-Template.page_dashboard.onCreated(() => {
-  subsManager.subscribe('organizations.public');
-  subsManager.subscribe('organizations.private');
+Template.page_dashboard.onCreated(function created() {
+  this.subscribe('organizations.public');
+  this.subscribe('organizations.private');
   subsManager.subscribe('organizationMembers.public');
   subsManager.subscribe('organizationMembers.private');
   subsManager.subscribe('apps.public');
