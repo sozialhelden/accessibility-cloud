@@ -95,3 +95,4 @@ themeteorchef:bert
 practicalmeteor:mocha
 practicalmeteor:chai
 dispatch:mocha-phantomjs
+percolate:migrations

@@ -100,6 +100,7 @@ peerlibrary:fiber-utils@0.6.0
 peerlibrary:reactive-mongo@0.1.1
 peerlibrary:reactive-publish@0.3.0
 peerlibrary:server-autorun@0.5.2
+percolate:migrations@0.9.8
 percolate:momentum@0.7.2
 percolate:velocityjs@1.2.1_1
 practicalmeteor:chai@2.1.0_1
