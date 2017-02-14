@@ -94,3 +94,4 @@ tomwasd:flow-router-seo
 themeteorchef:bert
 practicalmeteor:mocha
 practicalmeteor:chai
+dispatch:mocha-phantomjs
