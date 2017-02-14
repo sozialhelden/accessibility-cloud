@@ -52,7 +52,6 @@ Meteor.methods({
     check(sourceId, String);
     checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
-    PlaceInfos.remove({ sourceId }); // removes legacy DB entries
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
     Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
   },

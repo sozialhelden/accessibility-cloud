@@ -35,7 +35,13 @@ function resetMarkers(instance, map) {
 }
 
 function fitBounds(instance, map) {
-  map.fitBounds(instance.markerClusterGroup.getBounds().pad(PADDING));
+  if (!instance.markerClusterGroup) {
+    return;
+  }
+  const bounds = instance.markerClusterGroup.getBounds();
+  if (bounds.isValid()) {
+    map.fitBounds(bounds.pad(PADDING));
+  }
 }
 
 async function loadPlaces({
@@ -136,7 +142,7 @@ export default function renderMap(map, instance) {
   if (!Meteor.userId()) { return; }
 
   const newSourceId = FlowRouter.getParam('_id');
-  if (newSourceId !== currentSourceId) {
+  if (newSourceId !== currentSourceId || !instance.markerClusterGroup) {
     resetMarkers(instance, map);
     currentSourceId = newSourceId;
   }
@@ -158,8 +164,7 @@ export default function renderMap(map, instance) {
     showPlacesOnMap(instance, map, featureCollection);
     placesPromise = Promise.resolve();
   } else {
-    const isDisplayingFewerMarkersThanBefore = currentLimit && limit <= currentLimit;
-
+    const isDisplayingFewerMarkersThanBefore = currentLimit && limit < currentLimit;
     if (isDisplayingFewerMarkersThanBefore) {
       fitBounds(instance, map);
       return;
