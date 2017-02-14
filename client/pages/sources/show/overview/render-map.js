@@ -35,7 +35,13 @@ function resetMarkers(instance, map) {
 }
 
 function fitBounds(instance, map) {
-  map.fitBounds(instance.markerClusterGroup.getBounds().pad(PADDING));
+  if (!instance.markerClusterGroup) {
+    return;
+  }
+  const bounds = instance.markerClusterGroup.getBounds();
+  if (bounds.isValid()) {
+    map.fitBounds(bounds.pad(PADDING));
+  }
 }
 
 async function loadPlaces({
