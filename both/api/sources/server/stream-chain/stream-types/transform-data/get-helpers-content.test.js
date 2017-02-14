@@ -43,9 +43,9 @@ describe('getHelpersContent', () => {
     const EXPECTED_METHOD_PATHS = [
       'AXSMaps.estimateFlagFor',
       'AXSMaps.estimateRatingFor',
-      'AXSMaps.fetchNameFromTags',
       'AXSMaps.getCategoryFromList',
       'AXSMaps.guessGeoPoint',
+      'OSM.fetchNameFromTags',
       'OSM.fetchCategoryFromTags',
       'extractNumber',
     ];

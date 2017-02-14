@@ -8,12 +8,12 @@ const AVAILABLE_HELPERS = {
   AXSMaps: {
     estimateFlagFor: 'estimate-flag-for.js',
     estimateRatingFor: 'estimate-rating-for.js',
-    fetchNameFromTags: 'fetch-name-from-tags.js',
     getCategoryFromList: 'get-category-from-list.js',
     guessGeoPoint: 'guess-geo-point.js',
   },
 
   OSM: {
+    fetchNameFromTags: 'fetch-name-from-tags.js',
     fetchCategoryFromTags: 'fetch-category-from-tags.js',
   },
 
