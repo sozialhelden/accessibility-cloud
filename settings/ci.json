@@ -1,0 +1,5 @@
+{
+    "scripts": {
+      "timeoutMs": 10000
+    }
+}
