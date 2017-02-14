@@ -5,15 +5,19 @@ import { $ } from 'meteor/jquery';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { getCurrentPlaceInfo } from './get-current-place-info';
-import { Sources } from '/both/api/sources/sources.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
-import { Organizations } from '/both/api/organizations/organizations.js';
-import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
 import subsManager from '/client/lib/subs-manager';
+
+import { roles } from '/both/api/organization-members/roles';
+import { Sources } from '/both/api/sources/sources.js';
+import { Organizations } from '/both/api/organizations/organizations.js';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
+import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
+import { getAccessibleOrganizationIdsForRoles } from '/both/api/organizations/privileges';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
+
+import { getCurrentPlaceInfo } from './get-current-place-info';
 import initializeMap from './initialize-map';
-import renderMap, { resetMarkers } from './render-map';
+import renderMap from './render-map';
 
 function centerOnCurrentPlace(map) {
   const place = getCurrentPlaceInfo();
@@ -71,6 +75,13 @@ Template.sources_show_page_map.helpers({
     }
 
     return !source.isFreelyAccessible && source.isRequestable;
+  },
+  currentUserHasOrganization() {
+    const organizationIds = getAccessibleOrganizationIdsForRoles(
+      Meteor.userId(),
+      roles.map(role => role.value)
+    );
+    return organizationIds && organizationIds.length > 0;
   },
   hasAlreadyRequestedAccessToSource() {
     const source = Sources.findOne({ _id: FlowRouter.getParam('_id') });

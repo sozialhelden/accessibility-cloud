@@ -30,47 +30,56 @@
     {{else}}
       {{#if canRequestAccessToSource}}
         <div class='centered-message'>
-          {{#if isShowingRequestForm}}
-            <div class="access-request-form">
-              <span class="close-window icon js-close-access-request-form"></span>
-              <p>
-                On behalf of which organization are you requesting access?
-              </p>
+          {{#if currentUserHasOrganization}}
+            {{#if isShowingRequestForm}}
+              <div class="access-request-form">
+                <span class="close-window icon js-close-access-request-form"></span>
+                <p>
+                  On behalf of which organization are you requesting access?
+                </p>
 
-              <select class="js-requester-organization-menu">
-                {{#each requesterOrganizations}}
-                  <option value="{{_id}}">{{name}}</option>
-                {{/each}}
-              </select>
+                <select class="js-requester-organization-menu">
+                  {{#each requesterOrganizations}}
+                    <option value="{{_id}}">{{name}}</option>
+                  {{/each}}
+                </select>
 
-              <p>
-                Why would you like to have access to this source?
-              </p>
+                <p>
+                  Why would you like to have access to this source?
+                </p>
 
-              <textarea class="js-access-request-message"></textarea>
+                <textarea class="js-access-request-message"></textarea>
 
-              <p>
-                By clicking "Confirm", the admin of the source will be notified that
-                {{email}}
-                is requesting access.
-              </p>
+                <p>
+                  By clicking "Confirm", the admin of the source will be notified that
+                  {{email}}
+                  is requesting access.
+                </p>
 
-              <br>
+                <br>
 
-              <a class="call-to-action button js-confirm-access-request">
-                Confirm and Send Email
-              </a>
-            </div>
-          {{else}}
-            {{#if hasAlreadyRequestedAccessToSource}}
-              You have a request for access to this source which is pending review.
+                <a class="call-to-action button js-confirm-access-request">
+                  Confirm and Send Email
+                </a>
+              </div>
             {{else}}
-              You do not have permission to access this source.
-              <br>
-              <a class="call-to-action button js-request-access-to-source">
-                Request Access
-              </a>
+              {{#if hasAlreadyRequestedAccessToSource}}
+                You have a request for access to this source which is pending review.
+              {{else}}
+                You do not have permission to access this source.
+                <br>
+                <a class="call-to-action button js-request-access-to-source">
+                  Request Access
+                </a>
+              {{/if}}
             {{/if}}
+          {{else}}
+            <p>
+              You can request access to this source, but need to be part of an organization first.
+            </p>
+            <a href='/organizations/create' class="call-to-action button">
+              Create organization
+            </a>
           {{/if}}
         </div>
       {{/if}}
