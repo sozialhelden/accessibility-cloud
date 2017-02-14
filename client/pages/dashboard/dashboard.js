@@ -50,7 +50,10 @@ const helpers = {
     }
     // console.log(organizations);
     const ids = _.pluck(organizations.fetch(), '_id');
-    return Sources.find({ organizationId: { $nin: ids }, isDraft: false });
+    return Sources.find(
+      { organizationId: { $nin: ids }, isDraft: false, placeInfoCount: { $gt: 0 } },
+      { sort: { placeInfoCount: -1 } }
+    );
   },
   firstOrganizationId() {
     const firstMembership = OrganizationMembers.findOne({ userId: Meteor.userId() });
