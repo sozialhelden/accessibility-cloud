@@ -29,6 +29,7 @@
     "gettext-parser": "^1.2.1",
     "iconv-lite": "^0.4.13",
     "lodash": "^4.17.4",
+    "meteor-node-stubs": "^0.2.5",
     "mime-types": "^2.1.12",
     "progress-stream": "^1.2.0",
     "request": "^2.75.0",
