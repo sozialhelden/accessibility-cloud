@@ -28,23 +28,6 @@ Template.sources_show_header.helpers({
   },
 });
 
-Template.sources_show_imports_page.events({
-  'click .btn.js-start-import'(event) {
-    event.preventDefault();
-
-    Meteor.call('sources.startImport', FlowRouter.getParam('_id'), (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        FlowRouter.go('sources.show.imports', {
-          _id: FlowRouter.getParam('_id'),
-          importId: result,
-        });
-      }
-    });
-  },
-});
-
 function getCurrentSource() {
   return Sources.findOne(FlowRouter.getParam('_id'));
 }
