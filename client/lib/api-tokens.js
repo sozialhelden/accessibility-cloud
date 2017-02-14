@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import { check, Match } from 'meteor/check';
+import { check } from 'meteor/check';
+import { Accounts } from 'meteor/accounts-base';
 import { SHA256 } from 'meteor/sha';
 import {
   ExpirationCheckInterval,
@@ -8,6 +9,9 @@ import {
 
 let storedUserToken = null;
 
+Accounts.onLogout(() => {
+  storedUserToken = null;
+});
 
 function expireApiTokenIfNecessary() {
   const now = new Date();
