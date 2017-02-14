@@ -142,7 +142,7 @@ export default function renderMap(map, instance) {
   if (!Meteor.userId()) { return; }
 
   const newSourceId = FlowRouter.getParam('_id');
-  if (newSourceId !== currentSourceId) {
+  if (newSourceId !== currentSourceId || !instance.markerClusterGroup) {
     resetMarkers(instance, map);
     currentSourceId = newSourceId;
   }
@@ -164,8 +164,7 @@ export default function renderMap(map, instance) {
     showPlacesOnMap(instance, map, featureCollection);
     placesPromise = Promise.resolve();
   } else {
-    const isDisplayingFewerMarkersThanBefore = currentLimit && limit <= currentLimit;
-
+    const isDisplayingFewerMarkersThanBefore = currentLimit && limit < currentLimit;
     if (isDisplayingFewerMarkersThanBefore) {
       fitBounds(instance, map);
       return;

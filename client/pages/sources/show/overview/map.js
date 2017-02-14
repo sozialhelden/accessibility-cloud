@@ -13,7 +13,7 @@ import { SourceAccessRequests } from '/both/api/source-access-requests/source-ac
 import subsManager from '/client/lib/subs-manager';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 import initializeMap from './initialize-map';
-import renderMap from './render-map';
+import renderMap, { resetMarkers } from './render-map';
 
 function centerOnCurrentPlace(map) {
   const place = getCurrentPlaceInfo();
