@@ -24,7 +24,10 @@ function compileMappingFunction(javascript, context, onDebugInfo) {
 }
 
 export class TransformScript {
-  constructor({ javascript, onDebugInfo }) {
+  constructor({
+    javascript,
+    onDebugInfo = () => {},
+  }) {
     check(javascript, String);
 
     const globalObject = Object.freeze({});
