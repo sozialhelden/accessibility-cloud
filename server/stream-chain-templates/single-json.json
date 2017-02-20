@@ -1,0 +1,47 @@
+[
+    {
+        "type": "HTTPDownload",
+        "comment": "Download the data from the given URL. Uploading a local file will adjust this step automatically.",
+        "parameters": {
+            "sourceUrl": "https://example.com/your-url.json",
+            "headers": {
+              "X-Requested-By": "accessibility-cloud"
+            }
+        }
+    },
+    {
+        "type": "ParseJSONStream",
+        "comment": "Parse JSON and output each child object that matches the given path.",
+        "parameters": {
+            "path": "features.*",
+            "lengthPath": "totalFeatures"
+        }
+    },
+    {
+        "type": "DebugLog",
+        "comment": "Log the first and last object before transforming."
+    },
+    {
+        "type": "TransformData",
+        "comment": "Transform each record into the unified accessibility-cloud format. Each attribute in `mappings` is transformed using a JavaScript string.\n\nNote that the output of this unit must at least have the following attributes: `geometry`, `properties-originalId`, `properties-name`, `properties-category`, and `properties-accessibility-accessibleWith-wheelchair`.\n\n`geometry` must be a valid [GeoJSON geometry object](http://geojson.org/geojson-spec.html#geometry-objects).\n\n`properties-originalId` must be an ID that is unique over the whole dataset of this source. If you do not have a unique ID in the dataset, it's best to use a combination of other attributes of the place that change rarely, for example name + address.\n\nIf provided, the `properties-infoPageUrl` property is used as backlink to your website.",
+        "parameters": {
+            "mappings": {
+                "geometry": "{ type: 'Point', coordinates: [Number(d.longitude), Number(d.latitude)] }",
+                "properties-originalId": "d.id",
+                "properties-infoPageUrl": "'https://example.com/places/' + d.id",
+                "properties-name": "d.name",
+                "properties-category": "helpers.AXSMaps.getCategoryFromList([d.placeType])",
+                "properties-address": "[d.address, d.city, d.state].join(', ')",
+                "properties-accessibility-accessibleWith-wheelchair": "d.isAccessibleWithWheelChair"
+            }
+        }
+    },
+    {
+        "type": "DebugLog",
+        "comment": "Log the first and last object after transforming."
+    },
+    {
+        "type": "UpsertPlace",
+        "comment": "Insert or update each transformed place. For recognizing/overwriting previously imported places, the `properties-originalId` is used."
+    }
+]

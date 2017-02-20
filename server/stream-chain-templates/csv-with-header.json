@@ -1,0 +1,47 @@
+[
+    {
+        "type": "HTTPDownload",
+        "comment": "Download the data from the given URL. Uploading a local file will adjust this step automatically.",
+        "parameters": {
+            "sourceUrl": "https://accessibility-cloud-uploads.s3.eu-central-1.amazonaws.com/uploads%2FhTHK7Rs9EHwgq9sPY%2F_oYELikyzVVmvtwydOZB5mw2rlTymG_5bzoXclENpK2.csv"
+        }
+    },
+    {
+        "type": "ConvertToUTF8",
+        "comment": "Ensures the data is processed as UTF8, even if it's originally using a different character set."
+    },
+    {
+        "type": "ParseCSVStream",
+        "comment": "Outputs each line of the CSV as JavaScript object for further processing. The header names are used as JavaScript property names in the output.",
+        "parameters": {
+            "headers": true,
+            "objectMode": true
+        }
+    },
+    {
+        "type": "DebugLog",
+        "comment": "Log the first and last object before transforming."
+    },
+    {
+        "type": "TransformData",
+        "comment": "Transform each record into the unified accessibility-cloud format. Each attribute in `mappings` is transformed using a JavaScript string.\n\nNote that the output of this unit must at least have the following attributes: `geometry`, `properties-originalId`, `properties-name`, `properties-category`, and `properties-accessibility-accessibleWith-wheelchair`.\n\n`geometry` must be a valid [GeoJSON geometry object](http://geojson.org/geojson-spec.html#geometry-objects).\n\n`properties-originalId` must be an ID that is unique over the whole dataset of this source. If you do not have a unique ID in the dataset, it's best to use a combination of other attributes of the place that change rarely, for example name + address.\n\nIf provided, the `properties-infoPageUrl` property is used as backlink to your website.",
+        "parameters": {
+            "mappings": {
+                "properties-originalId": "d.ID",
+                "properties-category": "'parking'",
+                "properties-name": "'Parking Spot ' + d['Address']",
+                "geometry": "{ type: 'Point', coordinates : [ Number(d.Longitude), Number(d.Latitude) ] }",
+                "properties-address": "d['Address']",
+                "properties-accessibility-accessibleWith-wheelchair": "d['Is accessible with wheelchair']"
+            }
+        }
+    },
+    {
+        "type": "DebugLog",
+        "comment": "Log the first and last JSON after transforming."
+    },
+    {
+        "type": "UpsertPlace",
+        "comment": "Insert or update each transformed place. For recognizing/overwriting previously imported places, the `properties-originalId` is used."
+    }
+]

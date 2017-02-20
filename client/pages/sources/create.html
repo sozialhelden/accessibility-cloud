@@ -12,7 +12,7 @@
 <template name="sources_create_page">
 
   <div class="form block">
-    <h2>{{_ "Please define the kind of source:" }}</h2>
+    <h2>Please enter your data source's details.</h2>
 
     {{#autoForm collection='Sources' id="insertSourceForm" type="insert"}}
       {{> afQuickField name='name'}}
@@ -27,10 +27,11 @@
       {{/autoForm}}
   </div>
   <div class="hints">
-    <h3 class="hint">{{_ "We’ll help settings things up" }}</h3>
+    <h3 class="hint">Hints</h3>
     <ol class="checks">
-      <li>{{_ "Upload some sample data so our friendly assistants can help you to convert and validate the format." }}</li>
-      <li>{{_ "Hint: you can add a custom-license under"}} <a href='{{pathFor "organizations.show.licenses" _id=organization._id}}'>{{_"licenses"}}</a></li>
+      <li>Your license is not listed here? It's easy to <a href='{{pathFor "organizations.show.licenses" _id=organization._id}}'>create your own licenses</a>.</li>
+      <li>After saving basic data for your source, you can define how the data is imported.</li>
+      <li>Feel free to <a href='mailto:support@accessibility.cloud'>contact us</a> if you need help getting started!</li>
     </ol>
   </div>
 </template>
