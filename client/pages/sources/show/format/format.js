@@ -3,7 +3,6 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { acFormat } from '/both/lib/ac-format.js';
 import { $ } from 'meteor/jquery';
 
@@ -119,6 +118,10 @@ function addError(errorHTML) {
 
 Template.sources_show_format_page.helpers(helpers);
 Template.sources_show_format_page.events({
+  'click .btn.js-set-format'(event) {
+    event.preventDefault();
+    Meteor.call('selectStreamChainTemplateForSourceId', this._id, Template.instance().find('input:checked').value);
+  },
   'click .btn.js-start-import'(event) {
     event.preventDefault();
 
