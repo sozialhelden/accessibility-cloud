@@ -14,17 +14,24 @@ const sourceIdsToStreamChains = {};
 
 export function abortImport(sourceId) {
   if (sourceIdsToStreamChains[sourceId]) {
-    sourceIdsToStreamChains[sourceId][0].stream.abortChain();
+    const firstStreamObserver = sourceIdsToStreamChains[sourceId][0];
+    if (firstStreamObserver && firstStreamObserver.stream) {
+      if (typeof firstStreamObserver.stream === 'function') {
+        firstStreamObserver.stream.abortChain();
+      }
+    }
     sourceIdsToStreamChains[sourceId].forEach(streamObserver => {
-      const stream = streamObserver.stream;
       if (typeof streamObserver.abort === 'function') {
         streamObserver.abort();
       }
-      if (typeof stream.abort === 'function') {
-        stream.abort();
+      const stream = streamObserver.stream;
+      if (!stream) {
+        if (typeof stream.abort === 'function') {
+          stream.abort();
+        }
+        stream.abortStream();
+        stream.emit('abort');
       }
-      stream.abortStream();
-      stream.emit('abort');
     });
     delete sourceIdsToStreamChains[sourceId];
   }
