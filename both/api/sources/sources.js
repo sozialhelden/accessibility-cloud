@@ -179,13 +179,6 @@ Sources.helpers({
     const downloadItem = _.find(this.streamChain, chainItem => chainItem.type === 'HTTPDownload');
     return (downloadItem && downloadItem.parameters && downloadItem.parameters.inputMimeType);
   },
-  inputMimeTypeName() {
-    switch (this.inputMimeType()) {
-      case 'application/json': return 'JSON';
-      case 'text/csv': return 'CSV';
-      default: return '(Unknown format)';
-    }
-  },
   hasDownloadStep() {
     // This should be using SimpleSchema validators on all mappings steps to validate the mappings.
     if (!this.streamChain) {

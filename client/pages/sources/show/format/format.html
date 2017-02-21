@@ -31,7 +31,12 @@
 
               <p>
                 If you don't have an API, you can also upload a JSON or CSV file:
-                {{> fileUpload additionalCSSClasses='btn btn-primary' accept=source.inputMimeType title='Upload {{source.inputMimeTypeName}}' metadata=fileMetadata callbacks=fileCallbacks}}
+                {{> fileUpload
+                      additionalCSSClasses='btn btn-primary'
+                      accept=source.inputMimeType
+                      metadata=fileMetadata
+                      callbacks=fileCallbacks
+                }}
               </p>
 
               {{#if source.isDraft}}
