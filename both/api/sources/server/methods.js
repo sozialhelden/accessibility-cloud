@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check, Match } from 'meteor/check';
+import { check } from 'meteor/check';
 
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
@@ -8,8 +8,6 @@ import {
   checkExistenceAndFullAccessToSourceId,
   checkExistenceAndVisibilityForSourceId,
 } from '/both/api/sources/server/privileges';
-
-import * as streamChainTemplates from '/server/stream-chain-templates';
 
 Meteor.methods({
   getPlacesForSource(sourceId, limitCount = 1000) {
@@ -56,15 +54,5 @@ Meteor.methods({
 
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
     Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
-  },
-
-  selectStreamChainTemplateForSourceId(sourceId, templateName) {
-    check(sourceId, String);
-    check(templateName, String);
-    checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
-    const templateNames = Object.keys(streamChainTemplates);
-    check(templateName, Match.OneOf.apply(undefined, templateNames));
-    const streamChain = streamChainTemplates[templateName];
-    Sources.update(sourceId, { $set: { streamChain } });
   },
 });

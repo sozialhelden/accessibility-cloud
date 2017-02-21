@@ -1,8 +1,6 @@
 import { Template } from 'meteor/templating';
-import { Tracker } from 'meteor/tracker';
 import './recursive-attributes.html';
 import { _ } from 'lodash';
-import * as d3 from 'd3';
 
 
 Template.sources_show_page_recursive_attributes.helpers({
@@ -21,13 +19,6 @@ Template.sources_show_page_recursive_attributes.helpers({
   },
   isBoolean() {
     return _.has(this.properties, 'false') || _.has(this.properties, 'true');
-  },
-  keyValues(object) {
-    if (!_.isPlainObject(object)) { return []; }
-    if (!object) { return []; }
-    return Object.keys(object).map(key =>
-      ({ key, value: object[key] })
-    );
   },
   joinPath(attributeName, key) {
     return attributeName ? `${attributeName}.${key}` : key;
