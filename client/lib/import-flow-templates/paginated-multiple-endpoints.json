@@ -1,0 +1,105 @@
+{
+  "name": "Paginated JSON API + single PoI endpoint",
+  "descriptionMarkdown": "Use this if the import needs to fetch a paginated list of place IDs from one endpoint, and makes one request per place over a different endpoint. Each place can have an arbitrary JSON format.",
+  "streamChain": [
+    {
+      "type": "HTTPDownload",
+      "comment": "Download paginated responses. This step fetches one page of places, which yields the total page count in the 'pages' field of the JSON result.",
+      "parameters": {
+        "sourceUrl": "https://example.com/v4/places?per_page=10&from_datetime={{lastImportDate}}",
+        "headers": {
+          "X-Api-Key": "YOUR API KEY HERE"
+        },
+        "allowedStatusCodes": [
+          200,
+          204
+        ]
+      }
+    },
+    {
+      "type": "ParseJSONStream",
+      "comment": "Output the 'pages' field of the JSON result.",
+      "parameters": {
+        "path": "pages"
+      }
+    },
+    {
+      "type": "TransformScript",
+      "comment": "Convert page count to an array of page indexes (e.g. `[1, 2, 3]`).",
+      "parameters": {
+        "javascript": "Array.from({length: d}, (v, k) => k + 1)"
+      }
+    },
+    {
+      "type": "DebugLog"
+    },
+    {
+      "type": "ConvertArrayToStream",
+      "comment": "Convert page index array to streamed single index values."
+    },
+    {
+      "type": "Limit",
+      "comment": "Limit the output to the first 3 indexes. This is helpful to make less requests while debugging. Set the `skip` parameter of this to `true` or remove this step as soon as everything works.",
+      "skip": false,
+      "parameters": {
+        "limit": 3
+      }
+    },
+    {
+      "type": "DebugLog"
+    },
+    {
+      "type": "MultiHTTPDownload",
+      "comment": "Download all pages of the place ID list.",
+      "parameters": {
+        "sourceUrl": "https://example.com/v4/places?page={{inputData}}&per_page=50",
+        "headers": {
+          "X-Api-Key": "YOUR API KEY HERE"
+        }
+      }
+    },
+    {
+      "type": "ParseJSONStream",
+      "comment": "Find ids in the results that we can use to fetch the single each single place.",
+      "parameters": {
+        "path": "items.*.id"
+      }
+    },
+    {
+      "type": "DebugLog"
+    },
+    {
+      "type": "MultiHTTPDownload",
+      "comment": "Download one single place per request",
+      "parameters": {
+        "sourceUrl": "https://example.com/v4/places/{{inputData}}",
+        "headers": {
+          "X-Api-Key": "YOUR API KEY HERE"
+        }
+      }
+    },
+    {
+      "type": "TransformData",
+      "comment": "Transform each record into the unified accessibility-cloud format. Each attribute in `mappings` is transformed using a JavaScript string.\n\nNote that the output of this unit must at least have the following attributes: `geometry`, `properties-originalId`, `properties-name`, `properties-category`, and `properties-accessibility-accessibleWith-wheelchair`.\n\n`geometry` must be a valid [GeoJSON geometry object](http://geojson.org/geojson-spec.html#geometry-objects).\n\n`properties-originalId` must be an ID that is unique over the whole dataset of this source. If you do not have a unique ID in the dataset, it's best to use a combination of other attributes of the place that change rarely, for example name + address.\n\nIf provided, the `properties-infoPageUrl` property is used as backlink to your website.",
+      "parameters": {
+        "mappings": {
+          "geometry": "d.geometry",
+          "properties-originalId": "d.properties.id",
+          "properties-infoPageUrl": "'https://example.com/places/' + d.properties.id",
+          "properties-name": "d.properties.name",
+          "properties-category": "helpers.AXSMaps.getCategoryFromList([d.properties.type])",
+          "properties-address": "[d.properties.address, d.properties.city, d.properties.state].join(', ')",
+          "properties-accessibility-accessibleWith-wheelchair": "d.properties.isAccessibleWithWheelChair"
+        }
+      }
+    },
+    {
+      "type": "DebugLog",
+      "comment": "Log the first and last object after transforming."
+    },
+    {
+      "type": "UpsertPlace",
+      "comment": "Insert or update each transformed place. For recognizing/overwriting previously imported places, the `properties-originalId` is used."
+    }
+  ]
+}

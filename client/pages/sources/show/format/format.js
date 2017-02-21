@@ -9,6 +9,7 @@ import { $ } from 'meteor/jquery';
 import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
+import * as importFlowTemplates from '/client/lib/import-flow-templates';
 
 const TAB_KEY_CODE = 9;
 
@@ -29,6 +30,7 @@ function getSource() {
 
 const helpers = {
   source: getSource,
+  importFlowTemplates,
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
@@ -120,7 +122,12 @@ Template.sources_show_format_page.helpers(helpers);
 Template.sources_show_format_page.events({
   'click .btn.js-set-format'(event) {
     event.preventDefault();
-    Meteor.call('selectStreamChainTemplateForSourceId', this._id, Template.instance().find('input:checked').value);
+    const templateName = Template.instance().find('input:checked').value;
+    const streamChain = importFlowTemplates[templateName].streamChain;
+    if (!streamChain) {
+      throw new Error(`${templateName} template has no valid stream chain`);
+    }
+    Sources.update(this._id, { $set: { streamChain } });
   },
   'click .btn.js-start-import'(event) {
     event.preventDefault();
@@ -169,6 +176,9 @@ Template.sources_show_format_page.events({
 
     const newStreamChain = parseStreamChainDefinition(instance);
     if (!newStreamChain) {
+      if ($(event.target).val() === '') {
+        Sources.update(this._id, { $unset: { streamChain: 1 } });
+      }
       return;
     }
 

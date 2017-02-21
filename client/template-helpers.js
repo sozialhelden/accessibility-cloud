@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/underscore';
+import isPlainObject from 'lodash/isPlainObject';
 import { s } from 'meteor/underscorestring:underscore.string';
 import { isApproved } from '/both/lib/is-approved';
 import { isAdmin } from '/both/lib/is-admin';
@@ -86,5 +87,12 @@ Template.registerHelpers({
       return number.toLocaleString('en-US');
     }
     return number.toString();
-  }
+  },
+  keyValues(object) {
+    if (!isPlainObject(object)) { return []; }
+    if (!object) { return []; }
+    return Object.keys(object).map(key =>
+      ({ key, value: object[key] })
+    );
+  },
 });

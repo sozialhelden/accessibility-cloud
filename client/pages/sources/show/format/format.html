@@ -62,52 +62,36 @@
       </aside>
     </section>
     {{else}}
-    <section class='page-content centered load-default-json'>
-      <div class='block'>
-        <h1>Select your data format</h1>
-        <p>
-          <form>
-          <table class='formats'>
-            <tbody>
-              <tr>
-                <td><label><input name='format' type='radio' value='csvWithoutHeader'>&nbsp;CSV without header</label></td>
-                <td>Comma-separated values. The first line contains the first data record.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' checked value='csvWithHeader'>&nbsp;CSV with header</label></td>
-                <td>Comma-separated values. The first line contains a header with a name for each column.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' value='featureCollection'>&nbsp;GeoJSON FeatureCollection</label></td>
-                <td>A collection of map features, as specified in the <a href='http://geojson.org/geojson-spec.html#feature-collection-objects'>GeoJSON standard</a>.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' value='singleJSON'>&nbsp;Single JSON object</label></td>
-                <td>For files/API endpoints that consist of one enclosing JSON object, which contains places in an array somewhere in the JSON structure.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' value='multipleJSONs'>&nbsp;Multiple newline-separated JSON objects</label></td>
-                <td>Use this format for files/API endpoints that return a list of JSON objects separated by newlines (<code>\n</code>, <code>\r</code>, or <code>\r\n</code>), and where each JSON object represents one place.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' value='paginatedSingleEndpoint'>&nbsp;Paginated JSON API</label></td>
-                <td>Import data from an API endpoint that returns an array of places (paginated). The API must have a parameter to supply a page index. The first page JSON result needs to contain the number of pages to fetch. Each place can have an arbitrary JSON format.</td>
-              </tr>
-              <tr>
-                <td><label><input name='format' type='radio' value='paginatedMultipleEndpoints'>&nbsp;Paginated JSON API + single PoI endpoint</label></td>
-                <td>Use this if the import needs to fetch a paginated list of place IDs from one endpoint, and makes one request per place over a different endpoint. Each place can have an arbitrary JSON format.</td>
-              </tr>
-            </tbody>
-          </table>
-          <button class='btn btn-primary js-set-format'>Set format</button>
-          </form>
-        </p>
+      <section class='page-content centered load-default-json'>
+        <div class='block'>
+          <h1>Select your data format</h1>
+          <p>
+            <form>
+            <table class='formats'>
+              <tbody>
+                {{#each keyValues importFlowTemplates}}
+                  <tr>
+                    <td>
+                      <label>
+                        <input name='format' type='radio' value='{{key}}'>&nbsp;{{value.name}}
+                      </label>
+                    </td>
+                    <td>
+                      {{#markdown}}{{value.descriptionMarkdown}}{{/markdown}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            <button class='btn btn-primary js-set-format'>Set format</button>
+            </form>
+          </p>
 
-        <p>
-          Your format is not listed here or more complex? Feel free to <a href='support@accessibility.cloud'>contact us</a> so we can assist you with the setup. ✌🏼
-        </p>
-      </div>
-    </section>
+          <p>
+            Your format is not listed here or more complex? Feel free to <a href='mailto:support@accessibility.cloud'>contact us</a> so we can assist you with the setup. ✌🏼
+          </p>
+        </div>
+      </section>
     {{/if}}
   {{/with}}
 </template>
