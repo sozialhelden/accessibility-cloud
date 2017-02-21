@@ -24,4 +24,5 @@ Template.page_start.onRendered(() => {
 });
 
 Template.page_start.helpers({
+  lastCollectionCount: GlobalStats.lastCollectionCount,
 });
