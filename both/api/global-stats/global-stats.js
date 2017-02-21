@@ -1,3 +1,4 @@
+import { check } from 'meteor/check';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 

@@ -1,36 +1,11 @@
-/* globals L */
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-import 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-
-// Extend Leaflet-icon to support colors and category-images
-L.AccessibilityIcon = L.Icon.extend({
-  options: {
-    number: '',
-    shadowUrl: null,
-    iconSize: new L.Point(27, 27),
-    iconAnchor: new L.Point(13, 25),
-    popupAnchor: new L.Point(0, -33),
-    className: 'leaflet-div-icon accessiblity',
-  },
-
-  createIcon() {
-    const div = document.createElement('div');
-    const img = this._createImg(this.options.iconUrl);
-    div.appendChild(img);
-    this._setIconStyles(div, 'icon');
-    return div;
-  },
-
-  createShadow() {
-    return null;
-  },
-});
 
 export default function initializeMap(instance) {
   check(Meteor.settings.public.mapbox, String);
