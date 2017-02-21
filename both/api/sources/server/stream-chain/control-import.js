@@ -15,10 +15,9 @@ const sourceIdsToStreamChains = {};
 export function abortImport(sourceId) {
   if (sourceIdsToStreamChains[sourceId]) {
     const firstStreamObserver = sourceIdsToStreamChains[sourceId][0];
-    if (firstStreamObserver && firstStreamObserver.stream) {
-      if (typeof firstStreamObserver.stream === 'function') {
-        firstStreamObserver.stream.abortChain();
-      }
+    const firstStream = firstStreamObserver && firstStreamObserver.stream;
+    if (firstStream && typeof firstStream.abortChain === 'function') {
+      firstStream.abortChain();
     }
     sourceIdsToStreamChains[sourceId].forEach(streamObserver => {
       if (typeof streamObserver.abort === 'function') {
@@ -26,10 +25,15 @@ export function abortImport(sourceId) {
       }
       const stream = streamObserver.stream;
       if (!stream) {
-        if (typeof stream.abort === 'function') {
-          stream.abort();
-        }
+        return;
+      }
+      if (typeof stream.abort === 'function') {
+        stream.abort();
+      }
+      if (typeof stream.abortStream === 'function') {
         stream.abortStream();
+      }
+      if (typeof stream.emit === 'function') {
         stream.emit('abort');
       }
     });
