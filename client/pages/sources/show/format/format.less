@@ -14,6 +14,114 @@
     }
   }
 
+  .source-import-flows-tabs {
+    li {
+      display: inline-block;
+      padding: 6px;
+
+      &.current-import-flow-tab {
+        background-color: @color-code-area;
+      }
+    }
+  }
+
+
+  .import-flow-actions {
+    font-size: 24px;
+    font-family: "iconfield";
+    text-align: right;
+
+    button,
+    .import-flow-file-uploader-wrapper,
+    .import-flow-help-wrapper,
+    .import-flow-notifications-wrapper {
+      width: 30px;
+      color: @color-text;
+    }
+
+    button {
+      background-color: transparent;
+    }
+
+    .import-flow-help-wrapper {
+      position: relative;
+      display: inline-block;
+
+      .import-flow-help {
+        text-align: left;
+        position: absolute;
+        display: none;
+        font-family: 'sourcesanspro-regular';
+        width: 450px;
+        right: 0;
+        background: white;
+        border-radius: 5px;
+        padding: 15px;
+        z-index: 10;
+
+        p {
+          margin-top: 0;
+        }
+
+        .iconfont {
+          font-family: 'iconfield';
+        }
+      }
+
+      &:hover {
+        .import-flow-help {
+          display: block;
+        }
+      }
+    }
+
+    .import-flow-notifications-wrapper {
+      position: relative;
+      display: inline-block;
+
+      .import-flow-notifications {
+        text-align: left;
+        position: absolute;
+        display: none;
+        font-family: 'sourcesanspro-regular';
+        width: 450px;
+        right: 0;
+        background: white;
+        border-radius: 5px;
+        padding: 15px;
+        z-index: 10;
+
+        p {
+          margin-top: 0;
+        }
+      }
+  
+      &:hover {
+        .import-flow-notifications {
+          display: block;
+        }
+      }
+    }
+
+    .import-flow-file-uploader-wrapper {
+      height: 20px;
+      width: 26px;
+      overflow: hidden;
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+
+      .import-flow-file-uploader {
+        cursor: pointer;
+        height: 100%;
+        position:absolute;
+        top: 0;
+        right: 0;
+        opacity: 0;
+      }
+    }
+  }
+
   > section {
     height: 100%;
 

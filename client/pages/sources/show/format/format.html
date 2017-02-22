@@ -1,52 +1,57 @@
 <template name="sources_show_format_page">
   {{#with source}}
-    {{#if streamChain}}
+    {{#if currentImportFlow}}
     <section class='edit-stream-chain'>
       <section class='stream-chain'>
-        <textarea class='code code-block' id='streamChain'>{{stringify streamChain}}</textarea>
+        <ul class="source-import-flows-tabs">
+          {{#each source.getImportFlows}}
+            <li {{getClassNameForImportFlowListItem _id}}>
+              {{name}}
+            </li>
+          {{/each}}
+        </ul>
+
+        <textarea class='code code-block' id='importFlow'>{{stringify currentImportFlow.streams}}</textarea>
       </section>
 
       <aside>
-        <header>
-          <ul class='errors is-empty'>
-          </ul>
+        <div class="import-flow-actions">
+          <div class="import-flow-help-wrapper">
+            <button>&#xE80A;</button>
+            <div class="import-flow-help">
+              {{> import_flow_help }}
+            </div>
+          </div>
+          {{#if getNotificationsForImportFlow.length}}
+            <div class="import-flow-notifications-wrapper">
+              <button>&#xE816;</button>
+              <div class="import-flow-notifications">
+                {{#each getNotificationsForImportFlow}}
+                  <p>
+                    {{{this}}}
+                  </p>
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+          <div class="import-flow-file-uploader-wrapper">
+            &#xE815;
+            {{> fileUpload
+                  additionalCSSClasses='import-flow-file-uploader'
+                  accept=source.currentImportFlow.inputMimeType
+                  metadata=fileMetadata
+                  callbacks=fileCallbacks
+            }}
+          </div>
+          <button class="js-start-import">&#x31;</button>
+        </div>
 
-          {{#unless source.hasRunningImport}}
-            {{#if source.hasDownloadStep}}
-              <button class='btn js-start-import btn btn-primary btn-inline'>Start</button>
-
-              {{> fileUpload
-                    additionalCSSClasses='btn btn-primary'
-                    accept=source.inputMimeType
-                    metadata=fileMetadata
-                    callbacks=fileCallbacks
-              }}
-
-              {{#if source.isDraft}}
-                <p>
-                  Your data will only be visible to members of {{source.getOrganization.name}} as your source is set to draft mode.
-                </p>
-              {{/if}}
-            {{else}}
-              <p>
-                Your source import flow is still missing a <code>HTTPDownload</code> step. Please add it to enable importing your data.
-              </p>
-            {{/if}}
-          {{/unless}}
-        </header>
-
-        {{#if lastSourceImport}}
-          {{#with lastSourceImport}}
-            {{> sources_stream_chain}}
-          {{else}}
-            <h2>{{_"Latest Import"}}</h2>
-            <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
-          {{/with}}
+        {{#with lastSourceImport}}
+          {{> sources_stream_chain}}
         {{else}}
-          <p>
-            Please insert a JSON that describes the data flow from your input source into the accessibility.cloud database on the left side.
-          </p>
-        {{/if}}
+          <h2>{{_"Latest Import"}}</h2>
+          <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
+        {{/with}}
       </aside>
     </section>
     {{else}}

@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
+import { ImportFlows } from '/both/api/import-flows/import-flows.js';
 import { acFormat } from '/both/lib/ac-format.js';
 import { $ } from 'meteor/jquery';
 
@@ -19,7 +20,7 @@ Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('sources.private');
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sourceImports.private');
-
+  subsManager.subscribe('importFlows.forSource', FlowRouter.getParam('_id'));
   window.SourceImports = SourceImports;
   window.Sources = Sources;
 });
@@ -99,18 +100,71 @@ const helpers = {
     }
     return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
   },
+  getNotificationsForImportFlow() {
+    const notifications = [];
+    const source = getSource();
+
+    if (!source) {
+      return [];
+    }
+
+    const currentImportFlow = helpers.currentImportFlow();
+
+    if (!currentImportFlow) {
+      return [];
+    }
+
+    const hasDownloadStep = currentImportFlow.hasDownloadStep();
+
+    if (hasDownloadStep) {
+      if (source.isDraft) {
+        notifications.push(`
+          Your data will only be visible to members of ${source.getOrganization().name}
+          as your source is set to draft mode.
+        `);
+      }
+    } else {
+      notifications.push(`
+        Your source import flow is still missing a <code>HTTPDownload</code> step.
+        Please add it to enable importing your data.
+      `);
+    }
+
+    return notifications;
+  },
+  currentImportFlow() {
+    // urls are 1-indexed, arrays are 0-indexed
+    const index = Number(FlowRouter.getParam('import_flow_index')) - 1;
+
+    return ImportFlows.findOne({
+      sourceId: FlowRouter.getParam('_id'),
+    }, {
+      sort: {
+        createdAt: 1,
+      },
+      skip: index,
+    });
+  },
+  isCurrentImportFlow(id) {
+    return helpers.currentImportFlow()._id === id;
+  },
+  getClassNameForImportFlowListItem(id) {
+    return {
+      'class': helpers.isCurrentImportFlow(id) ? 'current-import-flow-tab' : '',
+    };
+  },
 };
 
-function parseStreamChainDefinition(instance) {
-  const newStreamChainText = instance.$('textarea#streamChain')[0].value;
-  let newStreamChain = null;
+function parseImportFlowDefinition(instance) {
+  const newImportFlowText = instance.$('textarea#importFlow')[0].value;
+  let newImportFlow = null;
   try {
-    newStreamChain = JSON.parse(newStreamChainText);
+    newImportFlow = JSON.parse(newImportFlowText);
   } catch (error) {
     $('.errors').html(`<strong>Invalid JSON:</strong> ${error.message}`);
     $('.errors').removeClass('is-empty');
   }
-  return newStreamChain;
+  return newImportFlow;
 }
 
 function addError(errorHTML) {
@@ -127,7 +181,11 @@ Template.sources_show_format_page.events({
     if (!streamChain) {
       throw new Error(`${templateName} template has no valid stream chain`);
     }
-    Sources.update(this._id, { $set: { streamChain } });
+
+    const source = getSource();
+    source.addImportFlow({
+      streams: streamChain,
+    });
   },
   'click .btn.js-start-import'(event) {
     event.preventDefault();
@@ -140,21 +198,24 @@ Template.sources_show_format_page.events({
       }
     });
   },
-  'blur textarea#streamChain'(event, instance) {
-    const newStreamChain = parseStreamChainDefinition(instance);
-    if (!newStreamChain) {
+  'blur textarea#importFlow'(event, instance) {
+    const newImportFlow = parseImportFlowDefinition(instance);
+    if (!newImportFlow) {
       return;
     }
-    const _id = FlowRouter.getParam('_id');
-    Sources.update(_id, {
-      $set: { streamChain: newStreamChain },
+    const currentImportFlow = helpers.currentImportFlow();
+
+    ImportFlows.update(currentImportFlow._id, {
+      $set: {
+        streams: newImportFlow,
+      },
     }, (error) => {
       if (error) {
-        addError(`<strong>Invalid stream chain:</strong> ${error.message}`);
+        addError(`<strong>Invalid import flow:</strong> ${error.message}`);
       }
     });
   },
-  'keydown textarea#streamChain'(event) {
+  'keydown textarea#importFlow'(event) {
     // Ensure tab key presses generate tabs instead of blurring the text area
     // idea borrowed from https://stackoverflow.com/a/6637396/387719
     const textArea = $(event.target);
@@ -171,13 +232,21 @@ Template.sources_show_format_page.events({
       textArea.get(0).selectionStart = textArea.get(0).selectionEnd = start + 1;
     }
   },
-  'input textarea#streamChain'(event, instance) {
+  'input textarea#importFlow'(event, instance) {
     $('.errors').html('').addClass('is-empty');
 
-    const newStreamChain = parseStreamChainDefinition(instance);
-    if (!newStreamChain) {
+    const newImportFlow = parseImportFlowDefinition(instance);
+    if (!newImportFlow) {
       if ($(event.target).val() === '') {
-        Sources.update(this._id, { $unset: { streamChain: 1 } });
+        const currentImportFlow = helpers.currentImportFlow();
+
+        ImportFlows.update({
+          _id: currentImportFlow._id,
+        }, {
+          $unset: {
+            streams: true,
+          },
+        });
       }
       return;
     }
@@ -185,7 +254,7 @@ Template.sources_show_format_page.events({
     // TODO: Refactor this, put this logic into the model validation
     let chain = undefined;
     try {
-      const chainText = $('textarea#streamChain')[0].value;
+      const chainText = $('textarea#importFlow')[0].value;
       chain = JSON.parse(chainText);
     } catch (e) {
       addError('Invalid json format');
