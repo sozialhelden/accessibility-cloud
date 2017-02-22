@@ -45,6 +45,10 @@ Template.members_list_page.helpers({
   memberRoleSchema() {
     return OrganizationMembers.schema.pick(['role']);
   },
+  organizationHasMoreThanOneMember() {
+    const organizationId = FlowRouter.getParam('_id');
+    return OrganizationMembers.find({ organizationId }).count() > 1;
+  },
   members() {
     const orga = getOrganizationForView();
     if (orga) {
