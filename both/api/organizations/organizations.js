@@ -178,7 +178,3 @@ Organizations.whereCurrentUserIsMember = () => {
 };
 
 Organizations.attachSchema(Organizations.schema);
-
-if (Meteor.isServer) {
-  Organizations._ensureIndex({ tocForOrganizationsAccepted: 1 });
-}

@@ -23,6 +23,3 @@ Meteor.publish('placeInfos.single', function publish(placeInfoId) {
   };
   return PlaceInfos.find(selector, options);
 });
-
-console.log('Ensuring geospatial index for PlaceInfos...');
-PlaceInfos._ensureIndex({ geometry: '2dsphere' });
