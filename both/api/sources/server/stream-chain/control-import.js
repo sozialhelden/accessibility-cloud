@@ -5,6 +5,7 @@ import { check } from 'meteor/check';
 
 import { checkExistenceAndFullAccessToSourceId } from '/both/api/sources/server/privileges';
 import { SourceImports } from '/both/api/source-imports/source-imports';
+import { ImportFlows } from '/both/api/import-flows/import-flows';
 import { Sources } from '/both/api/sources/sources';
 
 import { createStreamChain } from './stream-chain';
@@ -44,13 +45,13 @@ export function abortImport(sourceId) {
   console.log('Aborted streams for source', sourceId);
 }
 
-function startImportStreaming(source) {
+function startImportStreaming(source, importFlow) {
   const sourceId = source._id;
   const sourceImportId = SourceImports.insert({
     sourceId,
     organizationId: source.organizationId,
-    streamChain: source.streamChain,
-    originalStreamChain: source.streamChain,
+    streamChain: importFlow.streams,
+    originalStreamChain: importFlow.streams,
     startTimestamp: Date.now(),
     insertedPlaceInfoCount: 0,
     updatedPlaceInfoCount: 0,
@@ -61,7 +62,7 @@ function startImportStreaming(source) {
     const streamChain = createStreamChain({
       sourceImportId,
       sourceId,
-      streamChainConfig: source.streamChain,
+      streamChainConfig: importFlow.streams,
     });
     sourceIdsToStreamChains[sourceId] = streamChain;
   } catch (error) {
@@ -72,7 +73,7 @@ function startImportStreaming(source) {
   }
 }
 
-export function startImportIfPossible({ userId, sourceId }, callback) {
+export function startImportIfPossible({ userId, sourceId, importFlowId }, callback) {
   console.log('Requested import for source', sourceId, '…');
 
   check(userId, String);
@@ -101,7 +102,9 @@ export function startImportIfPossible({ userId, sourceId }, callback) {
         return;
       }
 
-      startImportStreaming(source);
+      const importFlow = ImportFlows.findOne(importFlowId);
+
+      startImportStreaming(source, importFlow);
 
       callback(null);
     })
@@ -109,11 +112,15 @@ export function startImportIfPossible({ userId, sourceId }, callback) {
 }
 
 Meteor.methods({
-  'sources.startImport'(sourceId) {
-    check(sourceId, String);
+  'sources.startImport'(importFlowId) {
+    check(importFlowId, String);
+
+    const { sourceId } = ImportFlows.findOne(importFlowId);
+
     this.unblock();
     const future = new Future();
-    startImportIfPossible({ sourceId, userId: this.userId }, error => {
+
+    startImportIfPossible({ sourceId, importFlowId, userId: this.userId }, error => {
       if (error) {
         future.throw(error);
         return;

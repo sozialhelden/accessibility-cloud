@@ -89,7 +89,7 @@ const helpers = {
               showError(error.message || error.reason);
               return;
             }
-            Meteor.call('sources.startImport', source._id);
+            Meteor.call('sources.startImport', importFlowId);
           }
         );
 
@@ -191,12 +191,13 @@ Template.sources_show_format_page.events({
       streams: streamChain,
     });
   },
-  'click .btn.js-start-import'(event) {
+  'click .js-start-import'(event) {
+    const importFlowId = helpers.currentImportFlow()._id;
     event.preventDefault();
 
-    Meteor.call('sources.startImport', FlowRouter.getParam('_id'), error => {
+    Meteor.call('sources.startImport', importFlowId, error => {
       if (error) {
-        alert(`Could not start import: ${error.reason}`);
+        alert(`Could not start import flow: ${error.reason}`);
       } else {
         console.log('Import started');
       }
