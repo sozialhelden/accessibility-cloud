@@ -35,14 +35,6 @@ const helpers = {
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
-  lastSourceImport() {
-    const sourceId = FlowRouter.getParam('_id');
-    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
-    if (latestImport) {
-      return latestImport;
-    }
-    return null;
-  },
   fileMetadata() {
     return {
       sourceId: FlowRouter.getParam('_id'),

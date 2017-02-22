@@ -10,8 +10,7 @@ function format(n) {
   }
   return number.toString();
 }
-
-Template.sources_stream_chain.helpers({
+const helpers = {
   unitName() {
     return this.unitName || 'bytes';
   },
@@ -52,7 +51,10 @@ Template.sources_stream_chain.helpers({
     }
     return `${format(transferred)} ${this.unitName}`;
   },
-});
+};
+
+Template.sources_stream_chain.helpers(helpers);
+Template.import_results.helpers(helpers);
 
 Template.sources_stream_chain.events({
   'click .btn.js-abort-import'(event) {

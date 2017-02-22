@@ -54,12 +54,15 @@
           <button class="js-start-import">&#x31;</button>
         </div>
 
-        {{#with lastSourceImport}}
-          {{> sources_stream_chain}}
+        {{#if getLastSourceImport}}
+          {{> sources_stream_chain
+                source=this
+                hideAbortButton=true
+          }}
         {{else}}
           <h2>{{_"Latest Import"}}</h2>
           <p class='placeholder'>{{_"Here you will see your last imports"}}</p>
-        {{/with}}
+        {{/if}}
       </aside>
     </section>
     {{else}}

@@ -167,6 +167,14 @@ Sources.helpers({
       .fetch()
       .find(i => (!i.hasError() && !i.isAborted()));
   },
+  getLastSourceImport() {
+    const sourceId = this._id;
+    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
+    if (latestImport) {
+      return latestImport;
+    }
+    return null;
+  },
   getImportFlows() {
     return ImportFlows.find(
       { sourceId: this._id },
