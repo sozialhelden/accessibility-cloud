@@ -175,19 +175,6 @@ Sources.helpers({
   getLicense() {
     return Licenses.findOne(this.licenseId);
   },
-  inputMimeType() {
-    const downloadItem = _.find(this.streamChain, chainItem => chainItem.type === 'HTTPDownload');
-    return (downloadItem && downloadItem.parameters && downloadItem.parameters.inputMimeType);
-  },
-  hasDownloadStep() {
-    // This should be using SimpleSchema validators on all mappings steps to validate the mappings.
-    if (!this.streamChain) {
-      return false;
-    }
-    const hasDownloadStep = !!this.streamChain.find((step) =>
-      step.type === 'HTTPDownload' && !!step.parameters.sourceUrl);
-    return hasDownloadStep;
-  },
   getLastSuccessfulImport() {
     return SourceImports
       .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })

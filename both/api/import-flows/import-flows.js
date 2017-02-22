@@ -33,11 +33,29 @@ ImportFlows.schema = new SimpleSchema({
 ImportFlows.attachSchema(ImportFlows.schema);
 
 ImportFlows.helpers({
+  inputMimeType() {
+    const downloadItem = this.streams.find(
+      ({ type }) => type === 'HTTPDownload'
+    );
+
+    return downloadItem
+            && downloadItem.parameters
+            && downloadItem.parameters.inputMimeType;
+  },
   getStreams() {
     return this.streams;
   },
   getFirstStream() {
     return this.streams[0];
+  },
+  hasDownloadStep() {
+    if (!this.streams) {
+      return false;
+    }
+
+    return this.streams.some(
+      step => step.type === 'HTTPDownload' && !!step.parameters.sourceUrl
+    );
   },
 });
 
