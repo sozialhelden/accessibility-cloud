@@ -48,6 +48,7 @@ describe('getHelpersContent', () => {
       'OSM.fetchNameFromTags',
       'OSM.fetchCategoryFromTags',
       'extractNumber',
+      'convertOSGB36ToWGS84Point',
     ];
 
     EXPECTED_METHOD_PATHS.forEach(methodPath => {
