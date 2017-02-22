@@ -19,6 +19,7 @@ SourceImports.publicFields = {
 
 SourceImports.statsFields = {
   startTimestamp: 1,
+  isFinished: 1,
   insertedPlaceInfoCount: 1,
   updatedPlaceInfoCount: 1,
   placeInfoCountAfterImport: 1,
@@ -45,21 +46,23 @@ SourceImports.helpers({
   },
 });
 
+// An import is visible if the user has access to its source.
 SourceImports.visibleSelectorForUserId = (userId) => {
-  if (!userId) {
-    return null;
-  }
-
+  if (!userId) { return null; }
   check(userId, String);
+  const selector = Sources.visibleSelectorForUserId(userId);
+  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id);
   return {
-    organizationId: { $in: getAccessibleOrganizationIdsForUserId(userId) },
+    sourceId: { $in: sourceIds },
   };
 };
 
 SourceImports.visibleSelectorForAppId = (appId) => {
   check(appId, String);
+  const selector = Sources.visibleSelectorForAppId(appId);
+  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id);
   return {
-    sourceId: { $in: Sources.visibleSelectorForAppId(appId) },
+    sourceId: { $in: sourceIds },
   };
 };
 
