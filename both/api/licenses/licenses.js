@@ -77,11 +77,10 @@ Licenses.schema = new SimpleSchema({
     autoform: {
       afFieldInput: {
         options: [
-          { label: 'undefined', value: '' },
           { label: 'Public Domain (CC0)', value: 'CC0' },
           { label: 'Free, with Attribution required (CCBY)', value: 'CCBY' },
           { label: 'Share Alike (CCSA)', value: 'CCSA' },
-          { label: 'Restricted ($)', value: 'restricted' },
+          { label: 'Restricted / Proprietary (©)', value: 'restricted' },
         ],
       },
     },
