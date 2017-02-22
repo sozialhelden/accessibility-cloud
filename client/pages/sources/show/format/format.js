@@ -188,6 +188,24 @@ Template.sources_show_format_page.events({
       streams: streamChain,
     });
   },
+  'click .add-import-flow'() {
+    const source = getSource();
+    const importFlowsCount = source.getImportFlows().count();
+    const newFlowIndex = importFlowsCount + 1;
+    const newImportFlowName = `Flow_${newFlowIndex}`;
+
+    ImportFlows.insert({
+      sourceId: source._id,
+      name: newImportFlowName,
+      createdAt: Date.now(),
+    });
+
+    const newFlowPath = FlowRouter.path('sources.show.format.for_import_flow', {
+      _id: FlowRouter.getParam('_id'),
+      import_flow_index: newFlowIndex,
+    });
+    FlowRouter.go(newFlowPath);
+  },
   'click .js-start-import'(event) {
     const importFlowId = helpers.currentImportFlow()._id;
     event.preventDefault();
