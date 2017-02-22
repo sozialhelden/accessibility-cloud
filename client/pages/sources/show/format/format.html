@@ -4,9 +4,16 @@
     <section class='edit-stream-chain'>
       <section class='stream-chain'>
         <ul class="source-import-flows-tabs">
-          {{#each source.getImportFlows}}
+          {{#each getImportFlows}}
             <li {{getClassNameForImportFlowListItem _id}}>
-              {{name}}
+              <a
+                href="{{pathFor
+                          route='sources.show.format.for_import_flow'
+                          _id=sourceId
+                          import_flow_index=urlIndex
+                      }}">
+                {{name}}
+              </a>
             </li>
           {{/each}}
         </ul>

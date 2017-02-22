@@ -157,6 +157,11 @@ const helpers = {
       'class': helpers.isCurrentImportFlow(id) ? 'current-import-flow-tab' : '',
     };
   },
+  getImportFlows() {
+    return getSource().getImportFlows().map((doc, i) => Object.assign({}, doc, {
+      urlIndex: i + 1,
+    }));
+  },
 };
 
 function parseImportFlowDefinition(instance) {
