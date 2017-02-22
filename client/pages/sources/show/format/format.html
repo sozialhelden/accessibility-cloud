@@ -63,9 +63,17 @@
             }}
           </div>
           {{#if source.hasRunningImport}}
-            <button class="js-abort-import">&#x32;</button>
+            <button
+              class="js-abort-import"
+              title="Abort import">
+              &#x32;
+            </button>
           {{else}}
-            <button class="js-start-import">&#x31;</button>
+            <button
+              class="js-start-import"
+              title="Start import">
+              &#x31;
+            </button>
           {{/if}}
         </div>
 
