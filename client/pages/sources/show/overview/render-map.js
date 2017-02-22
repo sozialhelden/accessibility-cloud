@@ -3,11 +3,11 @@
 
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { _ } from 'lodash';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { getCurrentPlaceInfo } from './get-current-place-info';
 import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 import getPlaces from './get-places';
+import createMarkerFromFeature from '/client/lib/create-marker-from-feature';
 
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
 const PADDING = 0.02;
@@ -61,19 +61,6 @@ async function loadPlaces({
   });
 }
 
-function getColorForWheelchairAccessiblity(placeData) {
-  try {
-    if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
-      return 'green';
-    } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
-      return 'red';
-    }
-  } catch (e) {
-    console.warn('Failed to get color for', placeData, e);
-  }
-  return 'grey';
-}
-
 function centerOnCurrentPlace(map) {
   const place = getCurrentPlaceInfo();
 
@@ -109,13 +96,7 @@ function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
         return idsToShownMarkers[id];
       }
 
-      const categoryIconName = _.get(feature, 'properties.category') || 'place';
-      const color = getColorForWheelchairAccessiblity(feature);
-      const acIcon = new L.AccessibilityIcon({
-        iconUrl: `/icons/categories/${categoryIconName}.png`,
-        className: `ac-marker ${color}`,
-      });
-      const marker = L.marker(latlng, { icon: acIcon });
+      const marker = createMarkerFromFeature(feature, latlng);
 
       marker.on('click', () => {
         FlowRouter.go('placeInfos.show', {

@@ -3,6 +3,7 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import { Sources } from '/both/api/sources/sources.js';
 import { _ } from 'lodash';
+import { calculateGlobalStats } from '/both/api/global-stats/server/calculation';
 
 const attributeBlacklist = {
   properties: {
@@ -93,6 +94,9 @@ SourceImports.helpers({
     });
 
     Sources.update(this.sourceId, { $set: { placeInfoCount } });
+
+    calculateGlobalStats();
+
     return attributeDistribution;
   },
 });

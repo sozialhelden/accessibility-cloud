@@ -132,6 +132,16 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  isShownOnStartPage: {
+    type: Boolean,
+    defaultValue: false,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
