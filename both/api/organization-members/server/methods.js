@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { userHasFullAccessToOrganization } from '/both/api/organizations/privileges';
 import { OrganizationMembers } from '../organization-members.js';
@@ -52,5 +53,38 @@ export const accept = new ValidatedMethod({
     }
 
     return acceptInvitation(this.userId, organizationId, invitationToken);
+  },
+});
+
+Meteor.methods({
+  'organizationMembers.remove'(_id) {
+    check(_id, String);
+
+    if (!this.userId) {
+      throw new Meteor.Error(401, 'Please log in first.');
+    }
+
+    const organizationMember = OrganizationMembers.findOne(_id);
+    if (!organizationMember) {
+      throw new Meteor.Error(404, 'Organization member not found');
+    }
+    const organizationId = organizationMember.organizationId;
+    const organization = Organizations.findOne(organizationId);
+    if (!organization) {
+      throw new Meteor.Error(404, 'Organization not found');
+    }
+
+    const hasFullAccess = userHasFullAccessToOrganization(this.userId, organization);
+    const isOwnMembership = organizationMember.userId === this.userId;
+    const isAuthorized = hasFullAccess || isOwnMembership;
+    if (!isAuthorized) {
+      throw new Meteor.Error(403, 'Not authorized.');
+    }
+
+    const isLastMembership = OrganizationMembers.find({ organizationId }).count() === 1;
+    if (isLastMembership) {
+      throw new Meteor.Error(403, 'Cannot revoke last organization membership.');
+    }
+    return OrganizationMembers.remove(_id);
   },
 });

@@ -67,7 +67,7 @@ Template.members_list_page.helpers({
 Template.members_list_page.events({
   'click .js-remove-member'(event) {
     if (confirm('Do you really want to remove this member?')) {
-      OrganizationMembers.remove(this._id, error => {
+      Meteor.call('organizationMembers.remove', this._id, error => {
         if (error) {
           alert(`Could not remove member: ${error}`);
         }
