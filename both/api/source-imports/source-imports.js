@@ -50,13 +50,8 @@ SourceImports.helpers({
   },
   upsertStream() {
     if (!this.streamChain) {
-      return;
+      return null;
     }
     return this.streamChain.find(stream => stream && stream.type === 'UpsertPlace');
   },
 });
-
-if (Meteor.isServer) {
-  SourceImports._ensureIndex({ sourceId: 1 });
-  SourceImports._ensureIndex({ organizationId: 1 });
-}

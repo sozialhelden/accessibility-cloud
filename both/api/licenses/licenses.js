@@ -103,8 +103,3 @@ Licenses.helpers({
     return Organizations.findOne(this.organizationId);
   },
 });
-
-if (Meteor.isServer) {
-  Licenses._ensureIndex({ organizationId: 1 });
-  Licenses._ensureIndex({ consideredAs: 1 });
-}

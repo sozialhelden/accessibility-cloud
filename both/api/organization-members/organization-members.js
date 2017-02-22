@@ -110,9 +110,3 @@ OrganizationMembers.helpers({
     return `<img src="${getGravatarImageUrl(this.gravatarHash)}" class='user-icon'>`;
   },
 });
-
-if (Meteor.isServer) {
-  OrganizationMembers._ensureIndex({ organizationId: 1 });
-  OrganizationMembers._ensureIndex({ userId: 1 });
-  OrganizationMembers._ensureIndex({ role: 1 });
-}

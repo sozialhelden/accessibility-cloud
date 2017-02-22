@@ -202,13 +202,3 @@ Sources.helpers({
       .find(i => (!i.hasError() && !i.isAborted()));
   },
 });
-
-if (Meteor.isServer) {
-  SourceImports._ensureIndex({ licenseId: 1 });
-  SourceImports._ensureIndex({ languageId: 1 });
-  SourceImports._ensureIndex({ name: 1 });
-  SourceImports._ensureIndex({ isFreelyAccessible: 1 });
-  SourceImports._ensureIndex({ isDraft: 1 });
-  SourceImports._ensureIndex({ accessRestrictedTo: 1 });
-  SourceImports._ensureIndex({ organizationId: 1 });
-}
