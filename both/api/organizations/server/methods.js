@@ -37,6 +37,7 @@ export const remove = new ValidatedMethod({
         'You don\'t have permission to remove this organization.');
     }
 
+    OrganizationMembers.remove({ organizationId });
     Organizations.remove(organizationId);
   },
 });
