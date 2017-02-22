@@ -6,6 +6,7 @@ import getHelpersContent from './get-helpers-content';
 
 const AVAILABLE_LIBS = [
   'lodash.min.js',
+  'geodesy.js',
 ];
 
 const getLibsContent = () =>
