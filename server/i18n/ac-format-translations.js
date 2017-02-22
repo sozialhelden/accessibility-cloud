@@ -1,3 +1,4 @@
+import Fiber from 'fibers';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/stevezhu:lodash';
 import { acFormat } from '/both/lib/ac-format';
@@ -72,8 +73,8 @@ function syncPropertyNamesWithTransifex() {
 
 
 Meteor.startup(() => {
-  syncPropertyNamesWithTransifex();
-  cacheRegisteredLocales(resourceSlug);
+  Fiber(() => syncPropertyNamesWithTransifex()).run();
+  Fiber(() => cacheRegisteredLocales(resourceSlug)).run();
 });
 
 
