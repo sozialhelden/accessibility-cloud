@@ -32,10 +32,6 @@ Sources.publicFields = {
   placeInfoCount: 1,
 };
 
-Sources.privateFields = {
-  streamChain: 1,
-};
-
 Sources.helpers({
   editableBy(userId) {
     check(userId, String);

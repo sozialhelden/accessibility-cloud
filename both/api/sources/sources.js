@@ -1,9 +1,7 @@
-import { _ } from 'meteor/underscore';
-import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { isAdmin } from '/both/lib/is-admin';
-
+import { ImportFlows } from '/both/api/import-flows/import-flows';
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
 import { SourceImports } from '/both/api/source-imports/source-imports';
@@ -76,18 +74,6 @@ Sources.schema = new SimpleSchema({
     label: 'Only a draft (content not available to people outside your organization)',
     defaultValue: true,
     optional: true,
-  },
-  streamChain: {
-    type: Array,
-    label: 'Stream chain setup',
-    optional: true,
-  },
-  'streamChain.$': {
-    type: Object,
-    blackbox: true,
-  },
-  'streamChain.$.type': {
-    type: String,
   },
   isFreelyAccessible: {
     type: Boolean,
@@ -180,5 +166,22 @@ Sources.helpers({
       .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
       .fetch()
       .find(i => (!i.hasError() && !i.isAborted()));
+  },
+  getImportFlows() {
+    return ImportFlows.find(
+      { sourceId: this._id },
+      { sort: { createdAt: 1 } }
+    );
+  },
+  addImportFlow({
+    name = 'Default',
+    streams,
+  }) {
+    ImportFlows.insert({
+      sourceId: this._id,
+      name,
+      streams,
+      createdAt: Date.now(),
+    });
   },
 });
