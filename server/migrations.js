@@ -15,7 +15,7 @@ Migrations.add({
         streams: source.streamChain,
         createdAt: Date.now()
       });
-      Sources.update({ _id: sourceId }, { $unset: { streamChain: true } });
+      Sources.update({ _id: sourceId }, { $unset: { streamChain: true } }, { bypassCollection2: true });
     });
   },
   down() {
@@ -26,4 +26,8 @@ Migrations.add({
       ImportFlows.remove({ _id: importFlow._id });
     });
   },
+});
+
+Meteor.startup(() => {
+  Migrations.migrateTo('latest');
 });
