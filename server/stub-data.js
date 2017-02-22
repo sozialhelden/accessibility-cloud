@@ -68,48 +68,6 @@ Factory.define('jsonSource', Sources, {
   primaryRegion: 'Vienna, Austria',
   description: 'All public toilets in vienna (JSON)',
   originWebsiteURL: 'http://data.wien.gv.at',
-  streamChain: [
-    {
-      type: 'HTTPDownload',
-      parameters: {
-        sourceUrl: 'http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WCANLAGEOGD&srsName=EPSG:4326&outputFormat=json',
-      },
-    },
-    {
-      type: 'ConvertToUTF8',
-      parameters: {
-        fromCharSet: 'utf8',
-      },
-    },
-    {
-      type: 'ParseJSONStream',
-      parameters: {
-        path: 'features.*',
-        length: 'totalFeatures',
-      },
-    },
-    {
-      type: 'TransformData',
-      parameters: {
-        mappings: {
-          originalId: 'row.id',
-          geometry: 'row.geometry',
-          category: 'toilets',
-          properties: 'row.properties',
-          address: 'row.properties[\'STRASSE\'] + \', Bezirk \' + row.properties[\'BEZIRK\'] + \', Vienna, Austria\'',
-          'properties-accessibility-withWheelchair': 'row.properties[\'KATEGORIE\'].includes(\'Behindertenkabine\')',
-        },
-      },
-    },
-    {
-      type: 'ConsoleOutput',
-      parameters: {},
-    },
-    {
-      type: 'UpsertPlace',
-      parameters: {},
-    },
-  ],
 });
 
 Factory.define('jsonSourceImport', SourceImports, {
@@ -177,54 +135,6 @@ Factory.define('csvSource', Sources, {
   name: 'Toilets in Rostock (CSV)',
   description: 'germany-rostock-toilets (CSV)',
   originWebsiteURL: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
-  streamChain: [
-    {
-      type: 'HTTPDownload',
-      parameters: {
-        sourceUrl: 'https://geo.sv.rostock.de/download/opendata/toiletten/toiletten.csv',
-      },
-    },
-    {
-      type: 'ConvertToUTF8',
-      parameters: {
-        fromCharSet: 'utf8',
-      },
-    },
-    {
-      type: 'ParseCSVStream',
-      parameters: {
-        header: true,
-      },
-    },
-    {
-      type: 'ParseJSONStream',
-      parameters: {
-        path: '*',
-      },
-    },
-    {
-      type: 'TransformData',
-      parameters: {
-        mappings: {
-          originalId: "row['uuid']",
-          category: 'toilets',
-          geometry: "{ type: 'Point', coordinates: [Number(row['longitude']), Number(row['latitude'])] }",
-          name: "'Public toilet in Rostock, ' + row['gemeindeteil_name']",
-          address: "row['strasse_name'] + ' ' + row['hausnummer'] + row['hausnummer_zusatz'] + ', ' + row['postleitzahl'] + ' Rostock'",
-          'properties-accessibility-withWheelchair': "row['behindertengerecht'] == '1'",
-          properties: 'row.properties',
-        },
-      },
-    },
-    // {
-    //   type: 'ConsoleOutput',
-    //   parameters: {},
-    // },
-    {
-      type: 'UpsertPlace',
-      parameters: {},
-    },
-  ],
 });
 
 Factory.define('csvSourceImport', SourceImports, {
