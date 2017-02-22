@@ -200,6 +200,17 @@ Template.sources_show_format_page.events({
       }
     });
   },
+  'click .js-abort-import'(event) {
+    event.preventDefault();
+    const sourceId = getSource()._id;
+
+    Meteor.call('sources.abortImport', sourceId, (err) => {
+      if (err) {
+        console.log(err);
+        alert(err);
+      }
+    });
+  },
   'blur textarea#importFlow'(event, instance) {
     const newImportFlow = parseImportFlowDefinition(instance);
     if (!newImportFlow) {
