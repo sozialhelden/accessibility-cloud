@@ -69,16 +69,20 @@ const helpers = {
           );
         }
 
-        const firstStream = source.streamChain && source.streamChain[0];
+        const currentImportFlow = helpers.currentImportFlow();
+        const firstStream = currentImportFlow.getFirstStream();
+
         if (!firstStream || firstStream.type !== 'HTTPDownload') {
           return showError(
             'Please setup the source format first so it has a HTTP download stream.'
           );
         }
 
+        const importFlowId = currentImportFlow._id;
+
         Meteor.call(
-          'updateDataURLForSource',
-          source._id,
+          'updateDataURLForImportFlow',
+          importFlowId,
           response.uploadedFile.storageUrl,
           (error) => {
             if (error) {

@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import { Sources } from '/both/api/sources/sources.js';
+import { ImportFlows } from '/both/api/import-flows/import-flows.js';
 import {
   checkExistenceAndFullAccessToSourceId,
   checkExistenceAndVisibilityForSourceId,
@@ -25,16 +26,16 @@ Meteor.methods({
     Sources.update(sourceId, { $set: { placeInfoCount } });
   },
 
-  updateDataURLForSource(sourceId, url) {
-    check(sourceId, String);
+  updateDataURLForImportFlow(importFlowId, url) {
+    const importFlow = ImportFlows.findOne(importFlowId);
+
+    check(importFlowId, String);
     check(url, String);
-    // check(url, SimpleSchema.RegEx.Url);
-    checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
+    checkExistenceAndFullAccessToSourceId(this.userId, importFlow.sourceId);
 
-    Sources.update(sourceId, { $set: {
-      'streamChain.0.parameters.sourceUrl': url,
-    } });// , { bypassCollection2: true });
-
+    ImportFlows.update(importFlowId, { $set: {
+      'streams.0.parameters.sourceUrl': url,
+    } });
 
     return true;
   },
