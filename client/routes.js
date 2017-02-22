@@ -296,8 +296,22 @@ dataRoutes.route('/organizations/:_id/sources/create', {
   },
 });
 
+// this is the index of the default import flow, always present
+const FIRST_IMPORT_FLOW_INDEX = 1;
+
 dataRoutes.route('/sources/:_id/format', {
   name: 'sources.show.format',
+  title: 'Format',
+  triggersEnter: [(context, redirect) => {
+    redirect(`${context.path}/${FIRST_IMPORT_FLOW_INDEX}`);
+  }],
+  action() {
+    throw new Error('Redirect failed');
+  },
+});
+
+dataRoutes.route('/sources/:_id/format/:import_flow_index', {
+  name: 'sources.show.format.for_import_flow',
   title: 'Format',
   action() {
     BlazeLayout.render('app_layout_full_size', {
