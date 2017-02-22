@@ -170,15 +170,15 @@ function parseImportFlowDefinition(instance) {
   try {
     newImportFlow = JSON.parse(newImportFlowText);
   } catch (error) {
-    $('.errors').html(`<strong>Invalid JSON:</strong> ${error.message}`);
-    $('.errors').removeClass('is-empty');
+    $('.import-flow-errors').html(`<strong>Invalid JSON:</strong> ${error.message}`);
+    $('.import-flow-errors').removeClass('is-empty');
   }
   return newImportFlow;
 }
 
 function addError(errorHTML) {
-  $('.errors').append(`<li>${errorHTML}</li>`);
-  $('.errors').removeClass('is-empty');
+  $('.import-flow-errors').append(`<li>${errorHTML}</li>`);
+  $('.import-flow-errors').removeClass('is-empty');
 }
 
 Template.sources_show_format_page.helpers(helpers);
@@ -243,7 +243,7 @@ Template.sources_show_format_page.events({
     }
   },
   'input textarea#importFlow'(event, instance) {
-    $('.errors').html('').addClass('is-empty');
+    $('.import-flow-errors').html('').addClass('is-empty');
 
     const newImportFlow = parseImportFlowDefinition(instance);
     if (!newImportFlow) {

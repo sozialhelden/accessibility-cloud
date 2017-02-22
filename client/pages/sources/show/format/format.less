@@ -152,6 +152,7 @@
 
       > section.stream-chain {
         flex: 1;
+
         textarea {
           height: 100%;
           min-height: inherit;
@@ -161,6 +162,31 @@
           background-color: @color-code-area;
           overflow: scroll;
           white-space: pre;
+        }
+
+        .import-flow-errors {
+          transition: 0.3s;
+          right: 0;
+
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+
+          padding: 1em;
+          background-color: white;
+          color: @color-error;
+          font-family: monospace;
+          font-size:14px;
+          ul {
+            li {
+              margin-left: 2em;
+              margin-bottom:5px;
+            }
+          }
+          &.is-empty {
+            transition: 0.3s;
+            right: 100vw;
+          }
         }
       }
     }
@@ -186,23 +212,6 @@
       }
       p:not(:last-child) {
         margin-bottom: 0.5em;
-      }
-      ul.errors {
-        padding: 1em;
-        margin-bottom: 1em;
-        background-color: white;
-        color: @color-error;
-        font-family: monospace;
-        font-size:14px;
-        ul {
-          li {
-            margin-left: 2em;
-            margin-bottom:5px;
-          }
-        }
-        &.is-empty {
-          display: none;
-        }
       }
     }
   }
