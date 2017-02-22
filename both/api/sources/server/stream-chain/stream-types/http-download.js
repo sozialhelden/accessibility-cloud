@@ -93,7 +93,9 @@ export class HTTPDownload {
       delete this.lengthRequest;
     }
     delete this.stream;
-    this.request.abort();
+    if (this.request) {
+      this.request.abort();
+    }
     delete this.request;
   }
 
