@@ -220,6 +220,26 @@ Template.sources_show_format_page.events({
     });
     FlowRouter.go(newFlowPath);
   },
+  'click .delete-import-flow-icon'() {
+    const message = 'Are you sure you want to delete this import flow?';
+    const shouldBeDeleted = confirm(message);
+
+
+    if (shouldBeDeleted) {
+      const currentImportFlow = helpers.currentImportFlow();
+      ImportFlows.remove(currentImportFlow._id);
+
+      const source = getSource();
+      const importFlowsCount = source.getImportFlows().count();
+      const indexOfNewlyDisplayedImportFlow = Math.max(importFlowsCount, 1);
+
+      const newFlowPath = FlowRouter.path('sources.show.format.for_import_flow', {
+        _id: FlowRouter.getParam('_id'),
+        import_flow_index: indexOfNewlyDisplayedImportFlow,
+      });
+      FlowRouter.go(newFlowPath);
+    }
+  },
   'click .js-start-import'(event) {
     const importFlowId = helpers.currentImportFlow()._id;
     event.preventDefault();
