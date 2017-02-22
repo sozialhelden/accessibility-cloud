@@ -174,7 +174,7 @@ Transforms given JSON objects into the [accessibility.cloud format](./exchange-f
 #### Parameters
 
 - `ignoreSkippedPlaces`: If `true`, places without original id are not regarded as errors. If `false` (default), mark the import as erroneous when encountering a place without original id.
-- `mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. We support ES6 here.
+- `mappings`: A JSON object that contains mappings. Keys are target property names according to the accessibility.cloud specification, values are JavaScript expression strings. Inside the expression, you can access the input data record using the predefined JavaScript variable `d`. We support ES2015 here.
 
 #### Defining mappings
 
@@ -207,7 +207,7 @@ Transforms each input chunk or object into something else, using a JavaScript ex
 
 #### Parameters
 
-- `javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES6. `d` is predefined as the input chunk/object. Evaluates the expression and writes its result as new chunk/object to the output.
+- `javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES2015. `d` is predefined as the input chunk/object. Evaluates the expression and writes its result as new chunk/object to the output.
 
 ### `UpsertPlace`
 
