@@ -42,6 +42,9 @@ ImportFlows.helpers({
             && downloadItem.parameters
             && downloadItem.parameters.inputMimeType;
   },
+  hasStreams() {
+    return this.streams && this.streams.length > 0;
+  },
   getStreams() {
     return this.streams;
   },

@@ -141,6 +141,10 @@ const helpers = {
       skip: index,
     });
   },
+  currentImportFlowHasStreams() {
+    const importFlow = helpers.currentImportFlow();
+    return importFlow && importFlow.hasStreams();
+  },
   isCurrentImportFlow(id) {
     return helpers.currentImportFlow()._id === id;
   },
@@ -183,10 +187,20 @@ Template.sources_show_format_page.events({
       throw new Error(`${templateName} template has no valid stream chain`);
     }
 
-    const source = getSource();
-    source.addImportFlow({
-      streams: streamChain,
-    });
+    const currentImportFlow = helpers.currentImportFlow();
+
+    if (currentImportFlow) {
+      ImportFlows.update(currentImportFlow._id, {
+        $set: {
+          streams: streamChain,
+        },
+      });
+    } else {
+      const source = getSource();
+      source.addImportFlow({
+        streams: streamChain,
+      });
+    }
   },
   'click .add-import-flow'() {
     const source = getSource();
