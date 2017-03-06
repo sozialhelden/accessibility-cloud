@@ -1,5 +1,5 @@
 # AXSMaps
-Some notes on the API inport-format of Jaccede
+Some notes on the API import-format of Jaccede
 
 ## example-places
 - https://www.jaccede.com/en/p/ChIJ8ect1eRZn0cRDRnpqH-ZzeI/hotel-novotel-nuernberg-messezentrum?page=1
