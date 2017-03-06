@@ -57,6 +57,7 @@ Template.page_start.onCreated(() => {
 
 Template.page_start.onRendered(function pageRendered() {
   const map = L.map('mapid', { zoomControl: false });
+  map.scrollWheelZoom.disable();
   map.fitBounds(
       [[45, -120], [-10, 120]]
   );
