@@ -29,10 +29,14 @@ function getPlaceInfoIds() {
 
 export default function pickRandomPlaceInfos(count) {
   const now = new Date();
-  const pickedIds = sampleSize(getPlaceInfoIds(), count);
+  const availableIds = getPlaceInfoIds();
+  const pickedIds = sampleSize(availableIds, count);
   const selector = { _id: { $in: pickedIds } };
   const options = { transform: null, fields: PlaceInfos.publicFields };
   const placeInfos = PlaceInfos.find(selector, options).fetch();
-  console.log('Picked', count, 'random places, needed', +new Date() - now, 'ms.');
+  console.log(
+    'Picked', pickedIds.length, 'random places from',
+    availableIds.length, 'available places, needed', +new Date() - now, 'ms.'
+  );
   return placeInfos;
 }
