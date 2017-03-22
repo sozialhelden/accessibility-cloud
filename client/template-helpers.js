@@ -20,11 +20,11 @@ Template.registerHelpers({
     return String(str).toUpperCase();
   },
   stringify(object) {
-    return JSON.stringify(object, true, 4);
+    return JSON.stringify(object, true, 2);
   },
   beautifyJSON(jsonString) {
     try {
-      return JSON.stringify(JSON.parse(jsonString), true, 4);
+      return JSON.stringify(JSON.parse(jsonString), true, 2);
     } catch (error) {
       return `(${error})`;
     }

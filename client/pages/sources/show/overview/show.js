@@ -57,6 +57,11 @@ function sourceImport() {
   return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
 }
 
+function hasBigSidebar() {
+  FlowRouter.watchPathChange();
+  return Boolean(FlowRouter.getParam('placeInfoId'));
+}
+
 Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sourceImports.private');
@@ -83,6 +88,7 @@ const helpers = {
   sourceImports,
   sourceImport,
   getCurrentPlaceInfo,
+  hasBigSidebar,
 };
 
 Template.sources_show_header.helpers(helpers);
