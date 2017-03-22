@@ -88,7 +88,7 @@ Sources.visibleSelectorForAppId = (appId) => {
   check(appId, String);
   const app = Apps.findOne(appId);
   const organizationId = app.organizationId;
-  return sourceSelectorForOrganizationIds([organizationId]);
+  return { $and: [sourceSelectorForOrganizationIds([organizationId]), { isDraft: false }] };
 };
 
 export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
