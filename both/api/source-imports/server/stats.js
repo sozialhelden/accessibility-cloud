@@ -10,6 +10,7 @@ const attributeBlacklist = {
     _id: true,
     properties: {
       infoPageUrl: true,
+      placeWebsiteUrl: true,
       sourceId: true,
       originalId: true,
       originalData: true,
