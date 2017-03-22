@@ -47,7 +47,6 @@ function convertPlaceDetails(data) {
 
 export class SimplifyJaccedeFormat {
   constructor({ onDebugInfo }) {
-
     check(onDebugInfo, Function);
 
     this.stream = new Transform({
@@ -55,20 +54,33 @@ export class SimplifyJaccedeFormat {
       readableObjectMode: true,
       transform(input, encoding, callback) {
         const output = convertPlaceDetails(input);
+        output.originalData = JSON.parse(input);
         callback(null, output);
       },
     });
 
-    this.stream.on('pipe', source => {
-      source.on('length', length => this.stream.emit('length', length));
-    });
+    this.lengthListener = length => this.stream.emit('length', length);
+    this.pipeListener = source => {
+      source.on('length', this.lengthListener);
+      this.source = source;
+    };
+
+    this.stream.on('pipe', this.pipeListener);
   }
 
   dispose() {
-    this.stream.removeListeners('pipe');
-    delete this.stream;
+    if (this.stream) {
+      this.stream.removeListener('pipe', this.pipeListener);
+      delete this.stream;
+    }
+    if (this.source) {
+      this.source.removeListener('length', this.lengthListener);
+      delete this.source;
+    }
+    delete this.lengthListener;
+    delete this.pipeListener;
   }
-  
+
   static getParameterSchema() {
     return new SimpleSchema({
 
