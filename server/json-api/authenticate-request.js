@@ -7,8 +7,8 @@ import { getUserIdFromToken } from './user-token';
 // is not (or incorrectly) authenticated.
 
 export function getAppAndUserFromRequest(req) {
-  const appToken = req.headers['x-token'] || req.headers['x-app-token'];
-  const userToken = req.headers['x-user-token'];
+  const appToken = req.headers['x-token'] || req.headers['x-app-token'] || req.query.appToken;
+  const userToken = req.headers['x-user-token'] || req.query.userToken;
 
   if (!appToken && !userToken) {
     // eslint-disable-next-line max-len
