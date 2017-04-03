@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import { geometrySelector } from './geometry';
+import { distanceSearchSelector } from './distance-search';
+import { mapTileSelector } from './map-tile';
 import { sourceFilterSelector } from './source-filter.js';
 import { paginationOptions } from './pagination';
 import { fieldOptions } from './fields';
@@ -25,10 +26,11 @@ export function buildSelectorAndOptions({ req, _id, collection, appId, userId })
 
   let selector = {
     $and: [
-      { $or: selectors },
       sourceFilterSelector(req),
-      geometrySelector(req),
-    ],
+      (selectors.length === 1) ? selectors[0] : { $or: selectors },
+      distanceSearchSelector(req),
+      mapTileSelector(req),
+    ].filter(s => Object.keys(s).length > 0),
   };
 
   if (_id) {
