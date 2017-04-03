@@ -61,12 +61,12 @@ Template.page_start.onRendered(function pageRendered() {
   map.fitBounds(
       [[45, -120], [-10, 120]]
   );
-
-  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGl4dHVyIiwiYSI6ImNpc2tuMWx1eDAwNHQzMnBremRzNjBqcXIifQ.3jo3ZXnwCVxTkKaw0RPlDg', {
+  const accessToken = Meteor.settings.public.mapbox;
+  L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${accessToken}`, {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
     id: 'accesssibility-cloud',
-    accessToken: Meteor.settings.public.mapbox || 'your.mapbox.public.access.token',
+    accessToken,
   }).addTo(map);
 
   const setTimeout = (firstTime) => {
