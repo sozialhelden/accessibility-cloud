@@ -42,8 +42,8 @@ export const acFormat = {
       stairs: [
         {
           count: '>10 ± 2',
-          hasHighcontrastAndAntiSlipStairNosing: true,    // needs review
-          name: 'mainStaris',
+          hasHighContrastAndAntiSlipStairNosing: true,    // needs review
+          name: 'mainStairs',
           stepHeight: '12cm ±1',
           hasHandRail: true,
           hasStairLift: true,
@@ -57,7 +57,16 @@ export const acFormat = {
 
       areas: [
         {                                                        // 'hotelRoom?'
-          tags: ['indoors', 'outdoors', 'meeting-room', 'confidential', 'bedroom', 'terrace', 'roof', 'front-space'],   // TBD
+          tags: [ // tbd
+            'indoors',
+            'outdoors',
+            'meeting-room',
+            'confidential',
+            'bedroom',
+            'terrace',
+            'roof',
+            'front-space'
+          ],
           name: '',
           floorLevel: 1,
 
@@ -108,7 +117,7 @@ export const acFormat = {
               },
               stairs: {
                 count: '>10 ± 2',
-                hasHighcontrastAndAntiSlipStairNosing: true,    // needs review
+                hasHighContrastAndAntiSlipStairNosing: true,    // needs review
                 name: 'mainStaris',
                 stepHeight: '12cm ±1',
                 hasHandRail: true,
@@ -324,7 +333,7 @@ export const acFormat = {
 
           media: [
             {
-              type: 'documents',                          // documents|menu|audioGuide|presentations|exhibits|movie|screen,
+              type: 'documents', // documents|menu|audioGuide|presentations|exhibits|movie|screen,
               name: 'Speisekarte',
               isBraille: true,
               isAudio: true,
