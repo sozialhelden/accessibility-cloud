@@ -1,4 +1,4 @@
-# AXSMaps
+# Jaccede data import
 Some notes on the API import-format of Jaccede
 
 ## example-places

@@ -31,7 +31,11 @@ export const acFormat = {
         guideDog: true,
         limitedSight: true,
       },
-
+      partiallyAccessibleWith: {
+        wheelchair: true,
+        guideDog: true,
+        limitedSight: true,
+      },
       offersActivitiesFor: {
         hearingImpaired: true,
         learningImpaired: true,
