@@ -25,9 +25,11 @@ const AccessibilityIcon = L.Icon.extend({
 
 function getColorForWheelchairAccessiblity(placeData) {
   try {
-    if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
+    if (_.get(placeData, 'properties.accessibility.accessibleWith.wheelchair') === true) {
       return 'green';
-    } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
+    } else if (_.get(placeData, 'properties.accessibility.partiallyAccessibleWith.wheelchair')) {
+      return 'orange';
+    } else if (_.get(placeData, 'properties.accessibility.accessibleWith.wheelchair') === false) {
       return 'red';
     }
   } catch (e) {
