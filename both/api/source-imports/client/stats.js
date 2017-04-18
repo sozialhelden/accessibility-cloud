@@ -33,7 +33,7 @@ SourceImports.helpers({
     const totalCount = this.getSource().placeInfoCount;
     const typeNamesToCounts =
       _.get(attributeDistribution, 'properties.properties.accessibility.accessibleWith');
-    return Object.keys(typeNamesToCounts)
+    return Object.keys(typeNamesToCounts || {})
       .map(name => ({
         name,
         false: typeNamesToCounts[name].false,
