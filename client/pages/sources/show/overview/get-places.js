@@ -1,6 +1,6 @@
+import PromisePool from 'es6-promise-pool';
 import { Meteor } from 'meteor/meteor';
 import { getApiUserToken } from '/client/lib/api-tokens';
-import PromisePool from 'es6-promise-pool';
 import { HTTP } from 'meteor/http';
 
 const PLACES_BATCH_SIZE = 2000;
