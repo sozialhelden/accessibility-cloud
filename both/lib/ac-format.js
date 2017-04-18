@@ -1,3 +1,207 @@
+// These are the AC format building blocks. At a later stage, they are supposed to be based on a
+// 'real' type system, for example Flowtype, at compile time and runtime.
+
+export const pointGeometryFormat = {
+  type: 'Point',
+  coordinates: [
+    -123.13700000000000045,
+    49.251339999999999009,
+  ],
+};
+
+export const groundFormat = {
+  isLevel: true,
+  distanceToDroppedCurb: '<20m ±10',      // interpretation of 'nearby',
+  slopeAngle: '6deg',
+  isCobbleStone: true,                    // RFC: replace with 'evenPavement'
+  turningSpace: '<150cm',                 // interpretation of 'very narrow'
+  streetIsSloping: true,
+};
+
+export const stairsFormat = {
+  count: 123,
+  nosing: {
+    isHighContrast: false,
+    isAntiSlip: true,
+  },
+  name: 'mainStaris',
+  stepHeight: 1,
+  hasHandRail: true,
+  hasStairLift: true,
+  hasTactileSafetyStrip: true,
+  wheelChairPlatformLift: {
+    height: '120cm',
+    width: '110cm',
+  },
+};
+
+export const doorFormat = {
+  turningSpaceInFront: '>150cm',
+  doorOpensToOutside: true,
+  isAutomaticOrAlwaysOpen: false,
+  isManual: true,
+  isOpenNow: false,
+  width: '85cm',
+  hasClearMarkingOnGlassDoor: false,
+  isEasyToHoldOpen: false,
+  hasErgonomicDoorHandle: false,
+  isRevolving: false,
+  needsRadarKey: true,
+  needsEuroKey: true,
+};
+
+export const liftFormat = {
+  name: 'Main Lift',
+  hasVoiceAnnounceSystem: true,
+  hasEmergencyVoiceIntercom: true,
+  isBroken: true,
+  isBeingMaintained: true,
+  controls: {
+    height: '90 .. 120cm',
+    isHighContrast: true,
+    isBraille: true,
+    isRaised: true,
+  },
+  cabin: {
+    width: '140cm',
+    length: '110cm',
+    door: {
+      width: '100cm',
+    },
+  },
+};
+
+
+export const entranceFormat = {
+  name: 'Main Entrance',
+  ratingForWheelchair: 0.9,
+  isMainEntrance: true,
+  isLevel: false,
+  isALift: true,
+  hasRemovableRamp: false,
+  hasSlope: true,
+  slopeAngle: '6%',
+  hasVisibleAndReadableSign: true,        // needs review
+  hasBrailleSitemap: true,
+  intercom: {
+    isAvailable: true,
+    height: '90..120cm',
+    isColorContrastedWithWall: true,      // needs review
+  },
+  stairs: stairsFormat,
+  door: doorFormat,
+  lift: liftFormat,
+};
+
+export const vendingMachineFormat = {
+  name: 'Ticket Machine 1',
+  easyToUse: true,
+  languages: ['en', 'de'],
+  hasHeadPhoneJack: true,
+  hasSpeech: true,
+  controls: {
+    height: '<120cm',
+    areHighContrast: true,
+    inBraille: true,
+    areRaised: true,
+  },
+};
+
+export const mediaFormat = {
+  type: 'documents', // documents|menu|audioGuide|presentations|exhibits|movie|screen,
+  name: 'Speisekarte',
+  isBraille: true,
+  isAudio: true,
+  isLargePrint: true,
+  hasContrastingBackground: true,
+  isEasyToUnderstand: true,
+  hasDedicatedScreenForSubtitles: true,
+  hasSubtitles: true,
+  hasRealtimeCaptioning: true,
+  languages: ['en', 'de'],
+  turningSpaceInFront: '>140cm',
+  isClearlyVisibleWhileSeated: true,
+  isInformationReadableWhileSeated: true,
+};
+
+export const roomFormat = {
+  name: 'Room name',
+};
+
+export const toiletFormat = {
+  heightOfBase: '40 .. 45cm',
+  spaceOnLeftSide: '>70',
+  spaceOnRightSide: '>70',
+  spaceInFront: '>70',
+  foldableHandles: {
+    onLeftSide: true,
+    onRightSide: true,
+    height: '>85cm',
+    extensionOverToilet: '>28cm',     // RFC: better label required,
+    distance: '60 .. 65cm',
+  },
+};
+
+export const showerFormat = {
+  step: '<2cm',
+  isWalkIn: true,                        // needs review
+  hasSupportRails: true,
+  supportRails: {
+    height: '85 .. 107cm',
+    aboveAndBelowControls: true,
+  },
+  controls: {
+    height: '85cm',
+    isEasyToUse: true,
+    hasErgonomicHandle: true,
+  },
+  hasShowerSeat: true,
+  showerSeat: {
+    isRemovable: true,
+    isFixed: false,
+    isFoldable: false,
+  },
+};
+
+export const restroomFormat = Object.assign({}, roomFormat, {
+  signage: {
+    unisex: true,
+    male: true,
+    female: true,
+  },
+  ratingForWheelchair: 0.3,
+  turningSpaceInside: '>150cm',
+  mirror: {
+    isAccessibleWhileSeated: true,
+    heightFromGround: '100cm',
+  },
+  hasSupportRails: true,
+  shampooAccessibleWithWheelchair: true,
+  toilet: toiletFormat,
+  hasBathTub: true,
+  hasShower: true,
+  entrance: entranceFormat,
+  shower: showerFormat,
+  heightOfSoapAndDrier: '100 .. 120cm',
+  washBasin: {
+    accessibleWithWheelchair: true,
+    height: '>80cm',
+    spaceBelow: {
+      height: '> 67cm',
+      depth: '30cm',
+    },
+  },
+});
+
+export const sitemapFormat = {
+  distanceFromEntrance: '<10m',
+  isBraille: true,
+  isRaised: true,
+  hasLargePrint: true,
+  languages: ['en'],
+  hasSimpleLanguage: true,
+};
+
 export const acFormat = {
   _id: 'someId',
   acVersion: '1',
@@ -43,22 +247,6 @@ export const acFormat = {
         visuallyImpaired: true,
       },
 
-      stairs: [
-        {
-          count: '>10 ± 2',
-          hasHighContrastAndAntiSlipStairNosing: true,    // needs review
-          name: 'mainStairs',
-          stepHeight: '12cm ±1',
-          hasHandRail: true,
-          hasStairLift: true,
-          hasTactileSafetyStrip: true,
-          wheelChairPlatformLift: {
-            height: '120cm',
-            width: '110cm',
-          },
-        },
-      ],
-
       areas: [
         {                                                        // 'hotelRoom?'
           tags: [ // tbd
@@ -69,7 +257,7 @@ export const acFormat = {
             'bedroom',
             'terrace',
             'roof',
-            'front-space'
+            'front-space',
           ],
           name: '',
           floorLevel: 1,
@@ -78,142 +266,25 @@ export const acFormat = {
           isWellLit: true,
           isQuiet: true,
 
-          ground: {
-            isStepLess: true,
-            distanceToDroppedCurb: '<20m ±10',      // interpretation of 'nearby',
-            slopeAngle: '6deg',
-            isCobbleStone: true,                    // RFC: replace with 'evenPavement'
-            turningSpace: '<150cm',                 // interpretation of 'very narrow'
-            streetIsSloping: true,
-          },
+          ground: groundFormat,
 
           pathways: {                               // RFC do we need this group?
-            //turningsSpaceInFrontOfRelevantFurniture: '>140',        // find better adj for 'relevant'
-            //widthOfOpeningsAndAisles: '> 140cm',
-            //widthOfAllOpeningsAndAisles: '>90',             // RFC
-            //width: '>150',
-            //widthAtObstacles: '>90cm',
-            //spaceBetweenExistingBallards: '>90cm',
+            // turningSpaceInFrontOfRelevantFurniture: '>140', // find better adj for 'relevant'
+            // widthOfOpeningsAndAisles: '> 140cm',
+            // widthOfAllOpeningsAndAisles: '>90',             // RFC
+            // width: '>150',
+            // widthAtObstacles: '>90cm',
+            // spaceBetweenExistingBallards: '>90cm',
             width: '>150',
             widthAtObstacles: '>90cm',
             maxLongitudinalSlope: '<6deg',
             maxLateralSlope: '<2.5deg',
           },
 
-          entrances: [
-            {
-              name: 'Main Entrance',
-              ratingForWheelchair: 0.9,
-              isMainEntrance: true,
-              isStepFree: false,
-              isALift: true,
-              hasRemovableRamp: false,
-              slopeAngle: '6%',                       //
-              hasVisualSign: true,                    // needs review
-              hasBrailleSign: true,
-              needsRadarKey: true,
-              needsEuroKey: true,
-
-              intercom: {
-                isAvailable: true,
-                height: '90..120cm',
-                isColorContrastedWithWall: true,      // needs review
-              },
-              stairs: {
-                count: '>10 ± 2',
-                hasHighContrastAndAntiSlipStairNosing: true,    // needs review
-                name: 'mainStaris',
-                stepHeight: '12cm ±1',
-                hasHandRail: true,
-                hasStairLift: true,
-                hasTactileSafetyStrip: true,
-                wheelChairPlatformLift: {
-                  height: '120cm',
-                  width: '110cm',
-                },
-              },
-              door: {
-                isAutomatic: false,
-                width: '85cm',
-                hasClearMarkingOnGlassDoor: false,
-                isEasyToHoldOpen: false,
-                hasErgonomicDoorHandle: false,
-                isRevolving: false,
-              },
-            },
-          ],
-          restrooms: [
-            {
-              signage: {
-                unisex: true,
-                male: true,
-                female: true,
-              },
-              ratingForWheelchair: 0.3,
-              turningSpaceInside: '>150cm',
-              hasBathTub: true,
-              mirrorAccessibleWhileSeated: true,
-              heightOfMirrorFromGround: '100cm',
-              hasSupportRails: true,
-              heightOfSoapAndDrier: '100 .. 120cm',
-              hasSpaceAlongsideToilet: true,
-              washBasinAccessibleWithWheelchair: true,
-              shampooAccessibleWithWheelchair: true,
-              entrance: {
-                isAutomatic: false,
-                doorWidth: '85cm',
-                hasClearMarkingOnGlassDoor: false,
-                isEasyToHoldOpen: false,
-                hasErgonomicDoorHandle: false,
-                isStepFree: true,
-                turningSpaceInFront: '>150cm',
-                doorOpensToOutside: true,
-                needsRadarKey: true,
-                needsEuroKey: true,
-              },
-              toilet: {
-                heightOfBase: '40 .. 45cm',
-                spaceOnLeftSide: '>70',
-                spaceOnRightSide: '>70',
-                foldableHandles: {
-                  onLeftSide: true,
-                  onRightSide: true,
-                  height: '>85cm',
-                  extensionOverToilet: '>28cm',     // RFC: better label required,
-                  distance: '60 .. 65cm',
-                },
-              },
-              hasShower: true,
-              shower: {
-                hasSupportRails: true,
-                step: '<2cm',
-                isWalkIn: true,                        // needs review
-                supportRails: {
-                  height: '85 .. 107cm',
-                  aboveAndBelowControls: true,
-                },
-                controls: {
-                  height: '85cm',
-                  isEasyToUse: true,
-                  hasErgonomicHandle: true,
-                },
-                hasShowerSeat: true,
-                showerSeat: {
-                  isRemovable: true,
-                  isFixed: false,
-                  isFoldable: false,
-                },
-              },
-              washBasin: {
-                accessibleWithWheelchair: true,
-                height: '>80cm',
-                spaceBelow: {
-                  height: '> 67cm',
-                  depth: '30cm',
-                },
-              },
-            },
-          ],
+          entrances: [entranceFormat],
+          restrooms: [restroomFormat],
+          sitemap: sitemapFormat,
+          lifts: [liftFormat],
 
           powerOutlets: {
             haveContrastColor: true,
@@ -221,18 +292,19 @@ export const acFormat = {
             hasChildProtection: true,
             height: '10 .. 30cm',
           },
-          switches: {                           // RFC: rename to "controls?"
+
+          controlsAndSwitches: {
             haveContrastColor: true,
             isErgnomicToUse: true,
             height: '120cm',
           },
 
-          bed: {
+          beds: [{
             height: '120cm ± 10',
             adjustableHeight: '30 .. 140cm',
             turningSpaceBeside: '>90cm',
             spaceBelow: '20cm',
-          },
+          }],
 
           wardrobe: {
             heightForRail: '<140cm',
@@ -254,29 +326,20 @@ export const acFormat = {
           },
 
           vendingMachines: [
-            {
-              name: 'Ticket Machine 1',
-              easyToUse: true,
-              languages: ['en', 'de'],
-              hasHeadPhoneJack: true,
-              hasSpeech: true,
-              controls: {
-                height: '<120cm',
-                areHighContrast: true,
-                inBraille: true,
-                areRaised: true,
-              },
-            },
+            vendingMachineFormat,
           ],
 
           cashRegister: {
             height: '90cm',
-            hasRemovableCreditCardReader: true,
+            hasMobilePaymentSystem: true,
+            acceptsCreditCards: true,
+            acceptsDebitCards: true,
+            acceptsCash: true,
           },
 
           wheelchairPlaces: {
             count: 1,
-            hasSpaceForAssistent: true,
+            hasSpaceForAssistant: true,
           },
 
           tables: {
@@ -306,23 +369,14 @@ export const acFormat = {
 
             hasPoolAccessFacility: true,
             hasSaunaWheelchair: true,
-            hasManualWheelChair: true,
-            hasAllTerrainWheelChair: true,
-            hasVehiclesAreAdaptedForWheelchairs: true,
-          },
-
-          sitemap: {
-            distanceFromEntrance: '<10m',
-            isBraille: true,
-            isRaised: true,
-            hasLargePrint: true,
-            languages: ['en'],
-            hasSimpleLanguage: true,
+            hasManualWheelchair: true,
+            hasAllTerrainWheelchair: true,
+            hasVehiclesAdaptedForWheelchairs: true,
           },
 
           tactileGuideStrips: {
             isGuidingToInfoDesk: true,                              // needs review
-            hasVisualContrat: true,
+            hasVisualContrast: true,
           },
 
           infoDesk: {
@@ -335,24 +389,7 @@ export const acFormat = {
             languages: ['de'],
           },
 
-          media: [
-            {
-              type: 'documents', // documents|menu|audioGuide|presentations|exhibits|movie|screen,
-              name: 'Speisekarte',
-              isBraille: true,
-              isAudio: true,
-              isLargePrint: true,
-              hasContrastingBackground: true,
-              isEasyToUnderstand: true,
-              hasDedicatedScreenForSubtitles: true,
-              hasSubtitles: true,
-              hasRealtimeCaptioning: true,
-              languages: ['en', 'de'],
-              turningSpaceInFront: '>140cm',
-              isClearlyVisibleWhileSeated: true,
-              isInformationReadableWhileSeated: true,
-            },
-          ],
+          media: [mediaFormat],
         },
       ],
       staff: {
@@ -360,28 +397,8 @@ export const acFormat = {
         canAssistWithSpecialNeeds: true,
         isTrainedInSigning: true,
         hasFreeAssistentForVisitors: true,
-        isTrainedInAccomodattingVisitorsWithDisabilities: true,   // very unspecific and loooong
+        isTrainedInAccomodatingVisitorsWithDisabilities: true,   // very unspecific and loooong
       },
-      lifts: [
-        {
-          name: 'Main Lift',
-          hasVoiceAnnounceSystem: true,
-          hasEmergencyVoiceIntercom: true,
-          controls: {
-            height: '90 .. 120cm',
-            isHighContrast: true,
-            isBraille: true,
-            isRaised: true,
-          },
-          cabin: {
-            width: '140cm',
-            length: '110cm',
-            door: {
-              width: '100cm',
-            },
-          },
-        },
-      ],
       parking: {
         parkingSpacesForWheelchairUsers: {
           areAvailable: true,
@@ -395,11 +412,5 @@ export const acFormat = {
       },
     },
   },
-  geometry: {
-    type: 'Point',
-    coordinates: [
-      -123.13700000000000045,
-      49.251339999999999009,
-    ],
-  },
+  geometry: pointGeometryFormat,
 };
