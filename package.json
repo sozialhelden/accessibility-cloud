@@ -44,66 +44,20 @@
     "zstreams": "^3.2.2"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "eslint": "^2.13.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-config-airbnb-es5": "^1.0.9",
-    "eslint-import-resolver-meteor": "^0.2.4",
-    "eslint-plugin-import": "^1.10.3",
-    "eslint-plugin-jsx-a11y": "^1.5.3",
-    "eslint-plugin-meteor": "^3.6.0",
-    "eslint-plugin-react": "^5.2.2",
+    "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "babel-eslint": "^7.2.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-meteor": "^4.0.1",
+    "eslint-plugin-react": "^6.10.3",
+    "flow-bin": "^0.43.1",
+    "react-scripts": "0.9.5",
     "shell-source": "^1.1.0",
-    "sinon": "^1.17.7"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "allowImportExportEverywhere": true
-    },
-    "plugins": [
-      "meteor"
-    ],
-    "extends": [
-      "airbnb",
-      "plugin:meteor/recommended"
-    ],
-    "globals": {
-      "Npm": true
-    },
-    "rules": {
-      "no-underscore-dangle": "off",
-      "no-console": "off",
-      "new-cap": [
-        2,
-        {
-          "capIsNewExceptions": [
-            "Match",
-            "Any",
-            "Object",
-            "ObjectIncluding",
-            "OneOf",
-            "Optional",
-            "Where",
-            "With",
-            "Fiber",
-            "SafeString"
-          ]
-        }
-      ],
-      "meteor/eventmap-params": [
-        "error",
-        {
-          "eventParamName": "event",
-          "templateInstanceParamName": "instance"
-        }
-      ],
-      "meteor/template-names": [
-        "off"
-      ]
-    },
-    "settings": {
-      "import/resolver": "meteor"
-    }
+    "sinon": "^1.17.7",
+    "undefined": "^0.1.0"
   }
 }

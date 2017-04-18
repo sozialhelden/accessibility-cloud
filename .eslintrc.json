@@ -1,0 +1,16 @@
+{
+    "extends": [
+        "@meteorjs/eslint-config-meteor",
+        "plugin:flowtype/recommended"
+    ],
+    "plugins": [
+        "flowtype"
+    ],
+    "globals": {
+        "Package": false,
+        "d3": false,
+        "FB": false,
+        "mf": false,
+        "Npm": true
+    }
+}
