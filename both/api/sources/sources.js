@@ -71,6 +71,16 @@ Sources.schema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Url,
     optional: true,
   },
+  additionalAccessibilityInformation: {
+    label: 'Additional accessibility information',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'This can be shown as an explanatory tool tip to users.',
+      },
+    },
+    type: String,
+    optional: true,
+  },
   isDraft: {
     type: Boolean,
     label: 'Only a draft (content not available to people outside your organization)',

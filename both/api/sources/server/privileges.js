@@ -30,6 +30,7 @@ Sources.publicFields = {
   accessRestrictedTo: 1,
   hasRunningImport: 1,
   placeInfoCount: 1,
+  additionalAccessibilityInformation: 1,
 };
 
 Sources.privateFields = {
