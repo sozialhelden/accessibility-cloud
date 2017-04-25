@@ -71,8 +71,8 @@ Sources.schema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Url,
     optional: true,
   },
-  additionalAccessibilityInformation: {
-    label: 'Additional accessibility information',
+  'translations.additionalAccessibilityInformation.en_US': {
+    label: 'Additional accessibility information (English)',
     autoform: {
       afFieldInput: {
         placeholder: 'This can be shown as an explanatory tool tip to users.',
@@ -222,3 +222,4 @@ Sources.helpers({
       .find(i => (!i.hasError() && !i.isAborted()));
   },
 });
+

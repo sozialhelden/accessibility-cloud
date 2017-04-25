@@ -31,6 +31,7 @@ Sources.publicFields = {
   hasRunningImport: 1,
   placeInfoCount: 1,
   additionalAccessibilityInformation: 1,
+  'translations.additionalAccessibilityInformation': 1,
 };
 
 Sources.privateFields = {
