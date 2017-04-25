@@ -128,7 +128,6 @@ function simplifyWheelchairAccessibility(flattenedAccessibility) {
         name: 'Entrance',
         entrances: [
           {
-            name: value(21) ? 'Main Entrance' : 'Additional entrance',
             isMainEntrance: value(21),
             isLevel: entranceAccessId ? entranceIsLevel : undefined,
             hasRemovableRamp: value(8),
