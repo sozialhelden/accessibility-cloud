@@ -334,7 +334,8 @@ export const acFormat = {
             hasMobilePaymentSystem: true,
             acceptsCreditCards: true,
             acceptsDebitCards: true,
-            acceptsCash: true,
+            acceptsCoins: true,
+            acceptsBills: true,
           },
 
           wheelchairPlaces: {
