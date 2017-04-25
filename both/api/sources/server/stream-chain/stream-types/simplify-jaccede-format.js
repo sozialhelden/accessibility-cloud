@@ -146,7 +146,7 @@ function simplifyWheelchairAccessibility(flattenedAccessibility) {
                 isHighContrast: value(14),
                 isAntiSlip: value(14),
               },
-              stepHeight: 0.01 * stepHeightInCm,
+              stepHeight: stepHeightInCm && (0.01 * stepHeightInCm),
               hasHandRail: value(13),
               hasStairLift: hasEntranceLift,
               hasTactileSafetyStrip: value(15),
