@@ -47,6 +47,6 @@ export function makeCollectionTranslatable(
 
   addRPCMethodForSyncing({ collection, attributePathFn, defaultLocale, msgidFn });
   addTranslationHelper({ collection, attributeName, attributePathFn, defaultLocale, msgidFn });
-  extendCollectionSchema(collection);
+  extendCollectionSchema(collection, attributeName);
   cacheRegisteredLocales(resourceSlugForCollection(collection));
 }
