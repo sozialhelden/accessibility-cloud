@@ -54,6 +54,7 @@ Template.admin_page.events({
   },
   'click .js-sync-translations'() {
     Meteor.call('Categories.syncWithTransifex');
+    Meteor.call('Sources.syncWithTransifex');
     Meteor.call('acFormat.syncWithTransifex');
   },
 });
