@@ -1,9 +1,12 @@
-// import util from 'util';
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
-import { SourceImports } from '/both/api/source-imports/source-imports.js';
-import { Sources } from '/both/api/sources/sources.js';
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { PlaceInfos } from '/both/api/place-infos/place-infos';
+import { SourceImports } from '/both/api/source-imports/source-imports';
+import { Sources } from '/both/api/sources/sources';
 import { _ } from 'lodash';
 import { calculateGlobalStats } from '/both/api/global-stats/server/calculation';
+import { checkExistenceAndVisibilityForSourceId } from '/both/api/sources/server/privileges';
+import Fiber from 'fibers';
 
 const attributeBlacklist = {
   properties: {
@@ -33,7 +36,7 @@ SourceImports.helpers({
         return;
       }
       if (_.isObject(valueOrAttributes)) {
-        Object.keys(valueOrAttributes).forEach(key => {
+        Object.keys(valueOrAttributes).forEach((key) => {
           const childKey = rootKey ? (`${rootKey}.${key}`) : key;
           exploreAttributesTree(childKey, valueOrAttributes[key]);
         });
@@ -50,14 +53,14 @@ SourceImports.helpers({
 
     const placeInfos = PlaceInfos.find(
       { 'properties.sourceId': this.sourceId },
-      { transform: null }
+      { transform: null },
     );
 
     const placeInfoCount = placeInfos.count();
     console.log('Analysing', placeInfoCount, 'PoIs...');
     const startDate = new Date();
 
-    placeInfos.forEach(placeInfo => {
+    placeInfos.forEach((placeInfo) => {
       exploreAttributesTree('properties', placeInfo);
     });
 
@@ -65,7 +68,7 @@ SourceImports.helpers({
     console.log(
       'Analysed',
       placeInfoCount,
-      `PoIs in ${seconds} seconds (${placeInfoCount / seconds} PoIs/second).`
+      `PoIs in ${seconds} seconds (${placeInfoCount / seconds} PoIs/second).`,
     );
 
     // Uncomment this for debugging
@@ -81,7 +84,7 @@ SourceImports.helpers({
     const upsertStream = this.upsertStream();
     if (upsertStream) {
       if (upsertStream.debugInfo) {
-        ['insertedPlaceInfoCount', 'updatedPlaceInfoCount'].forEach(attributeName => {
+        ['insertedPlaceInfoCount', 'updatedPlaceInfoCount'].forEach((attributeName) => {
           attributesToSet[attributeName] = upsertStream.debugInfo[attributeName];
         });
       }
@@ -99,5 +102,25 @@ SourceImports.helpers({
     calculateGlobalStats();
 
     return attributeDistribution;
+  },
+});
+
+Meteor.methods({
+  'SourceImports.generateAndSaveStats'(sourceImportId) {
+    check(sourceImportId, String);
+    const sourceImport = SourceImports.findOne(sourceImportId);
+    if (!this.userId) {
+      throw new Meteor.Error(401, 'Please log in first.');
+    }
+    if (!sourceImport) {
+      throw new Meteor.Error(404, 'Not found');
+    }
+    if (!sourceImport.editableBy(this.userId)) {
+      throw new Meteor.Error(402, 'Not authorized');
+    }
+    this.unblock();
+    Fiber(() => {
+      sourceImport.generateAndSaveStats();
+    }).run();
   },
 });
