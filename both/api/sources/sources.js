@@ -221,5 +221,11 @@ Sources.helpers({
       .fetch()
       .find(i => (!i.hasError() && !i.isAborted()));
   },
+  getLastImportWithStats() {
+    return SourceImports
+      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
+      .fetch()
+      .find(i => Boolean(i.attributeDistribution));
+  },
 });
 
