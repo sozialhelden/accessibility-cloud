@@ -24,6 +24,10 @@ describe('getVMContext', () => {
       assert.equal(vm.runInContext('typeof _', context), 'function');
     });
 
+    it('mixes in lodash-inflection correctly', () => {
+      assert.equal(vm.runInContext('typeof _.pluralize', context), 'function');
+    });
+
     it('exposes `categoryIdForSynonyms` as a global variable', () => {
       assert.equal(vm.runInContext('typeof categoryIdForSynonyms', context), 'object');
     });
