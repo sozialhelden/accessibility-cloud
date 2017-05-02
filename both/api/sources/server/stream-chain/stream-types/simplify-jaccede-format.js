@@ -125,7 +125,6 @@ function simplifyWheelchairAccessibility(flattenedAccessibility) {
   const result = {
     areas: [
       {
-        name: 'Entrance',
         entrances: [
           {
             isMainEntrance: value(21),
