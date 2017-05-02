@@ -2,12 +2,12 @@
   "scripts": {
     "start": "meteor --settings deploy/local.json",
     "pretest": "npm run lint --silent",
-    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
-    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
-    "test-watch": "meteor test --driver-package practicalmeteor:mocha --settings settings/local.json",
-    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json",
-    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
-    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
+    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json --port 8000",
+    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json --port 8000",
+    "test-watch": "meteor test --driver-package practicalmeteor:mocha --settings settings/ci.json --port 8000",
+    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json --port 8000",
+    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
+    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
     "lint": "eslint ."
   },
   "dependencies": {
