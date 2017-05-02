@@ -33,7 +33,7 @@ Template.sources_show_page_boolean_chart.onRendered(function rendered() {
     { name: 'false', value: distributionAsObject.false, color: RED },
   ].map(d => {
     const result = Object.assign({ offsetX }, d);
-    offsetX += d.value;
+    offsetX += d.value || 0;
     return result;
   });
 
@@ -49,9 +49,9 @@ Template.sources_show_page_boolean_chart.onRendered(function rendered() {
 
   rect.append('rect')
     .attr('fill', d => d.color)
-    .attr('x', d => x(d.offsetX))
+    .attr('x', d => x(d.offsetX || 0))
     .attr('height', HEIGHT)
-    .attr('width', d => (d.value ? x(d.value) : 0))
+    .attr('width', d => (d.value ? x(d.value || 0) : 0))
     .append('title')
     .text(d => `${d.value} places have this attribute set to '${d.name}'.`);
 });
