@@ -1,4 +1,3 @@
-import util from 'util';
 import { check, Match } from 'meteor/check';
 import { s } from 'meteor/underscorestring:underscore.string';
 import { _ } from 'meteor/stevezhu:lodash';
