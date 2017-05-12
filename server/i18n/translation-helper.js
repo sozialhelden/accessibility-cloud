@@ -15,13 +15,15 @@ export function createTranslationHelper(
   { resourceSlug, defaultLocale, getTranslationFn, msgidFn = (d) => d }
 ) {
   return (requestedLocale, docOrMsgId) => {
-    const localeWithoutCountry = requestedLocale.replace(/_[A-Z][A-Z]$/);
-    const localeHasCountry = requestedLocale !== localeWithoutCountry;
-    const localeWithDefaultCountry = localeHasCountry ? requestedLocale :
-      findLocaleWithCountry(resourceSlug, requestedLocale);
+    const sanitizedRequestedLocale = requestedLocale.replace('_', '-');
+    const localeWithoutCountry = requestedLocale.substring(0,2).toLowerCase();
+    const localeHasCountry = sanitizedRequestedLocale !== localeWithoutCountry;
+    const localeWithDefaultCountry = localeHasCountry ? sanitizedRequestedLocale :
+      findLocaleWithCountry(resourceSlug, sanitizedRequestedLocale);
 
     const localesToTry = [
       requestedLocale,
+      sanitizedRequestedLocale,
       localeWithoutCountry,
       localeWithDefaultCountry,
       defaultLocale,
@@ -29,6 +31,7 @@ export function createTranslationHelper(
 
     for (const locale of localesToTry) {
       const translation = getTranslationFn(locale, docOrMsgId);
+      console.log('Tried locale', locale, 'and got translation', translation);
       if (translation) {
         return translation;
       }
@@ -57,15 +60,7 @@ export function addTranslationHelper(
     attributePathFn,
     msgidFn,
     getTranslationFn(locale, doc) {
-      const localeWithoutCountry = locale.replace(/_[A-Z][A-Z]$/);
-      const localeHasCountry = locale !== localeWithoutCountry;
-      const localeWithDefaultCountry =
-        localeHasCountry ? locale : findLocaleWithCountry(locale, doc);
-      return _.get(doc, attributePathFn(locale)) ||
-        _.get(doc, attributePathFn(localeWithoutCountry)) ||
-        _.get(doc, attributePathFn(localeWithDefaultCountry)) ||
-        _.get(doc, attributePathFn(defaultLocale)) ||
-        null;
+      return _.get(doc, attributePathFn(locale));
     },
   });
 
