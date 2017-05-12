@@ -44,7 +44,12 @@ Meteor.methods({
             _id,
             icon: _id || 'place',
             parentIds: parentIds.split(',') || [],
-            translations: { de: labelDE, en: labelEN },
+            translations: {
+              _id: {
+                de: labelDE,
+                en: labelEN,
+              },
+            },
             synonyms,
           },
         }

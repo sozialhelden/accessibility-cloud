@@ -9,8 +9,10 @@ export const Categories = new Mongo.Collection('Categories');
 {
   _id: "atm",
   translations: {
-    "de": "Geldautomat",
-    "en": "ATM",
+    _id: {
+      "de_DE": "Geldautomat",
+      "en_US": "ATM",
+    }
   },
   synonyms: ["ATM", "amenity=atm"],
   icon: "atm",
