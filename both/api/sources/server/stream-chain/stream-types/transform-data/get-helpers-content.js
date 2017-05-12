@@ -19,7 +19,9 @@ const AVAILABLE_HELPERS = {
 
   extractNumber: 'extract-number.js',
   convertOSGB36ToWGS84Point: 'convert-osgb36-to-wgs84-point.js',
+  md5: 'md5.js',
 };
+
 const HELPERS_BASE_PATH = 'transform-helpers';
 
 const readAsset = relativePath => Assets.getText(`${HELPERS_BASE_PATH}${relativePath}`);
