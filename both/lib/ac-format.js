@@ -190,6 +190,7 @@ export const showerFormat = {
 };
 
 export const restroomFormat = Object.assign({}, roomFormat, {
+  isAccessibleWithWheelchair: true,
   signage: {
     unisex: true,
     male: true,
