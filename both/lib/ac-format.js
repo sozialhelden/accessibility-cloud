@@ -229,6 +229,16 @@ export const sitemapFormat = {
   hasSimpleLanguage: true,
 };
 
+export const personalProfile = {
+  aphasia: true,
+  guideDog: true,
+  hearingImpairment: true,
+  learningImpairment: true,
+  limitedSight: true,
+  physicalImpairment: true,
+  visualImpairment: true,
+  wheelchair: true,
+};
 
 export const acFormat = {
   _id: 'someId',
@@ -259,23 +269,9 @@ export const acFormat = {
     category: 'hotel',                                // see [ac-categories]
 
     accessibility: {
-      accessibleWith: {
-        wheelchair: true,
-        guideDog: true,
-        limitedSight: true,
-      },
-      partiallyAccessibleWith: {
-        wheelchair: true,
-        guideDog: true,
-        limitedSight: true,
-      },
-      offersActivitiesForPeople: {
-        hearingImpairment: true,
-        learningImpairment: true,
-        physicalImpairment: true,
-        visualImpairment: true,
-        aphasia: true,
-      },
+      accessibleWith: personalProfile,
+      partiallyAccessibleWith: personalProfile,
+      offersActivitiesForPeople: personalProfile,
       areas: [
         {                                                        // 'hotelRoom?'
           tags: [ // tbd
