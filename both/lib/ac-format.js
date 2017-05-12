@@ -426,15 +426,21 @@ export const acFormat = {
         isTrainedInAccomodatingVisitorsWithDisabilities: true,   // very unspecific and loooong
       },
       parking: {
-        parkingSpacesForWheelchairUsers: {
-          areAvailable: true,
+        forWheelchairUsers: {
+          isAvailable: true,
           location: '2nd floor',
           count: 2,
           isLocatedInside: true,              // needs review
           width: '>350cm',
           length: '>500cm',
+          maxHeight: '>500cm',
           hasDedicatedSignage: true,
+          paymentBySpace: true,
+          paymentByZone: true,
+          neededParkingPermits: ['Blue Badge'],
         },
+        payment: paymentFormat,
+        lifts: [liftFormat],
       },
     },
   },
