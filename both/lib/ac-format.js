@@ -74,6 +74,27 @@ export const liftFormat = {
 };
 
 
+export const offerFormat = {
+  name: 'Entry fee',
+  amount: '10.00',
+  currencyCode: 'EUR',
+  lastUpdate: '2017-01-01', // ISO date string
+};
+
+
+export const paymentFormat = {
+  hasMovablePaymentSystem: true,
+  acceptsPaymentByApp: true,
+  acceptsPaymentByMobilePhone: true,
+  acceptsCreditCards: true,
+  acceptsDebitCards: true,
+  acceptsCoins: true,
+  acceptsBills: true,
+  offers: [offerFormat],
+  customPaymentMetaInfo: ['SMS to +49 123…'], // e.g. for phone numbers, parking lot IDs etc.
+};
+
+
 export const entranceFormat = {
   name: 'Main Entrance',
   ratingForWheelchair: 0.9,
@@ -93,7 +114,9 @@ export const entranceFormat = {
   stairs: stairsFormat,
   door: doorFormat,
   lift: liftFormat,
+  payment: paymentFormat,
 };
+
 
 export const vendingMachineFormat = {
   name: 'Ticket Machine 1',
@@ -107,6 +130,7 @@ export const vendingMachineFormat = {
     inBraille: true,
     areRaised: true,
   },
+  payment: paymentFormat,
 };
 
 export const mediaFormat = {
@@ -333,11 +357,7 @@ export const acFormat = {
 
           cashRegister: {
             height: '90cm',
-            hasMobilePaymentSystem: true,
-            acceptsCreditCards: true,
-            acceptsDebitCards: true,
-            acceptsCoins: true,
-            acceptsBills: true,
+            payment: paymentFormat
           },
 
           wheelchairPlaces: {
