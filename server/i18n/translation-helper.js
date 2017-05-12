@@ -31,7 +31,6 @@ export function createTranslationHelper(
 
     for (const locale of localesToTry) {
       const translation = getTranslationFn(locale, docOrMsgId);
-      console.log('Tried locale', locale, 'and got translation', translation);
       if (translation) {
         return translation;
       }
