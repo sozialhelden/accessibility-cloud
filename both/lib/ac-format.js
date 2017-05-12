@@ -237,6 +237,7 @@ export const personalProfile = {
   limitedSight: true,
   physicalImpairment: true,
   visualImpairment: true,
+  blindness: true,
   wheelchair: true,
 };
 
