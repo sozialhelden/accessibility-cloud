@@ -9,7 +9,7 @@ import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-
 import getPlaces from './get-places';
 import createMarkerFromFeature from '/client/lib/create-marker-from-feature';
 
-const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
+const DEFAULT_NUMBER_OF_PLACES_FETCHED = 2000;
 const PADDING = 0.02;
 
 const idsToShownMarkers = {};
