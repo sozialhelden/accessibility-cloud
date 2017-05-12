@@ -11,6 +11,10 @@ import { PlaceInfos } from '/both/api/place-infos/place-infos';
 const helpers = {
   getLocalizedCategory(locale) {
     const category = Categories.findOne(this.properties.category);
+    if (!category) {
+      console.log(`Category ${this.properties.category} not found.`);
+      return '';
+    }
     return category.getLocalizedId(locale);
   },
   getLocalizedAccessibility(locale) {
