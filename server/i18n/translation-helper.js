@@ -38,6 +38,7 @@ export function createTranslationHelper(
   };
 }
 
+
 export function addTranslationHelper(
   { attributeName, attributePathFn, collection, defaultLocale, msgidFn }
 ) {
@@ -51,11 +52,20 @@ export function addTranslationHelper(
 
   const helperName = `getLocalized${_.capitalize(attributeName.replace(/^_/, ''))}`;
   const helper = createTranslationHelper({
-    resourceSlug, defaultLocale, attributePathFn, msgidFn,
+    resourceSlug,
+    defaultLocale,
+    attributePathFn,
+    msgidFn,
     getTranslationFn(locale, doc) {
-      const path = attributePathFn(locale);
-      const result = _.get(doc, path);
-      return result;
+      const localeWithoutCountry = locale.replace(/_[A-Z][A-Z]$/);
+      const localeHasCountry = locale !== localeWithoutCountry;
+      const localeWithDefaultCountry =
+        localeHasCountry ? locale : findLocaleWithCountry(locale, doc);
+      return _.get(doc, attributePathFn(locale)) ||
+        _.get(doc, attributePathFn(localeWithoutCountry)) ||
+        _.get(doc, attributePathFn(localeWithDefaultCountry)) ||
+        _.get(doc, attributePathFn(defaultLocale)) ||
+        null;
     },
   });
 
