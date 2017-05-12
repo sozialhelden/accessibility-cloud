@@ -28,6 +28,8 @@ export const stairsFormat = {
   stepHeight: 1,
   hasHandRail: true,
   hasStairLift: true,
+  hasStairWay: true,
+  hasHoist: true,
   hasTactileSafetyStrip: true,
   wheelChairPlatformLift: {
     height: '120cm',
@@ -364,7 +366,6 @@ export const acFormat = {
             transferToRegularSeatPossible: true,
 
             hasMobileSafetyDepositBox: true,
-            hasHoist: true,
             hasChangingTable: true,                       //
             hasFlashingOrVibratingFireAlarm: true,
 
