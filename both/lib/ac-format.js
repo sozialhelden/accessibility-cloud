@@ -228,6 +228,7 @@ export const sitemapFormat = {
   hasSimpleLanguage: true,
 };
 
+
 export const acFormat = {
   _id: 'someId',
   acVersion: '1',
@@ -253,6 +254,7 @@ export const acFormat = {
     name: 'Hotel Adlon',                              // short name
     description: '',                                  // optional
     address: '',
+    phoneNumber: '',
     category: 'hotel',                                // see [ac-categories]
 
     accessibility: {
@@ -266,13 +268,13 @@ export const acFormat = {
         guideDog: true,
         limitedSight: true,
       },
-      offersActivitiesFor: {
-        hearingImpaired: true,
-        learningImpaired: true,
-        physicallyImpaired: true,
-        visuallyImpaired: true,
+      offersActivitiesForPeople: {
+        hearingImpairment: true,
+        learningImpairment: true,
+        physicalImpairment: true,
+        visualImpairment: true,
+        aphasia: true,
       },
-
       areas: [
         {                                                        // 'hotelRoom?'
           tags: [ // tbd
@@ -381,7 +383,7 @@ export const acFormat = {
             hasRemovableFurniture: false,
             hasInductionLoop: true,
             hasRemoteControlAudioSigns: true,
-
+            hasServiceInSignLanguage: true,
             hasTableService: true,
             transferToRegularSeatPossible: true,
 
@@ -408,6 +410,7 @@ export const acFormat = {
 
           signage: {
             isReadible: true,
+            hasSameMeaningInMonochromatic: true,
             languages: ['de'],
           },
 
