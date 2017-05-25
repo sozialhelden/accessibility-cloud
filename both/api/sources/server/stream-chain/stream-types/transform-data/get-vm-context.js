@@ -8,6 +8,7 @@ const AVAILABLE_LIBS = [
   'lodash.min.js',
   'lodash-inflection.js',
   'geodesy.js',
+  'md5.js',
 ];
 
 const getLibsContent = () =>
