@@ -156,7 +156,6 @@ To use a filter, add this parameter:
 Currently, the following filter presets are supported:
 
 - `at-least-partially-accessible-by-wheelchair`
-- `partially-accessible-by-wheelchair`
 - `fully-accessible-by-wheelchair`
 - `not-accessible-by-wheelchair`
 - `unknown-wheelchair-accessibility`
