@@ -1,36 +1,36 @@
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-
-- [Accessibility Cloud API](#accessibility-cloud-api)
-	- [Features](#features)
-	- [Getting started](#getting-started)
-	- [Authentication](#authentication)
-	- [Features for all endpoints](#features-for-all-endpoints)
-		- [Licensing](#licensing)
-		- [Pagination](#pagination)
-		- [Filtering returned fields](#filtering-returned-fields)
-		- [Embedded related resources](#embedded-related-resources)
-		- [Sorting](#sorting)
-		- [Error handling](#error-handling)
-	- [Endpoints](#endpoints)
-		- [GET /place-infos](#get-place-infos)
-			- [Data source filtering](#data-source-filtering)
-			- [Location-based search](#location-based-search)
-			- [Embedding related documents](#embedding-related-documents)
-			- [Example request](#example-request)
-			- [Example response](#example-response)
-		- [GET /apps](#get-apps)
-		- [GET /languages](#get-languages)
-		- [GET /licenses](#get-licenses)
-		- [GET /organizations](#get-organizations)
-		- [GET /source-imports](#get-source-imports)
-		- [GET /sources](#get-sources)
-
-<!-- /TOC -->
-
 # Accessibility Cloud API
 
 Accessibility Cloud allows you to request accessibility data via HTTP in JSON format.
 
+<!-- TOC -->
+
+- [Accessibility Cloud API](#accessibility-cloud-api)
+  - [Features](#features)
+  - [Getting started](#getting-started)
+  - [Authentication](#authentication)
+  - [Features for all endpoints](#features-for-all-endpoints)
+    - [Licensing](#licensing)
+    - [Pagination](#pagination)
+    - [Filtering returned fields](#filtering-returned-fields)
+    - [Embedded related resources](#embedded-related-resources)
+    - [Sorting](#sorting)
+    - [Error handling](#error-handling)
+  - [Endpoints](#endpoints)
+    - [GET /place-infos](#get-place-infos)
+      - [Data source filtering](#data-source-filtering)
+      - [Location-based search](#location-based-search)
+      - [Filter by metadata](#filter-by-metadata)
+      - [Embedding related documents](#embedding-related-documents)
+      - [Example request](#example-request)
+      - [Example response](#example-response)
+    - [GET /apps](#get-apps)
+    - [GET /languages](#get-languages)
+    - [GET /licenses](#get-licenses)
+    - [GET /organizations](#get-organizations)
+    - [GET /source-imports](#get-source-imports)
+    - [GET /sources](#get-sources)
+
+<!-- /TOC -->
 
 ## Features
 
@@ -59,11 +59,12 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token).
 
 Your API token allows you to access the following data:
+
 - Your organization's profile data
 - Content of your own organizations' data sources
-- Content of other organizations' data sources, if the sources meet the following criteria
-  - the source is not in draft mode
-  - your organization is allowed to access the data source (or the data source is publicly available)
+- Content of other organizations' data sources, if the source
+  - is not in draft mode
+  - is accessible for your organization (or publicly available)
 
 
 ## Features for all endpoints
@@ -92,11 +93,11 @@ You can sort results by using the `sort` parameter. For this parameter, the serv
 
 The server uses HTTP status codes for a general categorization of the errors you get back. Typical error codes:
 
-- `404`: The resource you requested could not be found.
+- `404`: The server could not find the resource you requested.
 - `401`: Your request was not authenticated (e.g. because the token was missing or invalid)
 - `402`: You don't have the necessary privileges to access the requested resource
 - `422`: Your request did not have the right format, e.g. you supplied invalid parameters
-- `500`: Your request could not be processed because there was an internal server error.
+- `500`: The server could not process your request because there was an internal error.
 
 All error responses from the JSON API contain a JSON body with `reason` and a `details` fields. For responses with `422` status code, the details field can contain an array with validation errors for each supplied parameter, e.g. like this:
 
@@ -130,7 +131,7 @@ All error responses from the JSON API contain a JSON body with `reason` and a `d
 
 Returns place infos (POIs) from arbitrary data sources. The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
-For requests to this endpoint, the following additional parameters are supported:
+For requests to this endpoint, the API supports the following parameters:
 
 #### Data source filtering
 
@@ -143,6 +144,22 @@ You can request POIs around a specific map location. For this, you have to suppl
 
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
+
+#### Filter by metadata
+
+The server has a database for additional metadata-based filter presets that you can use in your queries. If you need a specific query, [let the accessibility.cloud team know](mailto:support@accessibility.cloud).
+
+To use a filter, add this parameter:
+
+- `filter`: a String identifying the preset used to filter your data, e.g. `at-least-partially-accessible-by-wheelchair`.
+
+Currently, the following filter presets are supported:
+
+- `at-least-partially-accessible-by-wheelchair`
+- `partially-accessible-by-wheelchair`
+- `fully-accessible-by-wheelchair`
+- `not-accessible-by-wheelchair`
+- `unknown-wheelchair-accessibility`
 
 #### Embedding related documents
 

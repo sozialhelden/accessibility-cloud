@@ -3,6 +3,7 @@ import { distanceSearchSelector } from './distance-search';
 import { mapTileSelector } from './map-tile';
 import { sourceFilterSelector } from './source-filter.js';
 import { paginationOptions } from './pagination';
+import { filterPresetSelector } from './filter-preset';
 import { fieldOptions } from './fields';
 import { sortOptions } from './sort';
 import { _ } from 'meteor/underscore';
@@ -30,6 +31,7 @@ export function buildSelectorAndOptions({ req, _id, collection, appId, userId })
       (selectors.length === 1) ? selectors[0] : { $or: selectors },
       distanceSearchSelector(req),
       mapTileSelector(req),
+      filterPresetSelector(req),
     ].filter(s => Object.keys(s).length > 0),
   };
 
