@@ -7,6 +7,7 @@ Meteor.startup(() => {
   PlaceInfos._ensureIndex({ 'properties.category': 1 });
   PlaceInfos._ensureIndex({ 'properties.name': 1 });
   PlaceInfos._ensureIndex({ 'properties.accessibility.accessibleWith.wheelchair': 1 });
+  PlaceInfos._ensureIndex({ 'properties.accessibility.partlyAccessibleWith.wheelchair': 1 });
   PlaceInfos._ensureIndex({ 'properties.originalId': 1 });
   PlaceInfos._ensureIndex({ 'properties.sourceId': 1, 'properties.originalId': 1 });
 
