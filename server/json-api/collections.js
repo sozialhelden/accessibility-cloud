@@ -8,6 +8,7 @@ import { Organizations } from '/both/api/organizations/organizations';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
+import { Categories } from '/both/api/categories/categories';
 
 // Limits collections accessible over JSON API to a white list.
 
@@ -19,6 +20,7 @@ const collections = [
   PlaceInfos,
   SourceImports,
   Sources,
+  Categories,
 ];
 
 const namesToCollections = _.indexBy(

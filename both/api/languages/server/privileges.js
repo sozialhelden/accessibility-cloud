@@ -18,3 +18,4 @@ Languages.helpers({
 
 Languages.visibleSelectorForUserId = () => ({});
 Languages.visibleSelectorForAppId = () => ({});
+Languages.apiParameterizedSelector = selector => selector;

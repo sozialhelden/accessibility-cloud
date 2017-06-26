@@ -52,3 +52,7 @@ Categories.schema = new SimpleSchema({
 });
 
 Categories.attachSchema(Categories.schema);
+
+Categories.visibleSelectorForUserId = () => ({});
+Categories.visibleSelectorForAppId = () => ({});
+Categories.apiParameterizedSelector = selector => selector;
