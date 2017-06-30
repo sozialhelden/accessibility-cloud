@@ -291,6 +291,8 @@ export const acFormat = {
           ratingSpacious: 1,                      // needs review
           isWellLit: true,
           isQuiet: true,
+          isSmoking: false,
+          isNonSmoking: false,
 
           ground: groundFormat,
 
