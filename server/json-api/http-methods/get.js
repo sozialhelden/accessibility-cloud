@@ -18,12 +18,17 @@ export function GET({ req, collection, _id, appId, userId }) {
 
   if (_id) {
     // Return single document
-    return collection.findOne(selector, options);
+    const result = collection.findOne(selector, options);
+    if (!result) {
+      throw new Meteor.Error(404, 'Resource not found.');
+    }
+    return result;
   }
 
   // Return array of documents
   const resultsCount = collection.find(selector, _.omit(options, 'skip', 'limit')).count();
   const results = collection.find(selector, options).fetch();
+
 
   const related = findAllRelatedDocuments({
     req,
