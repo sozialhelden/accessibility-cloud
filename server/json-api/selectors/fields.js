@@ -47,15 +47,17 @@ export function fieldOptions(req, collection) {
   // Throw ValidationError if something is wrong
   schema.validate(fieldsQuery);
 
-  // TODO: This is not safe yet. It has to ensure all fields are publicFields of the collection.
-
-  const fields = {};
+  let fields = {};
   Object.assign(
     fields,
     _.object((fieldsQuery.include || '').split(',').map(field => [field, 1])),
-    _.object((fieldsQuery.exclude || '').split(',').map(field => [field, 0]))
+    _.object((fieldsQuery.exclude || '').split(',').map(field => [field, 0])),
   );
   delete fields[''];
+
+  if (Object.keys(fields).length === 0) {
+    fields = _.object(publicFieldNames.map(f => [f, 1]));
+  }
 
   return { fields };
 }
