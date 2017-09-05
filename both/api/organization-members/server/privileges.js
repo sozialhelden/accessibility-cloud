@@ -81,6 +81,6 @@ Meteor.users.visibleSelectorForUserId = (userId) => {
 
 Meteor.users.visibleSelectorForAppId = (appId) => {
   check(appId, String);
-  const app = Apps.findOnd(appId);
+  const app = Apps.findOne(appId);
   return getUserSelectorForMemberSelector({ organizationId: app.organizationId });
 };
