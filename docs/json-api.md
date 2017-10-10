@@ -24,6 +24,7 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
       - [Example request](#example-request)
       - [Example response](#example-response)
     - [GET /apps](#get-apps)
+    - [GET /categories](#get-categories)
     - [GET /languages](#get-languages)
     - [GET /licenses](#get-licenses)
     - [GET /organizations](#get-organizations)
@@ -210,10 +211,7 @@ If given, the `include` parameter has to be a comma-separated list of relation n
 #### Example request
 
 ```bash
-curl -v -s \
-    -H 'Accept: application/json' \
-    -H 'X-App-Token: YOUR_TOKEN_HERE' \
-    https://www.accessibility.cloud/place-infos\?latitude\=48.24350856260559\&longitude\=16.39748637322089\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&include=source | jq .
+curl -v https://www.accessibility.cloud/place-infos.json\?appToken\=YOUR_APP_TOKEN_HERE&latitude\=48.2435\&longitude\=16.3974\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&include=source | jq .
 ```
 
 #### Example response
@@ -322,6 +320,45 @@ curl -v -s \
 ### GET /apps
 
 TODO
+
+### GET /categories
+
+Returns all categories known to accessibility.cloud, together with their translated names in the given `locale`.
+
+#### Example request
+
+```bash
+curl https://www.accessibility.cloud/categories.json\?appToken\=YOUR_APP_TOKEN_HERE\&locale\=en | jq
+```
+
+#### Example response
+
+```json
+{
+  "count": 172,
+  "totalCount": 172,
+  "related": {},
+  "results": [
+    {
+      "_id": "car_sharing",
+      "icon": "car_sharing",
+      "parentIds": [
+        "transport"
+      ],
+      "translations": {
+        "_id": {
+          "de": "Carsharing",
+          "en": "Car sharing"
+        }
+      },
+      "synonyms": [
+        "amenity=car_sharing"
+      ]
+    },
+    ...
+  ]
+}
+```
 
 ### GET /languages
 
