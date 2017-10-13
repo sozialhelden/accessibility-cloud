@@ -16,7 +16,7 @@ GlobalStats.lastCollectionCount = collectionName => {
   check(collectionName, String);
   const lastDataPoint = GlobalStats.findOne(
     { name: `${collectionName}.count` },
-    { sort: { data: -1 } }
+    { sort: { date: -1 } },
   );
   return lastDataPoint && lastDataPoint.value;
 };
