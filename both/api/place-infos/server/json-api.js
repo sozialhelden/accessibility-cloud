@@ -50,6 +50,12 @@ const helpers = {
       if (typeof this.properties.name[localeWithoutCountry] === 'string') {
         return this.properties.name[localeWithoutCountry];
       }
+      if (typeof this.properties.name.en_US === 'string') {
+        return this.properties.name.en_US;
+      }
+      if (typeof this.properties.name.en === 'string') {
+        return this.properties.name.en;
+      }
     }
     return null;
   },
