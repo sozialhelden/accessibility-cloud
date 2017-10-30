@@ -1,9 +1,10 @@
+import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/stevezhu:lodash';
 import { geoDistance } from '/both/lib/geo-distance';
 import { Sources } from '/both/api/sources/sources';
 import {
   pathsInObject,
-  getTranslationForAccessibilityAttribute,
+  getTranslationForAccessibilityAttributeName,
 } from '/server/i18n/ac-format-translations';
 import { Categories } from '/both/api/categories/categories';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
@@ -21,9 +22,36 @@ const helpers = {
     const result = _.cloneDeep(this.properties.accessibility);
     const paths = pathsInObject(result);
     paths.forEach(path => {
-      _.set(result, `${path}Localized`, getTranslationForAccessibilityAttribute(path, locale));
+      _.set(result, `${path}Localized`, getTranslationForAccessibilityAttributeName(path, locale));
     });
     return result;
+  },
+  getLocalizedName(locale) {
+    if (locale && !(typeof locale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
+    if (!this.properties) return null;
+    if (typeof this.properties.name === 'string') return this.properties.name;
+    if (typeof this.properties.name === 'object') {
+      if (!locale) {
+        if (typeof this.properties.name.en_US === 'string') {
+          return this.properties.name.en_US;
+        }
+        if (typeof this.properties.name.en === 'string') {
+          return this.properties.name.en;
+        }
+        const firstAvailableLocale = Object.keys(this.properties.name)[0];
+        if (firstAvailableLocale && typeof this.properties.name[firstAvailableLocale] === 'string') {
+          return this.properties.name[firstAvailableLocale];
+        }
+      }
+      if (typeof this.properties.name[locale] === 'string') {
+        return this.properties.name[locale];
+      }
+      const localeWithoutCountry = locale.slice(0, 2);
+      if (typeof this.properties.name[localeWithoutCountry] === 'string') {
+        return this.properties.name[localeWithoutCountry];
+      }
+    }
+    return null;
   },
 };
 
@@ -39,6 +67,7 @@ PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
     properties.localizedCategory = helpers.getLocalizedCategory.call(doc, locale);
     properties.accessibility = helpers.getLocalizedAccessibility.call(doc, locale);
   }
+  properties.name = helpers.getLocalizedName.call(doc, locale);
   delete properties.properties;
   return {
     type: 'Feature',

@@ -27,7 +27,7 @@ const translate = createTranslationHelper({
   },
 });
 
-export function getTranslationForAccessibilityAttribute(path, locale) {
+export function getTranslationForAccessibilityAttributeName(path, locale) {
   const msgid = lastPart(path);
   return translate(locale, msgid);
 }

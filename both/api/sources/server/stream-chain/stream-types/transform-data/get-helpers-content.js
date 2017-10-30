@@ -19,6 +19,7 @@ const AVAILABLE_HELPERS = {
 
   extractNumber: 'extract-number.js',
   convertOSGB36ToWGS84Point: 'convert-osgb36-to-wgs84-point.js',
+  convert3LetterLanguageCode: 'convert-3-letter-language-code.js',
 };
 
 const HELPERS_BASE_PATH = 'transform-helpers';
