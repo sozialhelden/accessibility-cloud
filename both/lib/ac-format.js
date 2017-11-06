@@ -261,7 +261,7 @@ export const acFormat = {
   properties: {
     originalId: '3',
     ids: [
-      { provider: 'Deutsche Bahn', stationnumber: 123 },
+      { provider: 'Deutsche Bahn', stationNumber: 123, ril100Identifier: 'KA', evaNumber: 123 },
     ],
 
     lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
