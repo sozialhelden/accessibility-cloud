@@ -9,14 +9,51 @@ export const pointGeometryFormat = {
   ],
 };
 
-export const groundFormat = {
-  isLevel: true,
-  distanceToDroppedCurb: '<20m ±10',      // interpretation of 'nearby',
-  slopeAngle: '6deg',
-  isCobbleStone: true,                    // RFC: replace with 'evenPavement'
-  turningSpace: '<150cm',                 // interpretation of 'very narrow'
-  streetIsSloping: true,
+export const equipmentAccessibilityFormat = {
+  height: '90 .. 120cm',
+  languages: ['en', 'de'],
+  isRaised: true,
+  isBraille: true,
+  hasSpeech: true,
+  isHighContrast: true,
+  hasLargePrint: true,
+  isVoiceActivated: true,
+  hasHeadPhoneJack: true,
+  isEasyToUnderstand: true,
 };
+
+export const equipmentFormat = {
+  ids: [
+    {
+      provider: 'Deutsche Bahn', // organization who manages the equipment database
+      equipmentnumber: 123,
+      stationnumber: 2628,
+    },
+  ],
+  description: 'zu Gleis 2/3',
+  geometry: pointGeometryFormat,
+
+  isWorking: true,
+  isInMaintenance: true,
+
+  controls: equipmentAccessibilityFormat,
+};
+
+
+export const escalatorFormat = equipmentFormat;
+
+
+export const liftFormat = Object.assign({}, equipmentFormat, {
+  hasEmergencyVoiceIntercom: true,
+  cabin: {
+    width: '140cm',
+    length: '110cm',
+    door: {
+      width: '100cm',
+    },
+  },
+});
+
 
 export const stairsFormat = {
   count: 123,
@@ -24,18 +61,19 @@ export const stairsFormat = {
     isHighContrast: false,
     isAntiSlip: true,
   },
-  name: 'mainStaris',
+  name: 'mainStairs',
   stepHeight: 1,
+  hasHoist: true,
   hasHandRail: true,
   hasStairLift: true,
-  hasStairWay: true,
-  hasHoist: true,
+  hasEscalator: true,
   hasTactileSafetyStrip: true,
   wheelChairPlatformLift: {
     height: '120cm',
     width: '110cm',
   },
 };
+
 
 export const doorFormat = {
   turningSpaceInFront: '>150cm',
@@ -52,25 +90,14 @@ export const doorFormat = {
   needsEuroKey: true,
 };
 
-export const liftFormat = {
-  name: 'Main Lift',
-  hasVoiceAnnounceSystem: true,
-  hasEmergencyVoiceIntercom: true,
-  isBroken: true,
-  isBeingMaintained: true,
-  controls: {
-    height: '90 .. 120cm',
-    isHighContrast: true,
-    isBraille: true,
-    isRaised: true,
-  },
-  cabin: {
-    width: '140cm',
-    length: '110cm',
-    door: {
-      width: '100cm',
-    },
-  },
+
+export const groundFormat = {
+  isLevel: true,
+  distanceToDroppedCurb: '<20m ±10',      // interpretation of 'nearby',
+  slopeAngle: '6deg',
+  isCobbleStone: true,                    // RFC: replace with 'evenPavement'
+  turningSpace: '<150cm',                 // interpretation of 'very narrow'
+  streetIsSloping: true,
 };
 
 
@@ -95,43 +122,40 @@ export const paymentFormat = {
 };
 
 
+export const vendingMachineFormat = Object.assign({}, equipmentFormat, {
+  name: 'Ticket Machine 1',
+  payment: paymentFormat,
+});
+
+
+export const sitemapFormat = Object.assign({}, equipmentFormat, {
+  distanceFromEntrance: '<10m',
+});
+
+
+export const intercomFormat = Object.assign({}, equipmentFormat, {
+  distanceFromEntrance: '<10m',
+});
+
+
 export const entranceFormat = {
   name: 'Main Entrance',
   ratingForWheelchair: 0.9,
   isMainEntrance: true,
   isLevel: false,
   isALift: true,
-  hasRemovableRamp: false,
   hasSlope: true,
   slopeAngle: '6%',
-  hasVisibleAndReadableSign: true,        // needs review
-  hasBrailleSitemap: true,
-  intercom: {
-    isAvailable: true,
-    height: '90..120cm',
-    isColorContrastedWithWall: true,      // needs review
-  },
+  hasRemovableRamp: false,
+  hasIntercom: true,
+  intercom: intercomFormat,
+  payment: paymentFormat,
+  sitemap: sitemapFormat,
   stairs: stairsFormat,
   door: doorFormat,
   lift: liftFormat,
-  payment: paymentFormat,
 };
 
-
-export const vendingMachineFormat = {
-  name: 'Ticket Machine 1',
-  easyToUse: true,
-  languages: ['en', 'de'],
-  hasHeadPhoneJack: true,
-  hasSpeech: true,
-  controls: {
-    height: '<120cm',
-    areHighContrast: true,
-    inBraille: true,
-    areRaised: true,
-  },
-  payment: paymentFormat,
-};
 
 export const mediaFormat = {
   type: 'documents', // documents|menu|audioGuide|presentations|exhibits|movie|screen,
@@ -144,6 +168,7 @@ export const mediaFormat = {
   hasDedicatedScreenForSubtitles: true,
   hasSubtitles: true,
   hasRealtimeCaptioning: true,
+  hasPlainLanguageOption: true,
   languages: ['en', 'de'],
   turningSpaceInFront: '>140cm',
   isClearlyVisibleWhileSeated: true,
@@ -152,6 +177,7 @@ export const mediaFormat = {
 
 export const roomFormat = {
   name: 'Room name',
+  isAccessibleWithWheelchair: true,
 };
 
 export const toiletFormat = {
@@ -176,12 +202,8 @@ export const showerFormat = {
     height: '85 .. 107cm',
     aboveAndBelowControls: true,
   },
-  controls: {
-    height: '85cm',
-    isEasyToUse: true,
-    hasErgonomicHandle: true,
-  },
   hasShowerSeat: true,
+  hasErgonomicHandle: true,
   showerSeat: {
     isRemovable: true,
     isFixed: false,
@@ -189,19 +211,19 @@ export const showerFormat = {
   },
 };
 
+
 export const restroomFormat = Object.assign({}, roomFormat, {
-  isAccessibleWithWheelchair: true,
   signage: {
     unisex: true,
     male: true,
     female: true,
   },
-  ratingForWheelchair: 0.3,
-  turningSpaceInside: '>150cm',
   mirror: {
     isAccessibleWhileSeated: true,
     heightFromGround: '100cm',
   },
+  ratingForWheelchair: 0.3,
+  turningSpaceInside: '>150cm',
   hasSupportRails: true,
   shampooAccessibleWithWheelchair: true,
   toilet: toiletFormat,
@@ -220,16 +242,7 @@ export const restroomFormat = Object.assign({}, roomFormat, {
   },
 });
 
-export const sitemapFormat = {
-  distanceFromEntrance: '<10m',
-  isBraille: true,
-  isRaised: true,
-  hasLargePrint: true,
-  languages: ['en'],
-  hasSimpleLanguage: true,
-};
-
-export const personalProfile = {
+export const personalProfile = { // can be used to match a personal profile to offers
   aphasia: true,
   guideDog: true,
   hearingImpairment: true,
@@ -247,10 +260,14 @@ export const acFormat = {
 
   properties: {
     originalId: '3',
+    ids: [
+      { provider: 'Deutsche Bahn', stationnumber: 123 },
+    ],
 
     lastSourceImportId: 'R7tbPmwn8Jbhi54rM',
-    infoPageUrl: 'https://...',
-    placeWebsiteUrl: 'https://...',
+    infoPageUrl: 'https://...',     // link to the PoI on the data provider's platform
+    editPageUrl: 'https://...',     // website where you can edit or contribute to the place data
+    placeWebsiteUrl: 'https://...', // website of the place itself
 
     license: {
       name: 'GPLv3',
@@ -272,7 +289,7 @@ export const acFormat = {
     accessibility: {
       accessibleWith: personalProfile,
       partiallyAccessibleWith: personalProfile,
-      offersActivitiesForPeople: personalProfile,
+      offersActivitiesForPeopleWith: personalProfile,
       areas: [
         {                                                        // 'hotelRoom?'
           tags: [ // tbd
@@ -303,7 +320,7 @@ export const acFormat = {
             // width: '>150',
             // widthAtObstacles: '>90cm',
             // spaceBetweenExistingBallards: '>90cm',
-            width: '>150',
+            width: '>150cm',
             widthAtObstacles: '>90cm',
             maxLongitudinalSlope: '<6deg',
             maxLateralSlope: '<2.5deg',
@@ -313,19 +330,11 @@ export const acFormat = {
           restrooms: [restroomFormat],
           sitemap: sitemapFormat,
           lifts: [liftFormat],
-
-          powerOutlets: {
-            haveContrastColor: true,
-            isErgnomicToUse: true,
+          switches: [equipmentFormat],
+          vendingMachines: [vendingMachineFormat],
+          powerOutlets: [Object.assign({}, equipmentFormat, {
             hasChildProtection: true,
-            height: '10 .. 30cm',
-          },
-
-          controlsAndSwitches: {
-            haveContrastColor: true,
-            isErgnomicToUse: true,
-            height: '120cm',
-          },
+          })],
 
           beds: [{
             height: '120cm ± 10',
@@ -353,13 +362,9 @@ export const acFormat = {
             turningSpace: '150cm',
           },
 
-          vendingMachines: [
-            vendingMachineFormat,
-          ],
-
           cashRegister: {
             height: '90cm',
-            payment: paymentFormat
+            payment: paymentFormat,
           },
 
           wheelchairPlaces: {
@@ -379,6 +384,8 @@ export const acFormat = {
             height: '20 .. 120cm',
           },
 
+          serviceContact: 'Call +49 030 12345678 to register',
+
           services: {                                     // RFC? do we need to group these
             hasRemovableFurniture: false,
             hasInductionLoop: true,
@@ -388,7 +395,7 @@ export const acFormat = {
             transferToRegularSeatPossible: true,
 
             hasMobileSafetyDepositBox: true,
-            hasChangingTable: true,                       //
+            hasChangingTable: true,
             hasFlashingOrVibratingFireAlarm: true,
 
             hasPoolAccessFacility: true,
@@ -396,6 +403,7 @@ export const acFormat = {
             hasManualWheelchair: true,
             hasAllTerrainWheelchair: true,
             hasVehiclesAdaptedForWheelchairs: true,
+            hasMobilityService: true,
           },
 
           tactileGuideStrips: {
