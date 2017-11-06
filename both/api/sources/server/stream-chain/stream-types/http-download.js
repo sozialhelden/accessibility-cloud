@@ -80,6 +80,7 @@ export class HTTPDownload {
   }
 
   abort() {
+    if (!this.request) return;
     this.request.abort();
   }
 
