@@ -14,8 +14,9 @@ SourceImports.helpers({
   },
   mostFrequentCategoryNamesToPlaceCounts(limit = 10) {
     const attributeDistribution = this.getCachedAttributeDistribution();
-    if (!attributeDistribution) { return []; }
+    if (!attributeDistribution) return [];
     const categoryNamesToCounts = attributeDistribution.properties.properties.category;
+    if (!categoryNamesToCounts) return [];
     const categoryNames = Object.keys(categoryNamesToCounts);
     const countForCategoryName = (name) => categoryNamesToCounts[name];
     return _.sortBy(categoryNames, countForCategoryName)

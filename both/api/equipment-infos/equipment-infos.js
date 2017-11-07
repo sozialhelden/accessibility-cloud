@@ -1,18 +1,27 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import LocationSchema from '../../lib/LocationSchema';
 
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
 
+SimpleSchema.debug = true;
+
 EquipmentInfos.schema = new SimpleSchema({
+  geometry: {
+    type: {},
+    optional: true,
+  },
   'geometry.type': {
     type: String,
     allowedValues: ['Point'],
   },
   'geometry.coordinates': {
     type: Array,
+    minCount: 2,
+    maxCount: 2
   },
   'geometry.coordinates.$': {
     type: Number,
@@ -20,13 +29,27 @@ EquipmentInfos.schema = new SimpleSchema({
     max: 180,
     decimal: true,
   },
-  // 'geometry.coordinates.1': {
-  //   type: Number,
-  //   min: -90,
-  //   max: 90,
-  //   decimal: true,
-  // },
+  'properties.originalId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalPlaceInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalData': {
+    type: String,
+    optional: true,
+  },
   'properties.placeInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.sourceId': {
+    type: String,
+    optional: true,
+  },
+  'properties.sourceImportId': {
     type: String,
     optional: true,
   },

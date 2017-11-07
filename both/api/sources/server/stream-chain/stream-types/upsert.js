@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
-import { Disruptions } from '/both/api/disruptions/disruptions';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/stevezhu:lodash';
 
@@ -11,9 +10,10 @@ const CoordinateMatcher = Match.Where(x => _.isNumber(x) && x !== 0);
 const CoordinatesMatcher = [CoordinateMatcher];
 const TwoCoordinatesMatcher = Match.Where(x => Match.test(x, CoordinatesMatcher) && x.length === 2);
 
-const upsert = Meteor.bindEnvironment((onDebugInfo, selector, doc, callback) => {
+const upsert = Meteor.bindEnvironment((collection, onDebugInfo, selector, doc, callback) => {
   try {
-    Disruptions.upsert(selector, doc, callback);
+    console.log('Upserting doc', doc);
+    collection.upsert(selector, { $set: doc }, callback);
   } catch (error) {
     console.log('Error while upserting:', doc, error);
     if (onDebugInfo) {
@@ -39,6 +39,7 @@ export default class Upsert {
     let updatedDocumentCount = 0;
 
     let firstDocumentWithoutOriginalId = null;
+    const streamClass = this.constructor;
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -77,7 +78,7 @@ export default class Upsert {
           sourceImportId,
         });
 
-        upsert(this.constructor.collection, onDebugInfo, {
+        upsert(streamClass.collection, onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, doc, (upsertError, result) => {

@@ -1,8 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import LocationSchema from '../../lib/LocationSchema';
 
 export const Disruptions = new Mongo.Collection('Disruptions');
+
 
 Disruptions.schema = new SimpleSchema({
   'geometry.type': {
@@ -11,6 +13,8 @@ Disruptions.schema = new SimpleSchema({
   },
   'geometry.coordinates': {
     type: Array,
+    minCount: 2,
+    maxCount: 2
   },
   'geometry.coordinates.$': {
     type: Number,
@@ -18,13 +22,36 @@ Disruptions.schema = new SimpleSchema({
     max: 180,
     decimal: true,
   },
-  // 'geometry.coordinates.1': {
-  //   type: Number,
-  //   min: -90,
-  //   max: 90,
-  //   decimal: true,
-  // },
+  'coordinates.$': {
+    type: Number,
+    decimal: true,
+    custom() {
+      if (Math.abs(this.value[0]) > 90) return 'outOfRange';
+      if (Math.abs(this.value[1]) > 180) return 'outOfRange';
+      return undefined;
+    },
+  },
+  'properties.originalId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalEquipmentId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalData': {
+    type: String,
+    optional: true,
+  },
   'properties.placeInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.sourceId': {
+    type: String,
+    optional: true,
+  },
+  'properties.sourceImportId': {
     type: String,
     optional: true,
   },
