@@ -1,10 +1,11 @@
+import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { FilterPresets } from '/both/api/filter-presets/filter-presets';
 
 // Returns MongoDB query options for given request
 
-export function filterPresetSelector(req) {
+export default function filterPresetSelector(req) {
   const fieldsQuery = _.pick(req.query, 'filter');
 
   const schema = new SimpleSchema({

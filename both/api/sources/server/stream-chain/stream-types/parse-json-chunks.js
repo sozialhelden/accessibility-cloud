@@ -1,7 +1,8 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
 const { Transform } = Npm.require('zstreams');
 
-export class ParseJSONChunks {
+export default class ParseJSONChunks {
   constructor() {
     this.stream = new Transform({
       // writableObjectMode: true,

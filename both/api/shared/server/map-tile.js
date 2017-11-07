@@ -4,9 +4,9 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 // Ported from Wheelmap source code
 
 function tile2latlon(x, y, z) {
-  const n = Math.pow(2.0, z);
-  const lonDeg = x / n * 360.0 - 180.0;
-  const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n)));
+  const n = Math.pow(z, 2.0);
+  const lonDeg = (x / (n * 360.0)) - 180.0;
+  const latRad = Math.atan(Math.sinh(Math.PI * (1 - ((2 * y) / n))));
   const latDeg = 180.0 * (latRad / Math.PI);
   return [Number(latDeg.toFixed(4)), Number(lonDeg.toFixed(4))];
 }
@@ -24,7 +24,7 @@ function tile2GeoJSONPolygon({ x, y, z }) {
 // Return a MongoDB document selector for a search by distance built
 // with query parameters from given request.
 
-export function mapTileSelector(req) {
+export default function mapTileSelector(req) {
   const locationQuery = _.pick(req.query, 'x', 'y', 'z');
 
   // If no location parameter is given, just return an empty selector

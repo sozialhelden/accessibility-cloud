@@ -196,6 +196,9 @@ Template.sources_show_format_page.events({
       if (chainPart.type !== 'TransformData') {
         continue;
       }
+      if (chainPart.skipValidation) {
+        continue;
+      }
       // console.log(chain[i]);
       const mappings = chainPart.parameters.mappings;
       if (mappings === undefined) {

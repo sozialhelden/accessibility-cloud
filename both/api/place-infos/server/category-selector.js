@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // Returns MongoDB query options for given request
 
-export function categoryFilterSelector(req) {
+export default function categoryFilterSelector(req) {
   const categoriesQuery = _.pick(req.query, 'includeCategories', 'excludeCategories');
 
   const schema = new SimpleSchema({

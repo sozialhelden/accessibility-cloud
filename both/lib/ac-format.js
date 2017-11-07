@@ -22,21 +22,38 @@ export const equipmentAccessibilityFormat = {
   isEasyToUnderstand: true,
 };
 
-export const equipmentFormat = {
-  ids: [
-    {
-      provider: 'Deutsche Bahn', // organization who manages the equipment database
-      equipmentnumber: 123,
-      stationnumber: 2628,
-    },
-  ],
-  description: 'zu Gleis 2/3',
+
+export const disruptionFormat = {
+  properties: {
+    placeInfoId: 'abc123',
+    equipmentId: 'abc123',
+    isWorking: true,
+    isInMaintenance: true,
+    outOfServiceReason: 'Not usable due to construction work in the northern building half',
+    furtherDescription: 'This text explains what\'s going on in detail',
+    plannedCompletion: '2017-10-16T16:05:27.000+02:00',
+    outOfServiceOn: '2017-10-10T16:05:27.000+02:00',
+    outOfServiceTo: '2017-10-11T16:00:27.000+02:00',
+    lastUpdate: '2017-10-10T16:05:27.000+02:00',
+  },
   geometry: pointGeometryFormat,
+};
 
-  isWorking: true,
-  isInMaintenance: true,
 
-  controls: equipmentAccessibilityFormat,
+export const equipmentFormat = {
+  properties: {
+    ids: [
+      {
+        provider: 'Deutsche Bahn', // organization who manages the equipment database
+        equipmentnumber: 123,
+        stationnumber: 2628,
+      },
+    ],
+    placeInfoId: 'abc123',
+    description: 'zu Gleis 2/3',
+    controls: equipmentAccessibilityFormat,
+  },
+  geometry: pointGeometryFormat,
 };
 
 

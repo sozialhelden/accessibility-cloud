@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 // Return a MongoDB document selector for a search by distance built
 // with query parameters from given request.
 
-export function distanceSearchSelector(req) {
+export default function distanceSearchSelector(req) {
   const locationQuery = _.pick(req.query, 'latitude', 'longitude', 'accuracy');
 
   // If no location parameter is given, just return an empty selector
