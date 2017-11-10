@@ -16,7 +16,7 @@ export function createTranslationHelper(
 ) {
   return (requestedLocale, docOrMsgId) => {
     const sanitizedRequestedLocale = requestedLocale.replace('_', '-');
-    const localeWithoutCountry = requestedLocale.substring(0,2).toLowerCase();
+    const localeWithoutCountry = requestedLocale.substring(0, 2).toLowerCase();
     const localeHasCountry = sanitizedRequestedLocale !== localeWithoutCountry;
     const localeWithDefaultCountry = localeHasCountry ? sanitizedRequestedLocale :
       findLocaleWithCountry(resourceSlug, sanitizedRequestedLocale);

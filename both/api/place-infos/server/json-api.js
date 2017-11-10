@@ -5,7 +5,7 @@ import { Sources } from '/both/api/sources/sources';
 import {
   pathsInObject,
   getTranslationForAccessibilityAttributeName,
-} from '/server/i18n/ac-format-translations';
+} from '/both/i18n/ac-format-translations';
 import { Categories } from '/both/api/categories/categories';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 

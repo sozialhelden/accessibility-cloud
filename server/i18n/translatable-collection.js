@@ -3,9 +3,9 @@ import { check } from 'meteor/check';
 
 import { addRPCMethodForSyncing } from './rpc-method';
 import { extendCollectionSchema } from './collection-schema';
-import { addTranslationHelper } from './translation-helper';
-import { resourceSlugForCollection } from './resource-slug';
-import { cacheRegisteredLocales } from './locales';
+import { addTranslationHelper } from '../../both/i18n/translation-helper';
+import { resourceSlugForCollection } from '../../both/i18n/resource-slug';
+import { cacheRegisteredLocales } from '../../both/i18n/locales';
 
 export const defaultLocale = 'en_US';
 
