@@ -9,7 +9,7 @@ if (!iconv.encodings) {
   throw new Error('No iconv encodings available. Please update implementation.');
 }
 
-export class ConvertToUTF8 {
+export default class ConvertToUTF8 {
   constructor({ fromCharSet = 'utf8' }) {
     check(fromCharSet, String);
     this.stream = iconv.decodeStream(fromCharSet);

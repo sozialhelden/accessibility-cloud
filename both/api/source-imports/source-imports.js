@@ -52,6 +52,6 @@ SourceImports.helpers({
     if (!this.streamChain) {
       return null;
     }
-    return this.streamChain.find(stream => stream && stream.type === 'UpsertPlace');
+    return this.streamChain.find(stream => stream && stream.type.match(/^Upsert/));
   },
 });

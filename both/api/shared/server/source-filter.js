@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // Returns MongoDB query options for given request
 
-export function sourceFilterSelector(req) {
+export default function sourceFilterSelector(req) {
   const fieldsQuery = _.pick(req.query, 'includeSourceIds', 'excludeSourceIds');
 
   const schema = new SimpleSchema({

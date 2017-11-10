@@ -1,9 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
-import { SourceImports } from '/both/api/source-imports/source-imports.js';
-import { Sources } from '/both/api/sources/sources.js';
+import { PlaceInfos } from '/both/api/place-infos/place-infos';
+import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
+import { Disruptions } from '/both/api/disruptions/disruptions';
+import { SourceImports } from '/both/api/source-imports/source-imports';
+import { Sources } from '/both/api/sources/sources';
 import {
   checkExistenceAndFullAccessToSourceId,
   checkExistenceAndVisibilityForSourceId,
@@ -53,6 +55,8 @@ Meteor.methods({
     checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
+    EquipmentInfos.remove({ 'properties.sourceId': sourceId });
+    Disruptions.remove({ 'properties.sourceId': sourceId });
     Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
   },
 });

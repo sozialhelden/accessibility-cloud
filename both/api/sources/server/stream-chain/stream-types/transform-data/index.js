@@ -1,9 +1,10 @@
+import vm from 'vm';
+import { _ } from 'lodash';
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'lodash';
+
 import entries from '/both/lib/entries';
 import getVMContext from './get-vm-context';
-import vm from 'vm';
 import vmScriptsOptions from '../vm-scripts-options';
 
 const { Transform } = Npm.require('zstreams');
@@ -29,12 +30,14 @@ function compileMappings(mappings, context) {
   return result;
 }
 
-export class TransformData {
+export default class TransformData {
   constructor({ mappings }) {
     check(mappings, Object);
 
-    const context = this.context = getVMContext();
-    const compiledMappings = this.compiledMappings = compileMappings(mappings, context, vmScriptsOptions);
+    const context = getVMContext();
+    this.context = context;
+    const compiledMappings = compileMappings(mappings, context, vmScriptsOptions);
+    this.compiledMappings = compiledMappings;
 
     let hadError = false;
 
@@ -66,13 +69,12 @@ export class TransformData {
           hadError = true;
           this.emit('error', error);
           callback(error);
-          return;
         }
       },
     });
 
     this.lengthListener = length => this.stream.emit('length', length);
-    this.pipeListener = source => {
+    this.pipeListener = (source) => {
       this.source = source;
       source.on('length', this.lengthListener);
     };

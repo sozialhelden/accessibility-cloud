@@ -1,13 +1,14 @@
-const { SkipStream } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 
-export class Skip {
+const { SkipStream } = Npm.require('zstreams');
+
+export default class Skip {
   constructor({ skip = 3 }) {
     check(skip, Number);
     this.stream = new SkipStream(skip, { objectMode: true });
 
     this.lengthListener = length => this.stream.emit('length', Math.max(0, length - skip));
-    this.pipeListener = source => {
+    this.pipeListener = (source) => {
       this.source = source;
       source.on('length', this.lengthListener);
     };

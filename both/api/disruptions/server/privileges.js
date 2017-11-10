@@ -1,26 +1,26 @@
 import { isAdmin } from '/both/lib/is-admin';
 import { check } from 'meteor/check';
-import { PlaceInfos } from '../place-infos';
+import { Disruptions } from '../disruptions';
 import { Sources } from '../../sources/sources';
 
-PlaceInfos.allow({
+Disruptions.allow({
   insert: isAdmin,
   update: isAdmin,
   remove: isAdmin,
 });
 
-PlaceInfos.publicFields = {
+Disruptions.publicFields = {
   properties: 1,
   geometry: 1,
 };
 
-PlaceInfos.helpers({
+Disruptions.helpers({
   editableBy: isAdmin,
 });
 
 // returns a selector that matches all places that are belonging to sources matched by the given
 // data source selector
-function placeInfoSelectorForSourceSelector(sourceSelector) {
+function disruptionSelectorForSourceSelector(sourceSelector) {
   check(sourceSelector, Object);
   // console.log('Including sources', JSON.stringify(sourceSelector));
   const options = { transform: null, fields: { _id: 1 } };
@@ -28,16 +28,16 @@ function placeInfoSelectorForSourceSelector(sourceSelector) {
   return { 'properties.sourceId': { $in: sourceIds } };
 }
 
-PlaceInfos.visibleSelectorForUserId = (userId) => {
+Disruptions.visibleSelectorForUserId = (userId) => {
   if (!userId) {
     return null;
   }
 
   check(userId, String);
-  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
+  return disruptionSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
 };
 
-PlaceInfos.visibleSelectorForAppId = (appId) => {
+Disruptions.visibleSelectorForAppId = (appId) => {
   check(appId, String);
-  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForAppId(appId));
+  return disruptionSelectorForSourceSelector(Sources.visibleSelectorForAppId(appId));
 };

@@ -11,7 +11,7 @@ const histogramAttributesMatchers = [
 
 Template.sources_show_page_recursive_attributes.helpers({
   attributeIsHidden(attributeName) {
-    return attributeName.match(/category$/) || attributeName.match(/sourceImportId$/);
+    return attributeName.match(/category$/i) || attributeName.match(/description$/i) || attributeName.match(/sourceImportId$/);
   },
   keys() {
     return Object.keys(this.properties);

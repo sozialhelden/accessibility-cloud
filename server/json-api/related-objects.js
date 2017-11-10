@@ -17,10 +17,17 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
     throw new Meteor.Error(401, 'Please log in first.');
   }
 
-  const relation = collection.relationships.belongsTo[fieldName];
+  let relation = collection.relationships && collection.relationships.belongsTo && collection.relationships.belongsTo[fieldName];
+  let isHasManyRelation = false;
+  if (!relation) {
+    relation = collection.relationships && collection.relationships.hasMany && collection.relationships.hasMany[fieldName];
+    isHasManyRelation = true;
+  }
+
   if (!relation) {
     throw new Meteor.Error(422, `'${fieldName}' is not a known relation for ${collection._name}.`);
   }
+
   const { foreignCollection, foreignKey } = relation;
 
   // Allow limiting visible documents dependent on the requesting app and user
@@ -32,12 +39,12 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
     visibleSelectors.push(foreignCollection.visibleSelectorForAppId(appId) || {});
   }
 
-  const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
+  const ids = _.uniq(_.map(documents, doc => _.get(doc, isHasManyRelation ? '_id' : foreignKey)));
 
   const selector = {
     $and: [
       { $or: visibleSelectors }, // doc must be visible for given user or via given app
-      { _id: { $in: foreignIds } }, // doc must be a foreign doc of given docs
+      { [isHasManyRelation ? foreignKey : '_id']: { $in: ids } }, // doc must be a foreign doc of given docs
     ],
   };
 

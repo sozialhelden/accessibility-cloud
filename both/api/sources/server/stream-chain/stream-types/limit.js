@@ -1,8 +1,9 @@
 
-const { LimitStream } = Npm.require('zstreams');
 import { check } from 'meteor/check';
 
-export class Limit {
+const { LimitStream } = Npm.require('zstreams');
+
+export default class Limit {
   constructor({ limit = 3 }) {
     check(limit, Number);
     this.stream = new LimitStream(limit, { objectMode: true });

@@ -1,7 +1,7 @@
 import CSVStream from 'csvstream';
 // import { check } from 'meteor/check';
 
-export class ParseCSVStreamTest {
+export default class ParseCSVStreamTest {
   constructor(options) {
     this.stream = new CSVStream(options);
   }
