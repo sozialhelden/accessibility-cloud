@@ -1,13 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import LocationSchema from '../../lib/LocationSchema';
+// import LocationSchema from '../../lib/LocationSchema';
+import { Disruptions } from '../disruptions/disruptions';
 
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
-
-SimpleSchema.debug = true;
 
 EquipmentInfos.schema = new SimpleSchema({
   geometry: {
@@ -53,6 +52,11 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.category': {
+    type: String,
+    optional: true,
+    allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
+  },
   'properties.isRaised': {
     type: Boolean,
     optional: true,
@@ -88,6 +92,17 @@ EquipmentInfos.schema = new SimpleSchema({
 });
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
+
+
+EquipmentInfos.relationships = {
+  hasMany: {
+    disruptions: {
+      foreignCollection: Disruptions,
+      foreignKey: 'equipmentInfoId',
+    },
+  },
+};
+
 
 if (Meteor.isClient) {
   window.EquipmentInfos = EquipmentInfos;

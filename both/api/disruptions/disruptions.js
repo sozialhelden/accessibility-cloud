@@ -7,6 +7,10 @@ export const Disruptions = new Mongo.Collection('Disruptions');
 
 
 Disruptions.schema = new SimpleSchema({
+  geometry: {
+    type: {},
+    optional: true,
+  },
   'geometry.type': {
     type: String,
     allowedValues: ['Point'],
@@ -35,7 +39,7 @@ Disruptions.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  'properties.originalEquipmentId': {
+  'properties.originalEquipmentInfoId': {
     type: String,
     optional: true,
   },
@@ -58,6 +62,11 @@ Disruptions.schema = new SimpleSchema({
   'properties.equipmentId': {
     type: String,
     optional: true,
+  },
+  'properties.category': {
+    type: String,
+    optional: true,
+    allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
   },
   'properties.isWorking': {
     type: Boolean,

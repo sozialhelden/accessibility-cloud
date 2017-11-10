@@ -1,9 +1,7 @@
 import { Sources } from '../../sources/sources';
 import { Disruptions } from '../../disruptions/disruptions';
-import {
-  convertToGeoJSONFeature,
-  wrapAPIResponseAsGeoJSON,
-} from '../../shared/server/geo-json-conversion';
+import convertToGeoJSONFeature from '../../shared/convertToGeoJSONFeature';
+import wrapAPIResponseAsGeoJSON from '../../shared/server/wrapAPIResponseAsGeoJSON';
 
 Disruptions.convertToGeoJSONFeature = convertToGeoJSONFeature;
 Disruptions.wrapAPIResponse = wrapAPIResponseAsGeoJSON;

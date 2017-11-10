@@ -1,9 +1,7 @@
 import { Sources } from '../../sources/sources';
 import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
-import {
-  convertToGeoJSONFeature,
-  wrapAPIResponseAsGeoJSON,
-} from '../../shared/server/geo-json-conversion';
+import convertToGeoJSONFeature from '../../shared/convertToGeoJSONFeature';
+import wrapAPIResponseAsGeoJSON from '../../shared/server/wrapAPIResponseAsGeoJSON';
 
 EquipmentInfos.convertToGeoJSONFeature = convertToGeoJSONFeature;
 EquipmentInfos.wrapAPIResponse = wrapAPIResponseAsGeoJSON;
