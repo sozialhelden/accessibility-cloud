@@ -1,24 +1,17 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import { _ } from 'meteor/stevezhu:lodash';
+import {
+  pathsInObject,
+  getTranslationForAccessibilityAttributeName,
+} from '/server/i18n/ac-format-translations';
+import { Categories } from '/both/api/categories/categories';
 import { EquipmentInfos } from '../equipment-infos/equipment-infos';
 import { Disruptions } from '../disruptions/disruptions';
 import convertToGeoJSONFeature from '../shared/convertToGeoJSONFeature';
 
+
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
-
-
-// Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
-PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
-  const convertedDocument = convertToGeoJSONFeature(doc, coordinatesForDistance, locale);
-  if (locale) {
-    Object.assign(convertedDocument.properties, {
-      localizedCategory: helpers.getLocalizedCategory.call(doc, locale),
-      accessibility: helpers.getLocalizedAccessibility.call(doc, locale),
-    });
-  }
-  convertedDocument.properties.name = helpers.getLocalizedName.call(doc, locale);
-  return convertedDocument;
-};
 
 
 const helpers = {
@@ -33,7 +26,7 @@ const helpers = {
   getLocalizedAccessibility(locale) {
     const result = _.cloneDeep(this.properties.accessibility);
     const paths = pathsInObject(result);
-    paths.forEach(path => {
+    paths.forEach((path) => {
       _.set(result, `${path}Localized`, getTranslationForAccessibilityAttributeName(path, locale));
     });
     return result;
@@ -72,6 +65,20 @@ const helpers = {
     return null;
   },
 };
+
+// Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
+PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
+  const convertedDocument = convertToGeoJSONFeature(doc, coordinatesForDistance, locale);
+  if (locale) {
+    Object.assign(convertedDocument.properties, {
+      localizedCategory: helpers.getLocalizedCategory.call(doc, locale),
+      accessibility: helpers.getLocalizedAccessibility.call(doc, locale),
+    });
+  }
+  convertedDocument.properties.name = helpers.getLocalizedName.call(doc, locale);
+  return convertedDocument;
+};
+
 
 PlaceInfos.helpers(helpers);
 
