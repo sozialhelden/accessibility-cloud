@@ -243,7 +243,7 @@ export const restroomFormat = Object.assign({}, roomFormat, {
 });
 
 export const personalProfile = { // can be used to match a personal profile to offers
-  aphasia: true,
+  muteness: true,
   guideDog: true,
   hearingImpairment: true,
   learningImpairment: true,
