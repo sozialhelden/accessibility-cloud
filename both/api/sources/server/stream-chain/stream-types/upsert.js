@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/stevezhu:lodash';
+import { Sources } from '../../../sources';
+import { Organizations } from '../../../../../api/organizations/organizations';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -28,6 +30,19 @@ const upsert = Meteor.bindEnvironment((collection, onDebugInfo, selector, doc, c
   }
 });
 
+function getSourceIdsOfSameOrganization(sourceId) {
+  const source = Sources.findOne(sourceId, { transform: null });
+  if (!source) throw new Error('Source with id', sourceId, 'not found');
+  const organizationId = source.organizationId;
+  if (!organizationId) throw new Error('Source needs an organization id before proceeding');
+  const organization = Organizations.findOne(organizationId, { transform: null });
+  const organizationName = organization.name;
+  const selector = { organizationId };
+  const options = { transform: null, fields: { _id: true } };
+  const organizationSourceIds = Sources.find(selector, options).map(s => s._id);
+  return { organizationSourceIds, organizationName };
+}
+
 export default class Upsert {
   constructor({ sourceId, ignoreSkippedRecords = true, sourceImportId, onDebugInfo }) {
     check(sourceId, String);
@@ -40,6 +55,7 @@ export default class Upsert {
 
     let firstDocumentWithoutOriginalId = null;
     const streamClass = this.constructor;
+    const streamObject = this;
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -78,10 +94,13 @@ export default class Upsert {
           sourceImportId,
         });
 
+        const { organizationSourceIds, organizationName } = getSourceIdsOfSameOrganization(sourceId);
+        const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
+
         upsert(streamClass.collection, onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, doc, (upsertError, result) => {
+        }, postProcessedDoc, (upsertError, result) => {
           if (result && result.insertedId) {
             insertedDocumentCount += 1;
           } else if (result && result.numberAffected) {
@@ -115,6 +134,12 @@ export default class Upsert {
     this.stream.on('pipe', this.pipeListener);
 
     this.stream.unitName = 'documents';
+  }
+
+  // override this in your stream subclass to add/change properties on the document before
+  // it is upserted into the DB
+  postProcessBeforeUpserting(doc) { // eslint-disable-line class-methods-use-this
+    return doc;
   }
 
   dispose() {
