@@ -21,7 +21,7 @@ Template.sources_show_page_boolean_chart.onRendered(function rendered() {
     return;
   }
 
-  const numberOfPlaces = this.data.placeInfoCount;
+  const numberOfPlaces = this.data.documentCount;
   const numberOfPlacesWithoutKnownValue = (numberOfPlaces &&
     numberOfPlaces - (distributionAsObject.true || 0) - (distributionAsObject.false || 0)
   ) || 0;

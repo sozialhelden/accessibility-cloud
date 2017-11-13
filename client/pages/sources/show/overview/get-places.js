@@ -21,7 +21,7 @@ async function getPlacesBatch({ sourceId, skip, limit, sendProgress }) {
   };
 
   return new Promise((resolve, reject) => {
-    HTTP.get(Meteor.absoluteUrl('place-infos'), options, (error, response) => {
+    HTTP.get(Meteor.absoluteUrl('place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions'), options, (error, response) => {
       if (error) {
         reject(error);
       } else {

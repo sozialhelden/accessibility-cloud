@@ -155,8 +155,8 @@ Factory.define('jsonSourceImport', SourceImports, {
   //   },
   // ],
 
-  insertedPlaceInfoCount: 0,
-  updatedPlaceInfoCount: 0,
+  insertedDocumentCount: 0,
+  updatedDocumentCount: 0,
 });
 
 Factory.define('jsonPlaceInfo', PlaceInfos, {
@@ -231,8 +231,8 @@ Factory.define('csvSource', Sources, {
 
 Factory.define('csvSourceImport', SourceImports, {
   sourceId: Factory.get('csvSource'),
-  insertedPlaceInfoCount: 2,
-  updatedPlaceInfoCount: 1,
+  insertedDocumentCount: 2,
+  updatedDocumentCount: 1,
 });
 
 Factory.define('csvPlaceInfo', PlaceInfos, {

@@ -51,8 +51,8 @@ const helpers = {
     // console.log(organizations);
     const ids = _.pluck(organizations.fetch(), '_id');
     return Sources.find(
-      { organizationId: { $nin: ids }, isDraft: false, placeInfoCount: { $gt: 0 } },
-      { sort: { placeInfoCount: -1 } }
+      { organizationId: { $nin: ids }, isDraft: false, documentCount: { $gt: 0 } },
+      { sort: { documentCount: -1 } }
     );
   },
   firstOrganizationId() {

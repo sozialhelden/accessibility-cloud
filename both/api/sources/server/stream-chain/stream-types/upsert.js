@@ -14,7 +14,7 @@ const TwoCoordinatesMatcher = Match.Where(x => Match.test(x, CoordinatesMatcher)
 
 const upsert = Meteor.bindEnvironment((collection, onDebugInfo, selector, doc, callback) => {
   try {
-    console.log('Upserting doc', doc);
+    // console.log('Upserting doc', doc);
     collection.upsert(selector, { $set: doc }, callback);
   } catch (error) {
     console.log('Error while upserting:', doc, error);
@@ -57,6 +57,8 @@ export default class Upsert {
     const streamClass = this.constructor;
     const streamObject = this;
 
+    const { organizationSourceIds, organizationName } = getSourceIdsOfSameOrganization(sourceId);
+
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
@@ -94,7 +96,6 @@ export default class Upsert {
           sourceImportId,
         });
 
-        const { organizationSourceIds, organizationName } = getSourceIdsOfSameOrganization(sourceId);
         const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
 
         upsert(streamClass.collection, onDebugInfo, {

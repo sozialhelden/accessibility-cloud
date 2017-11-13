@@ -4,14 +4,4 @@ import wrapAPIResponseAsGeoJSON from '../../shared/server/wrapAPIResponseAsGeoJS
 
 
 PlaceInfos.wrapAPIResponse = wrapAPIResponseAsGeoJSON;
-
-PlaceInfos.relationships = {
-  belongsTo: {
-    source: {
-      foreignCollection: Sources,
-      foreignKey: 'properties.sourceId',
-    },
-  },
-};
-
 PlaceInfos.includePathsByDefault = ['source.license'];

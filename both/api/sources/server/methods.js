@@ -23,8 +23,12 @@ Meteor.methods({
   cachePlaceCountForSource(sourceId) {
     check(sourceId, String);
     checkExistenceAndVisibilityForSourceId(this.userId, sourceId);
-    const placeInfoCount = PlaceInfos.find({ 'properties.sourceId': sourceId }).count();
-    Sources.update(sourceId, { $set: { placeInfoCount } });
+    const documentCount = [
+      PlaceInfos,
+      EquipmentInfos,
+      Disruptions,
+    ].map(collection => collection.find({ 'properties.sourceId': sourceId }).count());
+    Sources.update(sourceId, { $set: { documentCount } });
   },
 
   updateDataURLForSource(sourceId, url) {
@@ -36,7 +40,6 @@ Meteor.methods({
     Sources.update(sourceId, { $set: {
       'streamChain.0.parameters.sourceUrl': url,
     } });// , { bypassCollection2: true });
-
 
     return true;
   },
@@ -57,6 +60,6 @@ Meteor.methods({
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
     EquipmentInfos.remove({ 'properties.sourceId': sourceId });
     Disruptions.remove({ 'properties.sourceId': sourceId });
-    Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
+    Sources.update({ _id: sourceId }, { $set: { documentCount: 0 } });
   },
 });

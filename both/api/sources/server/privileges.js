@@ -29,7 +29,7 @@ Sources.publicFields = {
   isRequestable: 1,
   accessRestrictedTo: 1,
   hasRunningImport: 1,
-  placeInfoCount: 1,
+  documentCount: 1,
   additionalAccessibilityInformation: 1,
   'translations.additionalAccessibilityInformation': 1,
 };

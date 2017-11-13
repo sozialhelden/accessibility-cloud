@@ -99,7 +99,7 @@ EquipmentInfos.relationships = {
   hasMany: {
     disruptions: {
       foreignCollection: Disruptions,
-      foreignKey: 'equipmentInfoId',
+      foreignKey: 'properties.equipmentInfoId',
     },
   },
   belongsTo: {

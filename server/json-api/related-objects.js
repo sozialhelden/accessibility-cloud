@@ -7,7 +7,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 // For each given document in `documents`, look up the related document that is specified by
 // foreign key `fieldName`. Returns all related documents and their collection.
 
-function findRelatedDocuments({ collection, documents, fieldName, appId, userId }) {
+function findRelatedDocuments({ req, collection, documents, fieldName, appId, userId }) {
   check(documents, [Object]);
   check(collection, Mongo.Collection);
   check(fieldName, String);
@@ -51,13 +51,16 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
+  const cursor = foreignCollection.find(selector, options);
+  const count = cursor.count();
+
   console.log(
-    `Including ${collection._name} → ${fieldName} (${foreignCollection._name})`, JSON.stringify(selector), JSON.stringify(options),
+    `Including ${collection._name} → ${fieldName} (${foreignCollection._name}, ${count} documents)`, JSON.stringify(selector), JSON.stringify(options),
   );
 
   return {
-    foreignDocuments: foreignCollection.find(selector, options).fetch(),
-    foreignCollectionName: foreignCollection._name.toLowerCase(),
+    foreignDocuments: cursor.fetch(),
+    foreignCollectionName: `${foreignCollection._name.slice(0, 1).toLowerCase()}${foreignCollection._name.slice(1)}`,
     foreignCollection,
   };
 }
@@ -103,24 +106,29 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
     const [,, parentPath, fieldName] = fieldPath.match(/((.*)\.)?([^\.]+$)/);
     resultsByPath[fieldPath] =
       findRelatedDocuments({
-        collection: parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection,
-        documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
-        fieldName: fieldName || fieldPath,
+        req,
         appId,
         userId,
+        fieldName: fieldName || fieldPath,
+        collection: parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection,
+        documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
       });
   });
 
   const results = {};
 
-  Object.keys(resultsByPath).forEach(path => {
+  Object.keys(resultsByPath).forEach((path) => {
     if (!requestedAndDefaultFieldPaths.includes(path)) {
       return;
     }
-    const { foreignCollectionName, foreignDocuments } = resultsByPath[path];
+    const { foreignCollectionName, foreignDocuments, foreignCollection } = resultsByPath[path];
     results[foreignCollectionName] = results[foreignCollectionName] || {};
-    foreignDocuments.forEach(doc => {
-      results[foreignCollectionName][doc._id] = doc;
+    foreignDocuments.forEach((doc) => {
+      let result = doc;
+      if (foreignCollection.convertToGeoJSONFeature) {
+        result = foreignCollection.convertToGeoJSONFeature(doc);
+      }
+      results[foreignCollectionName][doc._id] = result;
     });
   });
 

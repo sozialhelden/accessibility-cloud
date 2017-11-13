@@ -1,7 +1,7 @@
 <template name='sources_show_page_source_top_stats'>
   <dt class='stats'>Number of places</dt>
   <dd class='number-of-places'>
-    {{#with placeInfoCount}}
+    {{#with documentCount}}
       <div class='number huge'>{{formatNumber this}}</div>
     {{else}}
       <span class='subtle'>No places provided yet.</span>
@@ -10,16 +10,16 @@
     {{#if currentUser}}
       {{#unless isShowingAllPlaces}}
         <span class='reduced-places-hint'>
-          {{formatNumber currentPlaceCountLimit}} shown.
+          {{formatNumber currentDocumentCountLimit}} shown.
           {{#if canShowMorePlaces}}
-          <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{formatNumber serverSidePlaceCountLimit}}{{/if}}</a>
+          <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{formatNumber serverSideDocumentCountLimit}}{{/if}}</a>
           {{/if}}
         </span>
       {{/unless}}
     {{/if}}
   </dd>
 
-  {{#if placeInfoCount}}
+  {{#if documentCount}}
     {{#with getLastSuccessfulImport}}
       <dt class='stats'>Accessible with…</dt>
       <dd>

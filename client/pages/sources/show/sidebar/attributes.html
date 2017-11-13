@@ -12,15 +12,15 @@
     </dd>
   {{/if}}
 
-  {{#if placeInfoCount}}
+  {{#if documentCount}}
     {{#with getLastImportWithStats}}
       <dt>Structure</dt>
       <dd>
         <dl>
-          {{#if ../placeInfoCount}}
+          {{#if ../documentCount}}
             {{> sources_show_page_recursive_attributes
               attributeName='properties'
-              placeInfoCount=../placeInfoCount
+              documentCount=../documentCount
               attributeDistribution=getCachedAttributeDistribution.properties
               properties=getCachedAttributeDistribution.properties.properties}}
           {{/if}}

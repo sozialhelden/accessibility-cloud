@@ -7,6 +7,7 @@ import {
 } from '/both/i18n/ac-format-translations';
 import { Categories } from '/both/api/categories/categories';
 import { EquipmentInfos } from '../equipment-infos/equipment-infos';
+import { Sources } from '../sources/sources';
 import { Disruptions } from '../disruptions/disruptions';
 import convertToGeoJSONFeature from '../shared/convertToGeoJSONFeature';
 
@@ -82,15 +83,22 @@ PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
 
 PlaceInfos.helpers(helpers);
 
+
 PlaceInfos.relationships = {
+  belongsTo: {
+    source: {
+      foreignCollection: Sources,
+      foreignKey: 'properties.sourceId',
+    },
+  },
   hasMany: {
     equipmentInfos: {
       foreignCollection: EquipmentInfos,
-      foreignKey: 'placeInfoId',
+      foreignKey: 'properties.placeInfoId',
     },
     disruptions: {
       foreignCollection: Disruptions,
-      foreignKey: 'placeInfoId',
+      foreignKey: 'properties.placeInfoId',
     },
   },
 };

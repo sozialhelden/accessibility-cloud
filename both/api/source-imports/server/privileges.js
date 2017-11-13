@@ -20,20 +20,20 @@ SourceImports.publicFields = {
 SourceImports.statsFields = {
   startTimestamp: 1,
   isFinished: 1,
-  insertedPlaceInfoCount: 1,
-  updatedPlaceInfoCount: 1,
-  placeInfoCountAfterImport: 1,
-  processedPlaceInfoCount: 1,
+  insertedDocumentCount: 1,
+  updatedDocumentCount: 1,
+  documentCountAfterImport: 1,
+  processedDocumentCount: 1,
   attributeDistribution: 1,
 };
 
 SourceImports.privateFields = {
   startTimestamp: 1,
   originalStreamChain: 1,
-  insertedPlaceInfoCount: 1,
-  updatedPlaceInfoCount: 1,
-  placeInfoCountAfterImport: 1,
-  processedPlaceInfoCount: 1,
+  insertedDocumentCount: 1,
+  updatedDocumentCount: 1,
+  documentCountAfterImport: 1,
+  processedDocumentCount: 1,
   attributeDistribution: 1,
   streamChain: 1,
   error: 1,

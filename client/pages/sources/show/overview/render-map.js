@@ -1,13 +1,14 @@
 /* globals L */
 /* eslint-disable no-param-reassign */
 
+import keyBy from 'lodash/keyBy';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
+import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
+import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
+import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
 import { getCurrentPlaceInfo } from './get-current-place-info';
-import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
 import getPlaces from './get-places';
-import createMarkerFromFeature from '/client/lib/create-marker-from-feature';
 
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 2000;
 const PADDING = 0.02;
@@ -44,7 +45,7 @@ function fitBounds(instance, map) {
   }
 }
 
-async function loadPlaces({
+async function loadMarkers({
   instance,
   sourceId,
   limit,
@@ -81,7 +82,64 @@ function filterShownMarkers(featureCollection) {
   return result;
 }
 
+// Sets bidirectional references between has-many docs and belongs-to docs using belongs-to-ids in
+// the given featureCollection. All docs have to be GeoJSON Features and will be added to the
+// FeatureCollection as features as well.
+
+function linkRelatedFeatureCollection({
+  featureCollection,
+  hasManyRelationName,
+  foreignKey,
+  parentDocumentsById,
+}) {
+  const childDocuments = featureCollection.related &&
+    featureCollection.related[hasManyRelationName];
+
+  if (!childDocuments) return;
+
+  Object.keys(childDocuments).forEach((childId) => {
+    const child = childDocuments[childId];
+
+    if (!child.properties) return;
+    const foreignId = child.properties[`${foreignKey}Id`];
+    if (!foreignId) return;
+    const parent = parentDocumentsById[foreignId];
+    if (!parent) return;
+
+    if (!parent[hasManyRelationName]) parent[hasManyRelationName] = [];
+    parent[hasManyRelationName].push(child);
+    child[foreignKey] = parent;
+    featureCollection.features.push(child);
+  });
+}
+
+function linkAllRelatedFeatureCollections(featureCollection) {
+  if (featureCollection.related) {
+    if (featureCollection.related.equipmentInfos) {
+      const placeInfosById = keyBy(featureCollection.features, '_id');
+
+      ['disruptions', 'equipmentInfos'].forEach((hasManyRelationName) => {
+        linkRelatedFeatureCollection({
+          featureCollection,
+          hasManyRelationName,
+          foreignKey: 'placeInfo',
+          parentDocumentsById: placeInfosById,
+        });
+      });
+
+      linkRelatedFeatureCollection({
+        featureCollection,
+        foreignKey: 'equipmentInfo',
+        hasManyRelationName: 'disruptions',
+        parentDocumentsById: featureCollection.related.equipmentInfos,
+      });
+    }
+  }
+}
+
 function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
+  linkAllRelatedFeatureCollections(unfilteredFeatureCollection);
+
   const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
 
   if (!featureCollection.featureCount) {
@@ -153,7 +211,7 @@ export default function renderMap(map, instance) {
 
     currentLimit = limit;
 
-    placesPromise = loadPlaces({
+    placesPromise = loadMarkers({
       instance,
       sourceId: currentSourceId,
       limit,
@@ -172,7 +230,7 @@ export default function renderMap(map, instance) {
       (error) => {
         instance.loadError.set(error);
         instance.isLoading.set(false);
-      }
+      },
     );
   FlowRouter.setQueryParams({ limit });
 }

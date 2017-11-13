@@ -132,7 +132,7 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
-  placeInfoCount: {
+  documentCount: {
     type: Number,
     defaultValue: 0,
     optional: true,

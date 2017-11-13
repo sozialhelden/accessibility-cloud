@@ -9,7 +9,7 @@ function defaultPlaceCountLimit() {
   return 5000;
 }
 
-function serverSidePlaceCountLimit() {
+function serverSideDocumentCountLimit() {
   return 150000;
 }
 
@@ -17,31 +17,31 @@ function source() {
   return Sources.findOne({ _id: FlowRouter.getParam('_id') });
 }
 
-function currentPlaceCountLimit() {
+function currentDocumentCountLimit() {
   return FlowRouter.getQueryParam('limit') || defaultPlaceCountLimit();
 }
 
 function shouldShowThisCanTakeAWhileHint() {
-  return currentPlaceCountLimit() > 50000;
+  return currentDocumentCountLimit() > 50000;
 }
 
 function isShowingAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return true; }
-  return currentPlaceCountLimit() >= currentSource.placeInfoCount;
+  return currentDocumentCountLimit() >= currentSource.documentCount;
 }
 
 function canShowMorePlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
-  return currentPlaceCountLimit() < serverSidePlaceCountLimit() &&
-    currentSource.placeInfoCount > currentPlaceCountLimit();
+  return currentDocumentCountLimit() < serverSideDocumentCountLimit() &&
+    currentSource.documentCount > currentDocumentCountLimit();
 }
 
 function couldShowAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
-  return serverSidePlaceCountLimit() > currentSource.placeInfoCount;
+  return serverSideDocumentCountLimit() > currentSource.documentCount;
 }
 
 function sourceImports() {
@@ -81,10 +81,10 @@ const helpers = {
   couldShowAllPlaces,
   isShowingAllPlaces,
   defaultPlaceCountLimit,
-  currentPlaceCountLimit,
+  currentDocumentCountLimit,
   shouldShowThisCanTakeAWhileHint,
   canShowMorePlaces,
-  serverSidePlaceCountLimit,
+  serverSideDocumentCountLimit,
   sourceImports,
   sourceImport,
   getCurrentPlaceInfo,
