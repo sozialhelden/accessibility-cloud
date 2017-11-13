@@ -43,11 +43,19 @@ Disruptions.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  'properties.originalData': {
+  'properties.equipmentInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalPlaceInfoId': {
     type: String,
     optional: true,
   },
   'properties.placeInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalData': {
     type: String,
     optional: true,
   },
@@ -56,10 +64,6 @@ Disruptions.schema = new SimpleSchema({
     optional: true,
   },
   'properties.sourceImportId': {
-    type: String,
-    optional: true,
-  },
-  'properties.equipmentId': {
     type: String,
     optional: true,
   },

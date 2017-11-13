@@ -25,7 +25,8 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
   }
 
   if (!relation) {
-    throw new Meteor.Error(422, `'${fieldName}' is not a known relation for ${collection._name}.`);
+    console.log('Allowed relationships:', collection.relationships);
+    throw new Meteor.Error(422, `'${fieldName}' is not a known relation for ${collection._name}`);
   }
 
   const { foreignCollection, foreignKey } = relation;
@@ -51,7 +52,7 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
   console.log(
-    `Including ${collection._name} → ${fieldName} (${foreignCollection._name})`, selector, options
+    `Including ${collection._name} → ${fieldName} (${foreignCollection._name})`, JSON.stringify(selector), JSON.stringify(options),
   );
 
   return {

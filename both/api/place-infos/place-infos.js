@@ -4,7 +4,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 import {
   pathsInObject,
   getTranslationForAccessibilityAttributeName,
-} from '/server/i18n/ac-format-translations';
+} from '/both/i18n/ac-format-translations';
 import { Categories } from '/both/api/categories/categories';
 import { EquipmentInfos } from '../equipment-infos/equipment-infos';
 import { Disruptions } from '../disruptions/disruptions';

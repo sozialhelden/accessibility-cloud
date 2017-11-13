@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 // import LocationSchema from '../../lib/LocationSchema';
 import { Disruptions } from '../disruptions/disruptions';
+import { Sources } from '../sources/sources';
 
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
@@ -101,8 +102,13 @@ EquipmentInfos.relationships = {
       foreignKey: 'equipmentInfoId',
     },
   },
+  belongsTo: {
+    source: {
+      foreignCollection: Sources,
+      foreignKey: 'properties.sourceId',
+    },
+  },
 };
-
 
 if (Meteor.isClient) {
   window.EquipmentInfos = EquipmentInfos;

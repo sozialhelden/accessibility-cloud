@@ -29,9 +29,10 @@ export default class UpsertDisruption extends Upsert {
       }
 
       if (properties.originalPlaceInfoId) {
-        const selector = { sourceId: placeSourceId, originalId: properties.originalPlaceInfoId };
-        const options = { transform: null, fields: { _id: true } };
+        const selector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
+        const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
+        console.log('Found association', placeInfo, 'for', selector);
         if (placeInfo) {
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
@@ -47,9 +48,10 @@ export default class UpsertDisruption extends Upsert {
       }
 
       if (properties.originalEquipmentInfoId) {
-        const selector = { sourceId: equipmentSourceId, originalId: properties.originalEquipmentInfoId };
-        const options = { transform: null, fields: { _id: true } };
+        const selector = { 'properties.sourceId': equipmentSourceId, 'properties.originalId': properties.originalEquipmentInfoId };
+        const options = { transform: null, fields: { _id: true, geometry: true } };
         const equipmentInfo = EquipmentInfos.findOne(selector, options);
+        console.log('Found association', equipmentInfo, 'for', selector);
         if (equipmentInfo) {
           result.properties.equipmentInfoId = equipmentInfo._id;
           result.geometry = result.geometry || equipmentInfo.geometry;
