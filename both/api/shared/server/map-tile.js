@@ -4,9 +4,9 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 // Ported from Wheelmap source code
 
 function tile2latlon(x, y, z) {
-  const n = Math.pow(z, 2.0);
-  const lonDeg = (x / (n * 360.0)) - 180.0;
-  const latRad = Math.atan(Math.sinh(Math.PI * (1 - ((2 * y) / n))));
+  const n = Math.pow(2.0, z);
+  const lonDeg = x / n * 360.0 - 180.0;
+  const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n)));
   const latDeg = 180.0 * (latRad / Math.PI);
   return [Number(latDeg.toFixed(4)), Number(lonDeg.toFixed(4))];
 }
