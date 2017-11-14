@@ -15,15 +15,14 @@ import { SourceAccessRequests } from '/both/api/source-access-requests/source-ac
 import { getAccessibleOrganizationIdsForRoles } from '/both/api/organizations/privileges';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
-import { getCurrentPlaceInfo } from './get-current-place-info';
+import { getCurrentFeature } from './get-current-feature';
 import initializeMap from './initialize-map';
 import renderMap from './render-map';
 
 function centerOnCurrentPlace(map) {
-  const place = getCurrentPlaceInfo();
-  if (place) {
-    map.setView(place.geometry.coordinates.reverse(), 18);
-  }
+  const { feature } = getCurrentFeature() || {};
+  if (!feature) return;
+  map.setView(feature.geometry.coordinates.reverse(), 18);
 }
 
 Template.sources_show_page_map.onCreated(function created() {

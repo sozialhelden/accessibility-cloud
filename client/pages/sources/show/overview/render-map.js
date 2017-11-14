@@ -9,7 +9,7 @@ import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
 import { Sources } from '../../../../../both/api/sources/sources.js';
 import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
 import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
-import { getCurrentPlaceInfo } from './get-current-place-info';
+import { getCurrentFeature } from './get-current-feature';
 import getFeatures from './getFeatures';
 
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 2000;
@@ -87,10 +87,11 @@ async function loadMarkers({
 }
 
 function centerOnCurrentPlace(map) {
-  const place = getCurrentPlaceInfo();
+  const { feature } = getCurrentFeature() || {};
 
-  if (place) {
-    map.setView(place.geometry.coordinates.reverse(), 18);
+  if (feature) {
+    const coordinates = [].concat(feature.geometry.coordinates);
+    map.setView(coordinates.reverse(), 18);
   }
 }
 

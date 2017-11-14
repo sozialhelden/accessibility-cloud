@@ -373,8 +373,35 @@ dataRoutes.route('/sources/:_id', {
 });
 
 dataRoutes.route('/sources/:_id/place-infos/:placeInfoId', {
+  collectionName: 'placeInfos',
   name: 'placeInfos.show',
   title: 'Place',
+  action() {
+    BlazeLayout.render('app_layout_full_size', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+dataRoutes.route('/sources/:_id/equipmentInfos/:equipmentInfoId', {
+  collectionName: 'equipmentInfos',
+  name: 'equipmentInfos.show',
+  title: 'Equipment info',
+  action() {
+    BlazeLayout.render('app_layout_full_size', {
+      main: 'sources_show_page',
+      header_navigation_list: 'sources_show_header',
+      header_sub: 'sources_show_header_sub',
+    });
+  },
+});
+
+dataRoutes.route('/sources/:_id/disruptions/:disruptionId', {
+  collectionName: 'disruptions',
+  name: 'disruptions.show',
+  title: 'Disruption',
   action() {
     BlazeLayout.render('app_layout_full_size', {
       main: 'sources_show_page',

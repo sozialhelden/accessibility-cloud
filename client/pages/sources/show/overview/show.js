@@ -3,7 +3,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import subsManager from '/client/lib/subs-manager';
-import { getCurrentPlaceInfo } from './get-current-place-info';
+import { getCurrentFeature } from './get-current-feature';
 
 function defaultPlaceCountLimit() {
   return 5000;
@@ -59,7 +59,7 @@ function sourceImport() {
 
 function hasBigSidebar() {
   FlowRouter.watchPathChange();
-  return Boolean(FlowRouter.getParam('placeInfoId'));
+  return Boolean(FlowRouter.getParam('placeInfoId') || FlowRouter.getParam('equipmentInfoId') || FlowRouter.getParam('disruptionId'));
 }
 
 Template.sources_show_page.onCreated(function created() {
@@ -71,6 +71,12 @@ Template.sources_show_page.onCreated(function created() {
   this.autorun(() => {
     if (FlowRouter.getParam('placeInfoId')) {
       subsManager.subscribe('placeInfos.single', FlowRouter.getParam('placeInfoId'));
+    }
+    if (FlowRouter.getParam('equipmentInfoId')) {
+      subsManager.subscribe('equipmentInfos.single', FlowRouter.getParam('equipmentInfoId'));
+    }
+    if (FlowRouter.getParam('disruptionId')) {
+      subsManager.subscribe('disruptions.single', FlowRouter.getParam('disruptionId'));
     }
   });
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
@@ -87,7 +93,7 @@ const helpers = {
   serverSideDocumentCountLimit,
   sourceImports,
   sourceImport,
-  getCurrentPlaceInfo,
+  getCurrentFeature,
   hasBigSidebar,
 };
 
