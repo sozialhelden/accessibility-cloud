@@ -81,7 +81,7 @@ export default class UpsertDisruption extends Upsert {
     return { selector, modifier };
   }
 
-  afterUpsert(disruption, onDebugInfo, callback) {
+  afterUpsert(disruption, callback) {
     const { selector, modifier } = this.constructor.updateEquipmentSelectorAndModifier(disruption);
 
     if (!selector || !modifier) {
@@ -89,7 +89,7 @@ export default class UpsertDisruption extends Upsert {
       return;
     }
 
-    this.upsert(PlaceInfos, onDebugInfo, selector, modifier, callback);
+    this.upsert(PlaceInfos, selector, modifier, callback);
   }
 }
 

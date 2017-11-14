@@ -81,7 +81,7 @@ export default class Upsert {
 
         const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
 
-        this.upsert(streamClass.collection, onDebugInfo, {
+        streamObject.upsert(streamClass.collection, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, { $set: postProcessedDoc }, (upsertError, result) => {
@@ -90,7 +90,7 @@ export default class Upsert {
           } else if (result && result.numberAffected) {
             updatedDocumentCount += 1;
           }
-          this.afterUpsert(postProcessedDoc, () => callback(upsertError, result));
+          streamObject.afterUpsert(postProcessedDoc, () => callback(upsertError, result));
         });
       },
       flush(callback) {
