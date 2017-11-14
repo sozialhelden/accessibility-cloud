@@ -32,7 +32,7 @@ function showNextRandomPlaceInfo(map) {
   const latlng = [].concat(placeInfo.geometry.coordinates).reverse();
   currentlyShownMarkers.forEach(marker => map.removeLayer(marker));
   currentlyShownMarkers = [
-    createMarkerFromFeature(placeInfo, latlng, 2),
+    createMarkerFromFeature({ placeInfo, latlng, size: 2 }),
     createDescriptionMarker(placeInfo, latlng),
   ];
   currentlyShownMarkers.forEach(layer => map.addLayer(layer));

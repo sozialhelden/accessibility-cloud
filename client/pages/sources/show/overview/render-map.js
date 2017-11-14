@@ -2,6 +2,7 @@
 /* eslint-disable no-param-reassign */
 
 import keyBy from 'lodash/keyBy';
+import { singularize } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
@@ -22,6 +23,10 @@ function createMarkerClusters(instance) {
     polygonOptions: {
       color: '#08c',
       weight: 1,
+    },
+    maxClusterRadius(zoom) {
+      const radius = 15 + (((1.5 ** (18 - zoom)) - 1) * 10);
+      return Math.round(Math.max(10, Math.min(radius, 120)));
     },
   });
 }
@@ -92,6 +97,7 @@ function linkRelatedFeatureCollection({
   foreignKey,
   parentDocumentsById,
 }) {
+  const singularName = singularize(hasManyRelationName);
   const childDocuments = featureCollection.related &&
     featureCollection.related[hasManyRelationName];
 
@@ -109,14 +115,14 @@ function linkRelatedFeatureCollection({
     if (!parent[hasManyRelationName]) parent[hasManyRelationName] = [];
     parent[hasManyRelationName].push(child);
     child[foreignKey] = parent;
-    featureCollection.features.push(child);
+    child.properties.entityType = singularName;
   });
 }
 
 function linkAllRelatedFeatureCollections(featureCollection) {
   if (featureCollection.related) {
     if (featureCollection.related.equipmentInfos) {
-      const placeInfosById = keyBy(featureCollection.features, '_id');
+      const placeInfosById = keyBy(featureCollection.features, 'properties._id');
 
       ['disruptions', 'equipmentInfos'].forEach((hasManyRelationName) => {
         linkRelatedFeatureCollection({
@@ -137,41 +143,56 @@ function linkAllRelatedFeatureCollections(featureCollection) {
   }
 }
 
+function convertToFeatureCollection(idMap = {}) {
+  const features = Object.keys(idMap).map(_id => idMap[_id]);
+  return {
+    features,
+    type: 'FeatureCollection',
+  };
+}
+
 function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
+  debugger
   linkAllRelatedFeatureCollections(unfilteredFeatureCollection);
 
-  const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
+  const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related || {};
+  const featureCollections = {
+    disruptions: convertToFeatureCollection(disruptions),
+    equipmentInfos: convertToFeatureCollection(equipmentInfos),
+    placeInfos: unfilteredFeatureCollection,
+  };
 
-  if (!featureCollection.featureCount) {
-    return;
-  }
+  Object.keys(featureCollections).forEach((collectionName) => {
+    const featureCollection = featureCollections[collectionName];
+    const filteredFeatureCollection = filterShownMarkers(featureCollection);
+    const geojsonLayer = new L.geoJson(filteredFeatureCollection, { // eslint-disable-line new-cap
+      pointToLayer(feature, latlng) {
+        const id = feature.properties._id;
 
-  const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
-    pointToLayer(feature, latlng) {
-      const id = feature.properties._id;
+        if (idsToShownMarkers[id]) {
+          return idsToShownMarkers[id];
+        }
 
-      if (idsToShownMarkers[id]) {
-        return idsToShownMarkers[id];
-      }
+        const marker = createMarkerFromFeature({ feature, latlng });
 
-      const marker = createMarkerFromFeature(feature, latlng);
-
-      marker.on('click', () => {
-        FlowRouter.go('placeInfos.show', {
-          _id: FlowRouter.getParam('_id'),
-          placeInfoId: feature.properties._id,
-        }, {
-          limit: FlowRouter.getQueryParam('limit'),
+        marker.on('click', () => {
+          FlowRouter.go('placeInfos.show', {
+            _id: FlowRouter.getParam('_id'),
+            placeInfoId: feature.properties._id,
+          }, {
+            limit: FlowRouter.getQueryParam('limit'),
+          });
         });
-      });
 
-      idsToShownMarkers[id] = marker;
+        idsToShownMarkers[id] = marker;
 
-      return marker;
-    },
+        return marker;
+      },
+    });
+
+    instance.markerClusterGroup.addLayer(geojsonLayer);
   });
 
-  instance.markerClusterGroup.addLayer(geojsonLayer);
   map.addLayer(instance.markerClusterGroup);
   fitBounds(instance, map);
   centerOnCurrentPlace(map);

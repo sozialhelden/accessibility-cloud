@@ -23,6 +23,27 @@ const AccessibilityIcon = L.Icon.extend({
   },
 });
 
+export const EquipmentIcon = L.Icon.extend({
+  options: {
+    number: '',
+    shadowUrl: null,
+    className: 'leaflet-div-icon equipment',
+  },
+
+  createIcon() {
+    const div = document.createElement('div');
+    const img = this._createImg(this.options.iconUrl);
+    div.appendChild(img);
+    this._setIconStyles(div, 'icon');
+    return div;
+  },
+
+  createShadow() {
+    return null;
+  },
+});
+
+
 function getColorForWheelchairAccessiblity(placeData) {
   try {
     if (_.get(placeData, 'properties.accessibility.accessibleWith.wheelchair') === true) {
@@ -38,14 +59,15 @@ function getColorForWheelchairAccessiblity(placeData) {
   return 'grey';
 }
 
-export default function createMarkerFromFeature(
+export default function createMarkerFromFeature({
   feature,
   latlng,
-  size = 1
-) {
+  size = 1,
+  IconClass = AccessibilityIcon,
+}) {
   const categoryIconName = _.get(feature, 'properties.category') || 'place';
   const color = getColorForWheelchairAccessiblity(feature);
-  const acIcon = new AccessibilityIcon({
+  const acIcon = new IconClass({
     iconUrl: `/icons/categories/${categoryIconName}@${size * 2}x.png`,
     className: `ac-marker ${color}`,
     iconSize: new L.Point(27, 27).multiplyBy(size),
