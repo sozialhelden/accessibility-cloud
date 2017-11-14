@@ -55,6 +55,7 @@ export default async function getFeatures({
     skip: 0,
     limit: FEATURE_BATCH_SIZE,
     sendProgress,
+    url,
   })).data;
 
   progress = firstResponseData.featureCount;

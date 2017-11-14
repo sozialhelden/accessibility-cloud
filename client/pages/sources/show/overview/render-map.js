@@ -6,6 +6,7 @@ import { singularize, underscore } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
+import { Sources } from '../../../../../both/api/sources/sources.js';
 import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
 import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
 import { getCurrentPlaceInfo } from './get-current-place-info';
@@ -60,10 +61,25 @@ async function loadMarkers({
   instance.loadError.set(null);
   instance.loadProgress.set({});
 
-  const url = Meteor.absoluteUrl('place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions');
+  const source = Sources.findOne(sourceId);
+  if (!source) return null;
+
+  const sourceType = source.getType();
+  if (!sourceType) return null;
+
+  let url;
+
+  switch (sourceType) {
+    case 'placeInfos':
+      url = 'place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions';
+      break;
+    case 'equipmentInfos': url = 'equipment-infos'; break;
+    case 'disruptions': url = 'disruptions'; break;
+    default: return null;
+  }
 
   return getFeatures({
-    url,
+    url: Meteor.absoluteUrl(url),
     sourceId,
     limit,
     onProgress,
@@ -82,7 +98,7 @@ function filterShownMarkers(featureCollection) {
   const result = {};
 
   result.features = featureCollection.features.filter(
-    feature => !idsToShownMarkers[feature.properties._id]
+    feature => !idsToShownMarkers[feature.properties._id],
   );
 
   result.featureCount = result.features.length;
@@ -154,15 +170,37 @@ function convertToFeatureCollection(idMap = {}) {
   };
 }
 
-function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
+function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
   linkAllRelatedFeatureCollections(unfilteredFeatureCollection);
 
-  const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related || {};
-  const featureCollections = {
-    disruptions: convertToFeatureCollection(disruptions),
-    equipmentInfos: convertToFeatureCollection(equipmentInfos),
-    placeInfos: unfilteredFeatureCollection,
-  };
+  const source = Sources.findOne(sourceId);
+  if (!source) return;
+
+  const sourceType = source.getType();
+  if (!sourceType) return;
+
+  let featureCollections;
+
+  switch (sourceType) {
+    case 'placeInfos': {
+      const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related;
+      featureCollections = {
+        disruptions: convertToFeatureCollection(disruptions),
+        equipmentInfos: convertToFeatureCollection(equipmentInfos),
+        placeInfos: unfilteredFeatureCollection,
+      };
+      break;
+    }
+    case 'disruptions':
+      featureCollections = { disruptions: unfilteredFeatureCollection };
+      break;
+    case 'equipmentInfos':
+      featureCollections = { equipmentInfos: unfilteredFeatureCollection };
+      break;
+    default:
+      featureCollections = {};
+      break;
+  }
 
   Object.keys(featureCollections).forEach((collectionName) => {
     const collectionNameSingular = singularize(collectionName);
@@ -229,7 +267,7 @@ export default function renderMap(map, instance) {
     const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
     const featureCollection = buildFeatureCollectionFromArray([place]);
 
-    showPlacesOnMap(instance, map, featureCollection);
+    showPlacesOnMap(instance, map, currentSourceId, featureCollection);
     placesPromise = Promise.resolve();
   } else {
     const isDisplayingFewerMarkersThanBefore = currentLimit && limit < currentLimit;
@@ -245,7 +283,7 @@ export default function renderMap(map, instance) {
       sourceId: currentSourceId,
       limit,
       onProgress: ({ featureCollection, percentage }) => {
-        showPlacesOnMap(instance, map, featureCollection);
+        showPlacesOnMap(instance, map, currentSourceId, featureCollection);
         instance.loadProgress.set({ percentage });
       },
     });

@@ -227,5 +227,24 @@ Sources.helpers({
       .fetch()
       .find(i => Boolean(i.attributeDistribution));
   },
+  getType() {
+    const lastImport = this.getLastSuccessfulImport();
+    if (!lastImport) return null;
+    const upsertStream = lastImport.upsertStream();
+    if (!upsertStream) return null;
+    switch (upsertStream.type) {
+      case 'UpsertEquipment': return 'equipmentInfos';
+      case 'UpsertPlace': return 'placeInfos';
+      case 'UpsertDisruption': return 'disruptions';
+      default: return null;
+    }
+  },
+  isPlaceInfoSource() {
+    return this.getType() === 'placeInfos';
+  },
 });
 
+
+if (Meteor.isClient) {
+  window.Sources = Sources;
+}

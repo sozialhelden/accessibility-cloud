@@ -1,12 +1,12 @@
 .leaflet-marker-icon.ac-marker {
   background-size: contain;
   text-align: center;
-  padding: 4px;
+  padding: 2px;
 
   img {
     opacity: 0.7;
     width: 15px;
-    margin-top: 0px;
+    margin-top: 2px;
   }
 }
 
@@ -20,16 +20,26 @@
   }
 }
 
+.leaflet-marker-icon.ac-equipment-info,
+.leaflet-marker-icon.ac-disruption, {
+  img {
+    border: 2px transparent solid;
+    box-sizing: content-box;
+    opacity: 1;
+  }
+}
+
 .leaflet-marker-icon.ac-equipment-info {
   img {
     background-color: white;
-    border: 1px white solid;
-    box-sizing: content-box;
-    opacity: 1;
-    border-radius: 8px;
+    border: 2px white solid;
   }
-  &.red {
-  }
-  &.green {
+}
+
+.leaflet-marker-icon.ac-disruption {
+  background-color: white;
+  img {
+    background-color: #ff96a1;
+    border: 2px #ff96a1 solid;
   }
 }
