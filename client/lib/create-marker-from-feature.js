@@ -64,14 +64,16 @@ export default function createMarkerFromFeature({
   latlng,
   size = 1,
   IconClass = AccessibilityIcon,
+  color = getColorForWheelchairAccessiblity(feature),
+  className = 'ac-place-info',
 }) {
+  const isCentered = className !== 'ac-place-info';
   const categoryIconName = _.get(feature, 'properties.category') || 'place';
-  const color = getColorForWheelchairAccessiblity(feature);
   const acIcon = new IconClass({
     iconUrl: `/icons/categories/${categoryIconName}@${size * 2}x.png`,
-    className: `ac-marker ${color}`,
+    className: `ac-marker ${className} ${color}`,
     iconSize: new L.Point(27, 27).multiplyBy(size),
-    iconAnchor: new L.Point(13, 25).multiplyBy(size),
+    iconAnchor: (isCentered ? new L.Point(13, 13) : new L.Point(13, 25)).multiplyBy(size),
     popupAnchor: new L.Point(0, -33).multiplyBy(size),
   });
   return L.marker(latlng, { icon: acIcon });

@@ -61,6 +61,36 @@ export default class UpsertDisruption extends Upsert {
 
     return result;
   }
+
+
+  static updateEquipmentSelectorAndModifier(disruption) {
+    if (!disruption) return {};
+    const equipmentInfoId = disruption.equipmentInfoId;
+    if (!equipmentInfoId) return {};
+    const selector = equipmentInfoId;
+    const { outOfServiceOn, outOfServiceTo } = disruption;
+    const now = Date.now();
+    const fromDate = outOfServiceOn ? new Date(outOfServiceOn) : 0;
+    const toDate = outOfServiceTo ? new Date(outOfServiceTo) : 0;
+    const isOutOfService = fromDate &&
+      toDate &&
+      (!fromDate || now >= +fromDate) && (!toDate || now <= +toDate);
+
+    const modifier = { isWorking: !isOutOfService }
+
+    return { selector, modifier };
+  }
+
+  afterUpsert(disruption, onDebugInfo, callback) {
+    const { selector, modifier } = this.constructor.updateEquipmentSelectorAndModifier(disruption);
+
+    if (!selector || !modifier) {
+      callback(null);
+      return;
+    }
+
+    this.upsert(PlaceInfos, onDebugInfo, selector, modifier, callback);
+  }
 }
 
 UpsertDisruption.collection = Disruptions;

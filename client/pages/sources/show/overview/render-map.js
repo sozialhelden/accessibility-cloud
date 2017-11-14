@@ -2,14 +2,14 @@
 /* eslint-disable no-param-reassign */
 
 import keyBy from 'lodash/keyBy';
-import { singularize } from 'inflected';
+import { singularize, underscore } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
 import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
 import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
 import { getCurrentPlaceInfo } from './get-current-place-info';
-import getPlaces from './get-places';
+import getFeatures from './getFeatures';
 
 const DEFAULT_NUMBER_OF_PLACES_FETCHED = 2000;
 const PADDING = 0.02;
@@ -60,7 +60,10 @@ async function loadMarkers({
   instance.loadError.set(null);
   instance.loadProgress.set({});
 
-  return getPlaces({
+  const url = Meteor.absoluteUrl('place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions');
+
+  return getFeatures({
+    url,
     sourceId,
     limit,
     onProgress,
@@ -152,7 +155,6 @@ function convertToFeatureCollection(idMap = {}) {
 }
 
 function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
-  debugger
   linkAllRelatedFeatureCollections(unfilteredFeatureCollection);
 
   const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related || {};
@@ -163,6 +165,8 @@ function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
   };
 
   Object.keys(featureCollections).forEach((collectionName) => {
+    const collectionNameSingular = singularize(collectionName);
+    const collectionNameSingularParameterized = underscore(collectionNameSingular).replace(/_/, '-');
     const featureCollection = featureCollections[collectionName];
     const filteredFeatureCollection = filterShownMarkers(featureCollection);
     const geojsonLayer = new L.geoJson(filteredFeatureCollection, { // eslint-disable-line new-cap
@@ -173,12 +177,16 @@ function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
           return idsToShownMarkers[id];
         }
 
-        const marker = createMarkerFromFeature({ feature, latlng });
+        const marker = createMarkerFromFeature({
+          feature,
+          latlng,
+          className: `ac-${collectionNameSingularParameterized}`,
+        });
 
         marker.on('click', () => {
-          FlowRouter.go('placeInfos.show', {
+          FlowRouter.go(`${collectionName}.show`, {
             _id: FlowRouter.getParam('_id'),
-            placeInfoId: feature.properties._id,
+            [`${collectionNameSingular}Id`]: feature.properties._id,
           }, {
             limit: FlowRouter.getQueryParam('limit'),
           });

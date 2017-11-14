@@ -12,23 +12,6 @@ const CoordinateMatcher = Match.Where(x => _.isNumber(x) && x !== 0);
 const CoordinatesMatcher = [CoordinateMatcher];
 const TwoCoordinatesMatcher = Match.Where(x => Match.test(x, CoordinatesMatcher) && x.length === 2);
 
-const upsert = Meteor.bindEnvironment((collection, onDebugInfo, selector, doc, callback) => {
-  try {
-    // console.log('Upserting doc', doc);
-    collection.upsert(selector, { $set: doc }, callback);
-  } catch (error) {
-    console.log('Error while upserting:', doc, error);
-    if (onDebugInfo) {
-      Meteor.defer(() => {
-        onDebugInfo({
-          reason: error.reason,
-          // stack: error.stack,
-        });
-      });
-    }
-    callback(error);
-  }
-});
 
 function getSourceIdsOfSameOrganization(sourceId) {
   const source = Sources.findOne(sourceId, { transform: null });
@@ -98,16 +81,16 @@ export default class Upsert {
 
         const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
 
-        upsert(streamClass.collection, onDebugInfo, {
+        this.upsert(streamClass.collection, onDebugInfo, {
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, postProcessedDoc, (upsertError, result) => {
+        }, { $set: postProcessedDoc }, (upsertError, result) => {
           if (result && result.insertedId) {
             insertedDocumentCount += 1;
           } else if (result && result.numberAffected) {
             updatedDocumentCount += 1;
           }
-          callback(upsertError, result);
+          this.afterUpsert(postProcessedDoc, () => callback(upsertError, result));
         });
       },
       flush(callback) {
@@ -135,12 +118,34 @@ export default class Upsert {
     this.stream.on('pipe', this.pipeListener);
 
     this.stream.unitName = 'documents';
+
+    this.upsert = Meteor.bindEnvironment((collection, selector, modifier, callback) => {
+      try {
+        // console.log('Upserting doc', doc);
+        collection.upsert(selector, modifier, callback);
+      } catch (error) {
+        console.log('Error while upserting:', modifier, error);
+        if (onDebugInfo) {
+          Meteor.defer(() => {
+            onDebugInfo({
+              reason: error.reason,
+              // stack: error.stack,
+            });
+          });
+        }
+        callback(error);
+      }
+    });
   }
 
   // override this in your stream subclass to add/change properties on the document before
   // it is upserted into the DB
   postProcessBeforeUpserting(doc) { // eslint-disable-line class-methods-use-this
     return doc;
+  }
+
+  afterUpsert(doc, callback) {
+    callback();
   }
 
   dispose() {

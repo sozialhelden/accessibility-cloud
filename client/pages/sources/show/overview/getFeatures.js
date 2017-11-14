@@ -1,12 +1,11 @@
 import PromisePool from 'es6-promise-pool';
-import { Meteor } from 'meteor/meteor';
 import { getApiUserToken } from '/client/lib/api-tokens';
 import { HTTP } from 'meteor/http';
 
-const PLACES_BATCH_SIZE = 2000;
+const FEATURE_BATCH_SIZE = 2000;
 const CONCURRENCY_LIMIT = 3;
 
-async function getPlacesBatch({ sourceId, skip, limit, sendProgress }) {
+async function getFeatureBatch({ url, sourceId, skip, limit, sendProgress }) {
   const hashedToken = await getApiUserToken();
   const options = {
     params: {
@@ -21,7 +20,7 @@ async function getPlacesBatch({ sourceId, skip, limit, sendProgress }) {
   };
 
   return new Promise((resolve, reject) => {
-    HTTP.get(Meteor.absoluteUrl('place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions'), options, (error, response) => {
+    HTTP.get(url, options, (error, response) => {
       if (error) {
         reject(error);
       } else {
@@ -32,10 +31,11 @@ async function getPlacesBatch({ sourceId, skip, limit, sendProgress }) {
   });
 }
 
-export default async function getPlaces({
+export default async function getFeatures({
   sourceId,
   limit,
   onProgress = () => {},
+  url,
 }) {
   let progress = 0;
   let numberOfPlacesToFetch = 0;
@@ -50,10 +50,10 @@ export default async function getPlaces({
   };
 
   // The first batch's response contains the total number of features to fetch.
-  const firstResponseData = (await getPlacesBatch({
+  const firstResponseData = (await getFeatureBatch({
     sourceId,
     skip: 0,
-    limit: PLACES_BATCH_SIZE,
+    limit: FEATURE_BATCH_SIZE,
     sendProgress,
   })).data;
 
@@ -63,14 +63,15 @@ export default async function getPlaces({
   // Allow only 3 running requests at the same time. Without this, all requests
   // would be started at the same time leading to timeouts.
   function *generatePromises() {
-    if (numberOfPlacesToFetch <= PLACES_BATCH_SIZE) {
+    if (numberOfPlacesToFetch <= FEATURE_BATCH_SIZE) {
       return;
     }
-    for (let i = 1; i < (numberOfPlacesToFetch / PLACES_BATCH_SIZE); i++) {
-      yield getPlacesBatch({
+    for (let i = 1; i < (numberOfPlacesToFetch / FEATURE_BATCH_SIZE); i++) {
+      yield getFeatureBatch({
+        url,
         sourceId,
-        skip: i * PLACES_BATCH_SIZE,
-        limit: PLACES_BATCH_SIZE,
+        skip: i * FEATURE_BATCH_SIZE,
+        limit: FEATURE_BATCH_SIZE,
         sendProgress,
       });
     }
