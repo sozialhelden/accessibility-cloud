@@ -27,14 +27,17 @@ function getSourceIdsOfSameOrganization(sourceId) {
 }
 
 export default class Upsert {
-  constructor({ sourceId, ignoreSkippedRecords = true, sourceImportId, onDebugInfo }) {
+  constructor({ sourceId, ignoreSkippedRecords = true, removeMissingRecords = false, sourceImportId, onDebugInfo }) {
     check(sourceId, String);
     check(sourceImportId, String);
     check(onDebugInfo, Function);
 
+    Object.assign(this, { sourceId, sourceImportId, removeMissingRecords });
+
     let skippedDocumentCount = 0;
     let insertedDocumentCount = 0;
     let updatedDocumentCount = 0;
+    let removedDocumentCount = 0;
 
     let firstDocumentWithoutOriginalId = null;
     const streamClass = this.constructor;
@@ -95,7 +98,9 @@ export default class Upsert {
       },
       flush(callback) {
         console.log('Done with upserting!');
-        callback();
+        if (removeMissingRecords) {
+          streamObject.remove(callback);
+        }
       },
     });
 
@@ -106,7 +111,7 @@ export default class Upsert {
             `Skipped ${skippedDocumentCount} documents that had no originalId or invalid coordinates.`,
         });
       }
-      onDebugInfo({ insertedDocumentCount, updatedDocumentCount });
+      onDebugInfo({ insertedDocumentCount, updatedDocumentCount, removedDocumentCount });
     };
     this.stream.on('end', this.endListener);
 
@@ -136,6 +141,32 @@ export default class Upsert {
         callback(error);
       }
     });
+
+    this.remove = Meteor.bindEnvironment((callback) => {
+      try {
+        // Remove all MongoDB documents that were not part of this stream's import
+        const selector = {
+          'properties.sourceId': sourceId,
+          'properties.sourceImportId': { $ne: sourceImportId },
+        };
+        console.log('Removing from ', streamClass.collection._name, selector);
+        streamClass.collection.remove(selector, (error, count) => {
+          removedDocumentCount = count;
+          callback(error);
+        });
+      } catch (error) {
+        console.log('Error while removing:', selector, error);
+        if (onDebugInfo) {
+          Meteor.defer(() => {
+            onDebugInfo({
+              reason: error.reason,
+              // stack: error.stack,
+            });
+          });
+        }
+        callback(error);
+      }
+    });
   }
 
   // override this in your stream subclass to add/change properties on the document before
@@ -144,7 +175,8 @@ export default class Upsert {
     return doc;
   }
 
-  afterUpsert(doc, callback) {
+  // override this in your stream subclass for postprocessing after upsert
+  afterUpsert(doc, callback) { // eslint-disable-line class-methods-use-this
     callback();
   }
 
