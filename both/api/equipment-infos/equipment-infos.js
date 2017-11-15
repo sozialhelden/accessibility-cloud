@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 // import LocationSchema from '../../lib/LocationSchema';
 import { Disruptions } from '../disruptions/disruptions';
 import { Sources } from '../sources/sources';
-
+import helpers from './helpers';
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
@@ -90,6 +90,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  'properties.isWorking': {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
@@ -109,6 +113,8 @@ EquipmentInfos.relationships = {
     },
   },
 };
+
+EquipmentInfos.helpers(helpers);
 
 if (Meteor.isClient) {
   window.EquipmentInfos = EquipmentInfos;

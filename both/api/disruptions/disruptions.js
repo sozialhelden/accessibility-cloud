@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import LocationSchema from '../../lib/LocationSchema';
+import helpers from './helpers';
 
 export const Disruptions = new Mongo.Collection('Disruptions');
 
@@ -72,11 +73,7 @@ Disruptions.schema = new SimpleSchema({
     optional: true,
     allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
   },
-  'properties.isWorking': {
-    type: Boolean,
-    optional: true,
-  },
-  'properties.isInMaintenance': {
+  'properties.isEquipmentWorking': {
     type: Boolean,
     optional: true,
   },
@@ -107,6 +104,7 @@ Disruptions.schema = new SimpleSchema({
 });
 
 Disruptions.attachSchema(Disruptions.schema);
+Disruptions.helpers(helpers);
 
 if (Meteor.isClient) {
   window.Disruptions = Disruptions;

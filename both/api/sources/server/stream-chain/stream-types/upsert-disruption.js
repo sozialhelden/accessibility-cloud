@@ -32,7 +32,7 @@ export default class UpsertDisruption extends Upsert {
         const selector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
-        console.log('Found association', placeInfo, 'for', selector);
+        console.log('Found place association', placeInfo, 'for', selector);
         if (placeInfo) {
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
@@ -51,7 +51,7 @@ export default class UpsertDisruption extends Upsert {
         const selector = { 'properties.sourceId': equipmentSourceId, 'properties.originalId': properties.originalEquipmentInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const equipmentInfo = EquipmentInfos.findOne(selector, options);
-        console.log('Found association', equipmentInfo, 'for', selector);
+        console.log('Found equipment association', equipmentInfo, 'for', selector);
         if (equipmentInfo) {
           result.properties.equipmentInfoId = equipmentInfo._id;
           result.geometry = result.geometry || equipmentInfo.geometry;
@@ -60,36 +60,6 @@ export default class UpsertDisruption extends Upsert {
     }
 
     return result;
-  }
-
-
-  static updateEquipmentSelectorAndModifier(disruption) {
-    if (!disruption) return {};
-    const equipmentInfoId = disruption.equipmentInfoId;
-    if (!equipmentInfoId) return {};
-    const selector = equipmentInfoId;
-    const { outOfServiceOn, outOfServiceTo } = disruption;
-    const now = Date.now();
-    const fromDate = outOfServiceOn ? new Date(outOfServiceOn) : 0;
-    const toDate = outOfServiceTo ? new Date(outOfServiceTo) : 0;
-    const isOutOfService = fromDate &&
-      toDate &&
-      (!fromDate || now >= +fromDate) && (!toDate || now <= +toDate);
-
-    const modifier = { isWorking: !isOutOfService }
-
-    return { selector, modifier };
-  }
-
-  afterUpsert(disruption, callback) {
-    const { selector, modifier } = this.constructor.updateEquipmentSelectorAndModifier(disruption);
-
-    if (!selector || !modifier) {
-      callback(null);
-      return;
-    }
-
-    this.upsert(PlaceInfos, selector, modifier, callback);
   }
 }
 
