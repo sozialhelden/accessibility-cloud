@@ -99,7 +99,7 @@ export default class Upsert {
       flush(callback) {
         console.log('Done with upserting!');
         if (removeMissingRecords) {
-          streamObject.remove(callback);
+          streamObject.removeMissingRecords(callback);
         }
       },
     });
@@ -142,7 +142,7 @@ export default class Upsert {
       }
     });
 
-    this.remove = Meteor.bindEnvironment((callback) => {
+    this.removeMissingRecords = Meteor.bindEnvironment((callback) => {
       try {
         // Remove all MongoDB documents that were not part of this stream's import
         const selector = {
