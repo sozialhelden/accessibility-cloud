@@ -100,6 +100,8 @@ export default class Upsert {
         console.log('Done with upserting!');
         if (removeMissingRecords) {
           streamObject.removeMissingRecords(callback);
+        } else {
+          callback();
         }
       },
     });
