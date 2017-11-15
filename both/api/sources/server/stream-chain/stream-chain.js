@@ -17,6 +17,7 @@ import ParseJSONStream from './stream-types/parse-json-stream';
 import ParseJSONChunks from './stream-types/parse-json-chunks';
 import ParseCSVStreamTest from './stream-types/parse-csv-stream-test';
 import ParseCSVStream from './stream-types/parse-csv-stream';
+import ParseXMLStream from './stream-types/parse-xml-stream';
 import Split from './stream-types/split';
 import Skip from './stream-types/skip';
 import Limit from './stream-types/limit';
