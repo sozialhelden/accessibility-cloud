@@ -1,3 +1,4 @@
+import util from 'util';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';

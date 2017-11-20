@@ -27,12 +27,20 @@ function getSourceIdsOfSameOrganization(sourceId) {
 }
 
 export default class Upsert {
-  constructor({ sourceId, ignoreSkippedRecords = true, removeMissingRecords = false, sourceImportId, onDebugInfo }) {
+  constructor(options) {
+    const {
+      sourceId,
+      ignoreSkippedRecords = true,
+      removeMissingRecords = false,
+      sourceImportId,
+      onDebugInfo,
+    } = options;
+
     check(sourceId, String);
     check(sourceImportId, String);
     check(onDebugInfo, Function);
 
-    Object.assign(this, { sourceId, sourceImportId, removeMissingRecords });
+    this.options = options;
 
     let skippedDocumentCount = 0;
     let insertedDocumentCount = 0;
@@ -49,7 +57,7 @@ export default class Upsert {
       writableObjectMode: true,
       readableObjectMode: true,
       highWaterMark: 3,
-      transform(doc, encoding, callback) {
+      transform: Meteor.bindEnvironment((doc, encoding, callback) => {
         const originalId = doc && doc.properties && doc.properties.originalId;
 
         let error;
@@ -84,7 +92,7 @@ export default class Upsert {
 
         const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
 
-        streamObject.upsert(streamClass.collection, {
+        streamClass.collection.upsert({
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
         }, { $set: postProcessedDoc }, (upsertError, result) => {
@@ -93,17 +101,16 @@ export default class Upsert {
           } else if (result && result.numberAffected) {
             updatedDocumentCount += 1;
           }
-          streamObject.afterUpsert(postProcessedDoc, () => callback(upsertError, result));
+          streamObject.afterUpsert({ doc: postProcessedDoc, organizationSourceIds }, () => callback(upsertError, result));
         });
-      },
-      flush(callback) {
+      }),
+      flush: Meteor.bindEnvironment((callback) => {
         console.log('Done with upserting!');
         if (removeMissingRecords) {
           streamObject.removeMissingRecords(callback);
-        } else {
-          callback();
         }
-      },
+        streamObject.afterFlush({ organizationSourceIds }, callback);
+      }),
     });
 
     this.endListener = () => {
@@ -126,12 +133,10 @@ export default class Upsert {
 
     this.stream.unitName = 'documents';
 
-    this.upsert = Meteor.bindEnvironment((collection, selector, modifier, callback) => {
+    this.bindEnv = fn => Meteor.bindEnvironment((...args) => {
       try {
-        // console.log('Upserting doc', doc);
-        collection.upsert(selector, modifier, callback);
+        fn(...args);
       } catch (error) {
-        console.log('Error while upserting:', modifier, error);
         if (onDebugInfo) {
           Meteor.defer(() => {
             onDebugInfo({
@@ -140,34 +145,26 @@ export default class Upsert {
             });
           });
         }
+        const callback = args[args.length - 1];
         callback(error);
       }
     });
 
-    this.removeMissingRecords = Meteor.bindEnvironment((callback) => {
-      try {
-        // Remove all MongoDB documents that were not part of this stream's import
-        const selector = {
-          'properties.sourceId': sourceId,
-          'properties.sourceImportId': { $ne: sourceImportId },
-        };
-        console.log('Removing from ', streamClass.collection._name, selector);
-        streamClass.collection.remove(selector, (error, count) => {
-          removedDocumentCount = count;
-          callback(error);
-        });
-      } catch (error) {
-        console.log('Error while removing:', selector, error);
-        if (onDebugInfo) {
-          Meteor.defer(() => {
-            onDebugInfo({
-              reason: error.reason,
-              // stack: error.stack,
-            });
-          });
-        }
+    this.upsert = this.bindEnv((collection, selector, modifier, callback) => {
+      collection.upsert(selector, modifier, callback);
+    });
+
+    this.removeMissingRecords = this.bindEnv((callback) => {
+      // Remove all MongoDB documents that were not part of this stream's import
+      const selector = {
+        'properties.sourceId': sourceId,
+        'properties.sourceImportId': { $ne: sourceImportId },
+      };
+      console.log('Removing from ', streamClass.collection._name, selector);
+      streamClass.collection.remove(selector, (error, count) => {
+        removedDocumentCount = count;
         callback(error);
-      }
+      });
     });
   }
 
@@ -178,7 +175,12 @@ export default class Upsert {
   }
 
   // override this in your stream subclass for postprocessing after upsert
-  afterUpsert(doc, callback) { // eslint-disable-line class-methods-use-this
+  afterUpsert({ doc, organizationSourceIds }, callback) { // eslint-disable-line class-methods-use-this
+    callback();
+  }
+
+  // override this in your stream subclass for postprocessing after the import is done
+  afterFlush({ organizationSourceIds }, callback) {  // eslint-disable-line class-methods-use-this
     callback();
   }
 

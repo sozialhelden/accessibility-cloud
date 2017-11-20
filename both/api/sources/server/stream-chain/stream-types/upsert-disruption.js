@@ -1,6 +1,8 @@
 import includes from 'lodash/includes';
 import { Meteor } from 'meteor/meteor';
+import { check, Match } from 'meteor/check';
 
+import { Sources } from '../../../../sources/sources';
 import { PlaceInfos } from '../../../../place-infos/place-infos';
 import { EquipmentInfos } from '../../../../equipment-infos/equipment-infos';
 import { Disruptions } from '../../../../disruptions/disruptions';
@@ -13,6 +15,26 @@ export default class UpsertDisruption extends Upsert {
     super(options);
     this.stream.unitName = 'disruptions';
   }
+
+
+  setUnreferencedEquipmentToWorking({ organizationSourceIds }, callback) {
+    const selector = {
+      'properties.sourceId': this.options.equipmentSourceId,
+      'properties.disruptionSourceImportId': { $ne: this.options.sourceImportId },
+    };
+
+    const modifier = {
+      $set: {
+        'properties.isWorking': true,
+      },
+    };
+
+    EquipmentInfos.update(selector, modifier, { multi: true }, (error, count) => {
+      console.log(`Set ${count} missing equipment records to working `, selector, modifier);
+      callback(error);
+    });
+  }
+
 
   // Associate the disruption information with a place data source and equipment info, if possible
 
@@ -60,6 +82,48 @@ export default class UpsertDisruption extends Upsert {
     }
 
     return result;
+  }
+
+
+  afterUpsert({ doc, organizationSourceIds }, callback) {
+    if (!this.options.takeOverEquipmentWorkingFlag || !doc) { callback(null); return; }
+    const equipmentInfoId = doc.properties.equipmentInfoId;
+    if (!equipmentInfoId) { callback(null); return; }
+    const selector = { _id: equipmentInfoId, 'properties.sourceId': { $in: organizationSourceIds } };
+    const modifier = { $set: {
+      'properties.isWorking': doc.properties.isEquipmentWorking,
+      'properties.disruptionSourceImportId': this.options.sourceImportId,
+    } };
+
+    console.log('Updating equipment working status', selector, modifier);
+    EquipmentInfos.upsert(selector, modifier, callback);
+  }
+
+
+  afterFlush({ organizationSourceIds }, callback) {
+    const equipmentSourceId = this.options.equipmentSourceId;
+
+    check(equipmentSourceId, Match.Optional(String));
+
+    if (equipmentSourceId) {
+      if (!includes(organizationSourceIds, equipmentSourceId)) {
+        throw new Meteor.Error(401, 'Not authorized to use this equipment data source ID.');
+      }
+    }
+
+    if (equipmentSourceId) {
+      const source = Sources.findOne(equipmentSourceId);
+      if (!source) {
+        throw new Meteor.Error(404, 'Source not found.');
+      }
+      const sourceImport = Sources.findOne(equipmentSourceId).getLastSuccessfulImport();
+      if (sourceImport) {
+        sourceImport.generateAndSaveStats();
+      }
+    }
+
+    if (!this.options.setUnreferencedEquipmentToWorking) { callback(); return; }
+    this.setUnreferencedEquipmentToWorking({ organizationSourceIds }, callback);
   }
 }
 
