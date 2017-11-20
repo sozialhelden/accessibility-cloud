@@ -3,7 +3,7 @@
     <span class='js-close close-window icon'></span>
 
     {{#with getCurrentFeature.feature}}
-      <h4>{{properties.name}}</h4>
+      <h4>{{#if properties.name}}{{properties.name}}{{else}}{{properties.description}}{{/if}}</h4>
 
       <dl class='place-info-attributes'>
         <dt>Category</dt>
