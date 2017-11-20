@@ -216,10 +216,14 @@ function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
           return idsToShownMarkers[id];
         }
 
+        let isWorkingClassName = 'ac-is-working-undefined';
+        if (typeof feature.properties.isWorking === 'boolean') {
+          isWorkingClassName = `ac-is-working-${feature.properties.isWorking}`;
+        }
         const marker = createMarkerFromFeature({
           feature,
           latlng,
-          className: `ac-${collectionNameSingularParameterized}`,
+          className: `ac-${collectionNameSingularParameterized} ${isWorkingClassName}`,
         });
 
         marker.on('click', () => {
