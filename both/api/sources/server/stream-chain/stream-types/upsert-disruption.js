@@ -96,7 +96,7 @@ export default class UpsertDisruption extends Upsert {
     } };
 
     console.log('Updating equipment working status', selector, modifier);
-    EquipmentInfos.upsert(selector, modifier, callback);
+    EquipmentInfos.update(selector, modifier, callback);
   }
 
 

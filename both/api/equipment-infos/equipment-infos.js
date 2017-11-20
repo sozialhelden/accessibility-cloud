@@ -37,6 +37,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.disruptionSourceImportId': {
+    type: String,
+    optional: true,
+  },
   'properties.originalData': {
     type: String,
     optional: true,
