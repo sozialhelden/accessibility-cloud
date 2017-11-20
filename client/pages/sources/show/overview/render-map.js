@@ -184,7 +184,7 @@ function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
 
   switch (sourceType) {
     case 'placeInfos': {
-      const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related;
+      const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related || {};
       featureCollections = {
         disruptions: convertToFeatureCollection(disruptions),
         equipmentInfos: convertToFeatureCollection(equipmentInfos),
