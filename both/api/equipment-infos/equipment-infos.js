@@ -62,6 +62,10 @@ EquipmentInfos.schema = new SimpleSchema({
     optional: true,
     allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
   },
+  'properties.description': {
+    type: String,
+    optional: true,
+  },
   'properties.isRaised': {
     type: Boolean,
     optional: true,
