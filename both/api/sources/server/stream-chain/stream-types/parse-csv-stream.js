@@ -1,7 +1,7 @@
 import FastCSV from 'fast-csv';
 import { _ } from 'meteor/underscore';
 
-export class ParseCSVStream {
+export default class ParseCSVStream {
   constructor(options) {
     const csvOptions = _.pick(
       options,

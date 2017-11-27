@@ -20,25 +20,28 @@ export function publishPublicFields(
   collection,
   selectorFunction = () => ({}),
   options = {},
-  visibleSelectorOrNull = null
+  visibleSelectorOrNull = null,
 ) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
-  const givenSelector = selectorFunction(this.userId);
-  check(givenSelector, Match.ObjectIncluding({}));
-
+  const fullPublicationName = `${publicationName}.public`;
   publishAndLog(
-    `${publicationName}.public`,
+    fullPublicationName,
     function publish() {
       this.autorun(() => {
+        const givenSelector = selectorFunction(this.userId);
+        if (!Match.test(givenSelector, Match.ObjectIncluding({}))) {
+          console.log('Erroneous selector given in', publicationName, 'publication:', givenSelector);
+          return [];
+        }
         const visibleSelector = visibleSelectorOrNull || collection.visibleSelectorForUserId(this.userId);
         const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
-          _.extend({}, options, { fields: collection.publicFields })
+          _.extend({}, options, { fields: collection.publicFields }),
         );
       });
-    }
+    },
   );
 }
 
@@ -49,22 +52,26 @@ export function publishPrivateFields(
   publicationName,
   collection,
   selectorFunction = () => ({}),
-  options = {}
+  options = {},
 ) {
   check(publicationName, String);
   check(collection, Mongo.Collection);
   check(selectorFunction, Function);
-  const givenSelector = selectorFunction(this.userId);
-  check(givenSelector, Match.ObjectIncluding({}));
+  const fullPublicationName = `${publicationName}.private`;
   publishAndLog(
-    `${publicationName}.private`,
+    fullPublicationName,
     function publish() {
       this.autorun(() => {
+        const givenSelector = selectorFunction(this.userId);
+        if (!Match.test(givenSelector, Match.ObjectIncluding({}))) {
+          console.log('Erroneous selector given in', publicationName, 'publication:', givenSelector);
+          return [];
+        }
         const visibleSelector = collection.visibleSelectorForUserId(this.userId);
         const selector = { $and: _.compact([givenSelector, visibleSelector]) };
         return collection.find(
           selector,
-          _.extend({}, options, { fields: collection.privateFields })
+          _.extend({}, options, { fields: collection.privateFields }),
         );
       });
     }

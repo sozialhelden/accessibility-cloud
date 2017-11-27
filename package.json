@@ -2,18 +2,19 @@
   "scripts": {
     "start": "meteor --settings deploy/local.json",
     "pretest": "npm run lint --silent",
-    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
-    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json",
-    "test-watch": "meteor test --driver-package practicalmeteor:mocha --settings settings/local.json",
-    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json",
-    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
-    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json",
+    "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json --port 8000",
+    "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs --settings settings/ci.json --port 8000",
+    "test-watch": "meteor test --driver-package practicalmeteor:mocha --settings settings/ci.json --port 8000",
+    "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json --port 8000",
+    "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
+    "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
     "lint": "eslint ."
   },
   "dependencies": {
     "JSONStream": "^1.2.1",
     "autoprefixer": "^6.3.7",
     "aws-sdk": "^2.6.12",
+    "babel-runtime": "^6.23.0",
     "basic-auth-connect": "^1.0.0",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
@@ -21,13 +22,16 @@
     "csv-stream": "^0.1.3",
     "csvstream": "^1.1.0",
     "d3": "^4.5.0",
+    "d3-scale-chromatic": "^1.1.1",
     "es6-promise-pool": "^2.4.4",
     "event-stream": "^3.3.4",
     "faker": "^3.1.0",
-    "fast-csv": "^2.3.0",
+    "fast-csv": "^2.4.0",
     "fibers": "^1.0.15",
     "gettext-parser": "^1.2.1",
     "iconv-lite": "^0.4.13",
+    "leaflet": "^1.0.3",
+    "leaflet.markercluster": "^1.0.4",
     "lodash": "^4.17.4",
     "meteor-node-stubs": "^0.2.5",
     "mime-types": "^2.1.12",
@@ -37,69 +41,23 @@
     "stream-length": "^1.0.2",
     "stream-throttle": "^0.1.3",
     "vstream": "^0.1.0",
-    "zstreams": "^3.2.2"
+    "zstreams": "^3.2.3"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "eslint": "^2.13.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-config-airbnb-es5": "^1.0.9",
-    "eslint-import-resolver-meteor": "^0.2.4",
-    "eslint-plugin-import": "^1.10.3",
-    "eslint-plugin-jsx-a11y": "^1.5.3",
-    "eslint-plugin-meteor": "^3.6.0",
-    "eslint-plugin-react": "^5.2.2",
+    "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "babel-eslint": "^7.2.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-meteor": "^4.0.1",
+    "eslint-plugin-react": "^6.10.3",
+    "flow-bin": "^0.43.1",
+    "react-scripts": "0.9.5",
     "shell-source": "^1.1.0",
-    "sinon": "^1.17.7"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "allowImportExportEverywhere": true
-    },
-    "plugins": [
-      "meteor"
-    ],
-    "extends": [
-      "airbnb",
-      "plugin:meteor/recommended"
-    ],
-    "globals": {
-      "Npm": true
-    },
-    "rules": {
-      "no-underscore-dangle": "off",
-      "no-console": "off",
-      "new-cap": [
-        2,
-        {
-          "capIsNewExceptions": [
-            "Match",
-            "Any",
-            "Object",
-            "ObjectIncluding",
-            "OneOf",
-            "Optional",
-            "Where",
-            "With",
-            "Fiber",
-            "SafeString"
-          ]
-        }
-      ],
-      "meteor/eventmap-params": [
-        "error",
-        {
-          "eventParamName": "event",
-          "templateInstanceParamName": "instance"
-        }
-      ],
-      "meteor/template-names": [
-        "off"
-      ]
-    },
-    "settings": {
-      "import/resolver": "meteor"
-    }
+    "sinon": "^1.17.7",
+    "undefined": "^0.1.0"
   }
 }

@@ -69,6 +69,16 @@ Sources.schema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Url,
     optional: true,
   },
+  'translations.additionalAccessibilityInformation.en_US': {
+    label: 'Additional accessibility information (English)',
+    autoform: {
+      afFieldInput: {
+        placeholder: 'This can be shown as an explanatory tool tip to users.',
+      },
+    },
+    type: String,
+    optional: true,
+  },
   isDraft: {
     type: Boolean,
     label: 'Only a draft (content not available to people outside your organization)',
@@ -108,9 +118,19 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
-  placeInfoCount: {
+  documentCount: {
     type: Number,
     defaultValue: 0,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  isShownOnStartPage: {
+    type: Boolean,
+    defaultValue: false,
     optional: true,
     autoform: {
       afFieldInput: {
@@ -192,4 +212,30 @@ Sources.helpers({
       createdAt: Date.now(),
     });
   },
+  getLastImportWithStats() {
+    return SourceImports
+      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
+      .fetch()
+      .find(i => Boolean(i.attributeDistribution));
+  },
+  getType() {
+    const lastImport = this.getLastSuccessfulImport();
+    if (!lastImport) return null;
+    const upsertStream = lastImport.upsertStream();
+    if (!upsertStream) return null;
+    switch (upsertStream.type) {
+      case 'UpsertEquipment': return 'equipmentInfos';
+      case 'UpsertPlace': return 'placeInfos';
+      case 'UpsertDisruption': return 'disruptions';
+      default: return null;
+    }
+  },
+  isPlaceInfoSource() {
+    return this.getType() === 'placeInfos';
+  },
 });
+
+
+if (Meteor.isClient) {
+  window.Sources = Sources;
+}

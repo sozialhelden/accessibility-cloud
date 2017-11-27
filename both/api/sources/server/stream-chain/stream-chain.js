@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import Stream from 'stream';
-import { _ } from 'meteor/underscore';
 
 import { startObservingObjectProgress } from './object-progress-stream';
 import { abortImport } from './control-import';
@@ -9,23 +8,26 @@ import { abortImport } from './control-import';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
 
-import { ConsoleOutput } from './stream-types/console-output';
-import { ConvertToUTF8 } from './stream-types/convert-to-utf8';
-import { DebugLog } from './stream-types/debug-log';
-import { HTTPDownload } from './stream-types/http-download';
-import { MultiHTTPDownload } from './stream-types/multi-http-download';
-import { ParseJSONStream } from './stream-types/parse-json-stream';
-import { ParseJSONChunks } from './stream-types/parse-json-chunks';
-import { ParseCSVStreamTest } from './stream-types/parse-csv-stream-test';
-import { ParseCSVStream } from './stream-types/parse-csv-stream';
-import { Split } from './stream-types/split';
-import { Skip } from './stream-types/skip';
-import { Limit } from './stream-types/limit';
-import { ConvertArrayToStream } from './stream-types/convert-array-to-stream';
-import { TransformData } from './stream-types/transform-data';
-import { TransformScript } from './stream-types/transform-script';
-import { UpsertPlace } from './stream-types/upsert-place';
-import { SimplifyJaccedeFormat } from './stream-types/simplify-jaccede-format';
+import ConsoleOutput from './stream-types/console-output';
+import ConvertToUTF8 from './stream-types/convert-to-utf8';
+import DebugLog from './stream-types/debug-log';
+import HTTPDownload from './stream-types/http-download';
+import MultiHTTPDownload from './stream-types/multi-http-download';
+import ParseJSONStream from './stream-types/parse-json-stream';
+import ParseJSONChunks from './stream-types/parse-json-chunks';
+import ParseCSVStreamTest from './stream-types/parse-csv-stream-test';
+import ParseCSVStream from './stream-types/parse-csv-stream';
+import ParseXMLStream from './stream-types/parse-xml-stream';
+import Split from './stream-types/split';
+import Skip from './stream-types/skip';
+import Limit from './stream-types/limit';
+import ConvertArrayToStream from './stream-types/convert-array-to-stream';
+import TransformData from './stream-types/transform-data';
+import TransformScript from './stream-types/transform-script';
+import UpsertPlace from './stream-types/upsert-place';
+import UpsertDisruption from './stream-types/upsert-disruption';
+import UpsertEquipment from './stream-types/upsert-equipment';
+import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
 
 const zstreams = Npm.require('zstreams');
 
@@ -43,6 +45,8 @@ const StreamTypes = {
   Split,
   TransformData,
   UpsertPlace,
+  UpsertDisruption,
+  UpsertEquipment,
   SimplifyJaccedeFormat,
   Skip,
   Limit,

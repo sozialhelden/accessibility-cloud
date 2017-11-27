@@ -1,44 +1,61 @@
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-
-- [Accessibility Cloud API](#accessibility-cloud-api)
-	- [Features](#features)
-	- [Getting started](#getting-started)
-	- [Authentication](#authentication)
-	- [Features for all endpoints](#features-for-all-endpoints)
-		- [Licensing](#licensing)
-		- [Pagination](#pagination)
-		- [Filtering returned fields](#filtering-returned-fields)
-		- [Embedded related resources](#embedded-related-resources)
-		- [Sorting](#sorting)
-		- [Error handling](#error-handling)
-	- [Endpoints](#endpoints)
-		- [GET /place-infos](#get-place-infos)
-			- [Data source filtering](#data-source-filtering)
-			- [Location-based search](#location-based-search)
-			- [Embedding related documents](#embedding-related-documents)
-			- [Example request](#example-request)
-			- [Example response](#example-response)
-		- [GET /apps](#get-apps)
-		- [GET /languages](#get-languages)
-		- [GET /licenses](#get-licenses)
-		- [GET /organizations](#get-organizations)
-		- [GET /source-imports](#get-source-imports)
-		- [GET /sources](#get-sources)
-
-<!-- /TOC -->
-
 # Accessibility Cloud API
 
 Accessibility Cloud allows you to request accessibility data via HTTP in JSON format.
 
+<!-- TOC -->
+
+- [Accessibility Cloud API](#accessibility-cloud-api)
+  - [Features](#features)
+  - [Getting started](#getting-started)
+  - [Authentication](#authentication)
+  - [Features for all endpoints](#features-for-all-endpoints)
+    - [Licensing](#licensing)
+    - [Pagination](#pagination)
+    - [Filtering returned fields](#filtering-returned-fields)
+    - [Embedded related resources](#embedded-related-resources)
+    - [Sorting](#sorting)
+    - [Error handling](#error-handling)
+  - [Endpoints](#endpoints)
+    - [GET /place-infos](#get-place-infos)
+      - [Data source filtering](#data-source-filtering)
+      - [Location-based search](#location-based-search)
+      - [Filter by metadata](#filter-by-metadata)
+      - [Embedding related documents](#embedding-related-documents)
+      - [Example request](#example-request)
+      - [Example response](#example-response)
+    - [GET /apps](#get-apps)
+    - [GET /categories](#get-categories)
+      - [Example request](#example-request-1)
+      - [Example response](#example-response-1)
+    - [GET /disruptions](#get-disruptions)
+      - [Data source filtering](#data-source-filtering-1)
+      - [Location-based search](#location-based-search-1)
+      - [Embedding related documents](#embedding-related-documents-1)
+      - [Example request](#example-request-2)
+      - [Example response](#example-response-2)
+    - [GET /equipment-infos](#get-equipment-infos)
+      - [Data source filtering](#data-source-filtering-2)
+      - [Location-based search](#location-based-search-2)
+      - [Embedding related documents](#embedding-related-documents-2)
+      - [Example request](#example-request-3)
+      - [Example response](#example-response-3)
+    - [GET /languages](#get-languages)
+    - [GET /licenses](#get-licenses)
+    - [GET /organizations](#get-organizations)
+    - [GET /source-imports](#get-source-imports)
+    - [GET /sources](#get-sources)
+
+<!-- /TOC -->
 
 ## Features
 
 - Free access
-- Allow your users to find places by location, category or other metadata
+- Allow your users to find places by location, category, or other metadata
 - Augment your own data with accessibility information
-- Requests over HTTP
+- Requests over HTTP(S)
 - GeoJSON-compatible output format
+- Get data about places, elevators, escalators, and facility disruptions
+
 
 
 ## Getting started
@@ -59,11 +76,12 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token).
 
 Your API token allows you to access the following data:
+
 - Your organization's profile data
 - Content of your own organizations' data sources
-- Content of other organizations' data sources, if the sources meet the following criteria
-  - the source is not in draft mode
-  - your organization is allowed to access the data source (or the data source is publicly available)
+- Content of other organizations' data sources, if the source
+  - is not in draft mode
+  - is accessible for your organization (or publicly available)
 
 
 ## Features for all endpoints
@@ -92,11 +110,11 @@ You can sort results by using the `sort` parameter. For this parameter, the serv
 
 The server uses HTTP status codes for a general categorization of the errors you get back. Typical error codes:
 
-- `404`: The resource you requested could not be found.
+- `404`: The server could not find the resource you requested.
 - `401`: Your request was not authenticated (e.g. because the token was missing or invalid)
 - `402`: You don't have the necessary privileges to access the requested resource
 - `422`: Your request did not have the right format, e.g. you supplied invalid parameters
-- `500`: Your request could not be processed because there was an internal server error.
+- `500`: The server could not process your request because there was an internal error.
 
 All error responses from the JSON API contain a JSON body with `reason` and a `details` fields. For responses with `422` status code, the details field can contain an array with validation errors for each supplied parameter, e.g. like this:
 
@@ -130,7 +148,7 @@ All error responses from the JSON API contain a JSON body with `reason` and a `d
 
 Returns place infos (POIs) from arbitrary data sources. The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
-For requests to this endpoint, the following additional parameters are supported:
+For requests to this endpoint, the API supports the following parameters:
 
 #### Data source filtering
 
@@ -144,9 +162,24 @@ You can request POIs around a specific map location. For this, you have to suppl
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
 
+#### Filter by metadata
+
+The server has a database for additional metadata-based filter presets that you can use in your queries. If you need a specific query, [let the accessibility.cloud team know](mailto:support@accessibility.cloud).
+
+To use a filter, add this parameter:
+
+- `filter`: a String identifying the preset used to filter your data, e.g. `at-least-partially-accessible-by-wheelchair`.
+
+accessibility.cloud supports the following filter presets:
+
+- `at-least-partially-accessible-by-wheelchair`
+- `fully-accessible-by-wheelchair`
+- `not-accessible-by-wheelchair`
+- `unknown-wheelchair-accessibility`
+
 #### Embedding related documents
 
-In the same way, the API allows you to get customized additional details for results in a special field named `related` that is embedded in the server response, like this:
+In the same way, the API allows you to get customized details for results in an embedded `related` field in the response:
 
 ```javascript
 {
@@ -181,23 +214,23 @@ In the same way, the API allows you to get customized additional details for res
 }
 ```
 
-The data source document is added to the response after adding the `include=source` parameter.
+For example, the response will include a data source document after adding the `includeRelated=source` parameter.
 
-If given, the `include` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
+If given, the `includeRelated` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
 
 - `source`
 - `source.organization`
 - `source.license`
 - `sourceImport`
 - `source.language`
+- `equipmentInfos`
+- `equipmentInfos.disruptions`
+- `disruptions`
 
 #### Example request
 
 ```bash
-curl -v -s \
-    -H 'Accept: application/json' \
-    -H 'X-App-Token: YOUR_TOKEN_HERE' \
-    https://www.accessibility.cloud/place-infos\?latitude\=48.24350856260559\&longitude\=16.39748637322089\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&include=source | jq .
+curl -v https://www.accessibility.cloud/place-infos.json\?appToken\=YOUR_APP_TOKEN_HERE&latitude\=48.2435\&longitude\=16.3974\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&includeRelated=source | jq .
 ```
 
 #### Example response
@@ -306,6 +339,244 @@ curl -v -s \
 ### GET /apps
 
 TODO
+
+### GET /categories
+
+Returns all categories known to accessibility.cloud, together with their translated names in the given `locale`.
+
+#### Example request
+
+```bash
+curl https://www.accessibility.cloud/categories.json\?appToken\=YOUR_APP_TOKEN_HERE\&locale\=en | jq
+```
+
+#### Example response
+
+```json
+{
+  "count": 172,
+  "totalCount": 172,
+  "related": {},
+  "results": [
+    {
+      "_id": "car_sharing",
+      "icon": "car_sharing",
+      "parentIds": [
+        "transport"
+      ],
+      "translations": {
+        "_id": {
+          "de": "Carsharing",
+          "en": "Car sharing"
+        }
+      },
+      "synonyms": [
+        "amenity=car_sharing"
+      ]
+    },
+    ...
+  ]
+}
+```
+
+### GET /disruptions
+
+Returns disruption infos from arbitrary data sources. The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+
+For requests to this endpoint, the API supports the following parameters:
+
+#### Data source filtering
+
+- `includeSourceIds`: comma-separated list of source ids you want to include, e.g. `QGf3sjbSxSpkeNHFm,eWrPejvNrE5AFB7bx`
+- `excludeSourceIds`: same as `includeSourceIds`, but excludes specific sources from results. This is helpful if you have your own data source on accessibility.cloud and want to show additional results on a web page without showing your own data source's results twice on the same view.
+
+#### Location-based search
+
+You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
+
+- `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
+- `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
+
+#### Embedding related documents
+
+You can embed related documents like in the `place-infos` endpoint.
+
+For example, the response will include associated place and facility/equipment infos after adding the `includeRelated=placeInfo,equipmentInfo` parameter.
+
+If given, the `includeRelated` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
+
+- `source`
+- `source.organization`
+- `source.license`
+- `sourceImport`
+- `source.language`
+- `placeInfo`
+- `equipmentInfo`
+
+#### Example request
+
+```bash
+curl -v https://www.accessibility.cloud/disruptions.json\?appToken\=YOUR TOKEN HERE\&includeRelated\=equipmentInfo\&limit\=1 |
+```
+
+#### Example response
+
+```json
+{
+  "type": "FeatureCollection",
+  "featureCount": 1,
+  "totalFeatureCount": 159,
+  "related": {
+    "equipmentInfos": {
+      "KNzmFCkq9Fod9jAKF": {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            13.3869289,
+            52.52093915
+          ]
+        },
+        "properties": {
+          "category": "escalator",
+          "originalId": "10095415",
+          "originalPlaceInfoId": "527",
+          "isWorking": false,
+          "sourceId": "nwccXsd9WMekvFs3r",
+          "sourceImportId": "ZNCp79ofnzXDCTPQi",
+          "placeInfoId": "vrQ3hnmdZnaMvmp3m",
+          "_id": "KNzmFCkq9Fod9jAKF"
+        }
+      }
+    },
+    "licenses": {
+      "ns5HmC6xFrakRdoJ5": {
+        "_id": "ns5HmC6xFrakRdoJ5",
+        "name": "CC-BY 4.0 International",
+        "shortName": "CC-BY 4.0 Int.",
+        "websiteURL": "https://creativecommons.org/licenses/by/4.0/",
+        "fullTextURL": "https://creativecommons.org/licenses/by/4.0/legalcode",
+        "consideredAs": "CCBY",
+        "organizationId": "6ZhFGZ97omm6uKyfn"
+      }
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.386934058,
+          52.520336851
+        ]
+      },
+      "properties": {
+        "originalId": "30400715",
+        "originalEquipmentInfoId": "10095415",
+        "originalPlaceInfoId": "527",
+        "category": "escalator",
+        "lastUpdate": {
+          "$date": 1510119891000
+        },
+        "sourceId": "9JcQxdE2PAFxLTEJc",
+        "sourceImportId": "wyvKYaPYNR54AwtQ6",
+        "placeInfoId": "vrQ3hnmdZnaMvmp3m",
+        "equipmentInfoId": "KNzmFCkq9Fod9jAKF",
+        "_id": "SdGFAf7ZgmSz2YERS"
+      }
+    }
+  ]
+}
+```
+
+### GET /equipment-infos
+
+Returns equipment / facility infos from arbitrary data sources, for example elevators and escalators.
+
+The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+
+For requests to this endpoint, the API supports the following parameters:
+
+#### Data source filtering
+
+- `includeSourceIds`: comma-separated list of source ids you want to include, e.g. `QGf3sjbSxSpkeNHFm,eWrPejvNrE5AFB7bx`
+- `excludeSourceIds`: same as `includeSourceIds`, but excludes specific sources from results. This is helpful if you have your own data source on accessibility.cloud and want to show additional results on a web page without showing your own data source's results twice on the same view.
+
+#### Location-based search
+
+You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
+
+- `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
+- `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
+
+#### Embedding related documents
+
+You can embed related documents like in the `place-infos` endpoint.
+
+For example, the response will include associated place infos and disruptions after adding the `includeRelated=placeInfo,disruptions` parameter.
+
+If given, the `includeRelated` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
+
+- `source`
+- `source.organization`
+- `source.license`
+- `sourceImport`
+- `source.language`
+- `placeInfo`
+- `disruptions`
+
+#### Example request
+
+```bash
+curl -v https://www.accessibility.cloud/equipment-infos.json\?appToken\=YOUR_TOKEN_HERE\&includeRelated\=disruptions\&limit\=1 | jq .
+```
+
+#### Example response
+
+```json
+{
+  "type": "FeatureCollection",
+  "featureCount": 1,
+  "totalFeatureCount": 3010,
+  "related": {
+    "disruptions": {},
+    "licenses": {
+      "ns5HmC6xFrakRdoJ5": {
+        "_id": "ns5HmC6xFrakRdoJ5",
+        "name": "CC-BY 4.0 International",
+        "shortName": "CC-BY 4.0 Int.",
+        "websiteURL": "https://creativecommons.org/licenses/by/4.0/",
+        "fullTextURL": "https://creativecommons.org/licenses/by/4.0/legalcode",
+        "consideredAs": "CCBY",
+        "organizationId": "6ZhFGZ97omm6uKyfn"
+      }
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.07710864,
+          50.8825014
+        ]
+      },
+      "properties": {
+        "category": "elevator",
+        "originalId": "10378163",
+        "originalPlaceInfoId": "2073",
+        "isWorking": true,
+        "sourceId": "nwccXsd9WMekvFs3r",
+        "sourceImportId": "ZNCp79ofnzXDCTPQi",
+        "placeInfoId": "4mMrcqMMxkDxCQdJn",
+        "_id": "dXNpJfzyaTGMQ2NtF"
+      }
+    }
+  ]
+}
+```
 
 ### GET /languages
 

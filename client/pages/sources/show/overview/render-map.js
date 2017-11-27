@@ -1,15 +1,18 @@
 /* globals L */
 /* eslint-disable no-param-reassign */
 
+import keyBy from 'lodash/keyBy';
+import { singularize, underscore } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { _ } from 'lodash';
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
-import { getCurrentPlaceInfo } from './get-current-place-info';
-import buildFeatureCollectionFromArray from '/both/lib/build-feature-collection-from-array';
-import getPlaces from './get-places';
+import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
+import { Sources } from '../../../../../both/api/sources/sources.js';
+import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
+import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
+import { getCurrentFeature } from './get-current-feature';
+import getFeatures from './getFeatures';
 
-const DEFAULT_NUMBER_OF_PLACES_FETCHED = 10000;
+const DEFAULT_NUMBER_OF_PLACES_FETCHED = 2000;
 const PADDING = 0.02;
 
 const idsToShownMarkers = {};
@@ -21,6 +24,10 @@ function createMarkerClusters(instance) {
     polygonOptions: {
       color: '#08c',
       weight: 1,
+    },
+    maxClusterRadius(zoom) {
+      const radius = 15 + (((1.5 ** (18 - zoom)) - 1) * 10);
+      return Math.round(Math.max(10, Math.min(radius, 120)));
     },
   });
 }
@@ -44,7 +51,7 @@ function fitBounds(instance, map) {
   }
 }
 
-async function loadPlaces({
+async function loadMarkers({
   instance,
   sourceId,
   limit,
@@ -54,31 +61,37 @@ async function loadPlaces({
   instance.loadError.set(null);
   instance.loadProgress.set({});
 
-  return getPlaces({
+  const source = Sources.findOne(sourceId);
+  if (!source) return null;
+
+  const sourceType = source.getType();
+  if (!sourceType) return null;
+
+  let url;
+
+  switch (sourceType) {
+    case 'placeInfos':
+      url = 'place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions';
+      break;
+    case 'equipmentInfos': url = 'equipment-infos'; break;
+    case 'disruptions': url = 'disruptions'; break;
+    default: return null;
+  }
+
+  return getFeatures({
+    url: Meteor.absoluteUrl(url),
     sourceId,
     limit,
     onProgress,
   });
 }
 
-function getColorForWheelchairAccessiblity(placeData) {
-  try {
-    if (placeData.properties.accessibility.accessibleWith.wheelchair === true) {
-      return 'green';
-    } else if (placeData.properties.accessibility.accessibleWith.wheelchair === false) {
-      return 'red';
-    }
-  } catch (e) {
-    console.warn('Failed to get color for', placeData, e);
-  }
-  return 'grey';
-}
-
 function centerOnCurrentPlace(map) {
-  const place = getCurrentPlaceInfo();
+  const { feature } = getCurrentFeature() || {};
 
-  if (place) {
-    map.setView(place.geometry.coordinates.reverse(), 18);
+  if (feature) {
+    const coordinates = [].concat(feature.geometry.coordinates);
+    map.setView(coordinates.reverse(), 18);
   }
 }
 
@@ -86,7 +99,7 @@ function filterShownMarkers(featureCollection) {
   const result = {};
 
   result.features = featureCollection.features.filter(
-    feature => !idsToShownMarkers[feature.properties._id]
+    feature => !idsToShownMarkers[feature.properties._id],
   );
 
   result.featureCount = result.features.length;
@@ -94,45 +107,143 @@ function filterShownMarkers(featureCollection) {
   return result;
 }
 
-function showPlacesOnMap(instance, map, unfilteredFeatureCollection) {
-  const featureCollection = filterShownMarkers(unfilteredFeatureCollection);
+// Sets bidirectional references between has-many docs and belongs-to docs using belongs-to-ids in
+// the given featureCollection. All docs have to be GeoJSON Features and will be added to the
+// FeatureCollection as features as well.
 
-  if (!featureCollection.featureCount) {
-    return;
-  }
+function linkRelatedFeatureCollection({
+  featureCollection,
+  hasManyRelationName,
+  foreignKey,
+  parentDocumentsById,
+}) {
+  const singularName = singularize(hasManyRelationName);
+  const childDocuments = featureCollection.related &&
+    featureCollection.related[hasManyRelationName];
 
-  const geojsonLayer = new L.geoJson(featureCollection, { // eslint-disable-line new-cap
-    pointToLayer(feature, latlng) {
-      const id = feature.properties._id;
+  if (!childDocuments) return;
 
-      if (idsToShownMarkers[id]) {
-        return idsToShownMarkers[id];
-      }
+  Object.keys(childDocuments).forEach((childId) => {
+    const child = childDocuments[childId];
 
-      const categoryIconName = _.get(feature, 'properties.category') || 'place';
-      const color = getColorForWheelchairAccessiblity(feature);
-      const acIcon = new L.AccessibilityIcon({
-        iconUrl: `/icons/categories/${categoryIconName}.png`,
-        className: `ac-marker ${color}`,
-      });
-      const marker = L.marker(latlng, { icon: acIcon });
+    if (!child.properties) return;
+    const foreignId = child.properties[`${foreignKey}Id`];
+    if (!foreignId) return;
+    const parent = parentDocumentsById[foreignId];
+    if (!parent) return;
 
-      marker.on('click', () => {
-        FlowRouter.go('placeInfos.show', {
-          _id: FlowRouter.getParam('_id'),
-          placeInfoId: feature.properties._id,
-        }, {
-          limit: FlowRouter.getQueryParam('limit'),
+    if (!parent[hasManyRelationName]) parent[hasManyRelationName] = [];
+    parent[hasManyRelationName].push(child);
+    child[foreignKey] = parent;
+    child.properties.entityType = singularName;
+  });
+}
+
+function linkAllRelatedFeatureCollections(featureCollection) {
+  if (featureCollection.related) {
+    if (featureCollection.related.equipmentInfos) {
+      const placeInfosById = keyBy(featureCollection.features, 'properties._id');
+
+      ['disruptions', 'equipmentInfos'].forEach((hasManyRelationName) => {
+        linkRelatedFeatureCollection({
+          featureCollection,
+          hasManyRelationName,
+          foreignKey: 'placeInfo',
+          parentDocumentsById: placeInfosById,
         });
       });
 
-      idsToShownMarkers[id] = marker;
+      linkRelatedFeatureCollection({
+        featureCollection,
+        foreignKey: 'equipmentInfo',
+        hasManyRelationName: 'disruptions',
+        parentDocumentsById: featureCollection.related.equipmentInfos,
+      });
+    }
+  }
+}
 
-      return marker;
-    },
+function convertToFeatureCollection(idMap = {}) {
+  const features = Object.keys(idMap).map(_id => idMap[_id]);
+  return {
+    features,
+    type: 'FeatureCollection',
+  };
+}
+
+function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
+  linkAllRelatedFeatureCollections(unfilteredFeatureCollection);
+
+  const source = Sources.findOne(sourceId);
+  if (!source) return;
+
+  const sourceType = source.getType();
+  if (!sourceType) return;
+
+  let featureCollections;
+
+  switch (sourceType) {
+    case 'placeInfos': {
+      const { disruptions, equipmentInfos } = unfilteredFeatureCollection.related || {};
+      featureCollections = {
+        disruptions: convertToFeatureCollection(disruptions),
+        equipmentInfos: convertToFeatureCollection(equipmentInfos),
+        placeInfos: unfilteredFeatureCollection,
+      };
+      break;
+    }
+    case 'disruptions':
+      featureCollections = { disruptions: unfilteredFeatureCollection };
+      break;
+    case 'equipmentInfos':
+      featureCollections = { equipmentInfos: unfilteredFeatureCollection };
+      break;
+    default:
+      featureCollections = {};
+      break;
+  }
+
+  Object.keys(featureCollections).forEach((collectionName) => {
+    const collectionNameSingular = singularize(collectionName);
+    const collectionNameSingularParameterized = underscore(collectionNameSingular).replace(/_/, '-');
+    const featureCollection = featureCollections[collectionName];
+    const filteredFeatureCollection = filterShownMarkers(featureCollection);
+    const geojsonLayer = new L.geoJson(filteredFeatureCollection, { // eslint-disable-line new-cap
+      pointToLayer(feature, latlng) {
+        const id = feature.properties._id;
+
+        if (idsToShownMarkers[id]) {
+          return idsToShownMarkers[id];
+        }
+
+        let isWorkingClassName = 'ac-is-working-undefined';
+        if (typeof feature.properties.isWorking === 'boolean') {
+          isWorkingClassName = `ac-is-working-${feature.properties.isWorking}`;
+        }
+        const marker = createMarkerFromFeature({
+          feature,
+          latlng,
+          className: `ac-${collectionNameSingularParameterized} ${isWorkingClassName}`,
+        });
+
+        marker.on('click', () => {
+          FlowRouter.go(`${collectionName}.show`, {
+            _id: FlowRouter.getParam('_id'),
+            [`${collectionNameSingular}Id`]: feature.properties._id,
+          }, {
+            limit: FlowRouter.getQueryParam('limit'),
+          });
+        });
+
+        idsToShownMarkers[id] = marker;
+
+        return marker;
+      },
+    });
+
+    instance.markerClusterGroup.addLayer(geojsonLayer);
   });
 
-  instance.markerClusterGroup.addLayer(geojsonLayer);
   map.addLayer(instance.markerClusterGroup);
   fitBounds(instance, map);
   centerOnCurrentPlace(map);
@@ -161,7 +272,7 @@ export default function renderMap(map, instance) {
     const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
     const featureCollection = buildFeatureCollectionFromArray([place]);
 
-    showPlacesOnMap(instance, map, featureCollection);
+    showPlacesOnMap(instance, map, currentSourceId, featureCollection);
     placesPromise = Promise.resolve();
   } else {
     const isDisplayingFewerMarkersThanBefore = currentLimit && limit < currentLimit;
@@ -172,12 +283,12 @@ export default function renderMap(map, instance) {
 
     currentLimit = limit;
 
-    placesPromise = loadPlaces({
+    placesPromise = loadMarkers({
       instance,
       sourceId: currentSourceId,
       limit,
       onProgress: ({ featureCollection, percentage }) => {
-        showPlacesOnMap(instance, map, featureCollection);
+        showPlacesOnMap(instance, map, currentSourceId, featureCollection);
         instance.loadProgress.set({ percentage });
       },
     });
@@ -191,7 +302,7 @@ export default function renderMap(map, instance) {
       (error) => {
         instance.loadError.set(error);
         instance.isLoading.set(false);
-      }
+      },
     );
   FlowRouter.setQueryParams({ limit });
 }

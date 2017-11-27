@@ -1,5 +1,5 @@
 <template name='sources_show_page_recursive_attributes'>
-  {{#if isRating}}
+  {{#if needsHistogram}}
     <dt class='attribute-name rating'><code>.{{key}}</code></dt>
     <dd class='rating'>
       {{> sources_show_page_rating_chart
@@ -10,10 +10,10 @@
     {{#if isBoolean}}
       <dt class='attribute-name boolean'><code>.{{key}}</code></dt>
       <dd class='boolean'>
-        {{#if placeInfoCount}}
+        {{#if documentCount}}
           {{> sources_show_page_boolean_chart
             attributeName=attributeName
-            placeInfoCount=placeInfoCount
+            documentCount=documentCount
             attributeDistribution=attributeDistribution}}
         {{/if}}
       </dd>
@@ -27,7 +27,7 @@
                 {{> sources_show_page_recursive_attributes
                   attributeName=(joinPath ../attributeName @index)
                   properties=this
-                  placeInfoCount=../placeInfoCount
+                  documentCount=../documentCount
                   attributeDistribution=../attributeDistribution}}
               </li>
             {{/each}}
@@ -42,7 +42,7 @@
                 {{> sources_show_page_recursive_attributes
                   key=key
                   attributeName=(joinPath ../attributeName key)
-                  placeInfoCount=../placeInfoCount
+                  documentCount=../documentCount
                   properties=value
                   attributeDistribution=../attributeDistribution}}
               {{/unless}}

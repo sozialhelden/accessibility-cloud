@@ -16,6 +16,22 @@
     <p class='error'>Error while importing: {{error.reason}} {{error.message}}</p>
   {{/if}}
 
+  <h2>Import results from {{humanReadableStartTimestamp}}</h2>
+
+  <p class='subtle'>
+    {{#if upsertStream}}
+      {{#if isFinished}}
+        {{insertedDocumentCount}} documents imported, {{updatedDocumentCount}} updated.
+      {{/if}}
+    {{else}}
+      This import is missing an <code>UpsertPlace</code>, <code>UpsertDisruption</code> or <code>UpsertEquipment</code> stream unit.
+    {{/if}}
+  </p>
+
+  {{#if error}}
+    <p class='error'>Error while importing: {{error.reason}} {{error.message}}</p>
+  {{/if}}
+
   <ol>
     {{#each streamChain}}
       <li class='item {{#if progress.hasError}}has-error{{/if}} {{#if progress.isFinished}}is-finished{{/if}} {{#if skip}}is-skipped{{/if}} {{#if progress.isAborted}}is-aborted{{/if}}'>

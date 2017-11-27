@@ -7,7 +7,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 // For each given document in `documents`, look up the related document that is specified by
 // foreign key `fieldName`. Returns all related documents and their collection.
 
-function findRelatedDocuments({ collection, documents, fieldName, appId, userId }) {
+function findRelatedDocuments({ req, collection, documents, fieldName, appId, userId }) {
   check(documents, [Object]);
   check(collection, Mongo.Collection);
   check(fieldName, String);
@@ -17,10 +17,18 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
     throw new Meteor.Error(401, 'Please log in first.');
   }
 
-  const relation = collection.relationships.belongsTo[fieldName];
+  let relation = collection.relationships && collection.relationships.belongsTo && collection.relationships.belongsTo[fieldName];
+  let isHasManyRelation = false;
   if (!relation) {
-    throw new Meteor.Error(422, `'${fieldName}' is not a known relation for ${collection._name}.`);
+    relation = collection.relationships && collection.relationships.hasMany && collection.relationships.hasMany[fieldName];
+    isHasManyRelation = true;
   }
+
+  if (!relation) {
+    console.log('Allowed relationships:', collection.relationships);
+    throw new Meteor.Error(422, `'${fieldName}' is not a known relation for ${collection._name}`);
+  }
+
   const { foreignCollection, foreignKey } = relation;
 
   // Allow limiting visible documents dependent on the requesting app and user
@@ -32,24 +40,27 @@ function findRelatedDocuments({ collection, documents, fieldName, appId, userId 
     visibleSelectors.push(foreignCollection.visibleSelectorForAppId(appId) || {});
   }
 
-  const foreignIds = _.uniq(_.map(documents, doc => _.get(doc, foreignKey)));
+  const ids = _.uniq(_.map(documents, doc => _.get(doc, isHasManyRelation ? '_id' : foreignKey)));
 
   const selector = {
     $and: [
       { $or: visibleSelectors }, // doc must be visible for given user or via given app
-      { _id: { $in: foreignIds } }, // doc must be a foreign doc of given docs
+      { [isHasManyRelation ? foreignKey : '_id']: { $in: ids } }, // doc must be a foreign doc of given docs
     ],
   };
 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
+  const cursor = foreignCollection.find(selector, options);
+  const count = cursor.count();
+
   console.log(
-    `Including ${collection._name} → ${fieldName} (${foreignCollection._name})`, selector, options
+    `Including ${collection._name} → ${fieldName} (${foreignCollection._name}, ${count} documents)`, JSON.stringify(selector), JSON.stringify(options),
   );
 
   return {
-    foreignDocuments: foreignCollection.find(selector, options).fetch(),
-    foreignCollectionName: foreignCollection._name.toLowerCase(),
+    foreignDocuments: cursor.fetch(),
+    foreignCollectionName: `${foreignCollection._name.slice(0, 1).toLowerCase()}${foreignCollection._name.slice(1)}`,
     foreignCollection,
   };
 }
@@ -95,24 +106,29 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
     const [,, parentPath, fieldName] = fieldPath.match(/((.*)\.)?([^\.]+$)/);
     resultsByPath[fieldPath] =
       findRelatedDocuments({
-        collection: parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection,
-        documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
-        fieldName: fieldName || fieldPath,
+        req,
         appId,
         userId,
+        fieldName: fieldName || fieldPath,
+        collection: parentPath ? resultsByPath[parentPath].foreignCollection : rootCollection,
+        documents: parentPath ? resultsByPath[parentPath].foreignDocuments : rootDocuments,
       });
   });
 
   const results = {};
 
-  Object.keys(resultsByPath).forEach(path => {
+  Object.keys(resultsByPath).forEach((path) => {
     if (!requestedAndDefaultFieldPaths.includes(path)) {
       return;
     }
-    const { foreignCollectionName, foreignDocuments } = resultsByPath[path];
+    const { foreignCollectionName, foreignDocuments, foreignCollection } = resultsByPath[path];
     results[foreignCollectionName] = results[foreignCollectionName] || {};
-    foreignDocuments.forEach(doc => {
-      results[foreignCollectionName][doc._id] = doc;
+    foreignDocuments.forEach((doc) => {
+      let result = doc;
+      if (foreignCollection.convertToGeoJSONFeature) {
+        result = foreignCollection.convertToGeoJSONFeature(doc);
+      }
+      results[foreignCollectionName][doc._id] = result;
     });
   });
 

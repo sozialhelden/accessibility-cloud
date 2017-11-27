@@ -2,8 +2,8 @@
   <section class="place-info">
     <span class='js-close close-window icon'></span>
 
-    {{#with getCurrentPlaceInfo}}
-      <h4>{{properties.name}}</h4>
+    {{#with getCurrentFeature.feature}}
+      <h4>{{#if properties.name}}{{properties.name}}{{else}}{{properties.description}}{{/if}}</h4>
 
       <dl class='place-info-attributes'>
         <dt>Category</dt>
@@ -20,10 +20,10 @@
         <dd><p class='readible json code-block'>{{stringify properties.accessibility}}</p></dd>
 
         <dt>Original data</dt>
-        <dd><p class='readible json code-block'>{{beautifyJSON getCurrentPlaceInfo.properties.originalData}}</p></dd>
+        <dd><p class='readible json code-block'>{{beautifyJSON properties.originalData}}</p></dd>
 
         <dt>As JSON</dt>
-        <dd><p class='readible json code-block'>{{stringify getCurrentPlaceInfo}}</p></dd>
+        <dd><p class='readible json code-block'>{{stringify this}}</p></dd>
       </dl>
     {{/with}}
   </section>

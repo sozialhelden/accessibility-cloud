@@ -1,9 +1,10 @@
 import JSONStream from 'JSONStream';
 import { check } from 'meteor/check';
+
 const { Transform } = Npm.require('zstreams');
 
 
-export class ParseJSONStream {
+export default class ParseJSONStream {
   constructor({ path, lengthPath }) {
     check(path, String);
 

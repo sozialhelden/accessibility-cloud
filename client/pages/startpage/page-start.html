@@ -11,10 +11,11 @@
           <li><a href='.'>Learn</a></li>
         </ul>
         <h1>
-          accessibility cloud
-          <small>
-            An open database for everybody
-          </small>
+          <img src="/images/ac-logo-dark.png" class='icon' alt="Icon">
+          <div class='text-part'>
+            <header>accessibility.cloud</header>
+            <section class='claim'>Exchange accessibility data, standardized.</section>
+          </div>
         </h1>
 <!--         <div class='input-area'>
           <input class='search input' placeholder="Placename / Address / Region">
@@ -47,21 +48,22 @@
       <div class='claim area'>
         <h2>Let’s collect more accessible places together.</h2>
         <p>
-          We believe in an inclusive world and want to make it easy to find accessibility information—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other. accessibility.cloud simplifies sharing and obtaining data in a standardized, future-proof, easy-to-use way.
+          We are a NGO that believes in an inclusive world. Our mission is to make accessibility information easier to find—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other. accessibility.cloud simplifies sharing and obtaining accessibility data in a standardized, future-proof, easy-to-use way.
         </p>
       </div>
 
       <div class='page content block benefits area'>
         <div class='on-white use-data'>
           <h3>Use our data.</h3>
-          <h4>For your app, website or studies: <br> use our free data.</h4>
-          <p>No matter if you are developing an app or do research about accessibility: we provide free-of-charge access to all data sources <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/json-api.md'>via an API</a> with open licenses—in a <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/exchange-format.md'>unified data format</a>.</p>
+          <h4>Get access to {{formatNumber (lastCollectionCount 'Sources.withoutDrafts')}} data sources with {{formatNumber (lastCollectionCount 'PlaceInfos.withoutDrafts')}} places.</h4>
+          <p>You have an app, a website, or a research project using location-based accessibility data?</p>
+          <p>We provide free-of-charge access <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/json-api.md'>via an API</a> in a <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/exchange-format.md'>unified data format</a>—often with an open license.</p>
         </div>
         <div class='on-white share-data'>
           <h3>Share your data.</h3>
-          <h4>You collected accessibility data yourself? We'd love to hear from you!</h4>
-          <p>Joining is easy, and we can help you to include your own data, no matter if you just have a file or your own web API.</p>
-          <p><a href='mailto:support@accessibility.cloud'>Contact us</a> if you have something to share!</p>
+          <h4>You collected accessibility data yourself? We'd love to see it!</h4>
+          <p>accessibility.cloud likely supports your data format already, even if it's custom-made or if the data has to be fetched from an API.</p>
+          <p>Register your organization on accessibility.cloud, or <a href='mailto:support@accessibility.cloud'>contact us</a> if you need help. We're eager to assist you!</p>
         </div>
       </div>
 
@@ -86,11 +88,12 @@
         <div class="wrapper">
           <h2>{{_ "Supporting partners" }}</h2>
           <div class="logo-cloud">
-            <a class='partner logo square' href='.' style="background-image:url(images/partners/logo-jaccede.png);"></a>
-            <a class='partner logo square' href='.' style="background-image:url(images/partners/logo-foursquare.png);"></a>
-            <a class='partner logo' href='.' style="background-image:url(images/partners/logo-axsmap.png);"></a>
-            <a class='partner logo' href='.' style="background-image:url(images/partners/logo-wheelmap.png);"></a>
-            <a class='partner logo' href='.' style="background-image:url(images/partners/logo-google.png);"></a>
+            <a class='partner logo square' href='https://www.jaccede.com/' style="background-image:url(images/partners/logo-jaccede.png);"></a>
+            <a class='partner logo square' href='https://www.foursquare.com/' style="background-image:url(images/partners/logo-foursquare.png);"></a>
+            <a class='partner logo' href='http://www.axsmap.com/' style="background-image:url(images/partners/logo-axsmap.png);"></a>
+            <a class='partner logo' href='https://wheelmap.org' style="background-image:url(images/partners/logo-wheelmap.png);"></a>
+            <a class='partner logo' href='https://www.google.org/' style="background-image:url(images/partners/logo-google.png);"></a>
+            <a class='partner logo' href='https://www.iwheelshare.com/' style="background-image:url(images/partners/logo-iwheelshare.png);"></a>
           </div>
         </div>
       </div>

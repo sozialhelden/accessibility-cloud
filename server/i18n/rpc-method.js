@@ -1,18 +1,36 @@
+import cloneDeep from 'lodash/cloneDeep';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { isAdmin } from '/both/lib/is-admin';
 import { syncWithTransifex } from './sync';
-import { resourceSlugForCollection } from './resource-slug';
-
+import { resourceSlugForCollection } from '../../both/i18n/resource-slug';
 
 function syncCollectionWithTransifex({ attributePathFn, collection, defaultLocale, msgidFn }) {
   const resourceSlug = resourceSlugForCollection(collection);
 
   const getTranslationForDocFn = (doc, locale) => doc.translations[locale];
   const updateLocalDocumentFn = ({ doc, locale, msgstr }) => {
-    collection.update(doc._id, { $set: { [attributePathFn(locale)]: msgstr } });
+    const modifierOriginal = { $set: { [attributePathFn(locale)]: msgstr } };
+    const modifier = cloneDeep(modifierOriginal);
+    try {
+      collection.update(doc._id, modifier);
+    } catch (error) {
+      console.error(
+        'Error while updating',
+        (collection && collection._name),
+        'document',
+        doc && doc._id,
+        'with modifier',
+        modifier,
+        'original modifier:',
+        modifierOriginal,
+        'schema:',
+        collection.schema,
+      );
+      throw error;
+    }
   };
 
   const msgidsToDocs = {};

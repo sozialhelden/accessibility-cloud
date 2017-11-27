@@ -149,7 +149,7 @@ Organizations.helpers({
   },
   getSources() {
     const sources = Sources.find({ organizationId: this._id }).fetch();
-    return _.sortBy(_.sortBy(sources, (s) => -s.placeInfoCount), 'isDraft');
+    return _.sortBy(_.sortBy(sources, (s) => -s.documentCount), 'isDraft');
   },
   getApps() {
     return Apps.find({ organizationId: this._id });

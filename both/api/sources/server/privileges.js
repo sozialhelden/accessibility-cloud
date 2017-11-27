@@ -29,7 +29,9 @@ Sources.publicFields = {
   isRequestable: 1,
   accessRestrictedTo: 1,
   hasRunningImport: 1,
-  placeInfoCount: 1,
+  documentCount: 1,
+  additionalAccessibilityInformation: 1,
+  'translations.additionalAccessibilityInformation': 1,
 };
 
 Sources.helpers({
@@ -84,8 +86,10 @@ Sources.visibleSelectorForAppId = (appId) => {
   check(appId, String);
   const app = Apps.findOne(appId);
   const organizationId = app.organizationId;
-  return sourceSelectorForOrganizationIds([organizationId]);
+  return { $and: [sourceSelectorForOrganizationIds([organizationId]), { isDraft: false }] };
 };
+
+Sources.apiParameterizedSelector = selector => selector;
 
 export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
   check(sourceId, String);

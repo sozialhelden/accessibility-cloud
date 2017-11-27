@@ -1,52 +1,88 @@
-import { _ } from 'meteor/underscore';
-import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
-import { geoDistance } from '/both/lib/geo-distance';
-import { Sources } from '/both/api/sources/sources';
-import helpers from './helpers';
+import { Mongo } from 'meteor/mongo';
+import { _ } from 'meteor/stevezhu:lodash';
+import {
+  pathsInObject,
+  getTranslationForAccessibilityAttributeName,
+} from '/both/i18n/ac-format-translations';
+import { Categories } from '/both/api/categories/categories';
+import { EquipmentInfos } from '../equipment-infos/equipment-infos';
+import { Sources } from '../sources/sources';
+import { Disruptions } from '../disruptions/disruptions';
+import convertToGeoJSONFeature from '../shared/convertToGeoJSONFeature';
+
 
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 
-if (Meteor.isClient) {
-  window.PlaceInfos = PlaceInfos;
-}
+
+const helpers = {
+  getLocalizedCategory(locale) {
+    const category = Categories.findOne(this.properties.category);
+    if (!category) {
+      console.log(`Category ${this.properties.category} not found.`);
+      return '';
+    }
+    return category.getLocalizedId(locale);
+  },
+  getLocalizedAccessibility(locale) {
+    const result = _.cloneDeep(this.properties.accessibility);
+    const paths = pathsInObject(result);
+    paths.forEach((path) => {
+      _.set(result, `${path}Localized`, getTranslationForAccessibilityAttributeName(path, locale));
+    });
+    return result;
+  },
+  getLocalizedName(locale) {
+    if (locale && !(typeof locale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
+    if (!this.properties) return null;
+    if (typeof this.properties.name === 'string') return this.properties.name;
+    if (typeof this.properties.name === 'object') {
+      if (!locale) {
+        if (typeof this.properties.name.en_US === 'string') {
+          return this.properties.name.en_US;
+        }
+        if (typeof this.properties.name.en === 'string') {
+          return this.properties.name.en;
+        }
+        const firstAvailableLocale = Object.keys(this.properties.name)[0];
+        if (firstAvailableLocale && typeof this.properties.name[firstAvailableLocale] === 'string') {
+          return this.properties.name[firstAvailableLocale];
+        }
+      }
+      if (typeof this.properties.name[locale] === 'string') {
+        return this.properties.name[locale];
+      }
+      const localeWithoutCountry = locale.slice(0, 2);
+      if (typeof this.properties.name[localeWithoutCountry] === 'string') {
+        return this.properties.name[localeWithoutCountry];
+      }
+      if (typeof this.properties.name.en_US === 'string') {
+        return this.properties.name.en_US;
+      }
+      if (typeof this.properties.name.en === 'string') {
+        return this.properties.name.en;
+      }
+    }
+    return null;
+  },
+};
 
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
 PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
-  const properties = {};
-  Object.assign(properties, doc.properties, doc);
-  if (coordinatesForDistance && properties.geometry && properties.geometry.coordinates) {
-    properties.distance = geoDistance(coordinatesForDistance, properties.geometry.coordinates);
-  }
+  const convertedDocument = convertToGeoJSONFeature(doc, coordinatesForDistance, locale);
   if (locale) {
-    properties.localizedCategory = helpers.getLocalizedCategory.call(doc, locale);
-    properties.accessibility = helpers.getLocalizedAccessibility.call(doc, locale);
+    Object.assign(convertedDocument.properties, {
+      localizedCategory: helpers.getLocalizedCategory.call(doc, locale),
+      accessibility: helpers.getLocalizedAccessibility.call(doc, locale),
+    });
   }
-  delete properties.properties;
-  return {
-    type: 'Feature',
-    geometry: properties.geometry,
-    properties: _.omit(properties, 'geometry', 'originalData'),
-  };
+  convertedDocument.properties.name = helpers.getLocalizedName.call(doc, locale);
+  return convertedDocument;
 };
 
-PlaceInfos.wrapAPIResponse = ({ results, req, related, resultsCount }) => {
-  // This is checked in buildSelectorAndOptions already, so no extra check here
-  let coordinates = undefined;
-  if (req.query.latitude && req.query.longitude) {
-    coordinates = [Number(req.query.longitude), Number(req.query.latitude)];
-  }
 
-  const locale = req.query.locale;
+PlaceInfos.helpers(helpers);
 
-  return {
-    type: 'FeatureCollection',
-    featureCount: results.length,
-    totalFeatureCount: resultsCount,
-    related,
-    features: results.map(doc => PlaceInfos.convertToGeoJSONFeature(doc, coordinates, locale)),
-  };
-};
 
 PlaceInfos.relationships = {
   belongsTo: {
@@ -55,8 +91,18 @@ PlaceInfos.relationships = {
       foreignKey: 'properties.sourceId',
     },
   },
+  hasMany: {
+    equipmentInfos: {
+      foreignCollection: EquipmentInfos,
+      foreignKey: 'properties.placeInfoId',
+    },
+    disruptions: {
+      foreignCollection: Disruptions,
+      foreignKey: 'properties.placeInfoId',
+    },
+  },
 };
 
-PlaceInfos.helpers(helpers);
-
-PlaceInfos.includePathsByDefault = ['source.license'];
+if (Meteor.isClient) {
+  window.PlaceInfos = PlaceInfos;
+}

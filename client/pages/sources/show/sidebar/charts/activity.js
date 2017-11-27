@@ -58,10 +58,10 @@ Template.sources_show_page_activity_chart.onRendered(function rendered() {
 
     const y = d3.scaleLinear()
       .domain([0, d3.max(imports, sourceImport => {
-        const afterImport = sourceImport.placeInfoCountAfterImport || 0;
-        const inserted = sourceImport.insertedPlaceInfoCount || 0;
-        const updated = sourceImport.insertedPlaceInfoCount || 0;
-        const processed = sourceImport.processedPlaceInfoCount || 0;
+        const afterImport = sourceImport.DocumentCountAfterImport || 0;
+        const inserted = sourceImport.insertedDocumentCount || 0;
+        const updated = sourceImport.insertedDocumentCount || 0;
+        const processed = sourceImport.processedDocumentCount || 0;
         return d3.max([processed, afterImport, inserted + updated]);
       })])
       .range([HEIGHT, 0]);
@@ -91,17 +91,17 @@ Template.sources_show_page_activity_chart.onRendered(function rendered() {
 
     ['inserted', 'processed', 'updated'].forEach(type => {
       bar.selectAll(`.${type}`)
-        .attr('y', d => d[`${type}PlaceInfoCount`] && y(d[`${type}PlaceInfoCount`]))
-        .attr('height', d => d[`${type}PlaceInfoCount`] && (HEIGHT - y(d[`${type}PlaceInfoCount`])))
+        .attr('y', d => d[`${type}DocumentCount`] && y(d[`${type}DocumentCount`]))
+        .attr('height', d => d[`${type}DocumentCount`] && (HEIGHT - y(d[`${type}DocumentCount`])))
       .selectAll('title')
         .text(d =>
-          `${d[`${type}PlaceInfoCount`]} records processed ${moment(d.startTimestamp).fromNow()}`
+          `${d[`${type}DocumentCount`]} records processed ${moment(d.startTimestamp).fromNow()}`
         );
     });
 
     bar.selectAll('.updated')
       .attr('y',
-        d => d.updatedPlaceInfoCount && y(d.updatedPlaceInfoCount + (d.insertedPlaceInfoCount || 0))
+        d => d.updatedDocumentCount && y(d.updatedDocumentCount + (d.insertedDocumentCount || 0))
       );
   });
 });

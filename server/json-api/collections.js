@@ -8,6 +8,9 @@ import { Organizations } from '/both/api/organizations/organizations';
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
+import { Categories } from '/both/api/categories/categories';
+import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
+import { Disruptions } from '/both/api/disruptions/disruptions';
 
 // Limits collections accessible over JSON API to a white list.
 
@@ -19,11 +22,14 @@ const collections = [
   PlaceInfos,
   SourceImports,
   Sources,
+  Categories,
+  EquipmentInfos,
+  Disruptions,
 ];
 
 const namesToCollections = _.indexBy(
   collections,
-  collection => s.slugify(s.humanize(collection._name))
+  collection => s.slugify(s.humanize(collection._name)),
 );
 
 // Returns a collection for a given route name (e.g. 'place-infos')

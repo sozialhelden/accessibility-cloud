@@ -7,17 +7,17 @@ import { getUserIdFromToken } from './user-token';
 // is not (or incorrectly) authenticated.
 
 export function getAppAndUserFromRequest(req) {
-  const appToken = req.headers['x-token'] || req.headers['x-app-token'];
-  const userToken = req.headers['x-user-token'];
+  const appToken = req.headers['x-token'] || req.headers['x-app-token'] || req.query.appToken;
+  const userToken = req.headers['x-user-token'] || req.query.userToken;
 
   if (!appToken && !userToken) {
     // eslint-disable-next-line max-len
-    throw new Meteor.Error(401, 'Please supply a token.', `Requests to the API must have an authentication token sent as "x-app-token" or "x-user-token" HTTP header. Log in on ${Meteor.absoluteUrl('')} and obtain a valid token in your app or organization settings.`);
+    throw new Meteor.Error(401, 'Please supply a token.', `Requests to the API must have an authentication token sent as "x-app-token" or "x-user-token" HTTP header, or as "appToken" / "userToken" query parameter. Log in on ${Meteor.absoluteUrl('')} to obtain a valid token in organization's API client settings.`);
   }
 
-  if (appToken && !Match.test(appToken, String) || userToken && !Match.test(userToken, String)) {
+  if ((appToken && !Match.test(appToken, String)) || (userToken && !Match.test(userToken, String))) {
     // eslint-disable-next-line max-len
-    throw new Meteor.Error(401, 'Token must be a String.', 'You supplied a token that was no string. Please supply it as String.');
+    throw new Meteor.Error(401, 'Token must be a String.', 'You supplied a token that was no string. Please supply it as string.');
   }
 
   const app = getAppFromToken(appToken);

@@ -14,7 +14,7 @@ import { getDisplayedNameForUser } from '/both/lib/user-name';
 
 function handleJSONRequest(req, res, next) {
   const { pathname } = url.parse(req.url);
-  const [collectionName, _id] = pathname.replace(/^\//, '').split('/');
+  const [collectionName, _id] = pathname.replace(/^\//, '').replace(/.json($|\?)/, '').split('/');
 
   let appId = null;
   let app = null;
@@ -33,7 +33,7 @@ function handleJSONRequest(req, res, next) {
       throw new Meteor.Error(
         405,
         errorMessage,
-        shouldUsePatch ? 'Please use PATCH instead.' : undefined
+        shouldUsePatch ? 'Please use PATCH instead.' : undefined,
       );
     }
 
@@ -53,21 +53,20 @@ function handleJSONRequest(req, res, next) {
     const options = { req, res, collectionName, collection, _id, appId, app, user, userId };
     const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
     const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
+
     console.log(
       'Request',
       _.compact([viaAppString, asUserString]).join(' '),
       req.method,
       req.url,
-      EJSON.stringify(req.body)
+      EJSON.stringify(req.body),
     );
-
 
     if (!app && !user) {
       console.warn('No app / user authorized for request.');
       // eslint-disable-next-line max-len
-      throw new Meteor.Error(401, 'Not authorized.', `One of the tokens you supplied either is too old or was never valid. Log in on ${Meteor.absoluteUrl('')} and obtain a valid token in your app settings.`);
+      throw new Meteor.Error(401, 'Not authorized.', `One of the tokens you supplied either is too old or was never valid. Log in on ${Meteor.absoluteUrl('')} and obtain a valid token in your organization's API key settings.`);
     }
-
 
     responseBody = EJSON.stringify(handler(options));
   } catch (error) {
@@ -77,7 +76,7 @@ function handleJSONRequest(req, res, next) {
       'Error while handling', req.url,
       ` requested by app id ${appId} (${app && app.name}):`,
       error,
-      error.stack
+      error.stack,
     );
     const responseData = { error: _.pick(error, 'reason', 'details') };
     responseData.error.reason = responseData.error.reason || 'Internal server error';
@@ -108,7 +107,7 @@ function handleFilteredJSONRequests(req, res, next) {
     .split(';')
     .map(format => format.trim());
 
-  if (!_.any(acceptedFormats, acceptsJSON)) {
+  if (!(req.url.match(/.json(\?|$)/) || _.any(acceptedFormats, acceptsJSON))) {
     return next();
   }
 

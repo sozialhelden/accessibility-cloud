@@ -2,7 +2,7 @@ import util from 'util';
 
 const { Transform } = Npm.require('zstreams');
 
-export class DebugLog {
+export default class DebugLog {
   constructor({ onDebugInfo }) {
     let logged = false;
     let lastChunk = null;
@@ -11,14 +11,14 @@ export class DebugLog {
       readableObjectMode: true,
       transform(chunk, encoding, callback) {
         if (!logged) {
-          onDebugInfo({ firstChunkInspectString: util.inspect(chunk) });
+          onDebugInfo({ firstChunkInspectString: util.inspect(chunk, { depth: 10 }) });
           logged = true;
         }
         lastChunk = chunk;
         callback(null, chunk);
       },
       flush(callback) {
-        onDebugInfo({ lastChunkInspectString: util.inspect(lastChunk) });
+        onDebugInfo({ lastChunkInspectString: util.inspect(lastChunk, { depth: 10 }) });
         callback();
       },
     });

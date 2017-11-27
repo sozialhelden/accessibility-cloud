@@ -2,7 +2,7 @@
 
 import { assert } from 'meteor/practicalmeteor:chai';
 import sinon from 'sinon';
-import { TransformData } from './index';
+import TransformData from './index';
 
 const {
   Transform,

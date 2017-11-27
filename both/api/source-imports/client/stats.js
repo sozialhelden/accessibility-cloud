@@ -14,8 +14,9 @@ SourceImports.helpers({
   },
   mostFrequentCategoryNamesToPlaceCounts(limit = 10) {
     const attributeDistribution = this.getCachedAttributeDistribution();
-    if (!attributeDistribution) { return []; }
+    if (!attributeDistribution) return [];
     const categoryNamesToCounts = attributeDistribution.properties.properties.category;
+    if (!categoryNamesToCounts) return [];
     const categoryNames = Object.keys(categoryNamesToCounts);
     const countForCategoryName = (name) => categoryNamesToCounts[name];
     return _.sortBy(categoryNames, countForCategoryName)
@@ -30,10 +31,10 @@ SourceImports.helpers({
     if (!source) {
       return [];
     }
-    const totalCount = this.getSource().placeInfoCount;
+    const totalCount = this.getSource().documentCount;
     const typeNamesToCounts =
       _.get(attributeDistribution, 'properties.properties.accessibility.accessibleWith');
-    return Object.keys(typeNamesToCounts)
+    return Object.keys(typeNamesToCounts || {})
       .map(name => ({
         name,
         false: typeNamesToCounts[name].false,

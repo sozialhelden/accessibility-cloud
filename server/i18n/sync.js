@@ -1,9 +1,8 @@
-import util from 'util';
 import { check, Match } from 'meteor/check';
 import { s } from 'meteor/underscorestring:underscore.string';
 import { _ } from 'meteor/stevezhu:lodash';
 import { getLocales, importFromTransifex, exportToTransifex } from './transifex-api';
-import { registerLocale, cacheRegisteredLocales } from './locales';
+import { registerLocale, cacheRegisteredLocales } from '../../both/i18n/locales';
 
 function generateEmptyPoFile(locale) {
   return {

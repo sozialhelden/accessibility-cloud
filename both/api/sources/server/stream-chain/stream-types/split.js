@@ -1,7 +1,8 @@
-const { SplitStream } = Npm.require('zstreams');
 import { check, Match } from 'meteor/check';
 
-export class Split {
+const { SplitStream } = Npm.require('zstreams');
+
+export default class Split {
   constructor({ string, regExpString }) {
     check(string, Match.Optional(String));
     check(regExpString, Match.Optional(String));

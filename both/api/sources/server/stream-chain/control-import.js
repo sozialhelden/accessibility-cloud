@@ -53,8 +53,8 @@ function startImportStreaming(source, importFlow) {
     streamChain: importFlow.streams,
     originalStreamChain: importFlow.streams,
     startTimestamp: Date.now(),
-    insertedPlaceInfoCount: 0,
-    updatedPlaceInfoCount: 0,
+    insertedDocumentCount: 0,
+    updatedDocumentCount: 0,
   });
   console.log('Creating stream chain for source import', sourceImportId, '…');
 

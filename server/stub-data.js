@@ -112,8 +112,8 @@ Factory.define('jsonSourceImport', SourceImports, {
   //   },
   // ],
 
-  insertedPlaceInfoCount: 0,
-  updatedPlaceInfoCount: 0,
+  insertedDocumentCount: 0,
+  updatedDocumentCount: 0,
 });
 
 Factory.define('jsonPlaceInfo', PlaceInfos, {
@@ -133,14 +133,15 @@ Factory.define('csvSource', Sources, {
   licenseId: Factory.get('_license_CC0'),
   languageId: Factory.get('language-en'),
   name: 'Toilets in Rostock (CSV)',
+  shortName: 'CSV Test',
   description: 'germany-rostock-toilets (CSV)',
   originWebsiteURL: 'https://geo.sv.rostock.de/download/opendata/toiletten/',
 });
 
 Factory.define('csvSourceImport', SourceImports, {
   sourceId: Factory.get('csvSource'),
-  insertedPlaceInfoCount: 2,
-  updatedPlaceInfoCount: 1,
+  insertedDocumentCount: 2,
+  updatedDocumentCount: 1,
 });
 
 Factory.define('csvPlaceInfo', PlaceInfos, {
@@ -180,10 +181,6 @@ function createStubData() {
     sourceId: source._id,
     lastSourceImportId: sourceImport._id,
   });
-  const placeImport = Factory.create('jsonPlaceImport', {
-    placeInfoId: placeInfo._id,
-    sourceImportId: sourceImport._id,
-  });
 
   console.log({
     license,
@@ -192,7 +189,6 @@ function createStubData() {
     source,
     sourceImport,
     placeInfo,
-    placeImport,
   });
 
   // --- CSV -------------------------------
@@ -208,15 +204,10 @@ function createStubData() {
     sourceId: csvSource._id,
     lastSourceImportId: csvSourceImport._id,
   });
-  const csvPlaceImport = Factory.create('csvPlaceImport', {
-    placeInfoId: csvPlaceInfo._id,
-    sourceImportId: csvSourceImport._id,
-  });
   console.log({
     csvSource,
     csvSourceImport,
     csvPlaceInfo,
-    csvPlaceImport,
   });
 }
 

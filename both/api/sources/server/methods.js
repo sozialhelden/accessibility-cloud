@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-import { PlaceInfos } from '/both/api/place-infos/place-infos.js';
-import { SourceImports } from '/both/api/source-imports/source-imports.js';
-import { Sources } from '/both/api/sources/sources.js';
-import { ImportFlows } from '/both/api/import-flows/import-flows.js';
+import { PlaceInfos } from '/both/api/place-infos/place-infos';
+import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
+import { Disruptions } from '/both/api/disruptions/disruptions';
+import { SourceImports } from '/both/api/source-imports/source-imports';
+import { ImportFlows } from '/both/api/import-flows/import-flows';
+import { Sources } from '/both/api/sources/sources';
 import {
   checkExistenceAndFullAccessToSourceId,
   checkExistenceAndVisibilityForSourceId,
@@ -22,8 +24,12 @@ Meteor.methods({
   cachePlaceCountForSource(sourceId) {
     check(sourceId, String);
     checkExistenceAndVisibilityForSourceId(this.userId, sourceId);
-    const placeInfoCount = PlaceInfos.find({ 'properties.sourceId': sourceId }).count();
-    Sources.update(sourceId, { $set: { placeInfoCount } });
+    const documentCount = [
+      PlaceInfos,
+      EquipmentInfos,
+      Disruptions,
+    ].map(collection => collection.find({ 'properties.sourceId': sourceId }).count());
+    Sources.update(sourceId, { $set: { documentCount } });
   },
 
   updateDataURLForImportFlow(importFlowId, url) {
@@ -54,6 +60,8 @@ Meteor.methods({
     checkExistenceAndFullAccessToSourceId(this.userId, sourceId);
 
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
-    Sources.update({ _id: sourceId }, { $set: { placeInfoCount: 0 } });
+    EquipmentInfos.remove({ 'properties.sourceId': sourceId });
+    Disruptions.remove({ 'properties.sourceId': sourceId });
+    Sources.update({ _id: sourceId }, { $set: { documentCount: 0 } });
   },
 });

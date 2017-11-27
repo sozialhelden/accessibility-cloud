@@ -69,18 +69,18 @@ Meteor.users.publicFields = {
 function getUserSelectorForMemberSelector(selector) {
   const members = OrganizationMembers.find(
     selector,
-    { fields: { userId: 1 }, transform: null }
+    { fields: { userId: 1 }, transform: null },
   ).fetch();
   return { _id: { $in: _.compact(_.uniq(_.map(members, (m => m.userId)))) } };
 }
 
 Meteor.users.visibleSelectorForUserId = (userId) => {
   check(userId, String);
-  getUserSelectorForMemberSelector(OrganizationMembers.visibleSelectorForUserId(userId));
+  return getUserSelectorForMemberSelector(OrganizationMembers.visibleSelectorForUserId(userId));
 };
 
 Meteor.users.visibleSelectorForAppId = (appId) => {
   check(appId, String);
-  const app = Apps.findOnd(appId);
+  const app = Apps.findOne(appId);
   return getUserSelectorForMemberSelector({ organizationId: app.organizationId });
 };

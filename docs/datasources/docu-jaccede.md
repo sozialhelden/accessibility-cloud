@@ -1,5 +1,5 @@
-# AXSMaps
-Some notes on the API inport-format of Jaccede
+# Jaccede data import
+Some notes on the API import-format of Jaccede
 
 ## example-places
 - https://www.jaccede.com/en/p/ChIJ8ect1eRZn0cRDRnpqH-ZzeI/hotel-novotel-nuernberg-messezentrum?page=1
@@ -18,7 +18,7 @@ Some notes on the API inport-format of Jaccede
 
 - Sometimes incorrect to misleading translations.
 - Extensive and hard to read json-format for nested data.
-- mixes precise data-attribes with interpretation
+- mixes precise data-attributes with interpretation
 - mixes boolean attributes with clarifications inside child-attributes
 - mixes float properties with booleans (less than, more then, precisely)
 - Floods response with undefined data like...
@@ -28,7 +28,7 @@ Some notes on the API inport-format of Jaccede
     "selected": false,
 
 - Default response language is French.
-- switches between possitive and negative properties: "door.easyToHoldOpen" vs. "door.difficultToHoldOpen"
+- switches between positive and negative properties: "door.easyToHoldOpen" vs. "door.difficultToHoldOpen"
 - has contradicting properties "services/equipment/foldingSeat" vs. "rooms/restroom/shower/showerSeat/fix/folds/Down"
 
 ## Formatted Sample Object

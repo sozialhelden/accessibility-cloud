@@ -28,12 +28,50 @@
           {{description}}
         </div>
         <div>
+          <h3>Include accessible places into your website, web app or blog</h3>
+          <p>
+            Just copy &amp; paste the following HTML snippet into your website or blog article source code. Then adapt the parameters to fit your needs!
+          </p>
+          <p class='markdown'>
+            {{#markdown}}
+```
+<div id="accessibility-cloud-results"></div>
+<script type="text/javascript">
+  window.onAccessibilityCloudLoaded = function (AccessibilityCloud) {
+    var element = document.querySelector('#accessibility-cloud-results');
+    AccessibilityCloud.render(element, {
+      token: '{{tokenString}}',
+        locale: 'de_DE',
+        requestParameters: {
+          latitude: 52.5243, // <-- Replace these coordinates with your own
+          longitude: 13.4063,
+          accuracy: 1000, // <-- Search radius, in meters
+          limit: 20, // <-- Maximal number of returned results
+          // The following line displays only places accessible by wheelchair. Remove it to return all places.
+          filter: 'at-least-partially-accessible-by-wheelchair',
+        },
+    });
+  };
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sozialhelden/accessibility-cloud-js@3.2.1/build/example/accessibility.cloud-3.2.1-2350f78a.css">
+<script type="text/javascript" async defer src="https://cdn.jsdelivr.net/gh/sozialhelden/accessibility-cloud-js@3.2.1/build/example/accessibility.cloud-3.2.1-21a6710d.min.js"></script>
+```
+            {{/markdown}}
+          </p>
+          <p>
+            If you want to know more about the supported parameters, have a look at <a href='https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/json-api.md#get-place-infos'>our documentation</a>.
+          </p>
+          <p>
+            The widget returns places around the coordinates specified by latitude and longitude. If you do not know the latitude and longitude coordinates of a place, <a href='http://www.latlong.net/'>there is an online tool for that</a>.
+          </p>
+        </div>
+        <div>
           <h3>Getting started with our API</h3>
           <p>
             Your <strong>API access token</strong> for {{name}} is <code>{{tokenString}}</code>.
           </p>
           <p>
-            Please keep it secret and only use it for {{name}}! If you want to request data from multiple apps, just create a new app here.
+            Please use it only for {{name}}! If you want to request data from multiple apps, just create a new app here.
           </p>
           <p>
             Below you find how to use the access token to request data, like places, from our API.

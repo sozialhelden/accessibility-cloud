@@ -1,3 +1,4 @@
+import includes from 'lodash/includes';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -330,6 +331,17 @@ Template.sources_show_format_page.events({
       if (chainPart.type !== 'TransformData') {
         continue;
       }
+      if (chainPart.skipValidation) {
+        continue;
+      }
+      if (!chainPart.parameters) {
+        continue;
+      }
+
+      if (includes(['equipment', 'disruption'], chainPart.parameters.outputType)) {
+        continue;
+      }
+
       // console.log(chain[i]);
       const mappings = chainPart.parameters.mappings;
       if (mappings === undefined) {

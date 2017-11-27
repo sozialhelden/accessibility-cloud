@@ -1,37 +1,39 @@
 <template name='sources_show_page_source_top_stats'>
-  <dt class='stats'>Number of places</dt>
+  <dt class='stats'>Number of {{humanize getType}}</dt>
   <dd class='number-of-places'>
-    {{#with placeInfoCount}}
+    {{#with documentCount}}
       <div class='number huge'>{{formatNumber this}}</div>
     {{else}}
-      <span class='subtle'>No places provided yet.</span>
+      <span class='subtle'>No data provided yet.</span>
     {{/with}}
 
     {{#if currentUser}}
       {{#unless isShowingAllPlaces}}
         <span class='reduced-places-hint'>
-          {{formatNumber currentPlaceCountLimit}} shown.
+          {{formatNumber currentDocumentCountLimit}} shown.
           {{#if canShowMorePlaces}}
-          <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{formatNumber serverSidePlaceCountLimit}}{{/if}}</a>
+          <a href='#' class='js-show-all-places'>Show {{#if couldShowAllPlaces}}all{{else}}{{formatNumber serverSideDocumentCountLimit}}{{/if}}</a>
           {{/if}}
         </span>
       {{/unless}}
     {{/if}}
   </dd>
 
-  {{#if placeInfoCount}}
+  {{#if documentCount}}
     {{#with getLastSuccessfulImport}}
-      <dt class='stats'>Accessible with…</dt>
-      <dd>
-        <ul class='stats-by-accessibility-type'>
-          {{#each placeCountsByAccessibilityType}}
-            <li>
-              <header class='type'>{{humanize name}}</header>
-              <div class='number middle'>{{formatNumber this.true}}</div>
-            </li>
-          {{/each}}
-        </ul>
-      </dd>
+      {{#if isPlaceInfoSource}}
+        <dt class='stats'>Accessible with…</dt>
+        <dd>
+          <ul class='stats-by-accessibility-type'>
+            {{#each placeCountsByAccessibilityType}}
+              <li>
+                <header class='type'>{{humanize name}}</header>
+                <div class='number middle'>{{formatNumber this.true}}</div>
+              </li>
+            {{/each}}
+          </ul>
+        </dd>
+      {{/if}}
 
       <dt class='stats'>Top categories</dt>
       <dd>

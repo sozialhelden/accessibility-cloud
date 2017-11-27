@@ -1,13 +1,11 @@
 import request from 'request';
-import { Throttle } from 'stream-throttle';
-import streamLength from 'stream-length';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { generateDynamicUrl } from '../generate-dynamic-url';
 
-export class HTTPDownload {
+export default class HTTPDownload {
   constructor({
     headers,
     sourceUrl,
@@ -80,6 +78,7 @@ export class HTTPDownload {
   }
 
   abort() {
+    if (!this.request) return;
     this.request.abort();
   }
 
@@ -93,7 +92,9 @@ export class HTTPDownload {
       delete this.lengthRequest;
     }
     delete this.stream;
-    this.request.abort();
+    if (this.request) {
+      this.request.abort();
+    }
     delete this.request;
   }
 

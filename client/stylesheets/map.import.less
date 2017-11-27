@@ -1,17 +1,59 @@
 .leaflet-marker-icon.ac-marker {
-    background-image: url(/icons/marker-shield-gray.png);
-    background-size: contain;
-    text-align: center;
-    padding: 4px;
+  background-size: contain;
+  text-align: center;
+  padding: 2px;
 
+  img {
+    opacity: 0.7;
+    width: 15px;
+    margin-top: 2px;
+  }
+}
+
+.leaflet-marker-icon.ac-place-info {
+  background-image: url(/icons/marker-shield-gray.png);
+  &.red {
+    background-image: url(/icons/marker-shield-red.png);
+  }
+  &.green {
+    background-image: url(/icons/marker-shield-green.png);
+  }
+}
+
+.leaflet-marker-icon.ac-equipment-info,
+.leaflet-marker-icon.ac-disruption, {
+  img {
+    border: 2px transparent solid;
+    box-sizing: content-box;
+    opacity: 1;
+  }
+}
+
+.leaflet-marker-icon.ac-equipment-info {
+  img {
+    background-color: white;
+    border: 2px white solid;
+  }
+
+  &.ac-is-working-false {
     img {
-      opacity: 0.7;
+      background-color: #ff96a1;
+      border: 2px #ff96a1 solid;
     }
+  }
 
-    &.red {
-      background-image: url(/icons/marker-shield-red.png);
+  &.ac-is-working-true {
+    img {
+      background-color: #a2f578;
+      border: 2px #a2f578 solid;
     }
-    &.green {
-      background-image: url(/icons/marker-shield-green.png);
-    }
+  }
+}
+
+.leaflet-marker-icon.ac-disruption {
+  background-color: white;
+  img {
+    background-color: #ff96a1;
+    border: 2px #ff96a1 solid;
+  }
 }

@@ -3,13 +3,13 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Sources } from '/both/api/sources/sources.js';
 import { SourceImports } from '/both/api/source-imports/source-imports.js';
 import subsManager from '/client/lib/subs-manager';
-import { getCurrentPlaceInfo } from './get-current-place-info';
+import { getCurrentFeature } from './get-current-feature';
 
 function defaultPlaceCountLimit() {
   return 5000;
 }
 
-function serverSidePlaceCountLimit() {
+function serverSideDocumentCountLimit() {
   return 150000;
 }
 
@@ -17,31 +17,31 @@ function source() {
   return Sources.findOne({ _id: FlowRouter.getParam('_id') });
 }
 
-function currentPlaceCountLimit() {
+function currentDocumentCountLimit() {
   return FlowRouter.getQueryParam('limit') || defaultPlaceCountLimit();
 }
 
 function shouldShowThisCanTakeAWhileHint() {
-  return currentPlaceCountLimit() > 50000;
+  return currentDocumentCountLimit() > 50000;
 }
 
 function isShowingAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return true; }
-  return currentPlaceCountLimit() >= currentSource.placeInfoCount;
+  return currentDocumentCountLimit() >= currentSource.documentCount;
 }
 
 function canShowMorePlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
-  return currentPlaceCountLimit() < serverSidePlaceCountLimit() &&
-    currentSource.placeInfoCount > currentPlaceCountLimit();
+  return currentDocumentCountLimit() < serverSideDocumentCountLimit() &&
+    currentSource.documentCount > currentDocumentCountLimit();
 }
 
 function couldShowAllPlaces() {
   const currentSource = source();
   if (!currentSource) { return false; }
-  return serverSidePlaceCountLimit() > currentSource.placeInfoCount;
+  return serverSideDocumentCountLimit() > currentSource.documentCount;
 }
 
 function sourceImports() {
@@ -57,6 +57,11 @@ function sourceImport() {
   return SourceImports.findOne({ sourceId: FlowRouter.getParam('_id') });
 }
 
+function hasBigSidebar() {
+  FlowRouter.watchPathChange();
+  return Boolean(FlowRouter.getParam('placeInfoId') || FlowRouter.getParam('equipmentInfoId') || FlowRouter.getParam('disruptionId'));
+}
+
 Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sourceImports.private');
@@ -67,6 +72,12 @@ Template.sources_show_page.onCreated(function created() {
     if (FlowRouter.getParam('placeInfoId')) {
       subsManager.subscribe('placeInfos.single', FlowRouter.getParam('placeInfoId'));
     }
+    if (FlowRouter.getParam('equipmentInfoId')) {
+      subsManager.subscribe('equipmentInfos.single', FlowRouter.getParam('equipmentInfoId'));
+    }
+    if (FlowRouter.getParam('disruptionId')) {
+      subsManager.subscribe('disruptions.single', FlowRouter.getParam('disruptionId'));
+    }
   });
   window.SourceImports = SourceImports; // FIXME: we don't need that, only for debugging
 });
@@ -76,13 +87,14 @@ const helpers = {
   couldShowAllPlaces,
   isShowingAllPlaces,
   defaultPlaceCountLimit,
-  currentPlaceCountLimit,
+  currentDocumentCountLimit,
   shouldShowThisCanTakeAWhileHint,
   canShowMorePlaces,
-  serverSidePlaceCountLimit,
+  serverSideDocumentCountLimit,
   sourceImports,
   sourceImport,
-  getCurrentPlaceInfo,
+  getCurrentFeature,
+  hasBigSidebar,
 };
 
 Template.sources_show_header.helpers(helpers);

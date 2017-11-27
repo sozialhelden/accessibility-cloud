@@ -5,7 +5,7 @@ import { generateDynamicUrl } from '../generate-dynamic-url';
 
 const { Transform } = Npm.require('zstreams');
 
-export class MultiHTTPDownload {
+export default class MultiHTTPDownload {
   constructor({
     headers,
     maximalErrorRatio = 0.25,
