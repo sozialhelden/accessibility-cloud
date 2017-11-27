@@ -17,8 +17,11 @@ const TAB_KEY_CODE = 9;
 
 Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
+  subsManager.subscribe('licenses.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
+  subsManager.subscribe('organizationMembers.public');
+  subsManager.subscribe('organizationMembers.private');
   subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sourceImports.private');
   subsManager.subscribe('importFlows.forSource', FlowRouter.getParam('_id'));

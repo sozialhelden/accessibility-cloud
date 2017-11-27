@@ -1,5 +1,6 @@
 /* global Migrations: true */
 
+import { Meteor } from 'meteor/meteor';
 import { Sources } from '/both/api/sources/sources';
 import { ImportFlows } from '/both/api/import-flows/import-flows';
 

@@ -8,7 +8,9 @@ import { helpers } from '/client/_layouts/helpers.js';
 
 Template.sources_show_header.onCreated(() => {
   subsManager.subscribe('organizations.public');
+  subsManager.subscribe('organizations.private');
   subsManager.subscribe('sources.public');
+  subsManager.subscribe('sources.private');
   subsManager.subscribe('sourceImports.public');
 
   window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging

@@ -110,3 +110,7 @@ OrganizationMembers.helpers({
     return `<img src="${getGravatarImageUrl(this.gravatarHash)}" class='user-icon'>`;
   },
 });
+
+if (Meteor.isClient) {
+  window.OrganizationMembers = OrganizationMembers;
+}

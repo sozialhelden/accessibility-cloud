@@ -10,7 +10,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.organizations_show_header_sub.onCreated(() => {
   subsManager.subscribe('licenses.public');
   subsManager.subscribe('organizations.public');
-  subsManager.subscribe('organizationMembers.public');
+  subsManager.subscribe('organizations.private');
 });
 
 
