@@ -193,7 +193,9 @@ Template.sources_show_format_page.helpers(helpers);
 Template.sources_show_format_schedule_button.helpers(helpers);
 
 Template.sources_show_format_page.events({
-  'dblclick .current-import-flow-tab'() {
+  'dblclick .current-import-flow-tab'(event) {
+    event.stopPropagation();
+    event.preventDefault();
     const name = window.prompt(`Enter a new name for the ‘${this.name}’ import flow:`, this.name);
     if (!name) return;
     ImportFlows.update(this._id, { $set: { name } });
@@ -221,7 +223,9 @@ Template.sources_show_format_page.events({
       });
     }
   },
-  'click .add-import-flow, dblclick .source-import-flows-tabs'() {
+  'click .add-import-flow, dblclick .source-import-flows-tabs'(event) {
+    event.stopPropagation();
+    event.preventDefault();
     const source = getSource();
     const importFlowsCount = source.getImportFlows().count();
     const newFlowIndex = importFlowsCount + 1;
@@ -243,10 +247,8 @@ Template.sources_show_format_page.events({
     const message = 'Are you sure you want to delete this import flow?';
     const shouldBeDeleted = confirm(message);
 
-
     if (shouldBeDeleted) {
-      const currentImportFlow = helpers.currentImportFlow();
-      ImportFlows.remove(currentImportFlow._id);
+      ImportFlows.remove(this._id);
 
       const source = getSource();
       const importFlowsCount = source.getImportFlows().count();
