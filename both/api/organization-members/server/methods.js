@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Organizations } from '/both/api/organizations/organizations.js';
 import { userHasFullAccessToOrganization } from '/both/api/organizations/privileges';
 import { OrganizationMembers } from '../organization-members.js';
@@ -58,7 +58,8 @@ export const accept = new ValidatedMethod({
 
 Meteor.methods({
   'organizationMembers.remove'(_id) {
-    check(_id, String);
+    console.log('Trying to remove member with id', _id);
+    check(_id, Match.OneOf(String, Mongo.ObjectID));
 
     if (!this.userId) {
       throw new Meteor.Error(401, 'Please log in first.');

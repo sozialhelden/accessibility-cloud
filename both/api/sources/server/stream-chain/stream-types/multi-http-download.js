@@ -9,7 +9,8 @@ export default class MultiHTTPDownload {
   constructor({
     headers,
     maximalErrorRatio = 0.25,
-    allowedStatusCodes = [200],
+    allowedStatusCodes = [200, 204],
+    includedStatusCodes = [200],
     sourceUrl,
     onDebugInfo,
     bytesPerSecond,
@@ -23,6 +24,7 @@ export default class MultiHTTPDownload {
     check(bytesPerSecond, Match.Optional(Number));
     check(headers, Match.Optional(Match.ObjectIncluding({})));
     check(allowedStatusCodes, [Number]);
+    check(includedStatusCodes, [Number]);
     check(maximalErrorRatio, Number);
     check(maximalConcurrency, Number);
 
@@ -60,9 +62,8 @@ export default class MultiHTTPDownload {
             callback(error);
             return;
           }
-          if (allowedStatusCodes.includes(response.statusCode)) {
-            this.push(body);
-          } else {
+
+          if (!allowedStatusCodes.includes(response.statusCode)) {
             errorCount++;
             lastErroneousResponse = response;
             lastErroneousRequest = req;
@@ -73,6 +74,11 @@ export default class MultiHTTPDownload {
               return;
             }
           }
+
+          if (includedStatusCodes.includes(response.statusCode)) {
+            this.push(body);
+          }
+
           callback();
         });
 
@@ -85,7 +91,7 @@ export default class MultiHTTPDownload {
               },
             });
           })
-          .once('response', response => {
+          .once('response', (response) => {
             onDebugInfo({
               response: {
                 statusCode: response.statusCode,

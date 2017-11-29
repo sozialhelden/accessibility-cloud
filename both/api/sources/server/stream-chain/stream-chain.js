@@ -28,6 +28,7 @@ import UpsertPlace from './stream-types/upsert-place';
 import UpsertDisruption from './stream-types/upsert-disruption';
 import UpsertEquipment from './stream-types/upsert-equipment';
 import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
+import ValidatePlace from './stream-types/validate-place';
 
 const zstreams = Npm.require('zstreams');
 
@@ -51,6 +52,7 @@ const StreamTypes = {
   Skip,
   Limit,
   ConvertArrayToStream,
+  ValidatePlace,
 };
 
 function cleanStackTrace(stackTrace) {
@@ -156,10 +158,14 @@ export function createStreamChain({
       }),
     });
 
-    if (StreamTypes[type] === undefined) {
+    const StreamType = StreamTypes[type];
+    if (StreamType === undefined) {
       throw new Meteor.Error(422, `ERROR: "${type}" is not a valid stream type.`);
     }
-    const runningStreamObserver = new StreamTypes[type](parameters);
+    if (typeof StreamType !== 'function') {
+      throw new Meteor.Error(422, `ERROR: "${type}" is not a valid stream type function.`);
+    }
+    const runningStreamObserver = new StreamType(parameters);
 
     // Validate setting up Step with parameters worked
     check(runningStreamObserver.stream, Stream);

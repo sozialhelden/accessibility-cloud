@@ -79,7 +79,7 @@ export default class Upsert {
           if (ignoreSkippedRecords) {
             callback(null, null);
           } else {
-            this.emit('error', error);
+            this.stream.emit('error', error);
             callback(error);
           }
           return;

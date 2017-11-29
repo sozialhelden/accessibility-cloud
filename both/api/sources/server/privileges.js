@@ -30,6 +30,7 @@ Sources.publicFields = {
   accessRestrictedTo: 1,
   hasRunningImport: 1,
   documentCount: 1,
+  schedule: 1,
   additionalAccessibilityInformation: 1,
   'translations.additionalAccessibilityInformation': 1,
 };

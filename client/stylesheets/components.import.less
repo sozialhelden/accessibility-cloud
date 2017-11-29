@@ -54,6 +54,19 @@ button.btn-primary {
   }
 }
 
+a.btn-negative,
+button.btn-negative {
+  color: white;
+  background-color: @color-negative;
+  display: inline-block;
+  &:hover {
+    background-color: darken(@color-negative, 5%);
+  }
+  &:active {
+    background-color: darken(@color-negative, 20%);
+  }
+}
+
 div.markdown {
   max-width:50em;
   p {

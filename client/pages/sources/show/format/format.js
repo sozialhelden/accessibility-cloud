@@ -12,6 +12,7 @@ import { _ } from 'meteor/stevezhu:lodash';
 
 import subsManager from '/client/lib/subs-manager';
 import * as importFlowTemplates from '/client/lib/import-flow-templates';
+import { isAdmin } from '/both/lib/is-admin';
 
 const TAB_KEY_CODE = 9;
 
@@ -29,6 +30,7 @@ Template.sources_show_format_page.onCreated(() => {
   window.Sources = Sources;
 });
 
+
 function getSource() {
   return Sources.findOne({ _id: FlowRouter.getParam('_id') });
 }
@@ -36,6 +38,12 @@ function getSource() {
 const helpers = {
   source: getSource,
   importFlowTemplates,
+  isAdmin() {
+    return isAdmin(Meteor.userId());
+  },
+  subscriptionsReady() {
+    return subsManager.ready();
+  },
   sourceImports() {
     return SourceImports.find({ sourceId: FlowRouter.getParam('_id') });
   },
@@ -182,7 +190,14 @@ function addError(errorHTML) {
 }
 
 Template.sources_show_format_page.helpers(helpers);
+Template.sources_show_format_schedule_button.helpers(helpers);
+
 Template.sources_show_format_page.events({
+  'dblclick .current-import-flow-tab'() {
+    const name = window.prompt(`Enter a new name for the ‘${this.name}’ import flow:`, this.name);
+    if (!name) return;
+    ImportFlows.update(this._id, { $set: { name } });
+  },
   'click .btn.js-set-format'(event) {
     event.preventDefault();
     const templateName = Template.instance().find('input:checked').value;
@@ -206,7 +221,7 @@ Template.sources_show_format_page.events({
       });
     }
   },
-  'click .add-import-flow'() {
+  'click .add-import-flow, dblclick .source-import-flows-tabs'() {
     const source = getSource();
     const importFlowsCount = source.getImportFlows().count();
     const newFlowIndex = importFlowsCount + 1;
@@ -267,8 +282,8 @@ Template.sources_show_format_page.events({
       }
     });
   },
-  'blur textarea#importFlow'(event, instance) {
-    const newImportFlow = parseImportFlowDefinition(instance);
+  'blur textarea#importFlow'(event, templateInstance) {
+    const newImportFlow = parseImportFlowDefinition(templateInstance);
     if (!newImportFlow) {
       return;
     }
@@ -301,10 +316,10 @@ Template.sources_show_format_page.events({
       textArea.get(0).selectionStart = textArea.get(0).selectionEnd = start + 1;
     }
   },
-  'input textarea#importFlow'(event, instance) {
+  'input textarea#importFlow'(event, templateInstance) {
     $('.import-flow-errors').html('').addClass('is-empty');
 
-    const newImportFlow = parseImportFlowDefinition(instance);
+    const newImportFlow = parseImportFlowDefinition(templateInstance);
     if (!newImportFlow) {
       if ($(event.target).val() === '') {
         const currentImportFlow = helpers.currentImportFlow();

@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
@@ -14,7 +15,7 @@ export function saveCount({ collection, countName, selector = {} }) {
   console.log(`${value} ${collection._name} in total.`);
 }
 
-export function calculateGlobalStats() {
+export const calculateGlobalStats = debounce(() => {
   const sourceIdsWithoutDrafts = Sources
     .find({ isDraft: false }, { fields: { _id: 1 } })
     .fetch()
@@ -36,4 +37,4 @@ export function calculateGlobalStats() {
       selector: { isDraft: false },
     },
   ].forEach(saveCount);
-}
+}, 60000);

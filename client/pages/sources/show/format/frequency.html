@@ -1,0 +1,28 @@
+<template name="import_flow_frequency">
+  {{#if schedule}}
+    <p>This import runs automatically at regular intervals.</p>
+    <p>The next run is scheduled {{getNextScheduledRunDescription}}.</p>
+    <p>
+      <button class="btn btn-danger js-stop-automatic-imports">Stop automatic imports</button>
+    </p>
+  {{else}}
+    <p>You can run this flow at regular intervals.</p>
+    <p>
+      <select class="js-schedule">
+        <option value="every 10 mins">every 10 minutes</option>
+        <option value="every 30 mins">every 30 minutes</option>
+        <option value="every 1 hours">every hour</option>
+        <option value="at 4:00 also at 16:00">twice a day</option>
+        <option value="at 0:00">every midnight (UTC)</option>
+        <option value="at 12:00">every noon (UTC)</option>
+        <option value="every Sunday at 4:00">weekly</option>
+        <option value="on the first day of the month">monthly</option>
+      </select>
+    </p>
+    <p>
+      <button class="btn btn-primary js-schedule-automatic-import">
+        Schedule automatic import
+      </button>
+    </p>
+  {{/if}}
+</template>

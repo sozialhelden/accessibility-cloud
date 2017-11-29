@@ -24,7 +24,7 @@ function compileMappingFunction(javascript, context, onDebugInfo) {
   }
 }
 
-export class TransformScript {
+export default class TransformScript {
   constructor({
     javascript,
     onDebugInfo = () => {},

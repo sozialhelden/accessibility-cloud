@@ -3,6 +3,14 @@
 .page-content.sources_show_format_page {
   flex-direction: column;
 
+  .loading-indicator {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   > header {
     margin-bottom: 1em;
     .float-right {
@@ -14,23 +22,37 @@
     }
   }
 
-  .source-import-flows-tabs {
+  .source-import-flows-tabs, .import-flow-actions {
     background: linear-gradient(#dee1e7, #cdd0d5);
-    line-height: 30px;
-    height: 30px;
+    line-height: 1;
+    min-height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .source-import-flows-tabs {
+    justify-content: flex-start;
 
     li {
       display: inline-block;
       padding: 6px 12px;
       height: 30px;
 
+      &:hover {
+        background-color: @color-grey091;
+      }
+
       a {
         outline: none;
-        color: #38404d;
+        color: @color-grey030;
       }
 
       &.current-import-flow-tab {
         background-color: @color-code-area;
+        border-top-left-radius: 0.25em;
+        border-top-right-radius: 0.25em;
       }
 
       .delete-import-flow-icon {
@@ -48,9 +70,8 @@
     .add-import-flow {
       background-color: transparent;
       font-family: 'iconfield';
-
-      padding: 1px 3px;
-      height: 20px;
+      height: 30px;
+      width: 30px;
       opacity: 0.2;
 
       &:hover {
@@ -60,32 +81,108 @@
   }
 
   .import-flow-actions {
-    font-size: 24px;
-    font-family: "iconfield";
-    text-align: right;
+    justify-content: space-between;
+
+    > * {
+      &, > button {
+        font-weight: bold !important;
+      }
+      height: 30px;
+      line-height: 30px;
+      border-radius: 0;
+      padding: 0 0.5em;
+      min-width: 6em;
+    }
+    > :first-child {
+      padding-left: 0.5em;
+    }
+    > :last-child {
+      padding-right: 0.5em;
+    }
 
     button,
+    .popup-wrapper,
     .import-flow-file-uploader-wrapper,
-    .import-flow-help-wrapper,
     .import-flow-notifications-wrapper {
-      width: 30px;
-      color: @color-text;
-    }
-
-    button {
       background-color: transparent;
+      color: @color-text;
+      &:hover {
+        background-color: @color-grey093;
+        color: @color-primary;
+        .iconfont, > button {
+          color: @color-primary;
+        }
+      }
     }
 
-    .import-flow-help-wrapper {
+    button.btn-primary {
+      &, .iconfont {
+        color: white;
+      }
+      background-color: @color-primary;
+      &:hover {
+        background-color: darken(@color-primary, 5%);
+      }
+      &:active {
+        background-color: darken(@color-primary, 20%);
+      }
+      &.unchanged {
+        background-color: @color-grey085;
+      }
+    }
+
+    button.btn-danger {
+      color: white;
+      background-color: @color-negative;
+      &:hover {
+        background-color: darken(@color-negative, 5%);
+      }
+      &:active {
+        background-color: darken(@color-negative, 20%);
+      }
+    }
+
+
+    .import-flow-notifications-wrapper button {
+      color: @color-warning;
+    }
+
+    .popup {
+      &, .iconfont {
+        color: @color-text !important;
+      }
+      .iconfont {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background-color: @color-grey093;
+        font-size: 0.75em;
+        line-height: 2em;
+        height: 2em;
+        width: 2em;
+        border-radius: 1em;
+      }
+    }
+
+    .iconfont {
+      font-size: 17px;
+      line-height: 30px;
+      font-family: 'iconfield';
+      vertical-align: middle;
+    }
+
+    .popup-wrapper {
       position: relative;
       display: inline-block;
+      text-align: center;
 
-      .import-flow-help {
+      .popup {
         text-align: left;
         position: absolute;
         display: none;
         font-family: 'sourcesanspro-regular';
-        width: 450px;
+        font-weight: normal;
+        width: 300px;
         right: 0;
         background: white;
         border-radius: 5px;
@@ -96,13 +193,10 @@
           margin-top: 0;
         }
 
-        .iconfont {
-          font-family: 'iconfield';
-        }
       }
 
       &:hover {
-        .import-flow-help {
+        .popup {
           display: block;
           box-shadow: 0 10px 20px rgba(0, 0, 0, .1)
         }
@@ -138,8 +232,8 @@
     }
 
     .import-flow-file-uploader-wrapper {
-      height: 20px;
-      width: 26px;
+      height: 30px;
+      line-height: 30px;
       overflow: hidden;
       position: relative;
       display: inline-block;
@@ -187,7 +281,7 @@
         flex-direction: column;
 
         textarea {
-          height: 100%;
+          flex: 1;
           min-height: inherit;
           margin: 0;
           padding: 0.5em;

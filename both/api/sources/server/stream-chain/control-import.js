@@ -107,7 +107,7 @@ export function startImportIfPossible({ userId, sourceId, importFlowId }, callba
       startImportStreaming(source, importFlow);
 
       callback(null);
-    })
+    }),
   );
 }
 
@@ -120,7 +120,7 @@ Meteor.methods({
     this.unblock();
     const future = new Future();
 
-    startImportIfPossible({ sourceId, importFlowId, userId: this.userId }, error => {
+    startImportIfPossible({ sourceId, importFlowId, userId: this.userId }, (error) => {
       if (error) {
         future.throw(error);
         return;

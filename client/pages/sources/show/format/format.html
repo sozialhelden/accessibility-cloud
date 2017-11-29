@@ -35,15 +35,17 @@
 
       <aside>
         <header class="import-flow-actions">
-          <div class="import-flow-help-wrapper">
-            <button>&#xE80A;</button>
-            <div class="import-flow-help">
-              {{> import_flow_help }}
-            </div>
-          </div>
+          {{#if isAdmin}}
+            {{> sources_show_format_schedule_button}}
+          {{else}}
+            {{#if schedule}}
+              {{> sources_show_format_schedule_button}}
+            {{/if}}
+          {{/if}}
+
           {{#if getNotificationsForImportFlow.length}}
             <div class="import-flow-notifications-wrapper">
-              <button>&#xE816;</button>
+              <button>{{getNotificationsForImportFlow.length}} warnings</button>
               <div class="import-flow-notifications">
                 {{#each getNotificationsForImportFlow}}
                   <p>
@@ -53,8 +55,16 @@
               </div>
             </div>
           {{/if}}
+
+          <div class="import-flow-help-wrapper popup-wrapper">
+            <button><span class="iconfont">&#xE80A;</span> Help</button>
+            <div class="import-flow-help popup">
+              {{> import_flow_help }}
+            </div>
+          </div>
+
           <div class="import-flow-file-uploader-wrapper">
-            &#xE815;
+            <span class="iconfont">&#xE815;</span>&nbsp;Upload a file
             {{> fileUpload
                   additionalCSSClasses='import-flow-file-uploader'
                   accept=source.currentImportFlow.inputMimeType
@@ -62,17 +72,19 @@
                   callbacks=fileCallbacks
             }}
           </div>
+
           {{#if source.hasRunningImport}}
             <button
-              class="js-abort-import"
+              class="js-abort-import btn-danger"
               title="Abort import">
-              &#x32;
+              Abort import
             </button>
           {{else}}
             <button
-              class="js-start-import"
+              class="js-start-import btn-primary"
               title="Start import">
-              &#x31;
+              Start import
+              <span class="iconfont">&#x31;</span>
             </button>
           {{/if}}
         </header>
@@ -89,36 +101,40 @@
       </aside>
     </section>
     {{else}}
-      <section class='page-content centered load-default-json'>
-        <div class='block'>
-          <h1>Select your data format</h1>
-          <p>
-            <form>
-            <table class='formats'>
-              <tbody>
-                {{#each keyValues importFlowTemplates}}
-                  <tr>
-                    <td>
-                      <label>
-                        <input name='format' type='radio' value='{{key}}'>&nbsp;{{value.name}}
-                      </label>
-                    </td>
-                    <td>
-                      {{#markdown}}{{value.descriptionMarkdown}}{{/markdown}}
-                    </td>
-                  </tr>
-                {{/each}}
-              </tbody>
-            </table>
-            <button class='btn btn-primary js-set-format'>Set format</button>
-            </form>
-          </p>
+      {{#if subscriptionsReady}}
+        <section class='page-content centered load-default-json'>
+          <div class='block'>
+            <h1>Select your data format</h1>
+            <p>
+              <form>
+              <table class='formats'>
+                <tbody>
+                  {{#each keyValues importFlowTemplates}}
+                    <tr>
+                      <td>
+                        <label>
+                          <input name='format' type='radio' value='{{key}}'>&nbsp;{{value.name}}
+                        </label>
+                      </td>
+                      <td>
+                        {{#markdown}}{{value.descriptionMarkdown}}{{/markdown}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+              <button class='btn btn-primary js-set-format'>Set format</button>
+              </form>
+            </p>
 
-          <p>
-            Your format is not listed here or more complex? Feel free to <a href='mailto:support@accessibility.cloud'>contact us</a> so we can assist you with the setup. ✌🏼
-          </p>
-        </div>
-      </section>
+            <p>
+              Your format is not listed here or more complex? Feel free to <a href='mailto:support@accessibility.cloud'>contact us</a> so we can assist you with the setup. ✌🏼
+            </p>
+          </div>
+        </section>
+      {{else}}
+        {{> sources_show_format_loading}}
+      {{/if}}
     {{/if}}
   {{/with}}
 </template>

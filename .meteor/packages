@@ -94,3 +94,4 @@ practicalmeteor:mocha
 practicalmeteor:chai
 dispatch:mocha-phantomjs
 percolate:migrations
+percolate:synced-cron

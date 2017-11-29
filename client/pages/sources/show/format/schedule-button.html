@@ -1,0 +1,10 @@
+<template name="sources_show_format_schedule_button">
+  {{#with currentImportFlow}}
+    <div class="import-flow-frequency-wrapper popup-wrapper">
+      <button>{{#if schedule}}<span class='iconfont'>,</span>&nbsp;{{schedule}}{{else}}Schedule{{/if}}</button>
+      <div class="import-flow-frequency popup">
+        {{> import_flow_frequency }}
+      </div>
+    </div>
+  {{/with}}
+</template>

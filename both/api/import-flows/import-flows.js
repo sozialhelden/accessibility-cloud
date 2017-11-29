@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { moment } from 'meteor/momentjs:moment';
 
 export const ImportFlows = new Mongo.Collection('ImportFlows');
 
@@ -12,6 +13,16 @@ ImportFlows.schema = new SimpleSchema({
   name: {
     label: 'Name',
     type: String,
+  },
+  schedule: {
+    type: String,
+    defaultValue: '',
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
   },
   createdAt: {
     type: Number,
@@ -27,6 +38,24 @@ ImportFlows.schema = new SimpleSchema({
   },
   'streams.$.type': {
     type: String,
+  },
+  lastImportStartedByUserId: {
+    type: String,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  nextImportDate: {
+    type: Date,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
   },
 });
 
@@ -59,6 +88,13 @@ ImportFlows.helpers({
     return this.streams.some(
       step => step.type === 'HTTPDownload' && !!step.parameters.sourceUrl
     );
+  },
+  getFrequencyDescription() {
+    return this.schedule;
+  },
+  getNextScheduledRunDescription() {
+    if (!this.nextImportDate) return null;
+    return moment(this.nextImportDate).fromNow();
   },
 });
 
