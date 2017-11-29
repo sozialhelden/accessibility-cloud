@@ -15,7 +15,7 @@ export function saveCount({ collection, countName, selector = {} }) {
   console.log(`${value} ${collection._name} in total.`);
 }
 
-export const calculateGlobalStats = debounce(() => {
+export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
   const sourceIdsWithoutDrafts = Sources
     .find({ isDraft: false }, { fields: { _id: 1 } })
     .fetch()
@@ -37,4 +37,4 @@ export const calculateGlobalStats = debounce(() => {
       selector: { isDraft: false },
     },
   ].forEach(saveCount);
-}, 60000);
+}), 60000);
