@@ -34,7 +34,9 @@ const helpers = {
   },
   getLocalizedName(locale) {
     if (locale && !(typeof locale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
-    locale = locale.replace('-', '_');
+    if (locale) {
+      locale = locale.replace('-', '_');
+    }
     if (!this.properties) return null;
     if (typeof this.properties.name === 'string') return this.properties.name;
     if (typeof this.properties.name === 'object') {
