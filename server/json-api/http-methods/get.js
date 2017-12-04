@@ -22,6 +22,9 @@ export function GET({ req, collection, _id, appId, userId }) {
     if (!result) {
       throw new Meteor.Error(404, 'Resource not found.');
     }
+    if (typeof collection.wrapDocumentAPIResponse === 'function') {
+      return collection.wrapDocumentAPIResponse({ result, req, _id });
+    }
     return result;
   }
 
@@ -38,8 +41,8 @@ export function GET({ req, collection, _id, appId, userId }) {
     rootDocuments: results,
   });
 
-  if (typeof collection.wrapAPIResponse === 'function') {
-    return collection.wrapAPIResponse({ results, req, _id, related, resultsCount });
+  if (typeof collection.wrapCollectionAPIResponse === 'function') {
+    return collection.wrapCollectionAPIResponse({ results, req, _id, related, resultsCount });
   }
 
   return {

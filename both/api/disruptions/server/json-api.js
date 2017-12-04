@@ -4,10 +4,10 @@ import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 import { PlaceInfos } from '../../place-infos/place-infos';
 
 import convertToGeoJSONFeature from '../../shared/convertToGeoJSONFeature';
-import wrapAPIResponseAsGeoJSON from '../../shared/server/wrapAPIResponseAsGeoJSON';
+import wrapCollectionAPIResponseAsGeoJSON from '../../shared/server/wrapCollectionAPIResponseAsGeoJSON';
 
 Disruptions.convertToGeoJSONFeature = convertToGeoJSONFeature;
-Disruptions.wrapAPIResponse = wrapAPIResponseAsGeoJSON;
+Disruptions.wrapCollectionAPIResponse = wrapCollectionAPIResponseAsGeoJSON;
 
 Disruptions.relationships = {
   belongsTo: {

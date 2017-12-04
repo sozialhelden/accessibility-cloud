@@ -1,6 +1,6 @@
 // @flow
 
-export default function wrapAPIResponseAsGeoJSON({ results, req, related, resultsCount }) {
+export default function wrapCollectionAPIResponseAsGeoJSON({ results, req, related, resultsCount }) {
   // This is checked in buildSelectorAndOptions already, so no extra check here
   let coordinates;
   if (req.query.latitude && req.query.longitude) {

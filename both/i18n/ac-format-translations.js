@@ -19,6 +19,7 @@ export const translate = createTranslationHelper({
 });
 
 export function getTranslationForAccessibilityAttributeName(path, locale) {
+  locale = locale.replace('-', '_');
   const msgid = lastPart(path);
   return translate(locale, msgid);
 }

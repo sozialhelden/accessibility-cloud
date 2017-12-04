@@ -34,6 +34,7 @@ const helpers = {
   },
   getLocalizedName(locale) {
     if (locale && !(typeof locale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
+    locale = locale.replace('-', '_');
     if (!this.properties) return null;
     if (typeof this.properties.name === 'string') return this.properties.name;
     if (typeof this.properties.name === 'object') {
@@ -68,6 +69,15 @@ const helpers = {
 };
 
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
+PlaceInfos.wrapDocumentAPIResponse = ({ result, req }) => {
+  const locale = req.query.locale;
+  Object.assign(result.properties, {
+    localizedCategory: helpers.getLocalizedCategory.call(result, locale),
+    accessibility: helpers.getLocalizedAccessibility.call(result, locale),
+  });
+  return result;
+};
+
 PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
   const convertedDocument = convertToGeoJSONFeature(doc, coordinatesForDistance, locale);
   if (locale) {

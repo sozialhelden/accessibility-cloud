@@ -1,7 +1,7 @@
 import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 import convertToGeoJSONFeature from '../../shared/convertToGeoJSONFeature';
-import wrapAPIResponseAsGeoJSON from '../../shared/server/wrapAPIResponseAsGeoJSON';
+import wrapCollectionAPIResponseAsGeoJSON from '../../shared/server/wrapCollectionAPIResponseAsGeoJSON';
 
 EquipmentInfos.convertToGeoJSONFeature = convertToGeoJSONFeature;
-EquipmentInfos.wrapAPIResponse = wrapAPIResponseAsGeoJSON;
+EquipmentInfos.wrapCollectionAPIResponse = wrapCollectionAPIResponseAsGeoJSON;
 EquipmentInfos.includePathsByDefault = ['source.license'];
