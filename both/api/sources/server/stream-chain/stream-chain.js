@@ -28,7 +28,7 @@ import UpsertPlace from './stream-types/upsert-place';
 import UpsertDisruption from './stream-types/upsert-disruption';
 import UpsertEquipment from './stream-types/upsert-equipment';
 import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
-import ValidatePlace from './stream-types/validate-place';
+// import ValidatePlace from './stream-types/validate-place';
 
 const zstreams = Npm.require('zstreams');
 
@@ -52,7 +52,7 @@ const StreamTypes = {
   Skip,
   Limit,
   ConvertArrayToStream,
-  ValidatePlace,
+  // ValidatePlace,
 };
 
 function cleanStackTrace(stackTrace) {
