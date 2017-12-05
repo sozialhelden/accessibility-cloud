@@ -25,15 +25,15 @@ function createDescriptionMarker(placeInfo, latlng) {
 }
 
 function showNextRandomPlaceInfo(map) {
-  const placeInfo = placeInfosToShow[currentPlaceIndex];
-  if (!placeInfo) {
+  const feature = placeInfosToShow[currentPlaceIndex];
+  if (!feature) {
     return;
   }
-  const latlng = [].concat(placeInfo.geometry.coordinates).reverse();
+  const latlng = [].concat(feature.geometry.coordinates).reverse();
   currentlyShownMarkers.forEach(marker => map.removeLayer(marker));
   currentlyShownMarkers = [
-    createMarkerFromFeature({ placeInfo, latlng, size: 2 }),
-    createDescriptionMarker(placeInfo, latlng),
+    createMarkerFromFeature({ className: 'ac-marker-big ac-place-info', feature, latlng, size: 2 }),
+    createDescriptionMarker(feature, latlng),
   ];
   currentlyShownMarkers.forEach(layer => map.addLayer(layer));
   map.setView(latlng, 10);

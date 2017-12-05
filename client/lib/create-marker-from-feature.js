@@ -67,7 +67,7 @@ export default function createMarkerFromFeature({
   color = getColorForWheelchairAccessiblity(feature),
   className = 'ac-place-info',
 }) {
-  const isCentered = className !== 'ac-place-info';
+  const isCentered = !className.match(/ac-place-info/);
   const categoryIconName = _.get(feature, 'properties.category') || 'place';
   const acIcon = new IconClass({
     iconUrl: `/icons/categories/${categoryIconName}@${size * 2}x.png`,
