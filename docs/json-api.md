@@ -39,6 +39,10 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
       - [Embedding related documents](#embedding-related-documents-2)
       - [Example request](#example-request-3)
       - [Example response](#example-response-3)
+    - [GET /global-stats](#get-global-stats)
+      - [Series filtering](#series-filtering)
+      - [Example request](#example-request-4)
+      - [Example response](#example-response-4)
     - [GET /languages](#get-languages)
     - [GET /licenses](#get-licenses)
     - [GET /organizations](#get-organizations)
@@ -577,6 +581,59 @@ curl -v https://www.accessibility.cloud/equipment-infos.json\?appToken\=YOUR_TOK
   ]
 }
 ```
+
+### GET /global-stats
+
+This API endpoint returns the time series that accessibility.cloud calculates every time it finishes an import.
+
+#### Series filtering
+
+- `name`: name of the statistic series you want to get. The following series are available:
+  - `Meteor.users`
+  - `PlaceInfos`
+  - `Sources`
+  - `Organizations`
+  - `PlaceInfos.withoutDrafts`
+  - `EquipmentInfos.withoutDrafts`
+  - `EquipmentInfos.withoutDrafts.onlyEscalators`
+  - `EquipmentInfos.withoutDrafts.onlyBrokenEscalators`
+  - `EquipmentInfos.withoutDrafts.onlyElevators`
+  - `EquipmentInfos.withoutDrafts.onlyBrokenElevators`
+  - `Disruptions.withoutDrafts`
+  - `Disruptions.withoutDrafts.onlyEscalators`
+  - `Disruptions.withoutDrafts.onlyElevators`
+  - `Sources.withoutDrafts`
+
+
+
+#### Example request
+
+This requests only one value with the latest known number of elevators that are out-of-service. Note that you need to specify that the backend should sort the returned data.
+
+```bash
+curl http://www.accessibility.cloud/global-stats.json?name=EquipmentInfos.withoutDrafts.onlyBrokenElevators.count&appToken=YOUR_TOKEN_HERE&sort=date&descending=1&limit=1 | jq
+```
+
+#### Example response
+
+```json
+{
+  "count": 1,
+  "totalCount": 7,
+  "related": {},
+  "results": [
+    {
+      "_id": "EawJ6KEdXDDmG8Fkj",
+      "name": "EquipmentInfos.withoutDrafts.onlyBrokenElevators.count",
+      "date": {
+        "$date": 1512478862900
+      },
+      "value": 99
+    }
+  ]
+}
+```
+
 
 ### GET /languages
 
