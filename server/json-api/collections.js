@@ -11,6 +11,7 @@ import { Sources } from '/both/api/sources/sources';
 import { Categories } from '/both/api/categories/categories';
 import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
 import { Disruptions } from '/both/api/disruptions/disruptions';
+import { GlobalStats } from '/both/api/global-stats/global-stats';
 
 // Limits collections accessible over JSON API to a white list.
 
@@ -25,6 +26,7 @@ const collections = [
   Categories,
   EquipmentInfos,
   Disruptions,
+  GlobalStats,
 ];
 
 const namesToCollections = _.indexBy(

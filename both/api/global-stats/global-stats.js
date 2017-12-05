@@ -12,7 +12,7 @@ GlobalStats.schema = new SimpleSchema({
 
 GlobalStats.attachSchema(GlobalStats.schema);
 
-GlobalStats.lastCollectionCount = collectionName => {
+GlobalStats.lastCollectionCount = (collectionName) => {
   check(collectionName, String);
   const lastDataPoint = GlobalStats.findOne(
     { name: `${collectionName}.count` },
