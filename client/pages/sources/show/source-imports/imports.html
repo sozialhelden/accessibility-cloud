@@ -11,7 +11,9 @@
 
   <div class='page content block along-sidebar'>
     {{#with sourceImport}}
-      {{> sources_stream_chain}}
+      <div class="stream-chain">
+        {{> import_results}}
+      </div>
       <h2>Used stream chain code</h2>
       <p class='code-block'>{{stringify originalStreamChain}}</p>
     {{else}}

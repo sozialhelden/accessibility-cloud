@@ -85,5 +85,11 @@ Template.page_start.onDestroyed(function pageDestroyed() {
 });
 
 Template.page_start.helpers({
-  lastCollectionCount: GlobalStats.lastCollectionCount,
+  lastCollectionCount(collectionName) {
+    const count = GlobalStats.lastCollectionCount(collectionName);
+    if (isNaN(count)) {
+      return 0;
+    }
+    return count;
+  },
 });
