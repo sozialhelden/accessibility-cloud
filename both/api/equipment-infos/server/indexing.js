@@ -8,6 +8,7 @@ Meteor.startup(() => {
   EquipmentInfos._ensureIndex({ 'properties.sourceId': 1, 'properties.originalId': 1 });
   EquipmentInfos._ensureIndex({ 'properties.placeSourceId': 1 });
   EquipmentInfos._ensureIndex({ 'properties.placeInfoId': 1 });
+  EquipmentInfos._ensureIndex({ 'properties.category': 1 });
   EquipmentInfos._ensureIndex({ 'properties.originalPlaceInfoId': 1 });
 
   console.log('Ensuring geospatial index for EquipmentInfos...');
