@@ -138,6 +138,15 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  lastImportType: {
+    type: String,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);

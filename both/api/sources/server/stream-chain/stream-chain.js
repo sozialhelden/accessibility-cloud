@@ -223,7 +223,8 @@ export function createStreamChain({
       console.log('Stream chain ended with error', error);
     } else {
       console.log('Import ended without error.');
-      Sources.update(sourceId, { $set: { hasRunningImport: false } });
+      const lastImportType = Sources.findOne(sourceId).getType();
+      Sources.update(sourceId, { $set: { hasRunningImport: false, lastImportType } });
       SourceImports.update(sourceImportId, { $set: { isFinished: true } });
     }
     Meteor.setTimeout(() => {

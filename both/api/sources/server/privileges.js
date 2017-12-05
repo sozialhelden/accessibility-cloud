@@ -31,6 +31,7 @@ Sources.publicFields = {
   hasRunningImport: 1,
   documentCount: 1,
   schedule: 1,
+  lastImportType: 1,
   additionalAccessibilityInformation: 1,
   'translations.additionalAccessibilityInformation': 1,
 };

@@ -32,6 +32,21 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
     { collection: Sources },
     { collection: Organizations },
     {
+      collection: Sources,
+      countName: 'withPlaceInfos',
+      selector: { lastImportType: 'placeInfos' },
+    },
+    {
+      collection: Sources,
+      countName: 'withEquipmentInfos',
+      selector: { lastImportType: 'equipmentInfos' },
+    },
+    {
+      collection: Sources,
+      countName: 'withDisruptions',
+      selector: { lastImportType: 'disruptions' },
+    },
+    {
       collection: PlaceInfos,
       countName: 'withoutDrafts',
       selector: { 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
@@ -40,6 +55,16 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
       collection: EquipmentInfos,
       countName: 'withoutDrafts',
       selector: { 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
+    },
+    {
+      collection: EquipmentInfos,
+      countName: 'onlyElevators',
+      selector: { 'properties.category': 'elevator' },
+    },
+    {
+      collection: EquipmentInfos,
+      countName: 'onlyBrokenElevators',
+      selector: { 'properties.category': 'elevator', 'properties.isWorking': false },
     },
     {
       collection: EquipmentInfos,
