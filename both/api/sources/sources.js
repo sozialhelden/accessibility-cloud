@@ -40,7 +40,7 @@ Sources.schema = new SimpleSchema({
       },
     },
     type: String,
-    max: 12,
+    max: 20,
   },
   licenseId: {
     label: 'License',
