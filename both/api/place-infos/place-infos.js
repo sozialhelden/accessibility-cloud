@@ -15,8 +15,9 @@ import convertToGeoJSONFeature from '../shared/convertToGeoJSONFeature';
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 
 
-const helpers = {
+export const helpers = {
   getLocalizedCategory(locale) {
+    if (!this.properties) return '';
     const category = Categories.findOne(this.properties.category);
     if (!category) {
       console.log(`Category ${this.properties.category} not found.`);
