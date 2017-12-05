@@ -33,39 +33,17 @@ export const helpers = {
     });
     return result;
   },
-  getLocalizedName(locale) {
-    if (locale && !(typeof locale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
-    if (locale) {
-      locale = locale.replace('-', '_');
-    }
+  getLocalizedName(requestedLocale) {
+    if (requestedLocale && !(typeof requestedLocale === 'string')) throw new Meteor.Error(422, 'Locale must be undefined or a string.');
+    if (!requestedLocale) return this.properties ? this.properties.name : null;
+    const sanitizedRequestedLocale = requestedLocale.replace('-', '_');
     if (!this.properties) return null;
     if (typeof this.properties.name === 'string') return this.properties.name;
     if (typeof this.properties.name === 'object') {
-      if (!locale) {
-        if (typeof this.properties.name.en_US === 'string') {
-          return this.properties.name.en_US;
-        }
-        if (typeof this.properties.name.en === 'string') {
-          return this.properties.name.en;
-        }
-        const firstAvailableLocale = Object.keys(this.properties.name)[0];
-        if (firstAvailableLocale && typeof this.properties.name[firstAvailableLocale] === 'string') {
-          return this.properties.name[firstAvailableLocale];
-        }
-      }
-      if (typeof this.properties.name[locale] === 'string') {
-        return this.properties.name[locale];
-      }
-      const localeWithoutCountry = locale.slice(0, 2);
-      if (typeof this.properties.name[localeWithoutCountry] === 'string') {
-        return this.properties.name[localeWithoutCountry];
-      }
-      if (typeof this.properties.name.en_US === 'string') {
-        return this.properties.name.en_US;
-      }
-      if (typeof this.properties.name.en === 'string') {
-        return this.properties.name.en;
-      }
+      const localeWithoutCountry = sanitizedRequestedLocale.slice(0, 2);
+      const firstAvailableLocale = Object.keys(this.properties.name)[0];
+      const foundLocale = [sanitizedRequestedLocale, localeWithoutCountry, 'en_US', 'en', firstAvailableLocale].find(locale => typeof this.properties.name[locale] === 'string');
+      if (foundLocale) return this.properties.name[foundLocale];
     }
     return null;
   },
