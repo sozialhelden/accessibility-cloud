@@ -236,6 +236,7 @@ export const restroomFormat = Object.assign({}, roomFormat, {
     female: true,
   },
   mirror: {
+    isLocatedInsideRestroom: true,
     isAccessibleWhileSeated: true,
     heightFromGround: '100cm',
   },
@@ -250,7 +251,8 @@ export const restroomFormat = Object.assign({}, roomFormat, {
   shower: showerFormat,
   heightOfSoapAndDrier: '100 .. 120cm',
   washBasin: {
-    accessibleWithWheelchair: true,
+    isLocatedInsideRestroom: true,
+    isAccessibleWithWheelchair: true,
     height: '>80cm',
     spaceBelow: {
       height: '> 67cm',
