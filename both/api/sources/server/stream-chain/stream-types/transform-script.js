@@ -57,12 +57,24 @@ export default class TransformScript {
   }
 
   dispose() {
-    this.stream.removeListener('pipe', this.pipeListener);
-    delete this.pipeListener;
-    this.source.removeListener('length', this.lengthListener);
-    delete this.source;
-    delete this.lengthListener;
-    delete this.stream;
+    if (this.stream) {
+      if (this.pipeListener) {
+        this.stream.removeListener('pipe', this.pipeListener);
+      }
+      delete this.stream;
+    }
+    if (this.pipeListener) {
+      delete this.pipeListener;
+    }
+    if (this.source) {
+      if (this.lengthListener) {
+        this.source.removeListener('length', this.lengthListener);
+      }
+      delete this.source;
+    }
+    if (this.lengthListener) {
+      delete this.lengthListener;
+    }
     delete this.compiledScript;
     delete this.context;
   }
