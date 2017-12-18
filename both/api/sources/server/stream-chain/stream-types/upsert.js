@@ -117,7 +117,7 @@ export default class Upsert {
       if (skippedDocumentCount) {
         onDebugInfo({
           skippedRecordWarning:
-            `Skipped ${skippedDocumentCount} documents that had no originalId or invalid coordinates.`,
+            `Skipped ${skippedDocumentCount} documents that had no originalId or invalid coordinates. Note that originalId must always be a string!`,
         });
       }
       onDebugInfo({ insertedDocumentCount, updatedDocumentCount, removedDocumentCount });
