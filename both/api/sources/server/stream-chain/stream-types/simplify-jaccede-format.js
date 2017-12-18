@@ -26,10 +26,13 @@ async function getCategories(categoriesUrl, apiKey) {
   };
 
   return new Promise((resolve, reject) => {
+    console.log('Getting categories from Jaccede...');
     HTTP.get(categoriesUrl, options, (error, response) => {
       if (error) {
+        console.log('Could not get categories from Jaccede:', error);
         reject(error);
       } else {
+        console.log('Got categories from Jaccede.');
         resolve(fromPairs(response.data.items.map(item => [item.id, item.name])));
       }
     });
@@ -201,7 +204,7 @@ function simplifyWheelchairAccessibility(flattenedAccessibility) {
 }
 
 function convertPlaceDetails(data, categoryIdsToNames) {
-  const obj = JSON.parse(data);
+  const obj = typeof data === 'string' ? JSON.parse(data) : data;
   if (obj.accessibility) {
     const accessibilityFlattened = {};
     obj.accessibility.forEach(c => rollOutCriteriaBlock(accessibilityFlattened, '', c));
@@ -215,7 +218,7 @@ function convertPlaceDetails(data, categoryIdsToNames) {
   return obj;
 }
 
-export class SimplifyJaccedeFormat extends StreamObserver {
+export default class SimplifyJaccedeFormat extends StreamObserver {
   stream: Transform;
   source: Stream;
   lengthListener: (length: Number) => void;
@@ -232,9 +235,15 @@ export class SimplifyJaccedeFormat extends StreamObserver {
       readableObjectMode: true,
       transform(input, encoding, callback) {
         categoriesPromise.then((categories) => {
-          const output = convertPlaceDetails(input, categories);
-          output.originalData = JSON.parse(input);
-          callback(null, output);
+          try {
+            const output = convertPlaceDetails(input, categories);
+            output.originalData = typeof input === 'string' ? input : JSON.stringify(input);
+            // console.log('Transformed:', output);
+            callback(null, output);
+          } catch (error) {
+            console.log('Could not transform:', error);
+            callback(error);
+          }
         },
         callback);
       },
