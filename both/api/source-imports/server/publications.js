@@ -6,7 +6,7 @@ import { SourceImports } from '../source-imports.js';
 import { publishPublicFields } from '/server/publish';
 import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
-const latestSelectorFn = () => {}
+const latestSelectorFn = () => ({});
 const options = { limit: 10, sort: { startTimestamp: -1 } };
 
 publishPublicFields('sourceImports', SourceImports, latestSelectorFn, options);
