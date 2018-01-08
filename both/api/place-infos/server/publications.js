@@ -7,12 +7,6 @@ const options = { fields: PlaceInfos.publicFields };
 // Publishing all placeInfos can be VERY slow.
 // Meteor.publish('placeInfos.public', () => PlaceInfos.find({}, options));
 
-Meteor.publish('placeInfosFromImport.public', (sourceImportId) => {
-  check(sourceImportId, String);
-
-  return PlaceInfos.find({ 'properties.sourceImportId': sourceImportId }, { limit: 3 });
-});
-
 Meteor.publish('placeInfos.single', function publish(placeInfoId) {
   check(placeInfoId, String);
   const selector = {

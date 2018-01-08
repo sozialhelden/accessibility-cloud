@@ -108,7 +108,6 @@ export function onCreated() {
     menuOpen: false,
     userMenuOpen: false,
   });
-  this.subscribe('currentUserData');
 
   const currentRoute = FlowRouter.current().route;
   const title = currentRoute.options.title || 'Accessibility Cloud';

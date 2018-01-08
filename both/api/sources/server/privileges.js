@@ -56,7 +56,9 @@ function sourceSelectorForOrganizationIds(organizationIds) {
   const otherOrganizationIdsWithAcceptedToS = Organizations.find(
     { tocForOrganizationsAccepted: true },
     { fields: { _id: 1 } }
-  ).map(organization => organization._id);
+  )
+  .map(organization => organization._id)
+  .sort();
 
   return {
     $or: [

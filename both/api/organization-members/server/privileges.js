@@ -71,7 +71,7 @@ function getUserSelectorForMemberSelector(selector) {
     selector,
     { fields: { userId: 1 }, transform: null },
   ).fetch();
-  return { _id: { $in: _.compact(_.uniq(_.map(members, (m => m.userId)))) } };
+  return { _id: { $in: _.compact(_.uniq(_.map(members, (m => m.userId)))).sort() } };
 }
 
 Meteor.users.visibleSelectorForUserId = (userId) => {

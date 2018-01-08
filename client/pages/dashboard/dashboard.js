@@ -10,10 +10,10 @@ import { _ } from 'meteor/underscore';
 import { SEO } from '/client/seo.js';
 
 Template.page_dashboard.onCreated(function created() {
-  this.subscribe('organizations.public');
-  this.subscribe('organizations.private');
   subsManager.subscribe('organizationMembers.public');
   subsManager.subscribe('organizationMembers.private');
+  subsManager.subscribe('organizations.public');
+  subsManager.subscribe('organizations.private');
   subsManager.subscribe('apps.public');
   subsManager.subscribe('apps.private');
   subsManager.subscribe('sources.public');

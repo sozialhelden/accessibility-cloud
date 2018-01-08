@@ -51,7 +51,7 @@ SourceImports.visibleSelectorForUserId = (userId) => {
   if (!userId) { return null; }
   check(userId, String);
   const selector = Sources.visibleSelectorForUserId(userId);
-  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id);
+  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id).sort();
   return {
     sourceId: { $in: sourceIds },
   };
@@ -60,7 +60,7 @@ SourceImports.visibleSelectorForUserId = (userId) => {
 SourceImports.visibleSelectorForAppId = (appId) => {
   check(appId, String);
   const selector = Sources.visibleSelectorForAppId(appId);
-  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id);
+  const sourceIds = Sources.find(selector, { fields: { _id: 1 } }).fetch().map(s => s._id).sort();
   return {
     sourceId: { $in: sourceIds },
   };
@@ -70,7 +70,7 @@ SourceImports.fromFreelyAccessibleSourcesSelector = () => {
   const freelyAccessibleSourceIds = Sources.find(
     { isFreelyAccessible: 1 },
     { fields: { _id: 1 } }
-  ).fetch().map(source => source._id);
+  ).fetch().map(source => source._id).sort();
 
   return {
     _id: { $in: freelyAccessibleSourceIds },

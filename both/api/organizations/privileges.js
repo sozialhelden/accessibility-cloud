@@ -27,7 +27,8 @@ export function getAccessibleOrganizationIdsForUserId(userId) {
   return uniq(OrganizationMembers
     .find(selector, { fields: { organizationId: 1 } })
     .fetch()
-    .map(member => member.organizationId));
+    .map(member => member.organizationId))
+    .sort();
 }
 
 // Functions for retrieving which roles a user has in which organization.
@@ -48,7 +49,9 @@ export function getAccessibleOrganizationIdsForRoles(userId, includedRoles = [])
   return uniq(OrganizationMembers.find({
     userId,
     $or: includedRoles.map(role => ({ role })),
-  }).map(member => member.organizationId));
+  })
+  .map(member => member.organizationId))
+  .sort();
 }
 
 
