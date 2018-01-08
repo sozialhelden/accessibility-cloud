@@ -6,14 +6,16 @@ import { SourceImports } from '../source-imports.js';
 import { publishPublicFields } from '/server/publish';
 import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
-const latestSelectorFn = () => ({});
-const options = { limit: 10, sort: { startTimestamp: -1 } };
 
-publishPublicFields('sourceImports', SourceImports, latestSelectorFn, options);
-publishPrivateFieldsForMembers('sourceImports', SourceImports, latestSelectorFn, options);
+publishPublicFields('sourceImports', SourceImports);
 
-publishPublicFields('sourceImports.all', SourceImports);
-publishPrivateFieldsForMembers('sourceImports.all', SourceImports);
+const selectorFn = (userId, sourceId) => {
+  check(userId, String);
+  check(sourceId, String);
+  return { sourceId };
+};
+
+publishPrivateFieldsForMembers('sourceImports', SourceImports, selectorFn, { limit: 50, sort: { startTimestamp: -1 } });
 
 
 Meteor.publish('sourceImports.stats.public', function publish(sourceId) {
@@ -27,7 +29,7 @@ Meteor.publish('sourceImports.stats.public', function publish(sourceId) {
     const visibleSelector = SourceImports.visibleSelectorForUserId(this.userId);
 
     let selector;
-    if (source.isFreelyAccessible) {
+    if (source.isFreelyAccessible && !source.isDraft) {
       selector = { sourceId };
     } else {
       selector = { $and: [visibleSelector, { sourceId }] };

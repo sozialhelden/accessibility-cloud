@@ -21,7 +21,7 @@ const BAR_WIDTH = 6;
 Template.sources_show_page_activity_chart.onCreated(() => {
   const source = Template.instance().data;
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('sourceImports.private');
+  subsManager.subscribe('sourceImports.private', source._id);
   subsManager.subscribe('sourceImports.stats.public', source._id);
 });
 

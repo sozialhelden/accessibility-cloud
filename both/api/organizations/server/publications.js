@@ -2,7 +2,7 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 
 import { Organizations } from '../organizations.js';
 
@@ -38,7 +38,7 @@ export function publishPrivateFieldsForMembers(
 
   Meteor.publish(
     name,
-    function publish() {
+    function publish(...args) {
       if (!collection.privateFields) {
         this.ready();
         return [];
@@ -46,8 +46,8 @@ export function publishPrivateFieldsForMembers(
 
       const organizationIds = getAccessibleOrganizationIdsForUserId(this.userId);
 
-      const specifiedSelector = selectorFn(this.userId);
-      check(specifiedSelector, {});
+      const specifiedSelector = selectorFn(this.userId, ...args);
+      check(specifiedSelector, Match.ObjectIncluding({}));
 
       const selectorWithOrganizationId = Object.assign({}, specifiedSelector, {
         organizationId: { $in: organizationIds },

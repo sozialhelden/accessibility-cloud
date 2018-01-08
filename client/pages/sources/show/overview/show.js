@@ -64,12 +64,12 @@ function hasBigSidebar() {
 
 Template.sources_show_page.onCreated(function created() {
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('sourceImports.private');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('organizationMembers.public');
   subsManager.subscribe('organizationMembers.private');
   subsManager.subscribe('licenses.public');
+  subsManager.subscribe('sourceImports.private', FlowRouter.getParam('sourceId'));
   this.autorun(() => {
     if (FlowRouter.getParam('placeInfoId')) {
       subsManager.subscribe('placeInfos.single', FlowRouter.getParam('placeInfoId'));

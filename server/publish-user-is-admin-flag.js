@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 Meteor.publish(null, function currentUserInfo() {
   if (!this.userId) {
     this.ready();
+    return [];
   }
 
   return Meteor.users.find(
