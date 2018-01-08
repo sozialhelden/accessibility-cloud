@@ -42,6 +42,7 @@ const StreamTypes = {
   MultiHTTPDownload,
   ParseJSONStream,
   ParseJSONChunks,
+  ParseXMLStream,
   ParseCSVStreamTest,
   ParseCSVStream,
   Split,
