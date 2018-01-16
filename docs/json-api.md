@@ -159,12 +159,22 @@ For requests to this endpoint, the API supports the following parameters:
 - `includeSourceIds`: comma-separated list of source ids you want to include, e.g. `QGf3sjbSxSpkeNHFm,eWrPejvNrE5AFB7bx`
 - `excludeSourceIds`: same as `includeSourceIds`, but excludes specific sources from results. This is helpful if you have your own data source on accessibility.cloud and want to show additional results on a web page without showing your own data source's results twice on the same view.
 
-#### Location-based search
+#### Location-based search by center/radius
 
 You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
 
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
+
+#### Location-based search by X/Y/Z tile coordinates
+
+The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
+
+Knowing the zoom level you want to request, you can [convert your latitude and longitude coordinates to x/y](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#ECMAScript_.28JavaScript.2FActionScript.2C_etc..29). Note that x/y coordinates refers to the top left corner of the tile, so if you want to use this for a search centered around a point, you have to calculate the position of the top left corner yourself.
+
+- `x`: x coordinate of the map tile you want to request
+- `y`: y coordinate of the map tile you want to request
+- `z`: zoom level
 
 #### Filter by metadata
 
