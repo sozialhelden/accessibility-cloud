@@ -1,5 +1,6 @@
 // @flow
 import Fiber from 'fibers';
+import get from 'lodash/get';
 import { Meteor } from 'meteor/meteor';
 
 import { acFormat } from '/both/lib/ac-format';
@@ -34,8 +35,12 @@ function syncPropertyNamesWithTransifex() {
 
 
 Meteor.startup(() => {
-  Fiber(() => syncPropertyNamesWithTransifex()).run();
   Fiber(() => cacheRegisteredLocales(resourceSlug)).run();
+  if (get(Meteor.settings, 'transifex.skipSyncingOnStart')) {
+    console.log('Skipping automatic transifex syncing on server start.');
+    return;
+  }
+  Fiber(() => syncPropertyNamesWithTransifex()).run();
 });
 
 
