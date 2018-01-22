@@ -185,12 +185,16 @@ export default class Upsert {
   }
 
   dispose() {
-    this.stream.removeListener('end', this.endListener);
-    delete this.endListener;
-    this.stream.removeListener('pipe', this.pipeListener);
-    delete this.pipeListener;
-    this.source.removeListener('length', this.lengthListener);
-    delete this.source;
+    if (this.stream) {
+      this.stream.removeListener('end', this.endListener);
+      delete this.endListener;
+      this.stream.removeListener('pipe', this.pipeListener);
+      delete this.pipeListener;
+    }
+    if (this.source) {
+      this.source.removeListener('length', this.lengthListener);
+      delete this.source;
+    }
     delete this.lengthListener;
     delete this.stream;
     delete this.compiledScript;

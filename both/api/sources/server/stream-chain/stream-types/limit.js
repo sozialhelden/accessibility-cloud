@@ -16,10 +16,15 @@ export default class Limit {
   }
 
   dispose() {
-    this.stream.removeListener('pipe', this.pipeListener);
-    delete this.pipeListener;
-    this.source.removeListener('length', this.lengthListener);
-    delete this.lengthListener;
+    if (this.stream) {
+      this.stream.removeListener('pipe', this.pipeListener);
+      delete this.pipeListener;
+    }
+    if (this.source) {
+      this.source.removeListener('length', this.lengthListener);
+      delete this.lengthListener;
+    }
+    delete this.source;
     delete this.stream;
   }
 
