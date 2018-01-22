@@ -18,7 +18,8 @@ import { getAccessibleOrganizationIdsForRoles } from '/both/api/organizations/pr
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
 import initializeMap from './initialize-map';
-import renderMap from './render-map';
+import loadAndRenderMap from './render-map';
+
 
 Template.sources_show_page_map.onCreated(function created() {
   this.isLoading = new ReactiveVar(true);
@@ -155,7 +156,7 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
     }
 
     Tracker.nonreactive(() => {
-      renderMap(map, instance);
+      loadAndRenderMap(map, instance);
     });
   });
 });

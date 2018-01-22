@@ -64,7 +64,7 @@ async function loadMarkers({
   const source = Sources.findOne(sourceId);
   if (!source) return null;
 
-  const sourceType = source.getType();
+  const sourceType = source.lastImportType || 'placeInfos';
   if (!sourceType) return null;
 
   let url;
@@ -249,7 +249,7 @@ function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
   centerOnCurrentPlace(map);
 }
 
-export default function renderMap(map, instance) {
+export default function loadAndRenderMap(map, instance) {
   if (!Meteor.userId()) { return; }
 
   const newSourceId = FlowRouter.getParam('_id');
