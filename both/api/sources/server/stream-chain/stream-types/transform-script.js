@@ -2,6 +2,7 @@ import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import vm from 'vm';
 import vmScriptsOptions from './vm-scripts-options';
+import getVMContext from './transform-data/get-vm-context';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -31,18 +32,23 @@ export default class TransformScript {
   }) {
     check(javascript, String);
 
-    const globalObject = Object.freeze({});
-    const context = this.context = vm.createContext(globalObject);
+    const context = getVMContext();
+    this.context = context;
     const compiledScript = compileMappingFunction(javascript, context, onDebugInfo);
+    let hadError = false;
 
     this.stream = new Transform({
       writableObjectMode: true,
       readableObjectMode: true,
       transform(data, encoding, callback) {
-        const output = compiledScript(data);
-
-        callback(null, output);
-        return null;
+        try {
+          const output = compiledScript(data);
+          callback(null, output);
+        } catch (error) {
+          hadError = true;
+          this.emit('error', error);
+          callback(error);
+        }
       },
     });
 
