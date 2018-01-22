@@ -1,6 +1,7 @@
 /* globals L */
 
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { $ } from 'meteor/jquery';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
@@ -8,22 +9,16 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import subsManager from '/client/lib/subs-manager';
 
 import { roles } from '/both/api/organization-members/roles';
-import { Sources } from '/both/api/sources/sources.js';
-import { Organizations } from '/both/api/organizations/organizations.js';
-import { OrganizationMembers } from '/both/api/organization-members/organization-members.js';
-import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests.js';
+import { Sources } from '/both/api/sources/sources';
+import { PlaceInfos } from '/both/api/place-infos/place-infos';
+import { Organizations } from '/both/api/organizations/organizations';
+import { OrganizationMembers } from '/both/api/organization-members/organization-members';
+import { SourceAccessRequests } from '/both/api/source-access-requests/source-access-requests';
 import { getAccessibleOrganizationIdsForRoles } from '/both/api/organizations/privileges';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
-import { getCurrentFeature } from './get-current-feature';
 import initializeMap from './initialize-map';
 import renderMap from './render-map';
-
-function centerOnCurrentPlace(map) {
-  const { feature } = getCurrentFeature() || {};
-  if (!feature) return;
-  map.setView(feature.geometry.coordinates.reverse(), 18);
-}
 
 Template.sources_show_page_map.onCreated(function created() {
   this.isLoading = new ReactiveVar(true);
@@ -145,6 +140,22 @@ Template.sources_show_page_map.onRendered(function sourcesShowPageOnRendered() {
   const instance = this;
   const map = initializeMap(this);
 
-  this.autorun(() => renderMap(map, instance));
-  this.autorun(() => centerOnCurrentPlace(map));
+  this.autorun(() => {
+    subsManager.ready();
+    FlowRouter.watchPathChange();
+    FlowRouter.getQueryParam('limit');
+    const sourceId = FlowRouter.getParam('_id');
+    if (sourceId) {
+      Sources.findOne(sourceId);
+    }
+
+    const placeInfoId = FlowRouter.getParam('placeInfoId');
+    if (placeInfoId) {
+      PlaceInfos.findOne(placeInfoId);
+    }
+
+    Tracker.nonreactive(() => {
+      renderMap(map, instance);
+    });
+  });
 });

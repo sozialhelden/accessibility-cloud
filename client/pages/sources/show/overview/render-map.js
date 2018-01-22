@@ -91,7 +91,7 @@ function centerOnCurrentPlace(map) {
 
   if (feature) {
     const coordinates = [].concat(feature.geometry.coordinates);
-    map.setView(coordinates.reverse(), 18);
+    map.setView(coordinates.reverse(), Math.max(map.getZoom(), 15));
   }
 }
 
@@ -258,8 +258,6 @@ export default function renderMap(map, instance) {
     currentSourceId = newSourceId;
   }
 
-  FlowRouter.watchPathChange();
-
   const limit = Number(FlowRouter.getQueryParam('limit')) || DEFAULT_NUMBER_OF_PLACES_FETCHED;
   const routeName = FlowRouter.getRouteName();
   const isShowingASinglePlace = routeName === 'placeInfos.show';
@@ -271,7 +269,6 @@ export default function renderMap(map, instance) {
     const doc = PlaceInfos.findOne(placeInfoId);
     const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
     const featureCollection = buildFeatureCollectionFromArray([place]);
-
     showPlacesOnMap(instance, map, currentSourceId, featureCollection);
     placesPromise = Promise.resolve();
   } else {
