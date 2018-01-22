@@ -1,25 +1,23 @@
-import XMLSplitter from 'xml-splitter/lib/xml-splitter';
+const XPathStream = Npm.require('xpath-stream');
+
+// https://github.com/nbqx/xpath-stream
 
 export default class ParseXMLStream {
-  constructor() {
-    const xs = new XMLSplitter('/root/item');
-    this.xs = xs;
-    // xs.on('data', function(data) {
-    //   console.log(data);
-    // })
-    // xs.on('end', function(counter) {
-    //   console.log(counter + elements)
-    // })
-    this.stream = xs.stream;
+  constructor({ path, objectDefinition }) {
+    check(path, String);
+    check(objectDefinition, Match.ObjectIncluding())
+    this.stream = new XPathStream(path, objectDefinition);
+    this.stream.unitName = 'chunks';
   }
 
   dispose() {
     delete this.stream;
-    delete this.xs;
   }
 
   static getParameterSchema() {
     return {
+      path: { type: String },
+      objectDefinition: { type: Object, blackbox: true },
     };
   }
 }
