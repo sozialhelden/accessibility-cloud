@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
@@ -10,7 +11,7 @@ import { Sources } from '/both/api/sources/sources';
 import { Organizations } from '/both/api/organizations/organizations';
 
 
-const MinimalTimeBetweenStatsCalculations = 60000;
+const MinimalTimeBetweenStatsCalculations = get(Meteor.settings, 'stats.minimalTimeBetweenStatsCalculations') || 60000;
 
 export function saveCount({ collection, countName, selector = {} }) {
   check(collection, Mongo.Collection);
