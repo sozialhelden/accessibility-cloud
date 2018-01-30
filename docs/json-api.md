@@ -18,8 +18,10 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
   - [Endpoints](#endpoints)
     - [GET /place-infos](#get-place-infos)
       - [Data source filtering](#data-source-filtering)
-      - [Location-based search](#location-based-search)
+      - [Location-based search by center/radius](#location-based-search-by-centerradius)
+      - [Location-based search by X/Y/Z tile coordinates](#location-based-search-by-xyz-tile-coordinates)
       - [Filter by metadata](#filter-by-metadata)
+      - [Filter by category](#filter-by-category)
       - [Embedding related documents](#embedding-related-documents)
       - [Example request](#example-request)
       - [Example response](#example-response)
@@ -29,13 +31,13 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
       - [Example response](#example-response-1)
     - [GET /disruptions](#get-disruptions)
       - [Data source filtering](#data-source-filtering-1)
-      - [Location-based search](#location-based-search-1)
+      - [Location-based search](#location-based-search)
       - [Embedding related documents](#embedding-related-documents-1)
       - [Example request](#example-request-2)
       - [Example response](#example-response-2)
     - [GET /equipment-infos](#get-equipment-infos)
       - [Data source filtering](#data-source-filtering-2)
-      - [Location-based search](#location-based-search-2)
+      - [Location-based search](#location-based-search-1)
       - [Embedding related documents](#embedding-related-documents-2)
       - [Example request](#example-request-3)
       - [Example response](#example-response-3)
@@ -190,6 +192,13 @@ accessibility.cloud supports the following filter presets:
 - `fully-accessible-by-wheelchair`
 - `not-accessible-by-wheelchair`
 - `unknown-wheelchair-accessibility`
+
+#### Filter by category
+
+You can either include or exclude categories by using the following parameters:
+
+- `includeCategories`: comma-separated list of category names to include in the search. All other categories are excluded.
+- `excludeCategories`: comma-separated list of category names to exclude in the search. All other categories are included.
 
 #### Embedding related documents
 
