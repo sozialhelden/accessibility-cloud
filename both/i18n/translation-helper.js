@@ -15,8 +15,8 @@ export function createTranslationHelper(
   { resourceSlug, defaultLocale, getTranslationFn, msgidFn = (d) => d }
 ) {
   return (requestedLocale, docOrMsgId) => {
-    const sanitizedRequestedLocale = requestedLocale.replace('_', '-');
-    const localeWithoutCountry = requestedLocale.substring(0, 2).toLowerCase();
+    const sanitizedRequestedLocale = (requestedLocale || defaultLocale).replace('_', '-');
+    const localeWithoutCountry = (requestedLocale || defaultLocale).substring(0, 2).toLowerCase();
     const localeHasCountry = sanitizedRequestedLocale !== localeWithoutCountry;
     const localeWithDefaultCountry = localeHasCountry ? sanitizedRequestedLocale :
       findLocaleWithCountry(resourceSlug, sanitizedRequestedLocale);
@@ -27,7 +27,7 @@ export function createTranslationHelper(
       localeWithoutCountry,
       localeWithDefaultCountry,
       defaultLocale,
-    ];
+    ].filter(Boolean);
 
     for (const locale of localesToTry) {
       const translation = getTranslationFn(locale, docOrMsgId);

@@ -9,17 +9,17 @@ export function lastPart(path) {
 }
 
 export const resourceSlug = 'accessibility-attributes';
-
+export const defaultLocale = 'en-US';
 export const translate = createTranslationHelper({
   resourceSlug,
-  defaultLocale: 'en-US',
+  defaultLocale,
   getTranslationFn(locale, msgid) {
     return msgidsToDocs[msgid] && msgidsToDocs[msgid][locale];
   },
 });
 
 export function getTranslationForAccessibilityAttributeName(path, locale) {
-  locale = locale.replace('-', '_');
+  locale = (locale || defaultLocale).replace('-', '_');
   const msgid = lastPart(path);
   return translate(locale, msgid);
 }
