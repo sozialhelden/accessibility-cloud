@@ -22,8 +22,16 @@ export function GET({ req, collection, _id, appId, userId }) {
     if (!result) {
       throw new Meteor.Error(404, 'Resource not found.');
     }
+    const related = findAllRelatedDocuments({
+      req,
+      appId,
+      userId,
+      rootCollection: collection,
+      rootDocuments: [result],
+    });
+
     if (typeof collection.wrapDocumentAPIResponse === 'function') {
-      return collection.wrapDocumentAPIResponse({ result, req, _id });
+      return collection.wrapDocumentAPIResponse({ result, req, _id, related });
     }
     return result;
   }

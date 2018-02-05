@@ -50,12 +50,13 @@ export const helpers = {
 };
 
 // Convert a given plain MongoDB document (not transformed) into a GeoJSON feature
-PlaceInfos.wrapDocumentAPIResponse = ({ result, req }) => {
+PlaceInfos.wrapDocumentAPIResponse = ({ result, req, related }) => {
   const locale = req.query.locale;
   Object.assign(result.properties, {
     localizedCategory: helpers.getLocalizedCategory.call(result, locale),
     accessibility: helpers.getLocalizedAccessibility.call(result, locale),
   });
+  Object.assign(result, { related });
   return result;
 };
 
