@@ -205,6 +205,7 @@ export const toiletFormat = {
   foldableHandles: {
     onLeftSide: true,
     onRightSide: true,
+    onAtLeastOneSide: true,
     height: '>85cm',
     extensionOverToilet: '>28cm',     // RFC: better label required,
     distance: '60 .. 65cm',
