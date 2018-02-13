@@ -106,6 +106,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  'properties.statusDescription': {
+    type: String,
+    optional: true,
+  },
 });
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
