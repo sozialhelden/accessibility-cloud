@@ -49,6 +49,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.placeSourceId': {
+    type: String,
+    optional: true,
+  },
   'properties.sourceId': {
     type: String,
     optional: true,

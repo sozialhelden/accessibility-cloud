@@ -6,6 +6,7 @@ import { singularize, underscore } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
+import { s } from 'meteor/underscorestring:underscore.string';
 import { Sources } from '../../../../../both/api/sources/sources.js';
 import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
 import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';
@@ -67,17 +68,7 @@ async function loadMarkers({
   const sourceType = source.lastImportType || 'placeInfos';
   if (!sourceType) return null;
 
-  let url;
-
-  switch (sourceType) {
-    case 'placeInfos':
-      url = 'place-infos?includeRelated=equipmentInfos,equipmentInfos.disruptions,disruptions';
-      break;
-    case 'equipmentInfos': url = 'equipment-infos'; break;
-    case 'disruptions': url = 'disruptions'; break;
-    default: return null;
-  }
-
+  const url = s.dasherize(s.decapitalize(sourceType));
   return getFeatures({
     url: Meteor.absoluteUrl(url),
     sourceId,

@@ -40,6 +40,46 @@ export default class UpsertEquipmentInfo extends Upsert {
     }
     return result;
   }
+
+
+  // Associate the equipment information with a place data source, if possible
+  afterUpsert({ doc, organizationSourceIds, organizationName }, callback) {
+    const result = doc;
+
+    const properties = doc.properties;
+    if (!properties) {
+      callback(null, doc);
+      return;
+    }
+
+    const placeSourceId = properties.placeSourceId;
+
+    if (!placeSourceId) {
+      callback(null, doc);
+      return;
+    }
+
+    if (!includes(organizationSourceIds, placeSourceId)) {
+      const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName}`;
+      throw new Meteor.Error(401, message);
+    }
+
+    if (properties.originalPlaceInfoId) {
+      const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
+      const equipmentInfo = EquipmentInfos.findOne({ 'properties.originalId': properties.originalId }, { transform: null, fields: { 'properties.originalData': false } });
+      if (equipmentInfo) {
+        console.log('Caching', doc, equipmentInfo, placeInfoSelector);
+        // Cache equipment information in PlaceInfo document
+        PlaceInfos.update(placeInfoSelector, {
+          $set: {
+            [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
+          },
+        });
+      }
+    }
+    callback(null, doc);
+  }
 }
 
 UpsertEquipmentInfo.collection = EquipmentInfos;
+

@@ -101,7 +101,7 @@ export default class Upsert {
           } else if (result && result.numberAffected) {
             updatedDocumentCount += 1;
           }
-          streamObject.afterUpsert({ doc: postProcessedDoc, organizationSourceIds }, () => callback(upsertError, result));
+          streamObject.afterUpsert({ doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName }, () => callback(upsertError, result));
         });
       }),
       flush: Meteor.bindEnvironment((callback) => {
