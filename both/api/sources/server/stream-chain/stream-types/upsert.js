@@ -4,6 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { _ } from 'meteor/stevezhu:lodash';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
+import { flatten } from 'mongo-dot-notation';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -95,7 +96,7 @@ export default class Upsert {
         streamClass.collection.upsert({
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, { $set: postProcessedDoc }, (upsertError, result) => {
+        }, flatten(postProcessedDoc), (upsertError, result) => {
           if (result && result.insertedId) {
             insertedDocumentCount += 1;
           } else if (result && result.numberAffected) {

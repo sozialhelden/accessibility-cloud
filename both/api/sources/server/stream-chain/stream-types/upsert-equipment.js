@@ -29,9 +29,11 @@ export default class UpsertEquipmentInfo extends Upsert {
         throw new Meteor.Error(401, message);
       }
       if (properties.originalPlaceInfoId) {
-        const selector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
+        const originalPlaceInfoIdField = properties.originalPlaceInfoIdField || 'properties.originalId';
+        const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
+        console.log('Associating equipment with place', placeInfo, 'matching', selector);
         if (placeInfo) {
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;

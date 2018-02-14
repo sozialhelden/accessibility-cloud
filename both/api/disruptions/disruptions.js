@@ -44,11 +44,19 @@ Disruptions.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.originalEquipmentInfoIdField': {
+    type: String,
+    optional: true,
+  },
   'properties.equipmentInfoId': {
     type: String,
     optional: true,
   },
   'properties.originalPlaceInfoId': {
+    type: String,
+    optional: true,
+  },
+  'properties.originalPlaceInfoIdField': {
     type: String,
     optional: true,
   },

@@ -26,6 +26,7 @@ export const equipmentAccessibilityFormat = {
 export const disruptionFormat = {
   properties: {
     placeInfoId: 'abc123',
+    placeInfoIdType: 'Deutsche Bahn',
     equipmentId: 'abc123',
     isWorking: true,
     isInMaintenance: true,
@@ -42,13 +43,6 @@ export const disruptionFormat = {
 
 export const equipmentFormat = {
   properties: {
-    ids: [
-      {
-        provider: 'Deutsche Bahn', // organization who manages the equipment database
-        equipmentnumber: 123,
-        stationnumber: 2628,
-      },
-    ],
     placeInfoId: 'abc123',
     description: 'zu Gleis 2/3',
     controls: equipmentAccessibilityFormat,

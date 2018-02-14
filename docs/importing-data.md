@@ -229,10 +229,11 @@ Note that equipment and facilities have a [differing set of accessibility attrib
 This works like `UpsertPlace`, but using it marks the source as a data source for equipment/facilities, which enables special features:
 
 - Equipment / Facility PoIs can belong to `PlaceInfo` PoIs from another data source. This way, places can have a list of (for example) elevators and escalators.
-- If a transformed imported PoI has `originalPlaceInfoId` and `placeSourceId` properties, importing will associate the equipment/facility with the place. For this association, accessibility.cloud uses the data provider's original place ID.
-- For this to work, `placeSourceId` must refer to the ID of a place data source on accessibility.cloud that belongs to the same organization.
+- If a transformed imported PoI has `properties.originalPlaceInfoId` and `properties.placeSourceId` properties, importing will associate the equipment/facility with the place. For this association, accessibility.cloud uses the data provider's original place ID.
+- If the equipment data source uses a different ID space than the associated places, you can use the `properties.originalPlaceInfoIdField` property
+- For this to work, `properties.placeSourceId` must refer to the ID of a place data source on accessibility.cloud that belongs to the same organization.
 - accessibility.cloud will show the imported equipment/facilities on the overview page of associated place data source.
-- The accessibility.cloud `/placeInfos` API will include equipment/facilkity data if you supply a `includeRelated=equipmentInfos` query parameter.
+- The accessibility.cloud `/placeInfos` API will include equipment/facility data as `properties.equipmentInfos` property.
 
 
 ### `UpsertDisruption`
@@ -253,10 +254,10 @@ Note that disruptions have a [specific set of attributes](https://github.com/soz
 This works like `UpsertPlace`, but using it marks the source as a data source for disruptions, which enables special features:
 
 - A disruption can belong to a `PlaceInfo` or `EquipmentInfo` from another data source. The same way, a place or equipment/facility can have a list of disruptions in the past, present and future. Depending on the imported data model, its your choice if you want to associate a disruption with a place or equipment/facility.
-- If a transformed imported PoI has `originalPlaceInfoId` and `placeSourceId` properties, importing will associate the disruption with the place.
-- If a transformed imported PoI has `originalEquipmentInfoId` and `equipmentSourceId` properties, importing will associate the disruption with the equipment/facility.
-- For this to work, the equipment/facility/place data sources must belong to the same organization. Use the `equipmentSourceId` and `placeSourceId` properties to refer to the respective data sources.
-- If you associate a disruption with equipment, you can use the `isEquipmentWorking` property of the disruption and set the stream unit's `takeOverEquipmentWorkingFlag` parameter to `true`. This will update the equipment's `isWorking` flag on import. If you want to take the date properties of the `Disruption` into account, set the `equipmentIsWorking` flag accordingly in the disruption data source transform stream.
+- If a transformed imported PoI has `properties.originalPlaceInfoId` and `properties.placeSourceId` properties, importing will associate the disruption with the place.
+- If a transformed imported PoI has `properties.originalEquipmentInfoId` and `properties.equipmentSourceId` properties, importing will associate the disruption with the equipment/facility.
+- For this to work, the equipment/facility/place data sources must belong to the same organization. Use the `properties.equipmentSourceId` and `properties.placeSourceId` properties to refer to the respective data sources.
+- If you associate a disruption with equipment, you can use the `isEquipmentWorking` property of the disruption and set the stream unit's `takeOverEquipmentWorkingFlag` parameter to `true`. This will update the equipment's `properties.isWorking` flag on import. If you want to take the date properties of the `Disruption` into account, set the `properties.equipmentIsWorking` flag accordingly in the disruption data source transform stream.
 - If you set `setUnreferencedEquipmentToWorking` to `true`, accessibility.cloud will interpret missing disruption information as working equipment and set all equipment infos not referenced in the last import to `isWorking: true` after import.
 - accessibility.cloud will show the imported disruptions on the overview page of associated places/equipment/facility data sources.
 - `/placeInfos` API responses will include disruption data if you supply a `includeRelated=equipmentInfos.disruptions` query parameter.

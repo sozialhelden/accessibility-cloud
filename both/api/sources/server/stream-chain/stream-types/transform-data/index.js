@@ -31,7 +31,7 @@ function compileMappings(mappings, context) {
 }
 
 export default class TransformData {
-  constructor({ mappings }) {
+  constructor({ mappings, keepOriginalData }) {
     check(mappings, Object);
 
     const context = getVMContext();
@@ -63,7 +63,9 @@ export default class TransformData {
             }
           }
           output.properties = output.properties || {};
-          output.properties.originalData = JSON.stringify(chunk);
+          if (!keepOriginalData) {
+            output.properties.originalData = JSON.stringify(chunk);
+          }
           callback(null, output);
         } catch (error) {
           hadError = true;

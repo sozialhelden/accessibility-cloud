@@ -37,6 +37,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.originalPlaceInfoIdField': {
+    type: String,
+    optional: true,
+  },
   'properties.disruptionSourceImportId': {
     type: String,
     optional: true,
@@ -67,6 +71,10 @@ EquipmentInfos.schema = new SimpleSchema({
     allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
   },
   'properties.description': {
+    type: String,
+    optional: true,
+  },
+  'properties.shortDescription': {
     type: String,
     optional: true,
   },

@@ -51,10 +51,11 @@ export default class UpsertDisruption extends Upsert {
       }
 
       if (properties.originalPlaceInfoId) {
-        const selector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
+        const originalPlaceInfoIdField = properties.originalPlaceInfoIdField || 'properties.originalId';
+        const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
-        console.log('Found place association', placeInfo, 'for', selector);
+        console.log('Associating disruption with place', placeInfo, 'matching', selector);
         if (placeInfo) {
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
@@ -70,10 +71,11 @@ export default class UpsertDisruption extends Upsert {
       }
 
       if (properties.originalEquipmentInfoId) {
-        const selector = { 'properties.sourceId': equipmentSourceId, 'properties.originalId': properties.originalEquipmentInfoId };
+        const originalEquipmentInfoIdField = properties.originalEquipmentInfoIdField || 'properties.originalId';
+        const selector = { 'properties.sourceId': equipmentSourceId, [originalEquipmentInfoIdField]: properties.originalEquipmentInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const equipmentInfo = EquipmentInfos.findOne(selector, options);
-        console.log('Found equipment association', equipmentInfo, 'for', selector);
+        console.log('Associating disruption with equipment', equipmentInfo, 'matching', selector);
         if (equipmentInfo) {
           result.properties.equipmentInfoId = equipmentInfo._id;
           result.geometry = result.geometry || equipmentInfo.geometry;
@@ -111,19 +113,26 @@ export default class UpsertDisruption extends Upsert {
       }
     }
 
-    if (equipmentSourceId) {
-      const source = Sources.findOne(equipmentSourceId);
-      if (!source) {
-        throw new Meteor.Error(404, 'Source not found.');
+    const updateStatsIfNecessary = () => {
+      if (equipmentSourceId) {
+        const source = Sources.findOne(equipmentSourceId);
+        if (!source) {
+          throw new Meteor.Error(404, 'Source not found.');
+        }
+        console.log('Updating equipment source stats...');
+        const sourceImport = Sources.findOne(equipmentSourceId).getLastSuccessfulImport();
+        if (sourceImport) {
+          sourceImport.generateAndSaveStats();
+        }
+        callback();
       }
-      const sourceImport = Sources.findOne(equipmentSourceId).getLastSuccessfulImport();
-      if (sourceImport) {
-        sourceImport.generateAndSaveStats();
-      }
-    }
+    };
 
-    if (!this.options.setUnreferencedEquipmentToWorking) { callback(); return; }
-    this.setUnreferencedEquipmentToWorking({ organizationSourceIds }, callback);
+    if (!this.options.setUnreferencedEquipmentToWorking) { updateStatsIfNecessary(callback); return; }
+    this.setUnreferencedEquipmentToWorking({ organizationSourceIds }, (error) => {
+      if (error) { callback(error); return; }
+      updateStatsIfNecessary(callback);
+    });
   }
 }
 
