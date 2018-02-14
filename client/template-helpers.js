@@ -26,7 +26,7 @@ Template.registerHelpers({
     try {
       return JSON.stringify(JSON.parse(jsonString), true, 2);
     } catch (error) {
-      return `(${error})`;
+      return `Error: ${error}\n\nInterpreted string: ${jsonString}`;
     }
   },
   stringifyHuman(object) {
