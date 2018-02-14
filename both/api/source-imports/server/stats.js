@@ -13,6 +13,7 @@ import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 const attributeBlacklist = {
   properties: {
     _id: true,
+    equipmentInfos: true,
     properties: {
       infoPageUrl: true,
       placeWebsiteUrl: true,
