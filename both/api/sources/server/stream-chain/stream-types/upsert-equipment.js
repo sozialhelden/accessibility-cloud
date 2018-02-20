@@ -1,10 +1,46 @@
 import includes from 'lodash/includes';
+import pick from 'lodash/pick';
 import { Meteor } from 'meteor/meteor';
 
 import { EquipmentInfos } from '../../../../../api/equipment-infos/equipment-infos';
 import { PlaceInfos } from '../../../../../api/place-infos/place-infos';
 
 import Upsert from './upsert';
+
+
+export function cacheEquipmentInPlaceInfo({
+  originalId,
+  placeSourceId,
+  originalPlaceInfoId,
+  organizationSourceIds,
+}) {
+  if (!includes(organizationSourceIds, placeSourceId)) {
+    const message = `Not authorized: placeSourceId ${placeSourceId} does not refer to a data source by the same organization.`;
+    throw new Meteor.Error(401, message);
+  }
+
+  console.log('Caching equipment info in place info...');
+
+  if (originalPlaceInfoId) {
+    const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': originalPlaceInfoId };
+    // Re-fetch equipment info from DB without disallowed attributes
+    const completeEquipmentInfo = EquipmentInfos.findOne(
+      { 'properties.originalId': originalId },
+      { transform: null, fields: { 'properties.originalData': false } },
+    );
+    if (completeEquipmentInfo) {
+      const equipmentInfo = pick(completeEquipmentInfo, ['_id'].concat(Object.keys(EquipmentInfos.publicFields)));
+      const placeInfoModifier = {
+        $set: {
+          [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
+        },
+      };
+      console.log('Caching', equipmentInfo, placeInfoSelector, placeInfoModifier);
+      // Cache equipment information in PlaceInfo document
+      PlaceInfos.update(placeInfoSelector, placeInfoModifier);
+    }
+  }
+}
 
 
 export default class UpsertEquipmentInfo extends Upsert {
@@ -54,31 +90,21 @@ export default class UpsertEquipmentInfo extends Upsert {
       return;
     }
 
-    const placeSourceId = properties.placeSourceId;
+    const { originalId, placeSourceId, originalPlaceInfoId } = properties;
 
     if (!placeSourceId) {
       callback(null, doc);
       return;
     }
 
-    if (!includes(organizationSourceIds, placeSourceId)) {
-      const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName}`;
-      throw new Meteor.Error(401, message);
-    }
+    cacheEquipmentInPlaceInfo({
+      originalId,
+      placeSourceId,
+      originalPlaceInfoId,
+      organizationSourceIds,
+      organizationName,
+    });
 
-    if (properties.originalPlaceInfoId) {
-      const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
-      const equipmentInfo = EquipmentInfos.findOne({ 'properties.originalId': properties.originalId }, { transform: null, fields: { 'properties.originalData': false } });
-      if (equipmentInfo) {
-        console.log('Caching', doc, equipmentInfo, placeInfoSelector);
-        // Cache equipment information in PlaceInfo document
-        PlaceInfos.update(placeInfoSelector, {
-          $set: {
-            [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
-          },
-        });
-      }
-    }
     callback(null, doc);
   }
 }

@@ -8,6 +8,7 @@ import { EquipmentInfos } from '../../../../equipment-infos/equipment-infos';
 import { Disruptions } from '../../../../disruptions/disruptions';
 
 import Upsert from './upsert';
+import { cacheEquipmentInPlaceInfo } from './upsert-equipment';
 
 
 export default class UpsertDisruption extends Upsert {
@@ -55,10 +56,12 @@ export default class UpsertDisruption extends Upsert {
         const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
-        console.log('Associating disruption with place', placeInfo, 'matching', selector);
         if (placeInfo) {
+          console.log('Copying geometry and placeInfoId into disruption from place', placeInfo, 'matching', selector);
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
+        } else {
+          console.log('No placeInfo matching', selector, 'found.');
         }
       }
     }
@@ -75,10 +78,12 @@ export default class UpsertDisruption extends Upsert {
         const selector = { 'properties.sourceId': equipmentSourceId, [originalEquipmentInfoIdField]: properties.originalEquipmentInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const equipmentInfo = EquipmentInfos.findOne(selector, options);
-        console.log('Associating disruption with equipment', equipmentInfo, 'matching', selector);
         if (equipmentInfo) {
+          console.log('Copying geometry and equipmentInfoId into disruption from equipmentInfo', equipmentInfo, 'matching', selector);
           result.properties.equipmentInfoId = equipmentInfo._id;
           result.geometry = result.geometry || equipmentInfo.geometry;
+        } else {
+          console.log('No equipment matching', selector, 'found.');
         }
       }
     }
@@ -97,8 +102,20 @@ export default class UpsertDisruption extends Upsert {
       'properties.disruptionSourceImportId': this.options.sourceImportId,
     } };
 
-    console.log('Updating equipment working status', selector, modifier);
-    EquipmentInfos.update(selector, modifier, callback);
+    const result = EquipmentInfos.update(selector, modifier);
+    console.log('Updated equipment working status', selector, modifier, result);
+
+    const equipmentInfo = EquipmentInfos.findOne(equipmentInfoId);
+    const { properties } = equipmentInfo;
+    const { originalId, placeSourceId, originalPlaceInfoId } = properties;
+    cacheEquipmentInPlaceInfo({
+      originalId,
+      placeSourceId,
+      originalPlaceInfoId,
+      organizationSourceIds,
+    });
+
+    callback(null, doc);
   }
 
 
