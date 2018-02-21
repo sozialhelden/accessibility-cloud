@@ -1,15 +1,17 @@
-import { SourceImports } from '../source-imports';
-import { _ } from 'lodash';
+import sortBy from 'lodash/sortBy';
+import get from 'lodash/get';
+
+import { Sources } from '../sources';
 
 const attributeDistributionCache = {};
 
-SourceImports.helpers({
+Sources.helpers({
   getCachedAttributeDistribution() {
     const cache = attributeDistributionCache;
-    cache[this._id] = cache[this._id] || this.getAttributeDistribution();
+    cache[this._id] = cache[this._id] || this.getAttributeDistributionString();
     return attributeDistributionCache[this._id];
   },
-  getAttributeDistribution() {
+  getAttributeDistributionString() {
     return this.attributeDistribution && JSON.parse(this.attributeDistribution);
   },
   mostFrequentCategoryNamesToPlaceCounts(limit = 10) {
@@ -19,7 +21,7 @@ SourceImports.helpers({
     if (!categoryNamesToCounts) return [];
     const categoryNames = Object.keys(categoryNamesToCounts);
     const countForCategoryName = (name) => categoryNamesToCounts[name];
-    return _.sortBy(categoryNames, countForCategoryName)
+    return sortBy(categoryNames, countForCategoryName)
       .reverse()
       .slice(0, limit)
       .map(name => ({ name, count: countForCategoryName(name) }));
@@ -27,13 +29,9 @@ SourceImports.helpers({
   placeCountsByAccessibilityType() {
     const attributeDistribution = this.getCachedAttributeDistribution();
     if (!attributeDistribution) { return []; }
-    const source = this.getSource();
-    if (!source) {
-      return [];
-    }
-    const totalCount = this.getSource().documentCount;
+    const totalCount = this.documentCount;
     const typeNamesToCounts =
-      _.get(attributeDistribution, 'properties.properties.accessibility.accessibleWith');
+      get(attributeDistribution, 'properties.properties.accessibility.accessibleWith');
     return Object.keys(typeNamesToCounts || {})
       .map(name => ({
         name,

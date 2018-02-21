@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { Match, check } from 'meteor/check';
+import Fiber from 'fibers';
 
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
@@ -63,5 +64,29 @@ Meteor.methods({
     EquipmentInfos.remove({ 'properties.sourceId': sourceId });
     Disruptions.remove({ 'properties.sourceId': sourceId });
     Sources.update({ _id: sourceId }, { $set: { documentCount: 0 } });
+  },
+});
+
+
+Meteor.methods({
+  'Sources.generateAndSaveStats'(sourceId, options) {
+    check(sourceId, String);
+    check(options, Match.Optional({ skipGlobalStats: Match.Optional(Boolean), token: Match.Optional(String) }));
+    const source = Sources.findOne(sourceId);
+    if (!source) {
+      throw new Meteor.Error(404, 'Not found');
+    }
+    if (!options || !options.token || options.token !== Meteor.settings.ddpClientToken) {
+      if (!this.userId) {
+        throw new Meteor.Error(401, 'Please log in first.');
+      }
+      if (!source.editableBy(this.userId)) {
+        throw new Meteor.Error(402, 'Not authorized');
+      }
+    }
+    this.unblock();
+    Fiber(() => {
+      source.generateAndSaveStats(options);
+    }).run();
   },
 });

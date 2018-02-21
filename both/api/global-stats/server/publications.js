@@ -1,4 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { GlobalStats } from '../global-stats.js';
-import { publishPublicFields } from '/server/publish';
 
-publishPublicFields('globalStats', GlobalStats, () => ({}), { sort: { date: -1 } });
+Meteor.publish('globalStats.lastCollectionCount', (collectionName) => {
+  check(collectionName, String);
+  return GlobalStats.find(
+    { name: `${collectionName}.count` },
+    { sort: { date: -1 }, limit: 1 },
+  );
+});

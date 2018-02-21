@@ -43,6 +43,15 @@ Template.sources_show_settings_page.events({
       }
     });
   },
+
+  'click .js-generate-stats'() {
+    const sourceId = FlowRouter.getParam('_id');
+    Meteor.call('Sources.generateAndSaveStats', sourceId, { skipGlobalStats: true }, (error) => {
+      if (error) {
+        alert('Could not generate statistics:', error.message);
+      }
+    });
+  },
 });
 
 Template.sources_show_settings_page.helpers({

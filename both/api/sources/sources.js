@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+import { Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { isAdmin } from '/both/lib/is-admin';
 import { ImportFlows } from '/both/api/import-flows/import-flows';
@@ -147,6 +148,11 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  attributeDistribution: {
+    type: Match.ObjectIncluding({}),
+    optional: true,
+    blackbox: true,
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -229,7 +235,7 @@ Sources.helpers({
   },
   getType() {
     const lastImport = this.getLastSuccessfulImport();
-    if (!lastImport) return null;
+    if (!lastImport) return 'placeInfos';
     const upsertStream = lastImport.upsertStream();
     if (!upsertStream) return null;
     switch (upsertStream.type) {

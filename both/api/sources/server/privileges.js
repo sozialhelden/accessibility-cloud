@@ -32,9 +32,11 @@ Sources.publicFields = {
   documentCount: 1,
   schedule: 1,
   lastImportType: 1,
+  attributeDistribution: 1,
   additionalAccessibilityInformation: 1,
   'translations.additionalAccessibilityInformation': 1,
 };
+
 
 Sources.helpers({
   editableBy(userId) {

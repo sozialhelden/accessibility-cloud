@@ -19,8 +19,10 @@
         <dt>Accessibility information</dt>
         <dd><p class='readible json code-block'>{{stringify properties.accessibility}}</p></dd>
 
-        <dt>Original data</dt>
-        <dd><p class='readible json code-block'>{{beautifyJSON properties.originalData}}</p></dd>
+        {{#if properties.originalData}}
+          <dt>Original data</dt>
+          <dd><p class='readible json code-block'>{{beautifyJSON properties.originalData}}</p></dd>
+        {{/if}}
 
         <dt>As JSON</dt>
         <dd><p class='readible json code-block'>{{stringify this}}</p></dd>

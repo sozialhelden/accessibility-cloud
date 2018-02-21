@@ -1,5 +1,5 @@
 <template name='sources_show_page_source_top_stats'>
-  <dt class='stats'>Number of {{humanize getType}}</dt>
+  <dt class='stats'>Number of data records</dt>
   <dd class='number-of-places'>
     {{#with documentCount}}
       <div class='number huge'>{{formatNumber this}}</div>
@@ -20,32 +20,30 @@
   </dd>
 
   {{#if documentCount}}
-    {{#with getLastSuccessfulImport}}
-      {{#if isPlaceInfoSource}}
-        <dt class='stats'>Accessible with…</dt>
-        <dd>
-          <ul class='stats-by-accessibility-type'>
-            {{#each placeCountsByAccessibilityType}}
-              <li>
-                <header class='type'>{{humanize name}}</header>
-                <div class='number middle'>{{formatNumber this.true}}</div>
-              </li>
-            {{/each}}
-          </ul>
-        </dd>
-      {{/if}}
-
-      <dt class='stats'>Top categories</dt>
+    {{#if isPlaceInfoSource}}
+      <dt class='stats'>Accessible with…</dt>
       <dd>
-        <ul class='categories'>
-          {{#each (mostFrequentCategoryNamesToPlaceCounts 12)}}
-            <li title='{{name}}'>
-              <span class='number'>{{formatNumber count}}</span>
-              <img class='icon' src='/icons/categories/{{name}}@2x.png' alt='{{name}}'>
+        <ul class='stats-by-accessibility-type'>
+          {{#each placeCountsByAccessibilityType}}
+            <li>
+              <header class='type'>{{humanize name}}</header>
+              <div class='number middle'>{{formatNumber this.true}}</div>
             </li>
           {{/each}}
         </ul>
       </dd>
-    {{/with}}
+    {{/if}}
+
+    <dt class='stats'>Top categories</dt>
+    <dd>
+      <ul class='categories'>
+        {{#each (mostFrequentCategoryNamesToPlaceCounts 12)}}
+          <li title='{{name}}'>
+            <span class='number'>{{formatNumber count}}</span>
+            <img class='icon' src='/icons/categories/{{name}}@2x.png' alt='{{name}}'>
+          </li>
+        {{/each}}
+      </ul>
+    </dd>
   {{/if}}
 </template>

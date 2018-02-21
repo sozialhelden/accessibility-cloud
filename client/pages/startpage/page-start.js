@@ -45,7 +45,13 @@ function showNextRandomPlaceInfo(map) {
 
 Template.page_start.onCreated(() => {
   subsManager.subscribe('organizations.public');
-  subsManager.subscribe('globalStats.public');
+
+  subsManager.subscribe('globalStats.lastCollectionCount', 'Sources.withoutDrafts');
+  subsManager.subscribe('globalStats.lastCollectionCount', 'PlaceInfos.withoutDrafts');
+  subsManager.subscribe('globalStats.lastCollectionCount', 'Sources.withEquipmentInfos');
+  subsManager.subscribe('globalStats.lastCollectionCount', 'EquipmentInfos.onlyElevators');
+  subsManager.subscribe('globalStats.lastCollectionCount', 'EquipmentInfos.onlyBrokenElevators');
+
   Meteor.call('PlaceInfos.getRandomPlaceInfos', (error, loadedPlaceInfos) => {
     if (error) {
       console.log('Could not load a random marker:', error);

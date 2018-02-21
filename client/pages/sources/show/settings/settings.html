@@ -17,6 +17,9 @@
     <div class="button-group">
       <button class='js-delete btn btn-danger'>Delete this source</button>
       <button class='js-delete-places btn btn-danger'>Delete all imported places of this source</button>
+      {{#if isAdmin}}
+        <button class='js-generate-stats btn'>Re-generate statistics</button>
+      {{/if}}
     </div>
   </div>
 </template>

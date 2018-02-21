@@ -91,18 +91,21 @@ export default class Upsert {
           sourceImportId,
         });
 
-        const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
+        const postProcessedDoc = flatten(streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName }));
 
         streamClass.collection.upsert({
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, flatten(postProcessedDoc), (upsertError, result) => {
+        }, postProcessedDoc, (upsertError, result) => {
           if (result && result.insertedId) {
             insertedDocumentCount += 1;
           } else if (result && result.numberAffected) {
             updatedDocumentCount += 1;
           }
-          streamObject.afterUpsert({ doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName }, () => callback(upsertError, result));
+          streamObject.afterUpsert(
+            { doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName },
+            () => callback(upsertError, result),
+          );
         });
       }),
       flush: Meteor.bindEnvironment((callback) => {

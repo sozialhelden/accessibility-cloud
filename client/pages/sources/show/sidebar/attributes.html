@@ -13,19 +13,17 @@
   {{/if}}
 
   {{#if documentCount}}
-    {{#with getLastImportWithStats}}
+    {{#if getCachedAttributeDistribution}}
       <dt>Structure</dt>
       <dd>
         <dl>
-          {{#if ../documentCount}}
-            {{> sources_show_page_recursive_attributes
-              attributeName='properties'
-              documentCount=../documentCount
-              attributeDistribution=getCachedAttributeDistribution.properties
-              properties=getCachedAttributeDistribution.properties.properties}}
-          {{/if}}
+          {{> sources_show_page_recursive_attributes
+            attributeName='properties'
+            documentCount=documentCount
+            attributeDistribution=getCachedAttributeDistribution.properties
+            properties=getCachedAttributeDistribution.properties.properties}}
         </dl>
       </dd>
-    {{/with}}
+    {{/if}}
   {{/if}}
 </template>
