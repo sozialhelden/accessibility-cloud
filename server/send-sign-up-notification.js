@@ -23,5 +23,5 @@ Accounts.onCreateUser((options, user) => {
   } catch (error) {
     console.error('Could not send sign-up notification email:', error, error.stack);
   }
-  return user;
+  return Object.assign({}, user, { isApproved: false });
 });

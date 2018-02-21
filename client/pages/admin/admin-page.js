@@ -30,7 +30,7 @@ Template.admin_page.helpers({
     return Sources.find({});
   },
   usersWaitingForApproval() {
-    return Meteor.users.find({ isApproved: null }).fetch();
+    return Meteor.users.find({ isApproved: false }).fetch();
   },
   getUserName() {
     return getDisplayedNameForUser(this);

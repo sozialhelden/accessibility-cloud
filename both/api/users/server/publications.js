@@ -6,9 +6,10 @@ Meteor.publish('users.needApproval', function publish() {
     if (!isAdmin(this.userId)) {
       return [];
     }
-    return Meteor.users.find({ $or: [
-      { isApproved: { $exists: false } },
-      { isApproved: false },
-    ] });
+
+    // Only users with `isApproved: false` are supposed to be approvable.
+    return Meteor.users.find({
+      isApproved: false,
+    });
   });
 });
