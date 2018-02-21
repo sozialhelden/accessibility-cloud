@@ -1,20 +1,16 @@
-import util from 'util';
+// import util from 'util';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
-import { PlaceInfos } from '/both/api/place-infos/place-infos';
 import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
-import { _ } from 'lodash';
 import { calculateGlobalStats } from '/both/api/global-stats/server/calculation';
 import Fiber from 'fibers';
-import { Disruptions } from '../../disruptions/disruptions';
-import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 
 SourceImports.helpers({
   generateAndSaveStats(options) {
     const source = Sources.findOne(this.sourceId);
     if (!source) throw new Error('Source not found');
-    const { attributeDistribution, documentCount } = source.attributeDistribution();
+    const { attributeDistribution, documentCount } = source.getAttributeDistribution();
 
     const attributesToSet = {
       attributeDistribution: JSON.stringify(attributeDistribution),
