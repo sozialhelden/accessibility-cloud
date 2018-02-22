@@ -78,7 +78,7 @@
           </p>
 
           <h4>…in the command line</h4>
-          <p class='code-block'>$ curl -v -s -H 'Accept: application/json' -H 'X-App-Token: {{tokenString}}' {{rootUrl}}place-infos\?latitude\=48.251\&amp;longitude\=16.5\&amp;accuracy\=10000</p>
+          <p class='code-block'>$ curl -v -s -H 'Accept: application/json' -H 'X-App-Token: {{tokenString}}' https://accessibility-cloud.freetls.fastly.net/place-infos\?latitude\=48.251\&amp;longitude\=16.5\&amp;accuracy\=10000</p>
           <p>
             If you start on the command line, we recommend piping your curl output through <a href='https://stedolan.github.io/jq/'><code>jq</code></a> when testing API requests in the command line. <code>jq</code> can be installed using your favorite package manager (e.g. <code>apt-get install jq</code> on Debian-based Linux or <code>brew install jq</code> on Macs).
           </p>
@@ -86,7 +86,7 @@
           <h4>…in JavaScript (with jQuery)</h4>
           <p class='code-block'>$.ajax({
       dataType: 'json',
-      url: '{{rootUrl}}place-infos',
+      url: 'https://accessibility-cloud.freetls.fastly.net/place-infos',
       data: { latitude: 48.251, longitude: 16.5, accuracy: 10000 },
       headers: {
         'X-App-Token': '{{tokenString}}',
