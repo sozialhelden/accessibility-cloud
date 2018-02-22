@@ -1,18 +1,18 @@
-import { Meteor } from 'meteor/meteor';
+import omit from 'lodash/omit';
 import { EJSON } from 'meteor/ejson';
-import { buildSelectorAndOptions } from '../selectors/build-selector';
+import { Meteor } from 'meteor/meteor';
+import extendSurrogateKeys from '../extendSurrogateKeys';
 import { findAllRelatedDocuments } from '../related-objects';
-import { _ } from 'meteor/underscore';
+import { buildSelectorAndOptions } from '../selectors/build-selector';
 
-// Handle a GET HTTP request. The following variables are available inside the function:
-//  }
+// Handle a GET HTTP request.
 
-export function GET({ req, collection, _id, appId, userId }) {
+export function GET({ req, collection, _id, appId, userId, surrogateKeys }) {
   if (!collection) {
     throw new Meteor.Error(404, 'Collection not found.');
   }
 
-  const { selector, options } = buildSelectorAndOptions({ req, collection, _id, appId, userId });
+  const { selector, options } = buildSelectorAndOptions({ req, collection, _id, appId, userId, surrogateKeys });
 
   console.log(EJSON.stringify({ selector, options }));
 
@@ -28,18 +28,20 @@ export function GET({ req, collection, _id, appId, userId }) {
       userId,
       rootCollection: collection,
       rootDocuments: [result],
+      surrogateKeys,
     });
 
+    extendSurrogateKeys({ collection, documents: [result], related, surrogateKeys });
+
     if (typeof collection.wrapDocumentAPIResponse === 'function') {
-      return collection.wrapDocumentAPIResponse({ result, req, _id, related });
+      return collection.wrapDocumentAPIResponse({ result, req, _id, related, surrogateKeys });
     }
     return result;
   }
 
   // Return array of documents
-  const resultsCount = collection.find(selector, _.omit(options, 'skip', 'limit')).count();
+  const resultsCount = collection.find(selector, omit(options, 'skip', 'limit')).count();
   const results = collection.find(selector, options).fetch();
-
 
   const related = findAllRelatedDocuments({
     req,
@@ -47,7 +49,10 @@ export function GET({ req, collection, _id, appId, userId }) {
     userId,
     rootCollection: collection,
     rootDocuments: results,
+    surrogateKeys,
   });
+
+  extendSurrogateKeys({ collection, documents: results, related, surrogateKeys });
 
   if (typeof collection.wrapCollectionAPIResponse === 'function') {
     return collection.wrapCollectionAPIResponse({ results, req, _id, related, resultsCount });

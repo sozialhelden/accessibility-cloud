@@ -4,6 +4,7 @@ import Fiber from 'fibers';
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import { EJSON } from 'meteor/ejson';
+import uniq from 'lodash/uniq';
 import { _ } from 'meteor/underscore';
 
 import httpMethodHandlers from './http-methods';
@@ -23,6 +24,7 @@ function handleJSONRequest(req, res, next) {
   let responseBody = '{}';
 
   setAccessControlHeaders(res);
+
   res.setHeader('Content-Type', 'application/json');
 
   try {
@@ -50,7 +52,8 @@ function handleJSONRequest(req, res, next) {
     appId = app && app._id;
     userId = user && user._id;
 
-    const options = { req, res, collectionName, collection, _id, appId, app, user, userId };
+    const surrogateKeys = [collectionName, appId, _id];
+    const options = { req, res, collectionName, collection, _id, appId, app, user, userId, surrogateKeys };
     const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
     const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
 
@@ -68,7 +71,18 @@ function handleJSONRequest(req, res, next) {
       throw new Meteor.Error(401, 'Not authorized.', `One of the tokens you supplied either is too old or was never valid. Log in on ${Meteor.absoluteUrl('')} and obtain a valid token in your organization's API key settings.`);
     }
 
-    responseBody = EJSON.stringify(handler(options));
+    const result = handler(options);
+
+    let maximalCacheTimeInSeconds = 30;
+    if (typeof collection.maximalCacheTimeInSeconds !== 'undefined') {
+      maximalCacheTimeInSeconds = collection.maximalCacheTimeInSeconds;
+    }
+    res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the CDN
+    res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
+    res.setHeader('Surrogate-Key', uniq(surrogateKeys).join(' '));
+
+
+    responseBody = EJSON.stringify(result);
   } catch (error) {
     // eslint-disable-next-line no-param-reassign
     res.statusCode = (error.error === 'validation-error') ? 422 : (error.error || 500);

@@ -85,7 +85,7 @@ function expandFieldPathsToFetch(fieldPaths) {
 // This finds requested related children documents for a given list of documents, indexed by
 // collection name and document `_id`.
 
-export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, appId, userId }) {
+export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, appId, userId, surrogateKeys }) {
   check(rootDocuments, [Object]);
   check(rootCollection, Mongo.Collection);
   check(appId, Match.Maybe(String));
@@ -123,11 +123,17 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
     }
     const { foreignCollectionName, foreignDocuments, foreignCollection } = resultsByPath[path];
     results[foreignCollectionName] = results[foreignCollectionName] || {};
+
     foreignDocuments.forEach((doc) => {
       let result = doc;
+      surrogateKeys.push(doc._id);
+      if (typeof foreignCollection.surrogateKeysForDocument === 'function') {
+        foreignCollection.surrogateKeysForDocument(doc).forEach(key => surrogateKeys.push(key));
+      }
       if (foreignCollection.convertToGeoJSONFeature) {
         result = foreignCollection.convertToGeoJSONFeature(doc);
       }
+
       results[foreignCollectionName][doc._id] = result;
     });
   });
