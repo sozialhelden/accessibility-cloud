@@ -4,6 +4,7 @@ import { check, Match } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { generateDynamicUrl } from '../generate-dynamic-url';
+import generateRequestSignature from './generateRequestSignature';
 
 export default class HTTPDownload {
   constructor({
@@ -13,18 +14,25 @@ export default class HTTPDownload {
     onDebugInfo,
     allowedStatusCodes = [200],
     gzip = true,
+    method = 'GET',
+    body = '',
+    signature,
   }) {
     check(sourceUrl, String);
     check(allowedStatusCodes, [Number]);
     check(onDebugInfo, Function);
     check(headers, Match.Optional(Match.ObjectIncluding({})));
 
-    const headersWithUserAgent = Object.assign({
+    const extendedHeaders = Object.assign({
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
 
+    if (signature) {
+      extendedHeaders[signature.headerName] = generateRequestSignature({ body, signature });
+    }
+
     const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
-    this.request = this.stream = request(url, { gzip, headers: headersWithUserAgent });
+    this.request = this.stream = request(url, { gzip, headers: extendedHeaders, method, body });
 
     this.requestListener = req => {
       // console.log('Making request', req);
@@ -60,7 +68,7 @@ export default class HTTPDownload {
       }
 
       if (isCompressed) {
-        this.lengthRequest = request(sourceUrl, { gzip: false, headers: headersWithUserAgent })
+        this.lengthRequest = request(sourceUrl, { gzip: false, headers: extendedHeaders })
           .on('response', lengthResponse => {
             if (lengthResponse.statusCode !== 200) {
               return;

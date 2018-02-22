@@ -2,6 +2,7 @@ import request from 'request';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
 import { generateDynamicUrl } from '../generate-dynamic-url';
+import generateRequestSignature from './generateRequestSignature';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -16,7 +17,10 @@ export default class MultiHTTPDownload {
     bytesPerSecond,
     lastSuccessfulImport,
     gzip = true,
+    body = '',
+    method = 'GET',
     maximalConcurrency = 3,
+    signature,
   }) {
     check(sourceUrl, String);
 
@@ -28,9 +32,13 @@ export default class MultiHTTPDownload {
     check(maximalErrorRatio, Number);
     check(maximalConcurrency, Number);
 
-    const headersWithUserAgent = Object.assign({
+    const extendedHeaders = Object.assign({
       'User-Agent': 'accessibility.cloud Bot/1.0',
     }, headers);
+
+    if (signature) {
+      extendedHeaders[signature.headerName] = generateRequestSignature({ body, signature });
+    }
 
     let loggedFirstRequest = false;
     let requestCount = 0;
@@ -51,12 +59,13 @@ export default class MultiHTTPDownload {
           gzip,
           allowedStatusCodes,
           url,
-          method: 'GET',
-          headers: headersWithUserAgent,
+          body,
+          method,
+          headers: extendedHeaders,
         };
 
-        requestCount++;
-        const req = request(options, (error, response, body) => {
+        requestCount += 1;
+        const req = request(options, (error, response, responseBody) => {
           if (error) {
             this.emit('error', error);
             callback(error);
@@ -64,7 +73,7 @@ export default class MultiHTTPDownload {
           }
 
           if (!allowedStatusCodes.includes(response.statusCode)) {
-            errorCount++;
+            errorCount += 1;
             lastErroneousResponse = response;
             lastErroneousRequest = req;
             if (errorCount / requestCount > maximalErrorRatio) {
@@ -76,7 +85,7 @@ export default class MultiHTTPDownload {
           }
 
           if (includedStatusCodes.includes(response.statusCode)) {
-            this.push(body);
+            this.push(responseBody);
           }
 
           callback();
