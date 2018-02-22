@@ -77,7 +77,7 @@ function handleJSONRequest(req, res, next) {
     if (typeof collection.maximalCacheTimeInSeconds !== 'undefined') {
       maximalCacheTimeInSeconds = collection.maximalCacheTimeInSeconds;
     }
-    res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the CDN
+    res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=30, stale-if-error=3600`); // Interpreted by the CDN
     res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
     res.setHeader('Surrogate-Key', uniq(surrogateKeys).join(' '));
 
