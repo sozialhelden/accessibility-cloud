@@ -91,12 +91,14 @@ export default class Upsert {
           sourceImportId,
         });
 
-        const postProcessedDoc = flatten(streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName }));
 
+        const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
+
+        // Using flatten here to deep-merge new properties into existing
         streamClass.collection.upsert({
           'properties.sourceId': sourceId,
           'properties.originalId': originalId,
-        }, postProcessedDoc, (upsertError, result) => {
+        }, flatten(postProcessedDoc), (upsertError, result) => {
           if (result && result.insertedId) {
             insertedDocumentCount += 1;
           } else if (result && result.numberAffected) {
