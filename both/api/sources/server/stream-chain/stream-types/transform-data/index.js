@@ -1,6 +1,6 @@
 import vm from 'vm';
 import { _ } from 'lodash';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import entries from '/both/lib/entries';
@@ -31,8 +31,10 @@ function compileMappings(mappings, context) {
 }
 
 export default class TransformData {
-  constructor({ mappings, keepOriginalData }) {
+  constructor({ mappings, keepOriginalData, onDebugInfo }) {
     check(mappings, Object);
+    check(keepOriginalData, Match.Optional(Boolean));
+    check(onDebugInfo, Match.Optional(Function));
 
     const context = getVMContext();
     this.context = context;
@@ -45,17 +47,19 @@ export default class TransformData {
       writableObjectMode: true,
       readableObjectMode: true,
       transform(chunk, encoding, callback) {
+        let lastFieldName;
         try {
           if (hadError) { return; }
 
           const output = {};
 
           for (const [fieldName, fn] of entries(compiledMappings)) {
+            lastFieldName = fieldName;
             const value = fn(chunk);
             if (fieldName.match(/-/)) {
               // Field name is probably a key path like 'a-b-c'
               if (value !== undefined && value !== null) {
-                // Don't polute database with undefined properties
+                // Don't pollute database with undefined properties
                 _.set(output, fieldName.replace(/-/g, '.'), value);
               }
             } else {
@@ -69,6 +73,13 @@ export default class TransformData {
           callback(null, output);
         } catch (error) {
           hadError = true;
+          if (onDebugInfo) {
+            onDebugInfo({
+              erroneousChunk: chunk,
+              erroneousFieldName: lastFieldName.replace(/-/g, '.'),
+              erroneousMapping: mappings[lastFieldName],
+            });
+          }
           this.emit('error', error);
           callback(error);
         }

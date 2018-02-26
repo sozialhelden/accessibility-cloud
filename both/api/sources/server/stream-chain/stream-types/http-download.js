@@ -5,6 +5,7 @@ import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { generateDynamicUrl } from '../generate-dynamic-url';
 import generateRequestSignature from './generateRequestSignature';
+import asCurlString from './asCurlString';
 
 export default class HTTPDownload {
   constructor({
@@ -32,11 +33,12 @@ export default class HTTPDownload {
     }
 
     const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
-    this.request = this.stream = request(url, { gzip, headers: extendedHeaders, method, body });
+    const options = { gzip, headers: extendedHeaders, method, body };
+    this.request = this.stream = request(url, options);
 
     this.requestListener = req => {
-      // console.log('Making request', req);
       onDebugInfo({
+        curlString: asCurlString(Object.assign({}, { url }, options)),
         request: {
           sourceUrl: String(this.request.uri.href),
           headers: _.flatten(_.pairs(req._headers)),

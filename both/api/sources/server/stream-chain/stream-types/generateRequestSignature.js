@@ -8,10 +8,10 @@ export default function generateRequestSignature({
   signature,
 }) {
   check(signature, Match.ObjectIncluding({
-    algorithm: Match.OneOf('SHA-1', 'SHA-224', 'SHA3-224', 'SHA-256', 'SHA3-256', 'SHA-384', 'SHA3-384', 'SHA-512', 'SHA3-512', 'SHAKE128', 'SHAKE256'),
+    algorithm: Match.Optional(Match.OneOf('SHA-1', 'SHA-224', 'SHA3-224', 'SHA-256', 'SHA3-256', 'SHA-384', 'SHA3-384', 'SHA-512', 'SHA3-512', 'SHAKE128', 'SHAKE256')),
     password: String,
-    passwordType: Match.OneOf('B64', 'HEX', 'TEXT'),
-    outputType: Match.OneOf('B64', 'HEX'),
+    passwordType: Match.Optional(Match.OneOf('B64', 'HEX', 'TEXT')),
+    outputType: Match.Optional(Match.OneOf('B64', 'HEX')),
   }));
 
   const shaObj = new JSSHA(signature.hashType || 'SHA-1', 'TEXT');
