@@ -20,6 +20,7 @@ import ParseCSVStream from './stream-types/parse-csv-stream';
 import ParseXMLStream from './stream-types/parse-xml-stream';
 import Split from './stream-types/split';
 import Skip from './stream-types/skip';
+import Filter from './stream-types/filter';
 import Limit from './stream-types/limit';
 import ConvertArrayToStream from './stream-types/convert-array-to-stream';
 import TransformData from './stream-types/transform-data';
@@ -41,6 +42,7 @@ const StreamTypes = {
   TransformScript,
   MultiHTTPDownload,
   ParseJSONStream,
+  Filter,
   ParseJSONChunks,
   ParseXMLStream,
   ParseCSVStreamTest,
