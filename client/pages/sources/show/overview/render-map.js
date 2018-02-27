@@ -211,6 +211,9 @@ function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
         if (typeof feature.properties.isWorking === 'boolean') {
           isWorkingClassName = `ac-is-working-${feature.properties.isWorking}`;
         }
+        if (typeof feature.properties.isEquipmentWorking === 'boolean') {
+          isWorkingClassName = `ac-is-working-${feature.properties.isEquipmentWorking}`;
+        }
         const marker = createMarkerFromFeature({
           feature,
           latlng,
