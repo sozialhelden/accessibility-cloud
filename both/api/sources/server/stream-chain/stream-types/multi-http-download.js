@@ -147,7 +147,7 @@ export default class MultiHTTPDownload {
               body: lastErroneousResponse.body,
             },
             lastErroneousRequest: lastErroneousRequest && {
-              sourceUrl: lastErroneousRequest.uri.href,
+              sourceUrl: lastErroneousRequest.uri,
               host: lastErroneousRequest.host,
               path: lastErroneousRequest.path,
               headers: lastErroneousRequest.rawHeaders,
@@ -157,7 +157,7 @@ export default class MultiHTTPDownload {
         if (lastRequest || lastResponse) {
           onDebugInfo({
             lastRequest: lastRequest && {
-              sourceUrl: lastRequest.uri.href,
+              sourceUrl: lastRequest.uri,
               host: lastRequest.host,
               path: lastRequest.path,
               headers: lastRequest.rawHeaders,
