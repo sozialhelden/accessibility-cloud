@@ -78,6 +78,10 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  'properties.longDescription': {
+    type: String,
+    optional: true,
+  },
   'properties.isRaised': {
     type: Boolean,
     optional: true,
