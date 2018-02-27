@@ -23,6 +23,7 @@ import Skip from './stream-types/skip';
 import Filter from './stream-types/filter';
 import Limit from './stream-types/limit';
 import ConvertArrayToStream from './stream-types/convert-array-to-stream';
+import ConvertStreamToArray from './stream-types/convert-stream-to-array';
 import TransformData from './stream-types/transform-data';
 import TransformScript from './stream-types/transform-script';
 import UpsertPlace from './stream-types/upsert-place';
@@ -56,6 +57,7 @@ const StreamTypes = {
   Skip,
   Limit,
   ConvertArrayToStream,
+  ConvertStreamToArray,
   ReimportSource,
   // ValidatePlace,
 };
