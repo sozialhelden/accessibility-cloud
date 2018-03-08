@@ -422,9 +422,7 @@ You can request POIs around a specific map location. For this, you have to suppl
 
 #### Embedding related documents
 
-You can embed related documents like in the `place-infos` endpoint.
-
-For example, the response will include associated place and facility/equipment infos after adding the `includeRelated=placeInfo,equipmentInfo` parameter.
+You can embed related documents like in the `place-infos`, `equipment-infos` and `disruptions` endpoints.
 
 If given, the `includeRelated` parameter has to be a comma-separated list of relation names. Allowed relation names for places are:
 
@@ -434,7 +432,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 - `sourceImport`
 - `source.language`
 - `placeInfo`
-- `equipmentInfo`
+- `equipmentInfos`
 
 #### Example request
 
