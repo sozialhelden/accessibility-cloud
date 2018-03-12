@@ -378,36 +378,27 @@ div.area.statistics {
 
       a.partner.logo {
         display: inline-block;
-        height:50px;
-        width:200px;
+        height: 100px;
+        width: 200px;
         margin: 0.5em;
+        padding: 0 1em;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: contain;
         position: relative;
         mix-blend-mode: multiply;
-
-        &:before {  // desaturates logos
-          content: '';
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background: inherit;
-          -webkit-filter: grayscale(1);
-          -webkit-filter: grayscale(100%);
-          -moz-filter: grayscale(100%);
-          filter: gray;
-          filter: grayscale(100%);
-        }
+        -webkit-filter: grayscale(1);
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        filter: gray;
+        filter: grayscale(100%);
       }
 
       a.partner.logo.square {
         margin-left: 20px;
         margin-right: 20px;
-        height:72px;
-        width:100px;
+        height: 80px;
+        width: 100px;
       }
     }
   }
