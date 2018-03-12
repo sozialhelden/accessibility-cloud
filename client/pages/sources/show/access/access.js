@@ -11,13 +11,16 @@ import { showNotification, showErrorNotification } from '/client/lib/notificatio
 
 Template.sources_show_access_page.onCreated(() => {
   subsManager.subscribe('sourceImports.public');
-  const sourceId = FlowRouter.getParam('_id');
-  subsManager.subscribe('sourceImports.private', sourceId);
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('users.public');
-  subsManager.subscribe('sourceAccessRequests.forSource', sourceId);
+
+  const sourceId = FlowRouter.getParam('_id');
+  if (sourceId) {
+    subsManager.subscribe('sourceImports.private', sourceId);
+    subsManager.subscribe('sourceAccessRequests.forSource', sourceId);
+  }
 
   window.Sources = Sources; // FIXME: we don't need this, it's only for debugging
 });

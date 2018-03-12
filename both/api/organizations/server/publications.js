@@ -15,7 +15,7 @@ publishPublicFields('organizations', Organizations);
 publishPrivateFields(
   'organizations',
   Organizations,
-  userId => ({ _id: { $in: getAccessibleOrganizationIdsForUserId(userId) } })
+  userId => ({ _id: { $in: getAccessibleOrganizationIdsForUserId(userId) } }),
 );
 
 // Publishes private fields for all documents that reference an organization you are member of.

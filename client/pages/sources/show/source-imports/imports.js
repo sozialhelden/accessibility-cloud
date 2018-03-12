@@ -9,9 +9,13 @@ Template.sources_show_imports_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sourceImports.public');
-  subsManager.subscribe('sourceImports.private', FlowRouter.getParam('_id'));
 
-  window.SourceImports = SourceImports;	// FIXME: we don't need that only for debugging
+  const sourceId = FlowRouter.getParam('_id');
+  if (sourceId) {
+    subsManager.subscribe('sourceImports.private', sourceId);
+  }
+
+  window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging
 });
 
 
