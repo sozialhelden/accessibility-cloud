@@ -8,7 +8,9 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
   - [Features](#features)
   - [Getting started](#getting-started)
   - [Authentication](#authentication)
+  - [Cached vs. non-cached base URLs](#cached-vs-non-cached-base-urls)
   - [Features for all endpoints](#features-for-all-endpoints)
+    - [Retrieving single documents by their `_id`](#retrieving-single-documents-by-their-_id)
     - [Licensing](#licensing)
     - [Pagination](#pagination)
     - [Filtering returned fields](#filtering-returned-fields)
@@ -22,6 +24,7 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
       - [Location-based search by X/Y/Z tile coordinates](#location-based-search-by-xyz-tile-coordinates)
       - [Filter by metadata](#filter-by-metadata)
       - [Filter by category](#filter-by-category)
+    - [Retrieving a PlaceInfo document by its `sourceId` and `originalId`](#retrieving-a-placeinfo-document-by-its-sourceid-and-originalid)
       - [Embedding related documents](#embedding-related-documents)
       - [Example request](#example-request)
       - [Example response](#example-response)
@@ -79,7 +82,7 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 
 ## Authentication
 
-For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token).
+For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token) or supply the token as URL query parameter, e.g. `appToken=12345`.
 
 Your API token allows you to access the following data:
 
@@ -89,8 +92,24 @@ Your API token allows you to access the following data:
   - is not in draft mode
   - is accessible for your organization (or publicly available)
 
+## Cached vs. non-cached base URLs
+
+accessibility.cloud's API is available via two base URLs:
+
+1. Cached: https://accessibility-cloud.freetls.fastly.net – This is the recommended base URL for most use cases. It caches responses up to 5 minutes using a CDN, so data included in the responses can lag behind the database content. Depending on the complexity of your request, a response to a URL not requested before in the last 5 minutes can take up to several seconds. After that, the server should respond to following requests with the same URL within less than 100ms. If you have a use case that needs <100ms for all requests, [write us an email](mailto:support@accessibility.cloud) so we can figure out a cache warm-up strategy. In case of a backend downtime, the cache can deliver stale data.
+2. Not cached: https://www.accessibility.cloud - Use this base URL if you need real-time data directly after an import or a data push process, for example for health monitoring. Do not use this base URL for end-user-facing web pages or apps except necessary.
 
 ## Features for all endpoints
+
+### Retrieving single documents by their `_id`
+
+If you have the `_id` value of a document, you can retrieve it using a URL like this:
+
+```
+https://accessibility-cloud.freetls.fastly.net/[TYPE]/[ID].json&appToken=[APP_TOKEN]
+```
+
+Replace `[TYPE]` with the type of the requested resource (e.g. `place-infos` – see below for allowed types), `[ID]` with the document's `_id`, and `[APP_TOKEN]` with your app token (see above).
 
 ### Licensing
 
@@ -199,6 +218,13 @@ You can either include or exclude categories by using the following parameters:
 
 - `includeCategories`: comma-separated list of category names to include in the search. All other categories are excluded.
 - `excludeCategories`: comma-separated list of category names to exclude in the search. All other categories are included.
+
+### Retrieving a PlaceInfo document by its `sourceId` and `originalId`
+
+If you have the `originalId` and `sourceId` values of a document, you can retrieve using these parameters:
+
+- `originalId`: the original ID used in the original data source provided externally
+- `sourceId`: `_id` of the data source on accessibility.cloud
 
 #### Embedding related documents
 
