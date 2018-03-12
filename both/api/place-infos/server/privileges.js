@@ -10,8 +10,27 @@ PlaceInfos.allow({
 });
 
 PlaceInfos.publicFields = {
-  properties: 1,
+  _id: 1,
   geometry: 1,
+  'properties.ids': 1,
+  'properties._id': 1,
+  'properties.originalId': 1,
+  'properties.sourceId': 1,
+  'properties.sourceImportId': 1,
+  'properties.name': 1,
+  'properties.category': 1,
+  'properties.description': 1,
+  'properties.infoPageUrl': 1,
+  'properties.editPageUrl': 1,
+  'properties.placeWebsiteUrl': 1,
+  'properties.phoneNumber': 1,
+  'properties.address': 1,
+  'properties.accessibility': 1,
+  'properties.equipmentInfos': 1,
+};
+
+PlaceInfos.privateFields = {
+  'properties.originalData': 1,
 };
 
 PlaceInfos.helpers({
