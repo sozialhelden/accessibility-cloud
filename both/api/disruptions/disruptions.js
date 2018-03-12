@@ -6,6 +6,81 @@ import helpers from './helpers';
 
 export const Disruptions = new Mongo.Collection('Disruptions');
 
+Disruptions.propertiesSchema = new SimpleSchema({
+  originalId: {
+    type: String,
+    optional: true,
+  },
+  originalEquipmentInfoId: {
+    type: String,
+    optional: true,
+  },
+  originalEquipmentInfoIdField: {
+    type: String,
+    optional: true,
+  },
+  equipmentInfoId: {
+    type: String,
+    optional: true,
+  },
+  originalPlaceInfoId: {
+    type: String,
+    optional: true,
+  },
+  originalPlaceInfoIdField: {
+    type: String,
+    optional: true,
+  },
+  placeInfoId: {
+    type: String,
+    optional: true,
+  },
+  originalData: {
+    type: String,
+    optional: true,
+  },
+  sourceId: {
+    type: String,
+    optional: true,
+  },
+  sourceImportId: {
+    type: String,
+    optional: true,
+  },
+  category: {
+    type: String,
+    optional: true,
+    allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
+  },
+  isEquipmentWorking: {
+    type: Boolean,
+    optional: true,
+  },
+  stateExplanation: {
+    type: String,
+    optional: true,
+  },
+  outOfOrderReason: {
+    type: String,
+    optional: true,
+  },
+  alternativeRouteInstructions: {
+    type: String,
+    optional: true,
+  },
+  startDate: {
+    type: String,
+    optional: true,
+  },
+  plannedCompletionDate: { // can be used for planned completion dates, too
+    type: String,
+    optional: true,
+  },
+  lastUpdate: {
+    type: String,
+    optional: true,
+  },
+});
 
 Disruptions.schema = new SimpleSchema({
   geometry: {
@@ -36,78 +111,8 @@ Disruptions.schema = new SimpleSchema({
       return undefined;
     },
   },
-  'properties.originalId': {
-    type: String,
-    optional: true,
-  },
-  'properties.originalEquipmentInfoId': {
-    type: String,
-    optional: true,
-  },
-  'properties.originalEquipmentInfoIdField': {
-    type: String,
-    optional: true,
-  },
-  'properties.equipmentInfoId': {
-    type: String,
-    optional: true,
-  },
-  'properties.originalPlaceInfoId': {
-    type: String,
-    optional: true,
-  },
-  'properties.originalPlaceInfoIdField': {
-    type: String,
-    optional: true,
-  },
-  'properties.placeInfoId': {
-    type: String,
-    optional: true,
-  },
-  'properties.originalData': {
-    type: String,
-    optional: true,
-  },
-  'properties.sourceId': {
-    type: String,
-    optional: true,
-  },
-  'properties.sourceImportId': {
-    type: String,
-    optional: true,
-  },
-  'properties.category': {
-    type: String,
-    optional: true,
-    allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
-  },
-  'properties.isEquipmentWorking': {
-    type: Boolean,
-    optional: true,
-  },
-  'properties.outOfServiceReason': {
-    type: String,
-    optional: true,
-  },
-  'properties.furtherDescription': {
-    type: String,
-    optional: true,
-  },
-  'properties.plannedCompletion': {
-    type: Date,
-    optional: true,
-  },
-  'properties.outOfServiceOn': {
-    type: Date,
-    optional: true,
-  },
-  'properties.outOfServiceTo': {
-    type: Date,
-    optional: true,
-  },
-  'properties.lastUpdate': {
-    type: Date,
-    optional: true,
+  properties: {
+    type: Disruptions.propertiesSchema,
   },
 });
 

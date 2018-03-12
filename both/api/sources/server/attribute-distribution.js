@@ -17,7 +17,9 @@ const attributeBlacklist = {
       address: true,
       phoneNumber: true,
       name: true,
+      lastUpdate: true,
     },
+    lastDisruptionProperties: true,
     geometry: true,
   },
 };

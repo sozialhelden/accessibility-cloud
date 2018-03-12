@@ -70,6 +70,10 @@ EquipmentInfos.schema = new SimpleSchema({
     optional: true,
     allowedValues: ['elevator', 'escalator', 'switch', 'sitemap', 'vending-machine', 'intercom', 'power-outlet'],
   },
+  'properties.subCategory': {
+    type: String,
+    optional: true,
+  },
   'properties.description': {
     type: String,
     optional: true,
@@ -82,7 +86,11 @@ EquipmentInfos.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  'properties.isRaised': {
+  'properties.isWorking': {
+    type: Boolean,
+    optional: true,
+  },
+  'properties.hasRaisedText': {
     type: Boolean,
     optional: true,
   },
@@ -114,11 +122,31 @@ EquipmentInfos.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
-  'properties.isWorking': {
+  'properties.hasDoorsInBothDirections': {
     type: Boolean,
     optional: true,
   },
-  'properties.statusDescription': {
+  'properties.heightOfControls': {
+    type: Number,
+    optional: true,
+  },
+  'properties.doorWidth': {
+    type: Number,
+    optional: true,
+  },
+  'properties.cabinWidth': {
+    type: Number,
+    optional: true,
+  },
+  'properties.cabinLength': {
+    type: Number,
+    optional: true,
+  },
+  'properties.lastDisruptionProperties': {
+    type: Disruptions.propertiesSchema,
+    optional: true,
+  },
+  'properties.lastUpdate': {
     type: String,
     optional: true,
   },

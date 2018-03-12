@@ -1,4 +1,5 @@
 import includes from 'lodash/includes';
+import omit from 'lodash/omit';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 
@@ -43,6 +44,8 @@ export default class UpsertDisruption extends Upsert {
     const result = super.postProcessBeforeUpserting(doc);
     const properties = result.properties;
     if (!properties) return result;
+
+    properties.lastUpdate = new Date().toISOString();
 
     const placeSourceId = properties.placeSourceId;
     if (placeSourceId) {
@@ -97,9 +100,19 @@ export default class UpsertDisruption extends Upsert {
     const equipmentInfoId = doc.properties.equipmentInfoId;
     if (!equipmentInfoId) { callback(null); return; }
     const selector = { _id: equipmentInfoId, 'properties.sourceId': { $in: organizationSourceIds } };
+    const omittedDisruptionProperties = [
+      'originalData',
+      'category',
+      'equipmentInfoId',
+      'placeInfoId',
+      'originalPlaceInfoId',
+      'originalEquipmentInfoId',
+    ];
     const modifier = { $set: {
       'properties.isWorking': doc.properties.isEquipmentWorking,
       'properties.disruptionSourceImportId': this.options.sourceImportId,
+      'properties.lastDisruptionProperties': omit(doc.properties, omittedDisruptionProperties),
+      'properties.lastUpdate': new Date().toISOString(),
     } };
 
     const result = EquipmentInfos.update(selector, modifier);

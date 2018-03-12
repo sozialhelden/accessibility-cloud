@@ -57,6 +57,8 @@ export default class UpsertEquipmentInfo extends Upsert {
     const properties = result.properties;
     if (!properties) return result;
 
+    properties.lastUpdate = new Date().toISOString();
+
     const placeSourceId = properties.placeSourceId;
 
     if (placeSourceId) {

@@ -12,7 +12,7 @@ export const pointGeometryFormat = {
 export const equipmentAccessibilityFormat = {
   height: '90 .. 120cm',
   languages: ['en', 'de'],
-  isRaised: true,
+  hasRaisedText: true,
   isBraille: true,
   hasSpeech: true,
   isHighContrast: true,
