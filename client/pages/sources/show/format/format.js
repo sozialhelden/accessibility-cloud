@@ -377,7 +377,9 @@ Template.sources_show_format_page.events({
         const path = key.replace(/-/g, '.');
 
         if (_.get(acFormat, path) === undefined) {
-          missingPaths.push(path);
+          if (!missingPaths.match(/^properties.customData/)) {
+            missingPaths.push(path);
+          }
         }
       });
 

@@ -28,6 +28,7 @@ PlaceInfos.publicFields = {
   'properties.address': 1,
   'properties.accessibility': 1,
   'properties.equipmentInfos': 1,
+  'properties.customData': 1,
 };
 
 PlaceInfos.privateFields = {
