@@ -298,6 +298,7 @@ export const acFormat = {
     description: '',                                  // optional
     address: '',
     phoneNumber: '',
+    emailAddress: '',
     category: 'hotel',                                // see [ac-categories]
 
     accessibility: {

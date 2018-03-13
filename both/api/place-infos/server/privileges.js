@@ -24,6 +24,7 @@ PlaceInfos.publicFields = {
   'properties.editPageUrl': 1,
   'properties.placeWebsiteUrl': 1,
   'properties.phoneNumber': 1,
+  'properties.emailAddress': 1,
   'properties.address': 1,
   'properties.accessibility': 1,
   'properties.equipmentInfos': 1,
