@@ -29,6 +29,13 @@ PlaceInfos.publicFields = {
   'properties.accessibility': 1,
   'properties.equipmentInfos': 1,
   'properties.customData': 1,
+
+  // Quick fix for source 'a7hEpRxZ9c5AxdtBx' to be removed after 1. April 2018
+  'properties.clubType': 1,
+  'properties.sports': 1,
+  'properties.logo': 1,
+  'properties.phone': 1,
+  'properties.email': 1,
 };
 
 PlaceInfos.privateFields = {
