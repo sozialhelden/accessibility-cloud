@@ -266,6 +266,7 @@ export const personalProfile = { // can be used to match a personal profile to o
   visualImpairment: true,
   blindness: true,
   wheelchair: true,
+  electricWheelchair: true,
 };
 
 export const acFormat = {
