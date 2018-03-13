@@ -90,55 +90,59 @@ EquipmentInfos.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
-  'properties.hasRaisedText': {
+  'properties.accessibility': {
+    type: Object,
+    optional: true,
+  },
+  'properties.accessibility.hasRaisedText': {
     type: Boolean,
     optional: true,
   },
-  'properties.isBraille': {
+  'properties.accessibility.isBraille': {
     type: Boolean,
     optional: true,
   },
-  'properties.hasSpeech': {
+  'properties.accessibility.hasSpeech': {
     type: Boolean,
     optional: true,
   },
-  'properties.isHighContrast': {
+  'properties.accessibility.isHighContrast': {
     type: Boolean,
     optional: true,
   },
-  'properties.hasLargePrint': {
+  'properties.accessibility.hasLargePrint': {
     type: Boolean,
     optional: true,
   },
-  'properties.isVoiceActivated': {
+  'properties.accessibility.isVoiceActivated': {
     type: Boolean,
     optional: true,
   },
-  'properties.hasHeadPhoneJack': {
+  'properties.accessibility.hasHeadPhoneJack': {
     type: Boolean,
     optional: true,
   },
-  'properties.isEasyToUnderstand': {
+  'properties.accessibility.isEasyToUnderstand': {
     type: Boolean,
     optional: true,
   },
-  'properties.hasDoorsInBothDirections': {
+  'properties.accessibility.hasDoorsInBothDirections': {
     type: Boolean,
     optional: true,
   },
-  'properties.heightOfControls': {
+  'properties.accessibility.heightOfControls': {
     type: Number,
     optional: true,
   },
-  'properties.doorWidth': {
+  'properties.accessibility.doorWidth': {
     type: Number,
     optional: true,
   },
-  'properties.cabinWidth': {
+  'properties.accessibility.cabinWidth': {
     type: Number,
     optional: true,
   },
-  'properties.cabinLength': {
+  'properties.accessibility.cabinLength': {
     type: Number,
     optional: true,
   },
@@ -149,6 +153,11 @@ EquipmentInfos.schema = new SimpleSchema({
   'properties.lastUpdate': {
     type: String,
     optional: true,
+  },
+  'properties.customData': {
+    type: Object,
+    optional: true,
+    blackbox: true,
   },
 });
 
