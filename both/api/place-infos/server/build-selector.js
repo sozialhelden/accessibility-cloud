@@ -7,6 +7,7 @@ import mapTileSelector from '../../shared/server/map-tile';
 import sourceFilterSelector from '../../shared/server/source-filter';
 import filterPresetSelector from '../../shared/server/filter-preset';
 import originalIdSelector from '../../shared/server/original-id';
+import existingAccessibilitySelector from '../../shared/server/existing-accessibility';
 
 
 PlaceInfos.apiParameterizedSelector = (visibleContentSelector, req) =>
@@ -14,6 +15,7 @@ PlaceInfos.apiParameterizedSelector = (visibleContentSelector, req) =>
     $and: [
       mapTileSelector(req),
       visibleContentSelector,
+      existingAccessibilitySelector(req),
       filterPresetSelector(req),
       sourceFilterSelector(req),
       originalIdSelector(req),

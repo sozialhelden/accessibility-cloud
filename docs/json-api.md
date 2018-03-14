@@ -19,6 +19,7 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
     - [Error handling](#error-handling)
   - [Endpoints](#endpoints)
     - [GET /place-infos](#get-place-infos)
+      - [Include places without known accessibility](#include-places-without-known-accessibility)
       - [Data source filtering](#data-source-filtering)
       - [Location-based search by center/radius](#location-based-search-by-centerradius)
       - [Location-based search by X/Y/Z tile coordinates](#location-based-search-by-xyz-tile-coordinates)
@@ -171,9 +172,17 @@ All error responses from the JSON API contain a JSON body with `reason` and a `d
 
 ### GET /place-infos
 
-Returns place infos (POIs) from arbitrary data sources. The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+Returns place infos (POIs) from arbitrary data sources.
+
+The response is a [GeoJSON FeatureCollection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
 For requests to this endpoint, the API supports the following parameters:
+
+#### Include places without known accessibility
+
+By default, the endpoint returns only places that have an accessibility structure set in `properties.accessibility`.
+
+If you want to include places without set accessibility, add a `includePlacesWithoutAccessibility=1` query parameter.
 
 #### Data source filtering
 
