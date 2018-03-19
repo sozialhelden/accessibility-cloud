@@ -31,7 +31,7 @@ export function buildSelectorAndOptions({ req, _id, collection, appId, userId })
 
   const visibleContentSelector = (selectors.length === 1) ? selectors[0] : { $or: selectors };
 
-  let selector = collection.apiParameterizedSelector(visibleContentSelector, req);
+  let selector = collection.apiParameterizedSelector(visibleContentSelector, req, _id);
 
   if (_id) {
     selector = {

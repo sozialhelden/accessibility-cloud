@@ -5,7 +5,9 @@ import { FilterPresets } from '/both/api/filter-presets/filter-presets';
 
 // Returns MongoDB query options for given request
 
-export default function filterPresetSelector(req) {
+export default function existingAccessibilitySelector(req, _id) {
+  if (_id) return {};
+  
   const fieldsQuery = _.pick(req.query, 'includePlacesWithoutAccessibility');
 
   const schema = new SimpleSchema({
