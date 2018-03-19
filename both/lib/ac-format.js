@@ -45,6 +45,8 @@ export const equipmentFormat = {
   properties: {
     placeInfoId: 'abc123',
     description: 'zu Gleis 2/3',
+    longDescription: 'zu Gleis 2 und 3',
+    shortDescription: '→ Gleis 2/3',
     controls: equipmentAccessibilityFormat,
   },
   geometry: pointGeometryFormat,
@@ -284,16 +286,7 @@ export const acFormat = {
     editPageUrl: 'https://...',     // website where you can edit or contribute to the place data
     placeWebsiteUrl: 'https://...', // website of the place itself
 
-    license: {
-      name: 'GPLv3',
-      licenseURL: 'https://accessibility.cloud/licenses/23asxas23k2d2',
-    },
-
     sourceId: 'BwEuneiKbLGJyEeDE',
-    sourceDetails: {
-      name: 'source name',
-      sourceURL: 'https://',
-    },
 
     name: 'Hotel Adlon',                              // short name
     description: '',                                  // optional
