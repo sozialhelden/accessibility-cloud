@@ -137,12 +137,24 @@ export function createStreamChain({
     const progressKey = `${streamChainElementKey}.progress`;
     const errorKey = `${streamChainElementKey}.error`;
     const skippedKey = `${streamChainElementKey}.isSkipped`;
+
+    let isAborted = false;
+    const abortFn = () => {
+      if (!isAborted) {
+        abortImport(sourceId);
+        isAborted = true;
+      }
+    };
+
     const onProgress = Meteor.bindEnvironment(progress => {
       if (progress.percentage === 100) {
         Object.assign(progress, { isFinished: true });
       }
       const modifier = { $set: { [progressKey]: progress } };
       SourceImports.update(sourceImportId, modifier);
+      if (progress.isAborted) {
+        Meteor.defer(() => abortFn());
+      }
     });
 
     // Setup parameters for stream object
@@ -179,13 +191,6 @@ export function createStreamChain({
 
     const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
 
-    let isAborted = false;
-    const abortFn = () => {
-      if (!isAborted) {
-        abortImport(sourceId);
-        isAborted = true;
-      }
-    };
 
     setupEventHandlersOnStream({
       errorKey,
@@ -228,6 +233,7 @@ export function createStreamChain({
   lastStreamObserver.stream.intoCallback(Meteor.bindEnvironment((error) => {
     if (error) {
       console.log('Stream chain ended with error', error);
+      abortImport(sourceId);
     } else {
       console.log('Import ended without error.');
       const lastImportType = Sources.findOne(sourceId).getType();
