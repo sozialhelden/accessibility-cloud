@@ -11,7 +11,7 @@ Template.sources_show_header.onCreated(() => {
   subsManager.subscribe('organizations.private');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
-  subsManager.subscribe('sourceImports.public');
+  // subsManager.subscribe('sourceImports.public');
 
   window.SourceImports = SourceImports; // FIXME: we don't need that only for debugging
 });

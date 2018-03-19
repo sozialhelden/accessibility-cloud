@@ -27,9 +27,9 @@ export function publishPublicFields(
   const fullPublicationName = `${publicationName}.public`;
   publishAndLog(
     fullPublicationName,
-    function publish() {
+    function publish(...args) {
       this.autorun(() => {
-        const givenSelector = selectorFunction(this.userId);
+        const givenSelector = selectorFunction(this.userId, ...args);
         if (!Match.test(givenSelector, Match.ObjectIncluding({}))) {
           console.log('Erroneous selector given in', publicationName, 'publication:', givenSelector);
           return [];
@@ -60,9 +60,9 @@ export function publishPrivateFields(
   const fullPublicationName = `${publicationName}.private`;
   publishAndLog(
     fullPublicationName,
-    function publish() {
+    function publish(...args) {
       this.autorun(() => {
-        const givenSelector = selectorFunction(this.userId);
+        const givenSelector = selectorFunction(this.userId, ...args);
         if (!Match.test(givenSelector, Match.ObjectIncluding({}))) {
           console.log('Erroneous selector given in', publicationName, 'publication:', givenSelector);
           return [];

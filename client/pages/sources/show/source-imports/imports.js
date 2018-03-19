@@ -8,10 +8,10 @@ import subsManager from '/client/lib/subs-manager';
 Template.sources_show_imports_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
-  subsManager.subscribe('sourceImports.public');
 
   const sourceId = FlowRouter.getParam('_id');
   if (sourceId) {
+    subsManager.subscribe('sourceImports.public', sourceId);
     subsManager.subscribe('sourceImports.private', sourceId);
   }
 

@@ -5,7 +5,7 @@ import subsManager from '/client/lib/subs-manager';
 
 Template.component_source.onRendered(function rendered() {
   if (this.data.source) {
-    subsManager.subscribe('sourceImports.public');
+    subsManager.subscribe('sourceImports.public', this.data.source._id);
   }
 });
 

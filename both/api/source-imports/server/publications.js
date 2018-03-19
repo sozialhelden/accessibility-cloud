@@ -7,14 +7,15 @@ import { publishPublicFields } from '/server/publish';
 import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/publications';
 
 
-publishPublicFields('sourceImports', SourceImports);
 
 const selectorFn = (userId, sourceId) => {
+  console.log('Building selector for publishing. userId = ', userId, 'sourceId = ', sourceId);
   check(userId, String);
   check(sourceId, String);
   return { sourceId };
 };
 
+publishPublicFields('sourceImports', SourceImports, selectorFn, { limit: 50, sort: { startTimestamp: -1 } });
 publishPrivateFieldsForMembers('sourceImports', SourceImports, selectorFn, { limit: 50, sort: { startTimestamp: -1 } });
 
 

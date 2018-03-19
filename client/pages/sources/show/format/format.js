@@ -23,9 +23,9 @@ Template.sources_show_format_page.onCreated(() => {
   subsManager.subscribe('sources.private');
   subsManager.subscribe('organizationMembers.public');
   subsManager.subscribe('organizationMembers.private');
-  subsManager.subscribe('sourceImports.public');
   const sourceId = FlowRouter.getParam('_id');
   if (sourceId) {
+    subsManager.subscribe('sourceImports.public', sourceId);
     subsManager.subscribe('sourceImports.private', sourceId);
     subsManager.subscribe('importFlows.forSource', sourceId);
   }

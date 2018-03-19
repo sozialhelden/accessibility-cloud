@@ -10,7 +10,7 @@ import subsManager from '/client/lib/subs-manager';
 import { showNotification, showErrorNotification } from '/client/lib/notifications';
 
 Template.sources_show_access_page.onCreated(() => {
-  subsManager.subscribe('sourceImports.public');
+  // subsManager.subscribe('sourceImports.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('sources.private');
   subsManager.subscribe('organizations.public');

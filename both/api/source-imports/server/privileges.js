@@ -18,6 +18,7 @@ SourceImports.publicFields = {
 };
 
 SourceImports.statsFields = {
+  sourceId: 1,
   startTimestamp: 1,
   isFinished: 1,
   insertedDocumentCount: 1,
