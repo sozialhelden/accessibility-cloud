@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { ImportFlows } from '../import-flows';
 import { Sources } from '../../sources/sources';
-import { startImportIfPossible } from '../../sources/server/stream-chain/control-import';
+import { startImportIfPossible, abortImport } from '../../sources/server/stream-chain/control-import';
 
 function jobName(importFlowId) {
   return `importFlow:${importFlowId}`;
@@ -134,6 +134,7 @@ ImportFlows.helpers({
       return;
     }
 
+    abortImport(sourceId);
 
     const options = { userId, sourceId, importFlowId: this._id };
 
