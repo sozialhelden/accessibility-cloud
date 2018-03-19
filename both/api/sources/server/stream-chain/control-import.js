@@ -69,6 +69,7 @@ function startImportStreaming(source, importFlow) {
     SourceImports.update(sourceImportId, {
       $set: { error: _.pick(error, 'reason', 'message', 'errorType') },
     });
+    abortImport(sourceId);
   }
 }
 
