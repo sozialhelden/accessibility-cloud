@@ -8,6 +8,19 @@ import helpers from './helpers';
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
+const LengthSchema = new SimpleSchema({
+  value: {
+    type: Number,
+  },
+  unit: {
+    type: String,
+    allowedValues: ['cm', 'centimeter', 'centimeters', 'm', 'meters', 'meter'],
+  },
+  rawValue: {
+    type: Match.OneOf(String, Number),
+    optional: true,
+  },
+});
 
 EquipmentInfos.schema = new SimpleSchema({
   geometry: {
@@ -98,7 +111,7 @@ EquipmentInfos.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.isBraille': {
+  'properties.accessibility.hasBrailleText': {
     type: Boolean,
     optional: true,
   },
@@ -135,15 +148,15 @@ EquipmentInfos.schema = new SimpleSchema({
     optional: true,
   },
   'properties.accessibility.doorWidth': {
-    type: Number,
+    type: LengthSchema,
     optional: true,
   },
   'properties.accessibility.cabinWidth': {
-    type: Number,
+    type: LengthSchema,
     optional: true,
   },
   'properties.accessibility.cabinLength': {
-    type: Number,
+    type: LengthSchema,
     optional: true,
   },
   'properties.lastDisruptionProperties': {
