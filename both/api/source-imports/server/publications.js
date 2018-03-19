@@ -9,7 +9,6 @@ import { publishPrivateFieldsForMembers } from '/both/api/organizations/server/p
 
 
 const selectorFn = (userId, sourceId) => {
-  console.log('Building selector for publishing. userId = ', userId, 'sourceId = ', sourceId);
   check(userId, String);
   check(sourceId, String);
   return { sourceId };
