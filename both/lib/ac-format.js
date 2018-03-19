@@ -10,16 +10,20 @@ export const pointGeometryFormat = {
 };
 
 export const equipmentAccessibilityFormat = {
-  height: '90 .. 120cm',
+  heightOfControls: '90 .. 120cm',
   languages: ['en', 'de'],
   hasRaisedText: true,
-  isBraille: true,
+  hasBrailleText: true,
   hasSpeech: true,
   isHighContrast: true,
   hasLargePrint: true,
   isVoiceActivated: true,
   hasHeadPhoneJack: true,
   isEasyToUnderstand: true,
+  hasDoorsInBothDirections: true,
+  doorWidth: '90cm',
+  cabinWidth: '100cm',
+  cabinLength: '130cm',
 };
 
 
@@ -29,10 +33,10 @@ export const disruptionFormat = {
     placeInfoIdType: 'Deutsche Bahn',
     equipmentId: 'abc123',
     isWorking: true,
-    isInMaintenance: true,
-    outOfServiceReason: 'Not usable due to construction work in the northern building half',
-    furtherDescription: 'This text explains what\'s going on in detail',
-    plannedCompletion: '2017-10-16T16:05:27.000+02:00',
+    outOfOrderReason: 'Maintenance',
+    stateExplanation: 'Not usable due to construction work in the northern building',
+    alternativeRouteInstructions: 'Use elevator 4 instead.',
+    plannedCompletionDate: '2017-10-16T16:05:27.000+02:00',
     outOfServiceOn: '2017-10-10T16:05:27.000+02:00',
     outOfServiceTo: '2017-10-11T16:00:27.000+02:00',
     lastUpdate: '2017-10-10T16:05:27.000+02:00',
@@ -47,7 +51,11 @@ export const equipmentFormat = {
     description: 'zu Gleis 2/3',
     longDescription: 'zu Gleis 2 und 3',
     shortDescription: '→ Gleis 2/3',
-    controls: equipmentAccessibilityFormat,
+    accessibility: equipmentAccessibilityFormat,
+    direction: 'up',
+    connectedAreas: [{ name: 'Untergeschoss', floor: -1 }, { name: 'Erdgeschoss', floor: 0 }, { name: '1. Obergeschoss', floor: 1 }],
+    manufacturerName: 'Schindler AG',
+    manufacturerSerialNumber: '12345-X-21',
   },
   geometry: pointGeometryFormat,
 };
@@ -173,7 +181,7 @@ export const entranceFormat = {
 export const mediaFormat = {
   type: 'documents', // documents|menu|audioGuide|presentations|exhibits|movie|screen,
   name: 'Speisekarte',
-  isBraille: true,
+  hasBrailleText: true,
   isAudio: true,
   isLargePrint: true,
   hasContrastingBackground: true,
@@ -294,6 +302,9 @@ export const acFormat = {
     phoneNumber: '',
     emailAddress: '',
     category: 'hotel',                                // see [ac-categories]
+
+    lines: [{ name: 'U6', type: 'U-Bahn', iconUrl: 'https://…/U6.svg' }, { name: 'M1', type: 'Metro-Tram', iconUrl: 'https://…/M1.svg' }],
+    meansOfTransport: [{ name: 'U6', type: 'U-Bahn', iconUrl: 'https://…/icons/U6.svg' }],
 
     accessibility: {
       accessibleWith: personalProfile,
