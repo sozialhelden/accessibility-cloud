@@ -16,8 +16,17 @@ const attributeBlacklist = {
       originalData: true,
       address: true,
       phoneNumber: true,
+      phone: true, // legacy
+      emailAddress: true,
+      email: true, // legacy
       name: true,
       lastUpdate: true,
+      description: true,
+      longDescription: true,
+      shortDescription: true,
+      outOfServiceReason: true,
+      furtherDescription: true,
+
     },
     lastDisruptionProperties: true,
     geometry: true,
