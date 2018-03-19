@@ -25,7 +25,8 @@ export default function convertToGeoJSONFeature(doc, coordinatesForDistance, loc
 
     if (result.properties.equipmentInfos) {
       Object.keys(result.properties.equipmentInfos).forEach((_id) => {
-        Object.assign(result.properties.equipmentInfos[_id], {
+        if (!result.properties.equipmentInfos[_id].properties) return;
+        Object.assign(result.properties.equipmentInfos[_id].properties, {
           localizedCategory: i18nHelpers.getLocalizedCategory.call(result.properties.equipmentInfos[_id], locale),
           accessibility: i18nHelpers.getLocalizedAccessibility.call(result.properties.equipmentInfos[_id], locale),
         });
