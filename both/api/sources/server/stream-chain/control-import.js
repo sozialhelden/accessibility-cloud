@@ -51,7 +51,6 @@ function startImportStreaming(source, importFlow) {
     sourceId,
     organizationId: source.organizationId,
     streamChain: importFlow.streams,
-    originalStreamChain: importFlow.streams,
     startTimestamp: Date.now(),
     insertedDocumentCount: 0,
     updatedDocumentCount: 0,

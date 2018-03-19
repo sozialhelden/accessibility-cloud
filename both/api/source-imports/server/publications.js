@@ -37,7 +37,7 @@ Meteor.publish('sourceImports.stats.public', function publish(sourceId) {
 
     return SourceImports.find(
       selector,
-      { fields: SourceImports.statsFields }
+      { fields: SourceImports.statsFields },
     );
   });
 });

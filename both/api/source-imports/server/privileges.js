@@ -29,7 +29,6 @@ SourceImports.statsFields = {
 
 SourceImports.privateFields = {
   startTimestamp: 1,
-  originalStreamChain: 1,
   insertedDocumentCount: 1,
   updatedDocumentCount: 1,
   documentCountAfterImport: 1,
