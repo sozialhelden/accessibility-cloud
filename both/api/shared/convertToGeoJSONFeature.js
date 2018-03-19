@@ -22,6 +22,15 @@ export default function convertToGeoJSONFeature(doc, coordinatesForDistance, loc
       localizedCategory: i18nHelpers.getLocalizedCategory.call(doc, locale),
       accessibility: i18nHelpers.getLocalizedAccessibility.call(doc, locale),
     });
+
+    if (result.properties.equipmentInfos) {
+      Object.keys(result.properties.equipmentInfos).forEach((_id) => {
+        Object.assign(result.properties.equipmentInfos[_id], {
+          localizedCategory: i18nHelpers.getLocalizedCategory.call(result.properties.equipmentInfos[_id], locale),
+          accessibility: i18nHelpers.getLocalizedAccessibility.call(result.properties.equipmentInfos[_id], locale),
+        });
+      });
+    }
   }
   result.properties.name = i18nHelpers.getLocalizedName.call(doc, locale);
 
