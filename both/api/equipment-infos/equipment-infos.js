@@ -1,10 +1,10 @@
-import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-// import LocationSchema from '../../lib/LocationSchema';
 import { Disruptions } from '../disruptions/disruptions';
 import { Sources } from '../sources/sources';
 import helpers from './helpers';
+import i18nHelpers from '../shared/i18nHelpers';
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
@@ -23,6 +23,10 @@ const LengthSchema = new SimpleSchema({
 });
 
 EquipmentInfos.schema = new SimpleSchema({
+  statusReportToken: {
+    type: String,
+    optional: true,
+  },
   geometry: {
     type: {},
     optional: true,
@@ -193,6 +197,7 @@ EquipmentInfos.relationships = {
 };
 
 EquipmentInfos.helpers(helpers);
+EquipmentInfos.helpers(i18nHelpers);
 
 if (Meteor.isClient) {
   window.EquipmentInfos = EquipmentInfos;

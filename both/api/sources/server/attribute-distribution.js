@@ -36,6 +36,7 @@ const attributeBlacklist = {
       alternativeRouteInstructions: true,
     },
     lastDisruptionProperties: true,
+    statusReportToken: true,
     geometry: true,
   },
 };

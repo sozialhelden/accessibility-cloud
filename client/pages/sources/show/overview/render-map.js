@@ -207,17 +207,18 @@ function showPlacesOnMap(instance, map, sourceId, unfilteredFeatureCollection) {
           return idsToShownMarkers[id];
         }
 
-        let isWorkingClassName = 'ac-is-working-undefined';
-        if (typeof feature.properties.isWorking === 'boolean') {
-          isWorkingClassName = `ac-is-working-${feature.properties.isWorking}`;
+        let color;
+        const isWorking = feature.properties.isWorking || feature.properties.isEquipmentWorking;
+
+        if (typeof isWorking !== 'undefined') {
+          color = isWorking ? 'green' : 'red';
         }
-        if (typeof feature.properties.isEquipmentWorking === 'boolean') {
-          isWorkingClassName = `ac-is-working-${feature.properties.isEquipmentWorking}`;
-        }
+
         const marker = createMarkerFromFeature({
+          color,
           feature,
           latlng,
-          className: `ac-${collectionNameSingularParameterized} ${isWorkingClassName}`,
+          className: `ac-${collectionNameSingularParameterized}`,
         });
 
         marker.on('click', () => {

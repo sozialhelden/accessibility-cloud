@@ -92,23 +92,27 @@ export default class Upsert {
         });
 
 
-        const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
+        try {
+          const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
 
-        // Using flatten here to deep-merge new properties into existing
-        streamClass.collection.upsert({
-          'properties.sourceId': sourceId,
-          'properties.originalId': originalId,
-        }, flatten(postProcessedDoc), (upsertError, result) => {
-          if (result && result.insertedId) {
-            insertedDocumentCount += 1;
-          } else if (result && result.numberAffected) {
-            updatedDocumentCount += 1;
-          }
-          streamObject.afterUpsert(
-            { doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName },
-            () => callback(upsertError, result),
-          );
-        });
+          // Using flatten here to deep-merge new properties into existing
+          streamClass.collection.upsert({
+            'properties.sourceId': sourceId,
+            'properties.originalId': originalId,
+          }, flatten(postProcessedDoc), (upsertError, result) => {
+            if (result && result.insertedId) {
+              insertedDocumentCount += 1;
+            } else if (result && result.numberAffected) {
+              updatedDocumentCount += 1;
+            }
+            streamObject.afterUpsert(
+              { doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName },
+              () => callback(upsertError, result),
+            );
+          });
+        } catch (caughtError) {
+          callback(caughtError);
+        }
       }),
       flush: Meteor.bindEnvironment((callback) => {
         console.log('Done with upserting!');

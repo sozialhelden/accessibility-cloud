@@ -10,6 +10,7 @@ import { SourceImports } from '/both/api/source-imports/source-imports';
 import { Sources } from '/both/api/sources/sources';
 import { Categories } from '/both/api/categories/categories';
 import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
+import { EquipmentStatusReports } from '/both/api/equipment-status-reports/equipment-status-reports';
 import { Disruptions } from '/both/api/disruptions/disruptions';
 import { GlobalStats } from '/both/api/global-stats/global-stats';
 
@@ -25,6 +26,7 @@ const collections = [
   Sources,
   Categories,
   EquipmentInfos,
+  EquipmentStatusReports,
   Disruptions,
   GlobalStats,
 ];

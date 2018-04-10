@@ -31,7 +31,11 @@ const helpers = {
 
     if (properties.originalPlaceInfoId) {
       const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': properties.originalPlaceInfoId };
-      const equipmentInfo = EquipmentInfos.findOne({ 'properties.originalId': properties.originalId }, { transform: null, fields: { 'properties.originalData': false } });
+      const equipmentInfo = EquipmentInfos.findOne(
+        { 'properties.originalId': properties.originalId },
+        { transform: null, fields: { statusReportToken: false, 'properties.originalData': false } },
+      );
+
       if (equipmentInfo) {
         console.log('Caching', this, equipmentInfo, placeInfoSelector);
         // Cache equipment information in PlaceInfo document

@@ -26,7 +26,7 @@ export function cacheEquipmentInPlaceInfo({
     // Re-fetch equipment info from DB without disallowed attributes
     const completeEquipmentInfo = EquipmentInfos.findOne(
       { 'properties.originalId': originalId },
-      { transform: null, fields: { 'properties.originalData': false } },
+      { transform: null, fields: { statusReportToken: false, 'properties.originalData': false } },
     );
     if (completeEquipmentInfo) {
       const equipmentInfo = pick(completeEquipmentInfo, ['_id'].concat(Object.keys(EquipmentInfos.publicFields)));
