@@ -12,17 +12,26 @@ export default function updateEquipmentWithStatusReport(report) {
   console.log('inactive since', report.timeSinceLastActivityInSeconds, 'max allowed', MaximalAllowedInactivityInSeconds);
   const lastUpdate = new Date().toISOString();
   const modifier = {};
-  if (report.isWorking) {
-    set(modifier, ['$set', 'properties.isWorking'], true);
+
+  if (typeof report.isWorking === 'boolean') {
+    // `true` means the sensor sensed that the elevator had a ride. `false` can be sent in case of
+    // a power outage (in this case they might be unplugged for maintenance).
+    // This is saved in the DB as it is explicit knowledge.
+
     set(modifier, ['$set', 'properties.lastUpdate'], lastUpdate);
-  } else if (typeof report.timeSinceLastActivityInSeconds === 'number' && report.timeSinceLastActivityInSeconds < MaximalAllowedInactivityInSeconds) {
-    set(modifier, ['$set', 'properties.isWorking'], true);
-  } else if (typeof report.isWorking === 'undefined') {
-    set(modifier, ['$unset', 'properties.isWorking'], true);
-  } else {
-    set(modifier, ['$set', 'properties.isWorking'], false);
-    set(modifier, ['$set', 'properties.lastUpdate'], lastUpdate);
+    set(modifier, ['$set', 'properties.isWorking'], report.isWorking);
+  } else if (typeof report.timeSinceLastActivityInSeconds === 'number') {
+    // The sensor has not been rebooted and still knows the last ride time...
+    if (report.timeSinceLastActivityInSeconds < MaximalAllowedInactivityInSeconds) {
+      // ...which was not long ago! -> Set elevator to working.
+      set(modifier, ['$set', 'properties.isWorking'], true);
+    } else if (typeof report.isWorking === 'undefined') {
+      // ...the last ride was too long ago and the sensor does not know if the elevator works.
+      // -> Unset isWorking flag.
+      set(modifier, ['$unset', 'properties.isWorking'], true);
+    }
   }
+
   const id = report.equipmentInfoId;
   console.log('Updating equipment', id, modifier);
   if (!isEmpty(modifier)) {
