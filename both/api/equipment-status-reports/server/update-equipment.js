@@ -52,7 +52,7 @@ export default function updateEquipmentWithStatusReport(report) {
     };
   }
   PlaceInfos.update(placeInfoId, cacheUpdateModifier);
-  // purgeOnFastly([placeInfoId, equipmentInfo._id]);
+  purgeOnFastly([placeInfoId, equipmentInfo._id]);
 }
 
 EquipmentStatusReports.afterInsertViaAPI = (doc) => {
