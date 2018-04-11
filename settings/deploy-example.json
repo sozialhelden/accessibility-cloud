@@ -27,6 +27,10 @@
       "username": "",
       "password": ""
     },
+    "fastly": {
+      "serviceId": "",
+      "fastlyKey": ""
+    },
     "scripts": {
       "timeoutMs": 10000
     }
