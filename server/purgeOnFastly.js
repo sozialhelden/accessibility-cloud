@@ -30,7 +30,11 @@ export default function purgeOnFastly(surrogateKeys: string[]): ?HTTP.HTTPRespon
   };
 
   const result = HTTP.post(url, options);
-  console.log('Sent purge request for', surrogateKeys, 'to Fastly, result:', result);
+  if (result.statusCode === 200) {
+    console.log('Purged', surrogateKeys, 'on Fastly.');
+  } else {
+    console.log('Error while processing purge request for', surrogateKeys, 'on Fastly, result:', result);
+  }
 
   return result;
 }
