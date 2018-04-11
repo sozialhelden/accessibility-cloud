@@ -55,7 +55,7 @@ function startImportStreaming(source, importFlow) {
     insertedDocumentCount: 0,
     updatedDocumentCount: 0,
   });
-  console.log('Creating stream chain for source import', sourceImportId, '…');
+  // console.log('Creating stream chain for source import', sourceImportId, '…');
 
   try {
     const streamChain = createStreamChain({

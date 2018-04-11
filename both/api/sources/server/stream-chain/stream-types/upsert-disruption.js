@@ -60,7 +60,7 @@ export default class UpsertDisruption extends Upsert {
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
         if (placeInfo) {
-          console.log('Copying geometry and placeInfoId into disruption from place', placeInfo, 'matching', selector);
+          // console.log('Copying geometry and placeInfoId into disruption from place', placeInfo, 'matching', selector);
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
         } else {
@@ -82,7 +82,7 @@ export default class UpsertDisruption extends Upsert {
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const equipmentInfo = EquipmentInfos.findOne(selector, options);
         if (equipmentInfo) {
-          console.log('Copying geometry and equipmentInfoId into disruption from equipmentInfo', equipmentInfo, 'matching', selector);
+          // console.log('Copying geometry and equipmentInfoId into disruption from equipmentInfo', equipmentInfo, 'matching', selector);
           result.properties.equipmentInfoId = equipmentInfo._id;
           result.geometry = result.geometry || equipmentInfo.geometry;
         } else {

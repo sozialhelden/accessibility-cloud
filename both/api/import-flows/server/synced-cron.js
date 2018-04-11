@@ -17,7 +17,7 @@ function restartAutomaticImports() {
   console.log('Found', cursor.count(), 'automatic import flows.');
 
   cursor.forEach((flow) => {
-    console.log('Restarting automatic imports for', flow);
+    console.log('Restarting automatic imports for import flow', flow._id, 'for source', flow.sourceId);
     flow.scheduleAutomaticImport(flow.lastImportStartedByUserId, flow.schedule);
   });
 }

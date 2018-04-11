@@ -26,7 +26,6 @@ export function POST({ req, res, collection, appId, userId }) {
 
   if (_id) {
     if (typeof collection.afterInsertViaAPI === 'function') {
-      console.log('Calling insertion callback');
       collection.afterInsertViaAPI(Object.assign({}, doc, { _id }));
     }
     res.statusCode = 204;

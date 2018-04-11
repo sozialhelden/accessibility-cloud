@@ -6,7 +6,7 @@ import { Organizations } from '/both/api/organizations/organizations';
 // is not valid / not found.
 
 export function getAppFromToken(tokenString) {
-  console.log(`Trying to find app for token '${tokenString}'…`);
+  // console.log(`Trying to find app for token '${tokenString}'…`);
 
   const app = Apps.findOne({ tokenString });
   if (!app) {

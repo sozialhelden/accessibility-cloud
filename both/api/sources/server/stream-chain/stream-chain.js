@@ -128,7 +128,7 @@ export function createStreamChain({
     check(parameters, Match.ObjectIncluding({}));
     check(skip, Boolean);
 
-    console.log('Creating', type, 'stream...');
+    // console.log('Creating', type, 'stream...');
 
     const source = Sources.findOne(sourceId);
     const lastSuccessfulImport = source.getLastSuccessfulImport();

@@ -31,7 +31,7 @@ function expireOldTokens() {
 }
 
 export function getUserIdFromToken(hashedToken) {
-  console.log(`Trying to find userId for token '${hashedToken}'…`);
+  // console.log(`Trying to find userId for token '${hashedToken}'…`);
   const now = new Date();
   const tokenData = ApiTokens.findOne({ hashedToken, expireDate: { $gt: now } });
   return tokenData && tokenData.userId;
