@@ -7,4 +7,4 @@ EquipmentInfos.surrogateKeysForDocument = placeInfo =>
     get(placeInfo, ['properties', 'sourceImportId']),
   ].filter(Boolean);
 
-EquipmentInfos.maximalCacheTimeInSeconds = 300;
+EquipmentInfos.maximalCacheTimeInSeconds = 600;
