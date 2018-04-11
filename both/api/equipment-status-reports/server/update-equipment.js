@@ -9,7 +9,6 @@ const MaximalAllowedInactivityInSeconds = 60 * 60;
 
 
 export default function updateEquipmentWithStatusReport(report) {
-  console.log('inactive since', report.timeSinceLastActivityInSeconds, 'max allowed', MaximalAllowedInactivityInSeconds);
   const lastUpdate = new Date().toISOString();
   const modifier = {};
 
@@ -20,7 +19,7 @@ export default function updateEquipmentWithStatusReport(report) {
 
     set(modifier, ['$set', 'properties.lastUpdate'], lastUpdate);
     set(modifier, ['$set', 'properties.isWorking'], report.isWorking);
-  } else if (typeof report.timeSinceLastActivityInSeconds === 'number') {
+  } else if (typeof report.timeSinceLastActivityInSeconds === 'number' && report.timeSinceLastActivityInSeconds >= 0) {
     // The sensor has not been rebooted and still knows the last ride time...
     if (report.timeSinceLastActivityInSeconds < MaximalAllowedInactivityInSeconds) {
       // ...which was not long ago! -> Set elevator to working.
@@ -42,11 +41,17 @@ export default function updateEquipmentWithStatusReport(report) {
   if (!equipmentInfo.properties) return;
   if (!equipmentInfo.properties.placeInfoId) return;
   const placeInfoId = equipmentInfo.properties.placeInfoId;
-  PlaceInfos.update(placeInfoId, {
+  const cacheUpdateModifier = {
     $set: {
       [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
     },
-  });
+  };
+  if (typeof equipmentInfo.properties.isWorking === 'undefined') {
+    cacheUpdateModifier.$unset = {
+      [`properties.equipmentInfos.${equipmentInfo._id}.properties.isWorking`]: true,
+    };
+  }
+  PlaceInfos.update(placeInfoId, cacheUpdateModifier);
   // purgeOnFastly([placeInfoId, equipmentInfo._id]);
 }
 
