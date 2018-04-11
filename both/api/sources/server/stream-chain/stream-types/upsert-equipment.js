@@ -19,7 +19,7 @@ export function cacheEquipmentInPlaceInfo({
     throw new Meteor.Error(401, message);
   }
 
-  console.log('Caching equipment info in place info...');
+  // console.log('Caching equipment info in place info...');
 
   if (originalPlaceInfoId) {
     const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': originalPlaceInfoId };
@@ -35,7 +35,7 @@ export function cacheEquipmentInPlaceInfo({
           [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
         },
       };
-      console.log('Caching', equipmentInfo, placeInfoSelector, placeInfoModifier);
+      // console.log('Caching equipment', equipmentInfo._id, 'for place info', originalPlaceInfoId);
       // Cache equipment information in PlaceInfo document
       PlaceInfos.update(placeInfoSelector, placeInfoModifier);
     }
