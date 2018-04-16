@@ -12,6 +12,7 @@ async function getFeatureBatch({ url, sourceId, skip, limit, sendProgress }) {
       skip,
       limit,
       includeSourceIds: sourceId,
+      includePlacesWithoutAccessibility: 1,
     },
     headers: {
       Accept: 'application/json',
