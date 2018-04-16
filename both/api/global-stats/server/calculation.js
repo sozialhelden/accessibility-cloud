@@ -12,6 +12,7 @@ import { Organizations } from '/both/api/organizations/organizations';
 
 
 const MinimalTimeBetweenStatsCalculations = get(Meteor.settings, 'stats.minimalTimeBetweenStatsCalculations') || 60000;
+const MaximalTimeBetweenStatsCalculations = get(Meteor.settings, 'stats.maximalTimeBetweenStatsCalculations') || 600000;
 
 export function saveCount({ collection, countName, selector = {} }) {
   check(collection, Mongo.Collection);
@@ -108,4 +109,4 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
       selector: { isDraft: false },
     },
   ].forEach(saveCount);
-}), MinimalTimeBetweenStatsCalculations);
+}), MinimalTimeBetweenStatsCalculations, { maxWait: MaximalTimeBetweenStatsCalculations });
