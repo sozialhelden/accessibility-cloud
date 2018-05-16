@@ -1,10 +1,12 @@
 import { Template } from 'meteor/templating';
-import { helpers } from '/both/api/place-infos/place-infos';
+import i18nHelpers from '/both/api/shared/i18nHelpers';
+
 
 Template.page_start_place_info.helpers({
   placeName() {
-    const placeInfo = Object.assign({}, this, helpers);
     const locale = window.navigator.language;
-    return placeInfo.getLocalizedName(locale) || placeInfo.getLocalizedCategory(locale) || '';
+    return i18nHelpers.getLocalizedName.call(this, locale) ||
+    i18nHelpers.getLocalizedCategory.call(this, locale) ||
+      '';
   },
 });
