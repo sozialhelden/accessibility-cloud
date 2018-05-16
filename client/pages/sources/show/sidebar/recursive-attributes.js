@@ -4,9 +4,15 @@ import { _ } from 'lodash';
 
 const histogramAttributesMatchers = [
   /^rating/i,
+  /^numberOf/i,
   /height$/i,
   /width$/i,
-  /count$/i
+  /length$/i,
+  /count$/i,
+  /angle$/i,
+  /^distanceTo/i,
+  /value$/i,
+  /unit$/i,
 ];
 
 Template.sources_show_page_recursive_attributes.helpers({
@@ -20,6 +26,7 @@ Template.sources_show_page_recursive_attributes.helpers({
     return _.isArray(this.properties);
   },
   needsHistogram() {
+    if (this.properties && this.properties.value) return false;
     const lastPathSegment = this.attributeName.match(/[^\.]+$/)[0];
     return histogramAttributesMatchers.find(m => lastPathSegment.match(m));
   },
