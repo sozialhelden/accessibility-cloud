@@ -1,5 +1,5 @@
 /* globals L */
-import 'mapbox.js';
+// import 'mapbox.js';
 import { _ } from 'lodash';
 
 // Extend Leaflet-icon to support colors and category-images

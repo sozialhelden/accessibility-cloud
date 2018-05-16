@@ -1,5 +1,5 @@
 /* globals L */
-import 'mapbox.js';
+// import 'mapbox.js';
 import { Meteor } from 'meteor/meteor';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
