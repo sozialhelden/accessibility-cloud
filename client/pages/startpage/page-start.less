@@ -8,10 +8,6 @@
   position:relative;
   height:420px;
 
-  .leaflet-container .leaflet-control-attribution {
-    opacity: 0.5;
-  }
-
   .cover-map {
     position: absolute;
     width:100%;
@@ -41,6 +37,7 @@
       background-color: rgba(255, 255, 255, 0.95);
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
       h4 {
+        margin-top: 0.75em;
         float: left;
         word-wrap: break-word;
       }
@@ -71,15 +68,20 @@
 
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     flex-wrap: wrap;
+    align-items: center;
 
     h1 {
       position: relative;
-      display: inline-block;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      justify-content: space-evenly;
+
       max-width: 100%;
-      margin-top: 0.55em;
+      margin-top: 1em;
       margin-bottom: 0;
-      margin-left: 0.4em;
       .type-light;
       .font-l3;
       text-shadow: 0 0 1px white;
@@ -98,13 +100,6 @@
 
       span {
         display: inline-block;
-      }
-
-      .text-part {
-        float: left;
-        width: calc(~"100% - 2em");
-        left: 1.2em;
-        top: 0;
       }
 
       .claim {

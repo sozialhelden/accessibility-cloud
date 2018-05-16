@@ -1,10 +1,12 @@
 /* globals L */
+import 'mapbox.js';
 import { Meteor } from 'meteor/meteor';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import subsManager from '/client/lib/subs-manager';
 import { GlobalStats } from '/both/api/global-stats/global-stats';
 import createMarkerFromFeature from '/client/lib/create-marker-from-feature';
+
 
 const PLACE_SWITCH_ANIMATION_DELAY_MS = 5000;
 
@@ -62,19 +64,14 @@ Template.page_start.onCreated(() => {
 });
 
 Template.page_start.onRendered(function pageRendered() {
-  const map = L.map('mapid', { zoomControl: false });
+  const accessToken = Meteor.settings.public.mapbox;
+  const map = L.mapbox.map('mapid', 'mapbox.streets', { accessToken, zoomControl: false });
   map.scrollWheelZoom.disable();
   map.fitBounds(
-      [[45, -120], [-10, 120]]
+      [[45, -120],
+      [-10, 120]],
   );
-  const accessToken = Meteor.settings.public.mapbox;
-  L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${accessToken}`, {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'accesssibility-cloud',
-    accessToken,
-  }).addTo(map);
-
+  this.find('.mapbox-logo').classList.add('mapbox-logo-true');
   const setTimeout = (firstTime) => {
     // ensure the timeout is not set again after template destruction
     if (firstTime || this.timeout) {

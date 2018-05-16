@@ -34,6 +34,8 @@
     "leaflet": "^1.0.3",
     "leaflet.markercluster": "^1.0.4",
     "lodash": "^4.17.4",
+    "mapbox-gl": "^0.45.0",
+    "mapbox.js": "^3.1.1",
     "meteor-node-stubs": "^0.2.5",
     "mime-types": "^2.1.12",
     "mongo-dot-notation": "^1.2.0",
