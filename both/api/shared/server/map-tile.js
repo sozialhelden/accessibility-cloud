@@ -49,7 +49,7 @@ export default function mapTileSelector(req) {
     z: {
       type: Number,
       min: 5,
-      max: 19,
+      max: 20,
       decimal: false,
     },
   });
