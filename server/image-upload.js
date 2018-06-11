@@ -24,7 +24,8 @@ function respondWithError(res, code, reason) {
 // use non nsa sha3 family
 const shaHasher = new JSSHA('SHA3-256', 'TEXT');
 
-const allowedMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+// TODO check actual mime type
+const allowedMimeTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
 
 function handleUploadRequest(req, res) {
   try {

@@ -13,6 +13,7 @@ import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
 import { EquipmentStatusReports } from '/both/api/equipment-status-reports/equipment-status-reports';
 import { Disruptions } from '/both/api/disruptions/disruptions';
 import { GlobalStats } from '/both/api/global-stats/global-stats';
+import { Images } from '/both/api/images/images';
 
 // Limits collections accessible over JSON API to a white list.
 
@@ -29,6 +30,7 @@ const collections = [
   EquipmentStatusReports,
   Disruptions,
   GlobalStats,
+  Images,
 ];
 
 const namesToCollections = _.indexBy(
