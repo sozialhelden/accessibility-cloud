@@ -45,6 +45,7 @@
     "simple-rate-limiter": "^0.2.3",
     "stream-length": "^1.0.2",
     "stream-throttle": "^0.1.3",
+    "svg-captcha": "^1.3.11",
     "vstream": "^0.1.0",
     "xpath-stream": "0.0.9",
     "zstreams": "^3.2.5"

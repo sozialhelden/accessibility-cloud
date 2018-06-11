@@ -8,6 +8,7 @@ import JSSHA from 'jssha';
 
 import { Images } from '../both/api/images/images';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
+import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 
 const path = '/image-upload';
 
@@ -45,7 +46,7 @@ function handleUploadRequest(req, res) {
       return;
     }
 
-    const appToken = req.headers['x-app-token'];
+    const appToken = req.headers['x-app-token'] || req.headers['x-user-token'] || query.appToken || query.userToken;
 
     const placeId = query.placeId;
     if (!placeId) {
@@ -59,7 +60,23 @@ function handleUploadRequest(req, res) {
       return;
     }
 
-    console.log(`Uploading image for place ${placeId}…`);
+    const solution = query.captcha;
+    const outdatedDuration = new Date(new Date().getTime() - (CaptchaLifetime));
+    const captchaQuery = {
+      objectId: placeId,
+      hashedIp,
+      appToken,
+      solution,
+      timestamp: { $gte: outdatedDuration },
+    };
+    const captchas = Captchas.find(captchaQuery, { limit: 1 }).fetch();
+    if (captchas.length < 1) {
+      respondWithError(res, 404, 'No captcha found.');
+      return;
+    }
+
+    const usedCaptcha = captchas[0]._id;
+    console.log(`Uploading image for place ${placeId} using captcha ${usedCaptcha}`);
     const suffix = mime.extension(mimeType);
     const attributes = {
       hashedIp,
@@ -69,9 +86,12 @@ function handleUploadRequest(req, res) {
       remotePath: `place-images/${placeId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
       timestamp: new Date(),
     };
+
     console.log('Inserting image upload', attributes);
     const _id = Images.insert(attributes);
     const image = Images.findOne(_id);
+
+    Captchas.remove(usedCaptcha);
 
     image.saveUploadFromStream(req, (error) => {
       if (!error) {
