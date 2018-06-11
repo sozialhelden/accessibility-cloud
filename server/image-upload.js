@@ -9,6 +9,7 @@ import JSSHA from 'jssha';
 import { Images } from '../both/api/images/images';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
 import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
+import { shouldThrottleByIp } from './throttle-api';
 
 const path = '/image-upload';
 
@@ -54,6 +55,12 @@ function handleUploadRequest(req, res) {
       return;
     }
 
+    const throttled = shouldThrottleByIp(Images, hashedIp);
+    if (throttled) {
+      respondWithError(res, 429, 'Too many requests');
+      return;
+    }
+
     const place = PlaceInfos.findOne(placeId);
     if (!place) {
       respondWithError(res, 404, `Place with id ${placeId} not found.`);
@@ -69,7 +76,7 @@ function handleUploadRequest(req, res) {
       solution,
       timestamp: { $gte: outdatedDuration },
     };
-    const captchas = Captchas.find(captchaQuery, { limit: 1 }).fetch();
+    const captchas = Captchas.find(captchaQuery, { limit: 1, fields: {} }).fetch();
     if (captchas.length < 1) {
       respondWithError(res, 404, 'No captcha found.');
       return;

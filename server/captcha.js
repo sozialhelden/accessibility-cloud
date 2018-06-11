@@ -6,6 +6,7 @@ import JSSHA from 'jssha';
 
 import { Captchas } from '../both/api/captchas/captchas';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
+import { shouldThrottleByIp } from './throttle-api';
 
 const path = '/captcha.svg';
 
@@ -48,6 +49,13 @@ function handleCaptchaRequest(req, res) {
       return;
     }
 
+    const hashedIp = shaHasher.getHash('HEX', req.connection.remoteAddress);
+    const throttled = shouldThrottleByIp(Captchas, hashedIp);
+    if (throttled) {
+      respondWithError(res, 429, 'Too many requests');
+      return;
+    }
+
     const appToken = req.headers['x-app-token'] || req.headers['x-user-token'] || query.appToken || query.userToken;
 
     const captcha = SvgCaptcha.create({
@@ -56,7 +64,6 @@ function handleCaptchaRequest(req, res) {
       color: true,
     });
 
-    const hashedIp = shaHasher.getHash('HEX', req.connection.remoteAddress);
 
     console.log('Requested captcha', captcha.text);
     const attributes = {

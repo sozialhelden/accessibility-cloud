@@ -4,4 +4,5 @@ import { Images } from '../images';
 Meteor.startup(() => {
   Images._ensureIndex({ placeId: 1 });
   Images._ensureIndex({ hashedIp: 1 });
+  Images._ensureIndex({ hashedIp: 1, timestamp: 1 });
 });
