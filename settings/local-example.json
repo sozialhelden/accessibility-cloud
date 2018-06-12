@@ -3,7 +3,8 @@
       "aws": {
         "region": "eu-central-1",
         "s3": {
-          "bucket": "accessibility-cloud-uploads"
+          "bucket": "accessibility-cloud-uploads",
+          "bucketEndpoint": null
         }
       },
       "mapbox": ""
@@ -23,5 +24,8 @@
     },
     "scripts": {
       "timeoutMs": 10000
+    },
+    "dataStorage": {
+      "ipSalt": "…"
     }
 }

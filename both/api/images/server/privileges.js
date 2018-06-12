@@ -9,7 +9,8 @@ Images.deny({
   remove() { return true; },
 });
 
-// TODO image apis are open to everyone - probably should be limited?
+// image apis are open to everyone as currently all images are public in any way
+// we will revisit this once our use case changes
 Images.visibleSelectorForUserId = (userId) => {
   if (!userId) {
     return null;

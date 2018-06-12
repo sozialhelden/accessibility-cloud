@@ -7,10 +7,32 @@ import { PlaceInfos } from '../place-infos/place-infos';
 export const Images = new Mongo.Collection('Images');
 
 Images.schema = new SimpleSchema({
-  placeId: {
+  objectId: {
     type: String,
   },
   hashedIp: {
+    type: String,
+  },
+  context: {
+    type: String,
+    allowedValues: [
+      'place',
+    ],
+  },
+  moderationRequired: {
+    type: Boolean,
+  },
+  reports: {
+    type: Array,
+    optional: true,
+  },
+  'reports.$': {
+    type: Object,
+  },
+  'reports.$.hashedIp': {
+    type: String,
+  },
+  'reports.$.reason': {
     type: String,
   },
   appToken: {
@@ -33,7 +55,6 @@ Images.schema = new SimpleSchema({
   },
   isUploadedToS3: {
     type: Boolean,
-    optional: true,
   },
 });
 

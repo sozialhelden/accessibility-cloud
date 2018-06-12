@@ -9,9 +9,6 @@ export const Captchas = new Mongo.Collection('Captchas');
 export const CaptchaLifetime = 60 * 5 * 1000;
 
 Captchas.schema = new SimpleSchema({
-  objectId: {
-    type: String,
-  },
   hashedIp: {
     type: String,
   },

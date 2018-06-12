@@ -2,9 +2,7 @@ import aws from 'aws-sdk';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-
 import { Images } from '../images';
-
 
 Images.helpers({
   saveUploadFromStream(stream, callback) {
@@ -20,13 +18,14 @@ Images.helpers({
       timeout: 1000 * 30,
     };
 
-    aws.config.sslEnabled = false;
-    aws.config.s3BucketEndpoint = true;
-    aws.config.s3 = {
-      endpoint: 'http://localhost:9090/accessibility-cloud-uploads',
-    };
-
-    // console.log('Using aws config:', aws.config);
+    if (Meteor.settings.public.aws.s3.bucketEndpoint) {
+      console.log('Overwriting bucket endpoint ', Meteor.settings.public.aws.s3.bucketEndpoint);
+      aws.config.sslEnabled = false;
+      aws.config.s3BucketEndpoint = true;
+      aws.config.s3 = {
+        endpoint: Meteor.settings.public.aws.s3.bucketEndpoint,
+      };
+    }
 
     const s3Params = {
       Bucket: Meteor.settings.public.aws.s3.bucket,
@@ -34,6 +33,7 @@ Images.helpers({
       Body: stream,
       ContentType: this.mimeType,
       ACL: 'public-read',
+      CacheControl: 'max-age=31104000',
     };
 
     const awsS3 = new aws.S3();

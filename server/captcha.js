@@ -2,11 +2,10 @@ import Fiber from 'fibers';
 import url from 'url';
 import { WebApp } from 'meteor/webapp';
 import SvgCaptcha from 'svg-captcha';
-import JSSHA from 'jssha';
 
 import { Captchas } from '../both/api/captchas/captchas';
-import { PlaceInfos } from '../both/api/place-infos/place-infos';
 import { shouldThrottleByIp } from './throttle-api';
+import { hashIp } from './hash-ip';
 
 const path = '/captcha.svg';
 
@@ -25,9 +24,6 @@ function respondWithError(res, code, reason) {
   respond(res, JSON.stringify({ error: { reason } }));
 }
 
-// use non nsa sha3 family
-const shaHasher = new JSSHA('SHA3-256', 'TEXT');
-
 function handleCaptchaRequest(req, res) {
   try {
     const query = url.parse(req.url, true).query;
@@ -37,19 +33,7 @@ function handleCaptchaRequest(req, res) {
       return;
     }
 
-    const placeId = query.placeId;
-    if (!placeId) {
-      respondWithError(res, 422, 'Please supply a `placeId` query string parameter.');
-      return;
-    }
-
-    const place = PlaceInfos.findOne(placeId);
-    if (!place) {
-      respondWithError(res, 404, `Place with id ${placeId} not found.`);
-      return;
-    }
-
-    const hashedIp = shaHasher.getHash('HEX', req.connection.remoteAddress);
+    const hashedIp = hashIp('HEX', req.connection.remoteAddress);
     const throttled = shouldThrottleByIp(Captchas, hashedIp);
     if (throttled) {
       respondWithError(res, 429, 'Too many requests');
@@ -64,11 +48,9 @@ function handleCaptchaRequest(req, res) {
       color: true,
     });
 
-
     console.log('Requested captcha', captcha.text);
     const attributes = {
       hashedIp,
-      objectId: placeId,
       solution: captcha.text,
       appToken,
       timestamp: new Date(),

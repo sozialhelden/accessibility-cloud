@@ -1,14 +1,16 @@
-import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // Returns MongoDB query options for given request
 
-export default function placeIdFilterSelector(req) {
-  const fieldsQuery = _.pick(req.query, 'placeId');
+export default function objectIdFilterSelector(req) {
+  const fieldsQuery = _.pick(req.query, 'objectId', 'context');
 
   const schema = new SimpleSchema({
-    placeId: {
+    context: {
+      type: String,
+    },
+    objectId: {
       type: String,
     },
   });
@@ -19,5 +21,9 @@ export default function placeIdFilterSelector(req) {
   // Throw ValidationError if something is wrong
   schema.validate(fieldsQuery);
 
-  return { placeId: fieldsQuery.placeId };
+  return {
+    context: fieldsQuery.context,
+    objectId: fieldsQuery.objectId,
+    isUploadedToS3: true,
+    moderationRequired: false };
 }
