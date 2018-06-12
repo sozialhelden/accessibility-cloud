@@ -4,6 +4,7 @@ import mime from 'mime-types';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { WebApp } from 'meteor/webapp';
+import FileType from 'stream-file-type';
 
 import { Images } from '../both/api/images/images';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
@@ -22,11 +23,12 @@ function respondWithError(res, code, reason) {
 }
 
 // TODO check actual mime type
-const allowedMimeTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
+const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
 
 function createImageUploadHandler({ path, queryParam, context, collection }) {
   function handleUploadRequest(req, res) {
     try {
+      const mimeTypeDetector = new FileType();
       const query = url.parse(req.url, true).query;
 
       const hashedIp = hashIp('HEX', req.connection.remoteAddress);
@@ -78,7 +80,7 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
       }
 
       const usedCaptcha = captchas[0]._id;
-      console.log(`Uploading image for place ${objectId} using captcha ${usedCaptcha}`);
+      console.log(`Uploading image for place ${objectId} using captcha ${usedCaptcha}`, req.headers);
       const suffix = mime.extension(mimeType);
       const attributes = {
         hashedIp,
@@ -95,6 +97,25 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
       console.log('Inserting image upload', attributes);
       const _id = Images.insert(attributes);
       const image = Images.findOne(_id);
+
+      req.pipe(mimeTypeDetector);
+
+      mimeTypeDetector.on('file-type', (fileType) => {
+        const unsupportedFileType =
+            fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
+        if (unsupportedFileType) {
+          respondWithError(res, 415, `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`);
+          req.emit('close');
+          req.destroy();
+        }
+        const mismatchedFileType =
+            mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
+        if (mismatchedFileType) {
+          respondWithError(res, 415, `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`);
+          req.emit('close');
+          req.destroy();
+        }
+      });
 
       image.saveUploadFromStream(req, (error) => {
         if (!error) {

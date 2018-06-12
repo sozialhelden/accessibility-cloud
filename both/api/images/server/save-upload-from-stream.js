@@ -1,4 +1,5 @@
 import aws from 'aws-sdk';
+import fs from 'fs';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
@@ -37,8 +38,8 @@ Images.helpers({
     };
 
     const awsS3 = new aws.S3();
-    let upload = awsS3.upload(s3Params, Meteor.bindEnvironment((error, data) => {
-      if (upload == null) {
+    let upload = awsS3.upload(s3Params, { partSize: 10 * 1024 * 1024, queueSize: 1 }, Meteor.bindEnvironment((error, data) => {
+      if (upload == null || (error && error.code === 'RequestAbortedError')) {
         // was already cancelled
         return;
       }
@@ -79,5 +80,7 @@ Images.helpers({
         );
       }
     }));
+
+    stream.resume();
   },
 });

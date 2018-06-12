@@ -13,7 +13,7 @@
   "dependencies": {
     "JSONStream": "^1.3.2",
     "autoprefixer": "^6.3.7",
-    "aws-sdk": "^2.240.1",
+    "aws-sdk": "^2.255.1",
     "babel-runtime": "^6.26.0",
     "basic-auth-connect": "^1.0.0",
     "bcrypt": "^0.8.7",
@@ -43,6 +43,7 @@
     "s3-upload-stream": "^1.0.7",
     "sax": "^1.2.4",
     "simple-rate-limiter": "^0.2.3",
+    "stream-file-type": "^0.1.1",
     "stream-length": "^1.0.2",
     "stream-throttle": "^0.1.3",
     "svg-captcha": "^1.3.11",
