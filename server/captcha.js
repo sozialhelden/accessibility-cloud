@@ -3,7 +3,7 @@ import url from 'url';
 import { WebApp } from 'meteor/webapp';
 import SvgCaptcha from 'svg-captcha';
 
-import { Captchas } from '../both/api/captchas/captchas';
+import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
 import { hashIp } from './hash-ip';
 
@@ -14,7 +14,11 @@ function respond(res, content) {
 }
 
 function respondWithSvg(res, code, content) {
-  res.writeHead(code, { 'Content-Type': 'image/svg+xml' });
+  res.writeHead(code, {
+    'Content-Type': 'image/svg+xml',
+    'Cache-Control': 'private, must-revalidate, max-age=300',
+    Expires: new Date(new Date().getTime() + CaptchaLifetime).toUTCString(),
+  });
   respond(res, content);
 }
 
