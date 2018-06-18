@@ -54,6 +54,9 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
     - [GET /organizations](#get-organizations)
     - [GET /source-imports](#get-source-imports)
     - [GET /sources](#get-sources)
+    - [GET /captcha](#get-captcha)
+    - [GET /images](#get-images)
+    - [POST /upload-image](#upload-images)
 
 <!-- /TOC -->
 
@@ -706,3 +709,111 @@ TODO
 ### GET /sources
 
 TODO
+
+### GET /captcha
+
+While not really part of the json apis, the captcha api returns a visual captcha that requires solving before the /image-upload API can be used.
+
+#### Example request
+
+```bash
+curl 'https://accessibility-cloud.freetls.fastly.net/captcha?appToken=YOUR_TOKEN_HERE'
+```
+
+#### Example response
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="50">
+  <path d="M15 33 C92 32,72 32,143 7" stroke="#708cdf" fill="none"/>
+  …omitted…
+</svg>
+```
+
+### GET /images
+
+This API endpoint returns the images assigned to an object id.
+Only images that passed moderation are returned.
+
+For requests to this endpoint, the API supports the following parameters:
+
+#### Context
+
+This query parameter is required.
+
+- `context`: name of the object the images are attached to. Can be one of:
+  - `place`
+  
+#### Object ID
+
+This query parameter is required.
+
+- `objectId`: the ID of the object the images are attached to. 
+
+#### Example request
+
+```bash
+curl 'https://accessibility-cloud.freetls.fastly.net/images?context=place&objectId=5b1667525536dc06e63effdb&appToken=YOUR_TOKEN_HERE&locale=en' -H 'Accept: application/json' | jq
+```
+
+#### Example response
+
+```json
+{
+  "totalCount": 1,
+  "images": [
+    {
+      "_id": "FbDShZ8uEjrmYrfNb",
+      "url": "https://accessibility-cloud-uploads.eu-central-1.amazonaws.com/place/5b1667525536dc06e63effdb/eHbzCTlqWa1T2hplB56lyGn9OBpTv2jM3_L0EDB9uzt.png",
+      "isoDate": "2018-06-12T13:36:08.326Z",
+      "mimeType": "image/png"
+    }
+  ]
+}
+```
+
+### POST /image-upload
+    
+This API endpoint allows uploading images to assign them to a place-id.
+
+Several steps have been taken to prevent abuse:
+
+- These images need to pass moderation before they are returned.
+- A captcha is required
+- Frequent requests are throttled
+
+For requests to this endpoint, the API supports the following parameters:
+
+#### Place ID
+
+This query parameter is required.
+
+- `placeId`: the ID of the object the images are attached to. 
+
+#### Captcha
+
+This query parameter is required.
+
+- `captcha`: the solution to a captcha requested with the same IP and api token from `/captcha`
+
+#### Potential Errors:
+
+- *Error*: Captcha not solved/found `{"error":{"reason":"No captcha found."}}`
+  - *Solution*: Request another captcha using the `/captcha` endpoint
+- *Error*: Mime type not supported `{"error":{"reason":"The given mime type image/xxx is not supported by this endpoint."}}`
+  - *Solution*: Pass a valid `Content-Type:` header with one of `image/png`, `image/jpeg`, `image/tiff`, `image/tif` or `image/gif`
+- *Error*: File type not recognized `{"error":{"reason":"Unsupported file-type detected (unknown)."}}`
+  - *Solution*: Upload a valid image, ensure that the data is not corrupted.
+- *Error*: Too many requests `{"error":{"reason":"Too many requests"}}`
+  - *Solution*: Throttle the upload frequency, the maximum number of requests are 3 every 5 seconds.
+
+#### Example request
+
+```bash
+curl -X POST 'https://accessibility.cloud/image-upload?placeId=5b1667525536dc06e63effdb&captcha=hLb70W' -H 'Accept: application/json' -H 'X-App-Token: YOUR_TOKEN_HERE' -H "Content-Type: image/png" -T example.png
+```
+
+#### Example response
+
+```json
+{"error":null,"success":true}
+```
