@@ -1,14 +1,17 @@
 import aws from 'aws-sdk';
-import fs from 'fs';
+import { PassThrough } from 'stream';
+
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
 import { Images } from '../images';
 
 Images.helpers({
-  saveUploadFromStream(stream, callback) {
+  saveUploadFromStream(reqestStream, callback) {
     console.log('Saving image upload from stream for', this);
     check(this.remotePath, String);
+
+    const pass = new PassThrough();
 
     aws.config.region = Meteor.settings.public.aws.region;
     aws.config.accessKeyId = Meteor.settings.aws.accessKeyId;
@@ -31,14 +34,17 @@ Images.helpers({
     const s3Params = {
       Bucket: Meteor.settings.public.aws.s3.bucket,
       Key: this.remotePath,
-      Body: stream,
+      Body: pass,
       ContentType: this.mimeType,
       ACL: 'public-read',
       CacheControl: 'max-age=31104000',
     };
 
     const awsS3 = new aws.S3();
-    let upload = awsS3.upload(s3Params, { partSize: 10 * 1024 * 1024, queueSize: 1 }, Meteor.bindEnvironment((error, data) => {
+    let upload = awsS3.upload(s3Params, {
+      partSize: 10 * 1024 * 1024,
+      queueSize: 1,
+    }, Meteor.bindEnvironment((error, data) => {
       if (upload == null || (error && error.code === 'RequestAbortedError')) {
         // was already cancelled
         return;
@@ -61,16 +67,18 @@ Images.helpers({
         callback(error);
       } else {
         console.log('File uploaded:', data);
-        Images.update({ _id: this._id }, { $set: {
-          isUploadedToS3: true,
-          storageUrl: data.Location,
-        } });
+        Images.update({ _id: this._id }, {
+          $set: {
+            isUploadedToS3: true,
+            storageUrl: data.Location,
+          },
+        });
         callback(null, data);
       }
     }));
 
     // abort upload if stream closes
-    stream.on('close', Meteor.bindEnvironment(() => {
+    reqestStream.on('close', Meteor.bindEnvironment(() => {
       console.log('Stream closed');
       if (upload) {
         upload.abort();
@@ -81,6 +89,7 @@ Images.helpers({
       }
     }));
 
-    stream.resume();
+    reqestStream.pipe(pass);
+    reqestStream.resume();
   },
 });
