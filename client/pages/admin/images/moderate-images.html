@@ -1,0 +1,57 @@
+<template name='images_moderate_head'>
+  <li>
+    Moderate Images
+  </li>
+</template>
+
+
+<template name='images_moderate_page'>
+  <div class='dashboard image-moderation'>
+
+    <div class='error-output js-error'></div> 
+    <div class='code block js-result'></div>
+
+    <div class='image-moderation-filters'>
+      <ul>
+        <li><a class='action js-sort-by-newest'>{{#if options.sortByNewest}}✔ {{/if}}Newest first</a></li>
+        <li><a class='action js-sort-by-oldest'>{{#if options.sortByOldest}}✔ {{/if}}Oldest first</a></li>
+        <li><a class='action js-filter-by-reported'>{{#if options.filterReported}}✔ {{/if}}Reported</a></li>
+        {{#if options.withIp}}
+          <li><a class='action js-reset-ip-filter'>✔ Filtered by IP <em class='ip-hash'>{{options.withIp}}</em></a></li>
+        {{/if}}
+        {{#if options.timestampFrom}}
+          <li><a class='action js-reset-timestamp-from'>✔ Reported after {{options.timestampFrom}}</a></li>
+        {{else}}
+          <li><a class='action js-filter-by-last-week'>Last Week</a></li>
+        {{/if}}
+        {{#if options.timestampTo}}
+          <li><a class='action js-reset-timestamp-to'>✔ Reported before {{options.timestampTo}}</a></li>
+        {{/if}}
+      </ul>
+    </div>
+    <div class='image-moderation-grid'>
+      {{#each images}}
+        <div class='image-moderation-entry'>
+          <div><b>Hashed IP:</b> <a class='action js-filter-by-image-ip'><em class='ip-hash'>{{shortIp}}</em></a></div>
+          <div><b>Uploaded:</b> {{uploadedAt}}</div>
+          <img src='{{fullUrl}}' />
+          <section class='image-entry-actions'>
+            <a class='action button positive js-approve-image'>Approve</a>
+            <a class='action button negative js-reject-image'>Reject</a>
+          </section>
+          {{#each reports}}
+          <section class='image-report subtle'>
+            ⚠️ Reported for <q>{{reason}}</q> by <em class='ip-hash'>{{hashedIp}}</em>
+          </section>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+    <div class='image-moderation-paging'>
+      {{#if paging.showPrev}}<a class='action js-prev-page'>Prev Page</a>{{/if}} 
+      Showing {{paging.start}} to {{paging.end}} of {{paging.count}} 
+      {{#if paging.showNext}}<a class='action js-next-page'>Next Page</a>{{/if}} 
+    </div>
+  </div>
+
+</template>

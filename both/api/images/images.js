@@ -35,6 +35,9 @@ Images.schema = new SimpleSchema({
   'reports.$.reason': {
     type: String,
   },
+  'reports.$.timestamp': {
+    type: Date,
+  },
   appToken: {
     type: String,
   },
@@ -64,9 +67,26 @@ Images.helpers({
   getPlace() {
     return PlaceInfos.findOne(this.placeId);
   },
+  shortIp() {
+    return this.hashedIp.substring(0, 8);
+  },
+  uploadedAt() {
+    return this.timestamp.toISOString();
+  },
+  fullUrl() {
+    if (Meteor.settings.public.aws.s3.bucketEndpoint) {
+      return `${Meteor.settings.public.aws.s3.bucketEndpoint}/${this.remotePath}`;
+    }
+    return `https://${Meteor.settings.public.aws.s3.bucket}.${Meteor.settings.public.aws.region}.amazonaws.com/${this.remotePath}`;
+  },
 });
 
 Images.publicFields = {};
+
+export const DefaultModerationFilter = {
+  moderationRequired: true,
+  isUploadedToS3: true,
+};
 
 if (Meteor.isClient) {
   window.Images = Images;

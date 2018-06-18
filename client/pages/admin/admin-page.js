@@ -9,11 +9,13 @@ import { getDisplayedNameForUser } from '/both/lib/user-name';
 import { getIconHTMLForUser } from '/both/lib/user-icon';
 import { TAPi18n } from 'meteor/tap:i18n';
 
+import { Images, DefaultModerationFilter } from '../../../both/api/images/images';
 
 Template.admin_page.onCreated(() => {
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
   subsManager.subscribe('licenses.public');
+  subsManager.subscribe('images.public');
   if (Meteor.user().isAdmin) {
     subsManager.subscribe('users.needApproval');
   }
@@ -28,6 +30,9 @@ Template.admin_page.helpers({
   },
   sources() {
     return Sources.find({});
+  },
+  imageBadge() {
+    return Images.find(DefaultModerationFilter).count();
   },
   usersWaitingForApproval() {
     return Meteor.users.find({ isApproved: false }).fetch();
