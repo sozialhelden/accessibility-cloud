@@ -23,8 +23,7 @@ EquipmentStatusReports.privateFields = {
 function allowedSourceIds(sourceSelector) {
   check(sourceSelector, Object);
   const options = { transform: null, fields: { _id: 1 } };
-  const sourceIds = Sources.find(sourceSelector, options).fetch().map(s => s._id).sort();
-  return { sourceId: { $in: sourceIds } };
+  return Sources.find(sourceSelector, options).fetch().map(s => s._id).sort();
 }
 
 
