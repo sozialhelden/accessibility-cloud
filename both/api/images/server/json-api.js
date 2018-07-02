@@ -1,12 +1,12 @@
-import { Images } from '../images';
+import { Images, buildFullImageUrl } from '../images';
 
-Images.wrapCollectionAPIResponse = ({ results, resultsCount }) => (
-  {
-    count: results.count,
-    totalCount: resultsCount,
-    images: results.map(r => ({
+Images.wrapCollectionAPIResponse = ({ results, resultsCount }) => ({
+  count: results.count,
+  totalCount: resultsCount,
+  images: results.map((r) => ({
       _id: r._id,
-      url: r.fullUrl(),
+      url: buildFullImageUrl(r),
       isoDate: r.timestamp.toISOString(),
-      mimeType: r.mimeType })),
-  });
+      mimeType: r.mimeType,
+    })),
+});
