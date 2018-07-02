@@ -96,6 +96,9 @@ Template.images_moderate_page.helpers({
       options,
     );
   },
+  truncate(str) {
+    return str.substring(0, 8);
+  },
 });
 
 // sorting & filtering
