@@ -6,6 +6,7 @@ import SvgCaptcha from 'svg-captcha';
 import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
 import { hashIp } from './hash-ip';
+import { isRequestAuthorized } from './json-api/authenticate-request';
 
 const path = '/captcha.svg';
 
@@ -35,6 +36,11 @@ function handleCaptchaRequest(req, res) {
     if (req.method !== 'GET') {
       respondWithError(res, 405, 'This endpoint only accepts GET requests');
       return;
+    }
+
+    const isAuthorized = isRequestAuthorized(req);
+    if (!isAuthorized) {
+      respondWithError(res, 401, 'Invalid token.');
     }
 
     const hashedIp = hashIp('HEX', req.connection.remoteAddress);

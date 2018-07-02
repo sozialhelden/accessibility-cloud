@@ -11,6 +11,7 @@ import { PlaceInfos } from '../both/api/place-infos/place-infos';
 import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
 import { hashIp } from './hash-ip';
+import { isRequestAuthorized } from './json-api/authenticate-request';
 
 function respond(res, code, json) {
   res.writeHead(code, { 'Content-Type': 'application/json' });
@@ -30,6 +31,11 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
     try {
       const mimeTypeDetector = new FileType();
       const query = url.parse(req.url, true).query;
+
+      const isAuthorized = isRequestAuthorized(req);
+      if (!isAuthorized) {
+        respondWithError(res, 401, 'Invalid token.');
+      }
 
       const hashedIp = hashIp('HEX', req.connection.remoteAddress);
 
