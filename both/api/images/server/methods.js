@@ -19,10 +19,14 @@ Meteor.methods({
     }
 
     // approve, remove reports and unset moderationRequired
-    Images.update(imageId, { $set: {
-      reports: undefined,
-      moderationRequired: false,
-    } });
+    Images.update(imageId, {
+      $set: {
+        moderationRequired: false,
+      },
+      $unset: {
+        reports: '',
+      },
+    });
   },
   async 'images.reject'(imageId) {
     check(imageId, String);
