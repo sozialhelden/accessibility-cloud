@@ -26,3 +26,8 @@ export function getAppAndUserFromRequest(req) {
 
   return { app, user };
 }
+
+export function isRequestAuthorized(req) {
+  const auth = getAppAndUserFromRequest(req);
+  return auth.app || auth.app;
+}
