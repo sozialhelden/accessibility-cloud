@@ -63,6 +63,13 @@ Images.schema = new SimpleSchema({
 
 Images.attachSchema(Images.schema);
 
+export const buildFullImageUrl = (image) => {
+  if (Meteor.settings.public.aws.s3.bucketEndpoint) {
+    return `${Meteor.settings.public.aws.s3.bucketEndpoint}/${image.remotePath}`;
+  }
+  return `https://${Meteor.settings.public.aws.s3.bucket}.${Meteor.settings.public.aws.region}.amazonaws.com/${image.remotePath}`;
+};
+
 Images.helpers({
   getPlace() {
     return PlaceInfos.findOne(this.placeId);
@@ -74,10 +81,7 @@ Images.helpers({
     return this.timestamp.toISOString();
   },
   fullUrl() {
-    if (Meteor.settings.public.aws.s3.bucketEndpoint) {
-      return `${Meteor.settings.public.aws.s3.bucketEndpoint}/${this.remotePath}`;
-    }
-    return `https://${Meteor.settings.public.aws.s3.bucket}.${Meteor.settings.public.aws.region}.amazonaws.com/${this.remotePath}`;
+    return buildFullImageUrl(this);
   },
 });
 

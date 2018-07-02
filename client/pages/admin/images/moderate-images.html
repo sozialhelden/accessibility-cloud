@@ -41,7 +41,7 @@
           </section>
           {{#each reports}}
           <section class='image-report subtle'>
-            ⚠️ Reported for <q>{{reason}}</q> by <em class='ip-hash'>{{hashedIp}}</em>
+            ⚠️ Reported for <q>{{reason}}</q> by <em class='ip-hash'>{{truncate hashedIp}}</em>
           </section>
           {{/each}}
         </div>
