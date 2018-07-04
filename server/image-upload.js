@@ -11,7 +11,9 @@ import { PlaceInfos } from '../both/api/place-infos/place-infos';
 import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
 import { hashIp } from './hash-ip';
+
 import { isRequestAuthorized } from './json-api/authenticate-request';
+import { setAccessControlHeaders } from './json-api/set-access-control-headers';
 
 function respond(res, code, json) {
   res.writeHead(code, { 'Content-Type': 'application/json' });
@@ -29,6 +31,7 @@ const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 
 function createImageUploadHandler({ path, queryParam, context, collection }) {
   function handleUploadRequest(req, res) {
     try {
+      setAccessControlHeaders(res);
       const mimeTypeDetector = new FileType();
       const query = url.parse(req.url, true).query;
 

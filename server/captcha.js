@@ -7,6 +7,7 @@ import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
 import { hashIp } from './hash-ip';
 import { isRequestAuthorized } from './json-api/authenticate-request';
+import { setAccessControlHeaders } from './json-api/set-access-control-headers';
 
 const path = '/captcha.svg';
 
@@ -31,6 +32,7 @@ function respondWithError(res, code, reason) {
 
 function handleCaptchaRequest(req, res) {
   try {
+    setAccessControlHeaders(res);
     const query = url.parse(req.url, true).query;
 
     if (req.method !== 'GET') {

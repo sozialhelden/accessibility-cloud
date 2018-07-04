@@ -6,6 +6,7 @@ import { Images } from '../both/api/images/images';
 
 import { isRequestAuthorized } from './json-api/authenticate-request';
 import { hashIp } from './hash-ip';
+import { setAccessControlHeaders } from './json-api/set-access-control-headers';
 
 function respond(res, code, json) {
   res.writeHead(code, { 'Content-Type': 'application/json' });
@@ -18,6 +19,8 @@ function respondWithError(res, code, reason) {
 }
 
 WebApp.connectHandlers.use('/images/report', (req, res) => {
+  setAccessControlHeaders(res);
+
   if (req.method !== 'POST') {
     respondWithError(res, 405, 'This endpoint only accepts POST requests');
     return;
