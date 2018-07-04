@@ -24,7 +24,7 @@ Meteor.methods({
         moderationRequired: false,
       },
       $unset: {
-        reports: '',
+        reports: true,
       },
     });
   },
