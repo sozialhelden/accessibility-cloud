@@ -1,23 +1,25 @@
-import { check } from 'meteor/check';
+import { isAdmin } from '../../../lib/is-admin';
 
 import { Images } from '../images';
 
-// Deny all client-side updates since we will be using methods to manage this collection
-Images.deny({
-  insert() { return true; },
-  update() { return true; },
-  remove() { return true; },
+Images.allow({
+  insert: isAdmin,
+  update: isAdmin,
+  remove: isAdmin,
 });
 
-// image apis are open to everyone as currently all images are public in any way
-// we will revisit this once our use case changes
+Images.helpers({
+  editableBy: isAdmin,
+});
+
 Images.visibleSelectorForUserId = (userId) => {
-  if (!userId) {
+  if (!userId || !isAdmin(userId)) {
     return null;
   }
 
-  check(userId, String);
   return {};
 };
 
-Images.visibleSelectorForAppId = appId => ({});
+// image apis are open to everyone as currently all images are public in any way
+// we will revisit this once our use case changes
+Images.visibleSelectorForAppId = () => ({});

@@ -6,31 +6,46 @@ import { check } from 'meteor/check';
 
 import { Images } from '../images';
 
+function configureS3() {
+  aws.config.region = Meteor.settings.public.aws.region;
+  aws.config.accessKeyId = Meteor.settings.aws.accessKeyId;
+  aws.config.secretAccessKey = Meteor.settings.aws.secretAccessKey;
+  aws.config.sslEnabled = true;
+  aws.config.httpOptions = {
+    connectTimeout: 1000 * 5,
+    timeout: 1000 * 30,
+  };
+
+  if (Meteor.settings.public.aws.s3.bucketEndpoint) {
+    console.log('Overwriting bucket endpoint ', Meteor.settings.public.aws.s3.bucketEndpoint);
+    aws.config.sslEnabled = false;
+    aws.config.s3BucketEndpoint = true;
+    aws.config.s3 = {
+      endpoint: Meteor.settings.public.aws.s3.bucketEndpoint,
+    };
+  }
+  return new aws.S3();
+}
+
 Images.helpers({
+  deleteFromS3(callback) {
+    console.log('Deleting uploaded image for', this);
+    const awsS3 = configureS3();
+    awsS3.deleteObject({
+      Bucket: Meteor.settings.public.aws.s3.bucket,
+      Key: this.remotePath,
+    }, Meteor.bindEnvironment((error, result) => {
+      console.log('deleteFromS3 result', error, result);
+      callback(error, result);
+    }));
+  },
   saveUploadFromStream(reqestStream, callback) {
     console.log('Saving image upload from stream for', this);
     check(this.remotePath, String);
 
+    const awsS3 = configureS3();
+
     const pass = new PassThrough();
-
-    aws.config.region = Meteor.settings.public.aws.region;
-    aws.config.accessKeyId = Meteor.settings.aws.accessKeyId;
-    aws.config.secretAccessKey = Meteor.settings.aws.secretAccessKey;
-    aws.config.sslEnabled = true;
-    aws.config.httpOptions = {
-      connectTimeout: 1000 * 5,
-      timeout: 1000 * 30,
-    };
-
-    if (Meteor.settings.public.aws.s3.bucketEndpoint) {
-      console.log('Overwriting bucket endpoint ', Meteor.settings.public.aws.s3.bucketEndpoint);
-      aws.config.sslEnabled = false;
-      aws.config.s3BucketEndpoint = true;
-      aws.config.s3 = {
-        endpoint: Meteor.settings.public.aws.s3.bucketEndpoint,
-      };
-    }
-
     const s3Params = {
       Bucket: Meteor.settings.public.aws.s3.bucket,
       Key: this.remotePath,
@@ -40,7 +55,6 @@ Images.helpers({
       CacheControl: 'max-age=31104000',
     };
 
-    const awsS3 = new aws.S3();
     let upload = awsS3.upload(s3Params, {
       partSize: 10 * 1024 * 1024,
       queueSize: 1,

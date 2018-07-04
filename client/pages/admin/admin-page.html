@@ -26,6 +26,10 @@
         <a href='{{pathFor "admin.categories.list"}}'>{{_'Import Categories'}}</a>
       </section>
       <section>
+        <h2>{{_"Images"}}</h2>
+        <a class='moderation-link' href='{{pathFor "admin.images.moderate"}}'>{{_'Moderate images'}} {{#if imageBadge}}<b class='item-count-badge'>{{imageBadge}}</b>{{/if}}</a>
+      </section>
+      <section>
         <h2>{{_"Localization"}}</h2>
         <button class='btn js-sync-translations'>Sync translations</button>
         <p class='subtle'>Click this button to upload new strings to and download new translations from transifex. Note that for syncing categories, you might have to restart all containers if the app runs multiple containers.</p>

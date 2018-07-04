@@ -36,7 +36,7 @@ function acceptInvitationOnLogin() {
         Session.set('invitationToken', null);
         Session.set('organizationId', null);
         FlowRouter.go('organizations.show', { _id: organizationId });
-      }
+      },
     );
 
     c.stop();
@@ -99,6 +99,18 @@ adminRoutes.route('/categories/', {
     BlazeLayout.render('app_layout_full_size', {
       main: 'categories_list_page',
       header_navigation_list: 'categories_list_head',
+    });
+  },
+});
+
+adminRoutes.route('/images/', {
+  name: 'admin.images.moderate',
+  title: 'Moderate images',
+
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'images_moderate_page',
+      header_navigation_list: 'images_moderate_head',
     });
   },
 });
