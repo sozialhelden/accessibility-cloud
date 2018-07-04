@@ -16,6 +16,11 @@ function restartAutomaticImports() {
   const cursor = ImportFlows.find({ schedule: { $exists: true }, lastImportStartedByUserId: { $exists: true }})
   console.log('Found', cursor.count(), 'automatic import flows.');
 
+  if (Meteor.settings.enableAutomaticImports === false) {
+    console.log('Automatic imports are disabled in settings, cronjobs were not restarted.');
+    return;
+  }
+
   cursor.forEach((flow) => {
     console.log('Restarting automatic imports for import flow', flow._id, 'for source', flow.sourceId);
     flow.scheduleAutomaticImport(flow.lastImportStartedByUserId, flow.schedule);

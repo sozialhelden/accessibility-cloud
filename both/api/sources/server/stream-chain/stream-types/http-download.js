@@ -34,11 +34,13 @@ export default class HTTPDownload {
 
     const url = generateDynamicUrl({ lastSuccessfulImport, sourceUrl });
     const options = { gzip, headers: extendedHeaders, method, body };
+    const curlString = asCurlString(Object.assign({}, { url }, options));
+
     this.request = this.stream = request(url, options);
 
     this.requestListener = req => {
       onDebugInfo({
-        curlString: asCurlString(Object.assign({}, { url }, options)),
+        curlString,
         request: {
           sourceUrl: String(this.request.uri.href),
           headers: _.flatten(_.pairs(req._headers)),
