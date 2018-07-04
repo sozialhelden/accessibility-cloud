@@ -272,7 +272,7 @@ export const personalProfile = { // can be used to match a personal profile to o
   hearingImpairment: true,
   learningImpairment: true,
   limitedSight: true,
-  physicalImpairment: true,
+  walkingImpediments: true,
   visualImpairment: true,
   blindness: true,
   wheelchair: true,
