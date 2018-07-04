@@ -63,7 +63,9 @@ export default class MultiHTTPDownload {
         });
 
         const bodyWithInputData = body.replace(/\{\{inputData\}\}/, chunk);
-
+        Object.keys(extendedHeaders).forEach((k) => {
+          extendedHeaders[k] = extendedHeaders[k].replace(/\{\{inputData\}\}/, chunk);
+        });
         if (signature) {
           extendedHeaders[signature.headerName] = generateRequestSignature({
             body: bodyWithInputData,
