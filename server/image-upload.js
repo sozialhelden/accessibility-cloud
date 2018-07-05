@@ -25,8 +25,9 @@ function respondWithError(res, code, reason) {
   respond(res, code, { error: { reason } });
 }
 
-// TODO check actual mime type
 const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
+
+const ignoreRelatedObject = { place: true };
 
 function createImageUploadHandler({ path, queryParam, context, collection }) {
   function handleUploadRequest(req, res) {
@@ -73,10 +74,12 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
         return;
       }
 
-      const place = collection.findOne(objectId);
-      if (!place) {
-        respondWithError(res, 404, `Object with id ${objectId} not found.`);
-        return;
+      if (!ignoreRelatedObject[context]) {
+        const relatedObject = collection.findOne(objectId);
+        if (!relatedObject) {
+          respondWithError(res, 404, `Object with id ${objectId} not found.`);
+          return;
+        }
       }
 
       const solution = query.captcha;
