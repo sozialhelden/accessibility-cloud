@@ -80,7 +80,7 @@ Template.images_moderate_page.helpers({
     const count = Images.find(filter).count();
 
     return {
-      start: params.skip + 1,
+      start: Math.min(params.skip + 1, count),
       end: Math.min(params.skip + params.limit, count),
       count,
       showPrev: params.skip > 0,
