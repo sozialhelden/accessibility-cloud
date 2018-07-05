@@ -31,7 +31,7 @@ const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 
 function createImageUploadHandler({ path, queryParam, context, collection }) {
   function handleUploadRequest(req, res) {
     try {
-      setAccessControlHeaders(res);
+      setAccessControlHeaders(res, ['OPTIONS', 'POST']);
       const mimeTypeDetector = new FileType();
       const query = url.parse(req.url, true).query;
 
@@ -42,8 +42,13 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
 
       const hashedIp = hashIp('HEX', req.connection.remoteAddress);
 
+      if (req.method === 'OPTIONS') {
+        res.end();
+        return;
+      }
+
       if (req.method !== 'POST') {
-        respondWithError(res, 405, 'This endpoint only accepts POST requests');
+        respondWithError(res, 405, 'This endpoint only accepts POST and OPTIONS requests');
         return;
       }
 

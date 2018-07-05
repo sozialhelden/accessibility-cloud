@@ -32,7 +32,7 @@ function respondWithError(res, code, reason) {
 
 function handleCaptchaRequest(req, res) {
   try {
-    setAccessControlHeaders(res);
+    setAccessControlHeaders(res, ['GET']);
     const query = url.parse(req.url, true).query;
 
     if (req.method !== 'GET') {

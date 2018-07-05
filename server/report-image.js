@@ -19,10 +19,15 @@ function respondWithError(res, code, reason) {
 }
 
 WebApp.connectHandlers.use('/images/report', (req, res) => {
-  setAccessControlHeaders(res);
+  setAccessControlHeaders(res, ['POST', 'OPTIONS']);
+
+  if (req.method === 'OPTIONS') {
+    res.end();
+    return;
+  }
 
   if (req.method !== 'POST') {
-    respondWithError(res, 405, 'This endpoint only accepts POST requests');
+    respondWithError(res, 405, 'This endpoint only accepts POST and OPTIONS requests');
     return;
   }
 
