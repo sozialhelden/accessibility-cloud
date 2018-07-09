@@ -39,7 +39,7 @@ Images.helpers({
       callback(error, result);
     }));
   },
-  saveUploadFromStream(reqestStream, callback) {
+  saveUploadFromStream(requestStream, callback) {
     console.log('Saving image upload from stream for', this);
     check(this.remotePath, String);
 
@@ -55,10 +55,7 @@ Images.helpers({
       CacheControl: 'max-age=31104000',
     };
 
-    let upload = awsS3.upload(s3Params, {
-      partSize: 10 * 1024 * 1024,
-      queueSize: 1,
-    }, Meteor.bindEnvironment((error, data) => {
+    let upload = awsS3.upload(s3Params, Meteor.bindEnvironment((error, data) => {
       if (upload == null || (error && error.code === 'RequestAbortedError')) {
         // was already cancelled
         return;
@@ -91,8 +88,9 @@ Images.helpers({
       }
     }));
 
+
     // abort upload if stream closes
-    reqestStream.on('close', Meteor.bindEnvironment(() => {
+    requestStream.on('close', Meteor.bindEnvironment(() => {
       console.log('Stream closed');
       if (upload) {
         upload.abort();
@@ -103,7 +101,15 @@ Images.helpers({
       }
     }));
 
-    reqestStream.pipe(pass);
-    reqestStream.resume();
+    requestStream.pipe(pass);
+    requestStream.resume();
+
+    // s3 upload will not start reading the stream by itself
+    requestStream.on('readable', () => {
+      // read in whole stream
+      while (upload != null && (requestStream.read()) !== null) {
+        // do nothing
+      }
+    });
   },
 });
