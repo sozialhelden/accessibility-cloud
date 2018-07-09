@@ -57,7 +57,8 @@ function handleCaptchaRequest(req, res) {
     const captcha = SvgCaptcha.create({
       size: 6,
       noise: 2,
-      color: true,
+      color: false,
+      ignoreChars: 'ABCDEFGHIJKLMNOPQRSTUVXYZ1iljuv0o',
     });
 
     console.log('Requested captcha', captcha.text);
