@@ -67,7 +67,7 @@ export const buildFullImageUrl = (image) => {
   if (Meteor.settings.public.aws.s3.bucketEndpoint) {
     return `${Meteor.settings.public.aws.s3.bucketEndpoint}/${image.remotePath}`;
   }
-  return `https://${Meteor.settings.public.aws.s3.bucket}.${Meteor.settings.public.aws.region}.amazonaws.com/${image.remotePath}`;
+  return `https://${Meteor.settings.public.aws.s3.bucket}.s3.amazonaws.com/${image.remotePath}`;
 };
 
 Images.helpers({
