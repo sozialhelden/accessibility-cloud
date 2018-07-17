@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { WebApp } from 'meteor/webapp';
 import FileType from 'stream-file-type';
+import ImageSize from 'image-size-stream';
 
 import { Images } from '../both/api/images/images';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
@@ -34,6 +35,7 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
     try {
       setAccessControlHeaders(res, ['OPTIONS', 'POST']);
       const mimeTypeDetector = new FileType();
+      const imageSizeDetector = new ImageSize();
       const query = url.parse(req.url, true).query;
 
       const isAuthorized = isRequestAuthorized(req);
@@ -109,6 +111,10 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
         isUploadedToS3: false,
         remotePath: `${context}/${objectId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
         timestamp: new Date(),
+        dimensions: {
+          width: 1,
+          height: 1,
+        },
       };
 
       console.log('Inserting image upload', attributes);
@@ -133,6 +139,19 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
           req.destroy();
         }
       });
+
+      req.pipe(imageSizeDetector);
+
+      imageSizeDetector.on('size', Meteor.bindEnvironment((dimensions) => {
+        Images.update(_id, {
+          $set: {
+            dimensions: {
+              width: dimensions.width,
+              height: dimensions.height,
+            },
+          },
+        });
+      }));
 
       image.saveUploadFromStream(req, (error) => {
         if (!error) {

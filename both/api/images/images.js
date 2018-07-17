@@ -38,6 +38,15 @@ Images.schema = new SimpleSchema({
   'reports.$.timestamp': {
     type: Date,
   },
+  dimensions: {
+    type: Object,
+  },
+  'dimensions.width': {
+    type: Number,
+  },
+  'dimensions.height': {
+    type: Number,
+  },
   appToken: {
     type: String,
   },
