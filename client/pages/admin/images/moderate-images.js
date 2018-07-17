@@ -3,13 +3,13 @@ import { Meteor } from 'meteor/meteor';
 import { $ } from 'meteor/jquery';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { Images, DefaultModerationFilter } from '../../../../both/api/images/images';
+import i18nHelpers from '/both/api/shared/i18nHelpers';
+
+import { Images } from '../../../../both/api/images/images';
+import imageFilterQuery from '../../../../both/api/images/filter-query';
 import subsManager from '../../../lib/subs-manager';
 
-Template.images_moderate_page.onCreated(function organizationsShowPageOnCreated() {
-  subsManager.subscribe('images.public');
-});
-
+const filterCount = new Meteor.Collection('images.filteredCount');
 
 const readParams = () => {
   const withIp = FlowRouter.getQueryParam('withIp');
@@ -33,32 +33,13 @@ const readParams = () => {
   };
 };
 
-const buildMongoQuery = (params) => {
-  const filter = Object.assign({}, DefaultModerationFilter);
-  if (params.isReported) {
-    filter.reports = { $exists: true, $ne: [] };
-  }
-  if (params.withIp) {
-    filter.hashedIp = params.withIp;
-  }
-  if (params.timestampFrom || params.timestampTo) {
-    filter.timestamp = {};
-    if (params.timestampFrom) {
-      filter.timestamp.$gte = new Date(params.timestampFrom);
-    }
-    if (params.timestampTo) {
-      filter.timestamp.$lte = new Date(params.timestampTo);
-    }
-  }
-
-  const options = {
-    sort: { timestamp: params.sortByTimestamp },
-    skip: params.skip,
-    limit: params.limit,
-  };
-
-  return { filter, options };
-};
+Template.images_moderate_page.onCreated(function organizationsShowPageOnCreated() {
+  this.autorun(() => {
+    const params = readParams();
+    subsManager.subscribe('images.filtered', params);
+    subsManager.subscribe('images.filteredCount', params);
+  });
+});
 
 Template.images_moderate_page.helpers({
   options() {
@@ -75,9 +56,8 @@ Template.images_moderate_page.helpers({
   },
   paging() {
     const params = readParams();
-    const { filter } = buildMongoQuery(params);
-
-    const count = Images.find(filter).count();
+    const countResult = filterCount.findOne();
+    const count = countResult ? countResult.count : 0;
 
     return {
       start: Math.min(params.skip + 1, count),
@@ -89,15 +69,23 @@ Template.images_moderate_page.helpers({
   },
   images() {
     const params = readParams();
-    const { filter, options } = buildMongoQuery(params);
+    const { filter, options } = imageFilterQuery(params);
 
-    return Images.find(
+    const images = Images.find(
       filter,
       options,
     );
+
+    return images.map(i => Object.assign(i, { contextObject: i.getContextObject() }));
   },
   truncate(str) {
     return str.substring(0, 8);
+  },
+  placeName(contextObject) {
+    const locale = window.navigator.language;
+    return i18nHelpers.getLocalizedName.call(contextObject, locale) ||
+    i18nHelpers.getLocalizedCategory.call(contextObject, locale) ||
+      'External Place';
   },
 });
 

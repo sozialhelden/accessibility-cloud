@@ -61,6 +61,7 @@ WebApp.connectHandlers.use('/images/report', (req, res) => {
   Images.update({ _id: imageId }, {
     $set: {
       moderationRequired: true,
+      updatedAt: new Date(),
     },
     $push: {
       reports: {

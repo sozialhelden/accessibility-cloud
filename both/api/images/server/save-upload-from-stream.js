@@ -82,6 +82,7 @@ Images.helpers({
           $set: {
             isUploadedToS3: true,
             storageUrl: data.Location,
+            updatedAt: new Date(),
           },
         });
         callback(null, data);
