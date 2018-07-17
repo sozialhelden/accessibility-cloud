@@ -22,6 +22,7 @@ Meteor.methods({
     Images.update(imageId, {
       $set: {
         moderationRequired: false,
+        updatedAt: new Date(),
       },
       $unset: {
         reports: true,

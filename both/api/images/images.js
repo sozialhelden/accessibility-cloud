@@ -53,6 +53,10 @@ Images.schema = new SimpleSchema({
   timestamp: {
     type: Date,
   },
+  updatedAt: {
+    type: Date,
+    optional: true,
+  },
   mimeType: {
     type: String,
   },
@@ -80,14 +84,20 @@ export const buildFullImageUrl = (image) => {
 };
 
 Images.helpers({
-  getPlace() {
-    return PlaceInfos.findOne(this.placeId);
+  getContextObject() {
+    if (this.context === 'place') {
+      return PlaceInfos.findOne(this.objectId);
+    }
+    return null;
   },
   shortIp() {
     return this.hashedIp.substring(0, 8);
   },
-  uploadedAt() {
+  readableUploadedAt() {
     return this.timestamp.toISOString();
+  },
+  readableUpdateddAt() {
+    return (this.updatedAt || this.timestamp).toISOString();
   },
   fullUrl() {
     return buildFullImageUrl(this);

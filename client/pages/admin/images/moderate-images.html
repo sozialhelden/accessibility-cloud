@@ -33,7 +33,9 @@
       {{#each images}}
         <div class='image-moderation-entry'>
           <div><b>Hashed IP:</b> <a class='action js-filter-by-image-ip'><em class='ip-hash'>{{shortIp}}</em></a></div>
-          <div><b>Uploaded:</b> {{uploadedAt}}</div>
+          <div><b>Uploaded:</b> {{readableUploadedAt}}</div>
+          <div><b>Updated:</b> {{readableUploadedAt}}</div>
+          <div><b>Context:</b> {{context}} <a href='http://wheelmap.org/beta/nodes/{{objectId}}'>{{placeName contextObject}}</a></div>
           <img src='{{fullUrl}}' />
           <section class='image-entry-actions'>
             <a class='action button positive js-approve-image'>Approve</a>
