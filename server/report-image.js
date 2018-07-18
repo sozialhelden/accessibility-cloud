@@ -52,8 +52,8 @@ WebApp.connectHandlers.use('/images/report', (req, res) => {
     return;
   }
 
-  const place = Images.findOne(imageId);
-  if (!place) {
+  const image = Images.findOne(imageId);
+  if (!image) {
     respondWithError(res, 404, `Image with id ${imageId} not found.`);
     return;
   }
