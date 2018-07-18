@@ -6,6 +6,7 @@ Images.wrapCollectionAPIResponse = ({ results, resultsCount }) => ({
   images: results.map(r => (
     {
       _id: r._id,
+      imagePath: r.remotePath,
       url: buildFullImageUrl(r),
       isoDate: r.timestamp.toISOString(),
       mimeType: r.mimeType,
