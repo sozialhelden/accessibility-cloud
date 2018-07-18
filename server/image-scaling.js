@@ -24,6 +24,9 @@ type TaskResult = any;
 
 type TaskCallback = ((error: ?Error, result: TaskResult) => void);
 
+const minImageSize = 32;
+const maxImageSize = 1920;
+
 const imageProcessingHandler = (task: ImageTask, callback: TaskCallback) => {
   // console.log('started', task.imagePath, fullUrl, Date.now());
 
@@ -109,14 +112,14 @@ WebApp.connectHandlers.use('/images/scale/', (req: http.IncomingMessage, res: ht
   }
 
   const fitw = parseInt(parsedUrl.query.fitw, 10);
-  if (!fitw) {
-    respondWithError(res, 422, 'Please supply a `fitw` query string parameter.');
+  if (!fitw || fitw < minImageSize || fitw > maxImageSize) {
+    respondWithError(res, 422, `Please supply a valid \`fitw\` query string parameter (between ${minImageSize} and ${maxImageSize}).`);
     return;
   }
 
   const fith = parseInt(parsedUrl.query.fith, 10);
-  if (!fith) {
-    respondWithError(res, 422, 'Please supply a `fith` query string parameter.');
+  if (!fith || fith < minImageSize || fith > maxImageSize) {
+    respondWithError(res, 422, `Please supply a valid \`fith\` query string parameter (between  ${minImageSize} and ${maxImageSize}).`);
     return;
   }
 
