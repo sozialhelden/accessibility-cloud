@@ -28,8 +28,6 @@ const minImageSize = 32;
 const maxImageSize = 1920;
 
 const imageProcessingHandler = (task: ImageTask, callback: TaskCallback) => {
-  // console.log('started', task.imagePath, fullUrl, Date.now());
-
   // configure resize task
   let resizeTask = sharp()
       .resize(task.fitw, task.fith)
@@ -58,10 +56,7 @@ const imageProcessingHandler = (task: ImageTask, callback: TaskCallback) => {
       Vary: 'X-Fastly-WebpSupport',
     });
 
-    // console.log('response', response.headers, Date.now());
-
     resizeTask.on('end', function () {
-      // console.log('end', Date.now());
       callback(null, 'done ');
     });
   });
