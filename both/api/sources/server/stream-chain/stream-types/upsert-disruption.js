@@ -19,10 +19,15 @@ export default class UpsertDisruption extends Upsert {
   }
 
 
-  setUnreferencedEquipmentToWorking({ organizationSourceIds }, callback) {
+  setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, callback) {
     const selector = {
-      'properties.sourceId': this.options.equipmentSourceId,
-      'properties.disruptionSourceImportId': { $ne: this.options.sourceImportId },
+      $and: [
+        {
+          'properties.sourceId': this.options.equipmentSourceId,
+          'properties.disruptionSourceImportId': { $ne: this.options.sourceImportId },
+        },
+        equipmentSelectorForImport || {},
+      ],
     };
 
     const modifier = {
@@ -133,7 +138,7 @@ export default class UpsertDisruption extends Upsert {
 
 
   afterFlush({ organizationSourceIds }, callback) {
-    const equipmentSourceId = this.options.equipmentSourceId;
+    const { equipmentSourceId, equipmentSelectorForImport } = this.options;
 
     check(equipmentSourceId, Match.Optional(String));
 
@@ -159,7 +164,7 @@ export default class UpsertDisruption extends Upsert {
     };
 
     if (!this.options.setUnreferencedEquipmentToWorking) { updateStatsIfNecessary(callback); return; }
-    this.setUnreferencedEquipmentToWorking({ organizationSourceIds }, (error) => {
+    this.setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, (error) => {
       if (error) { callback(error); return; }
       updateStatsIfNecessary(callback);
     });
