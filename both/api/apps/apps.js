@@ -5,6 +5,40 @@ import { Organizations } from '/both/api/organizations/organizations';
 
 export const Apps = new Mongo.Collection('Apps');
 
+const linkSchema = new SimpleSchema({
+  label: { type: String },
+  url: { type: String, regEx: SimpleSchema.RegEx.Url },
+});
+
+const clientSideConfiguration = new SimpleSchema({
+  allowedBaseURLs: {
+    type: Array,
+  },
+  'allowedBaseURLs.$': { type: String, regEx: SimpleSchema.RegEx.Url },
+  includeSourceIds: { type: Array },
+  'includeSourceIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
+  excludeSourceIds: { type: Array },
+  'excludeSourceIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
+  textContent: { type: Object },
+  'textContent.onboarding': { type: Object },
+  'textContent.onboarding.headerMarkdown': { type: String },
+  'textContent.accessibilityNames': { type: Object, optional: true },
+  'textContent.accessibilityNames.long': { type: Object },
+  'textContent.accessibilityNames.long.unknown': { type: String },
+  'textContent.accessibilityNames.long.yes': { type: String },
+  'textContent.accessibilityNames.long.limited': { type: String },
+  'textContent.accessibilityNames.long.no': { type: String },
+  'textContent.accessibilityNames.short': { type: Object },
+  'textContent.accessibilityNames.short.unknown': { type: String },
+  'textContent.accessibilityNames.short.yes': { type: String },
+  'textContent.accessibilityNames.short.limited': { type: String },
+  'textContent.accessibilityNames.short.no': { type: String },
+  customMainMenuLinks: { type: Array },
+  'customMainMenuLinks.$': { type: linkSchema },
+  addPlaceURL: { type: String, regEx: SimpleSchema.RegEx.Url },
+});
+
+
 Apps.schema = new SimpleSchema({
   tokenString: {
     type: String,
@@ -55,6 +89,12 @@ Apps.schema = new SimpleSchema({
     },
     allowedValues: [true],
   },
+  logoURL: {
+    label: 'Logo URL',
+    type: String,
+    optional: true,
+  },
+  clientSideConfiguration: { type: clientSideConfiguration, optional: true },
 });
 
 Apps.schema.messages({
@@ -68,3 +108,10 @@ Apps.helpers({
     return Organizations.findOne(this.organizationId);
   },
 });
+
+Apps.visibleSelectorForAppId = appId => ({ _id: appId });
+Apps.apiParameterizedSelector = selector => selector;
+
+if (Meteor.isClient) {
+  window.Apps = Apps;
+}
