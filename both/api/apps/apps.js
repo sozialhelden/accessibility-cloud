@@ -109,7 +109,6 @@ Apps.helpers({
   },
 });
 
-Apps.visibleSelectorForAppId = appId => ({ _id: appId });
 Apps.apiParameterizedSelector = selector => selector;
 
 if (Meteor.isClient) {

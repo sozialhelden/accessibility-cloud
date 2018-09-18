@@ -23,12 +23,7 @@ Apps.publicFields = {
   name: 1,
   description: 1,
   website: 1,
-  allowedBaseURLs: 1,
-  includeSourceIds: 1,
-  excludeSourceIds: 1,
-  textContent: 1,
-  customMainMenuLinks: 1,
-  addPlaceURL: 1,
+  clientSideConfiguration: 1,
 };
 
 Apps.privateFields = {
@@ -44,7 +39,7 @@ Apps.visibleSelectorForUserId = (userId) => {
 };
 
 // Apps can only see themselves
-Apps.visibleSelectorForAppId = (_id) => ({ _id });
+Apps.visibleSelectorForAppId = _id => ({ _id });
 
 Apps.helpers({
   editableBy(userId) {
