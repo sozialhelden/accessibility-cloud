@@ -23,6 +23,12 @@ Apps.publicFields = {
   name: 1,
   description: 1,
   website: 1,
+  allowedBaseURLs: 1,
+  includeSourceIds: 1,
+  excludeSourceIds: 1,
+  textContent: 1,
+  customMainMenuLinks: 1,
+  addPlaceURL: 1,
 };
 
 Apps.privateFields = {
