@@ -1,20 +1,16 @@
 # Development
 
-
-
 ## Running locally
 
-- Have Meteor.js (>1.4) and Node.js (>6.5) installed.
+- Have [Meteor.js](https://www.meteor.com/install) (>1.4) installed
+- Have Node.js (>6.5) installed.
 - `cd` into the meteor app directory in your terminal
-- Run `npm install` to install necessary dependencies
+- Run `meteor npm install` to install necessary dependencies
 - Run `meteor --settings settings/local.json` to start the app
 - Navigate to [http://localhost:3000](http://localhost:3000).
 
 
-
 ## Development
-
-The project uses ECMAScript6 and contains a configuration for Sublime Edit / Atom + ESLint. [Setting up ESLint with Sublime Edit](https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48) is a bit tedious, but worth it, as it gives you static analysis, notifies you about potential logic issues, JS-typical pitfalls and enforces a styleguide. The configuration is derived from [AirBnb's ESLint configuration](https://github.com/airbnb/javascript/blob/master/es5). With Atom, just install the linter-eslint package and you're good to go.
 
 Please work on the `development` branch and only merge it into `master` after a QA of the deployed `development` branch on the development/staging server.
 
@@ -34,4 +30,3 @@ TbD
 ## Staging-Server
 
 TbD
-
