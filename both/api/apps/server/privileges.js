@@ -39,7 +39,7 @@ Apps.visibleSelectorForUserId = (userId) => {
 };
 
 // Apps can only see themselves
-Apps.visibleSelectorForAppId = _id => ({ _id });
+Apps.visibleSelectorForAppId = () => ({});
 
 Apps.helpers({
   editableBy(userId) {
