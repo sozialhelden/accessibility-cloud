@@ -11,6 +11,11 @@ const linkSchema = new SimpleSchema({
 });
 
 const clientSideConfiguration = new SimpleSchema({
+  logoURL: {
+    label: 'Logo URL',
+    type: String,
+    optional: true,
+  },
   allowedBaseURLs: {
     type: Array,
   },
@@ -88,11 +93,6 @@ Apps.schema = new SimpleSchema({
       type: 'tos-checkbox',
     },
     allowedValues: [true],
-  },
-  logoURL: {
-    label: 'Logo URL',
-    type: String,
-    optional: true,
   },
   clientSideConfiguration: { type: clientSideConfiguration, optional: true },
 });
