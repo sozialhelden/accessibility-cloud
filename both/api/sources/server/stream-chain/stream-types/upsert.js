@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { _ } from 'meteor/stevezhu:lodash';
+import _ from 'lodash';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
 import { flatten } from 'mongo-dot-notation';

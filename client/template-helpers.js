@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { _ } from 'meteor/underscore';
 import isPlainObject from 'lodash/isPlainObject';
-import { s } from 'meteor/underscorestring:underscore.string';
+import s from 'meteor/underscorestring:underscore.string';
 import { isApproved } from '/both/lib/is-approved';
 import { isAdmin } from '/both/lib/is-admin';
 

@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check, Match } from 'meteor/check';
-import { _ } from 'meteor/stevezhu:lodash';
+import _ from 'lodash';
 
 
 // For each given document in `documents`, look up the related document that is specified by

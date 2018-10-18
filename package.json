@@ -63,6 +63,8 @@
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "@types/inflection": "^1.5.28",
+    "@types/lodash": "^4.14.117",
     "babel-eslint": "^7.2.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",

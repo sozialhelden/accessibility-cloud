@@ -6,7 +6,7 @@ import { singularize, underscore } from 'inflected';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { PlaceInfos } from '../../../../../both/api/place-infos/place-infos.js';
-import { s } from 'meteor/underscorestring:underscore.string';
+import s from 'meteor/underscorestring:underscore.string';
 import { Sources } from '../../../../../both/api/sources/sources.js';
 import createMarkerFromFeature from '../../../../lib/create-marker-from-feature';
 import buildFeatureCollectionFromArray from '../../../../../both/lib/build-feature-collection-from-array';

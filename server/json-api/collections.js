@@ -1,5 +1,5 @@
 import { _ } from 'meteor/underscore';
-import { s } from 'meteor/underscorestring:underscore.string';
+import s from 'meteor/underscorestring:underscore.string';
 
 import { Apps } from '/both/api/apps/apps';
 import { Languages } from '/both/api/languages/languages';
