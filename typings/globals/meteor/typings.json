@@ -1,0 +1,15 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/meteor-typings/meteor/9e96f088dee667910a492e59a340d631c3305be0/1.3/typings.json",
+    "raw": "registry:env/meteor#1.3.0+20160830163906",
+    "main": "main.d.ts",
+    "browser": "browser.d.ts",
+    "version": "1.3",
+    "files": [
+      "header.d.ts"
+    ],
+    "global": true,
+    "name": "meteor"
+  }
+}

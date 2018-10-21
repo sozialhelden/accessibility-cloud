@@ -1,6 +1,5 @@
 import { _ } from 'meteor/underscore';
-import { s } from 'meteor/underscorestring:underscore.string';
-
+import { dasherize, tableize } from 'inflection';
 import { Apps } from '/both/api/apps/apps';
 import { Languages } from '/both/api/languages/languages';
 import { Licenses } from '/both/api/licenses/licenses';
@@ -35,7 +34,7 @@ const collections = [
 
 const namesToCollections = _.indexBy(
   collections,
-  collection => s.slugify(s.humanize(collection._name)),
+  collection => dasherize(tableize(collection._name)),
 );
 
 // Returns a collection for a given route name (e.g. 'place-infos')
