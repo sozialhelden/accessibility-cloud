@@ -21,10 +21,6 @@ const clientSideConfiguration = new SimpleSchema({
     type: String,
     optional: true,
   },
-  allowedBaseURLs: {
-    type: Array,
-  },
-  'allowedBaseURLs.$': { type: String, regEx: SimpleSchema.RegEx.Url },
   includeSourceIds: { type: Array },
   'includeSourceIds.$': { type: String, regEx: SimpleSchema.RegEx.Id },
   excludeSourceIds: { type: Array },

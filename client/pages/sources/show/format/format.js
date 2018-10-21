@@ -8,7 +8,7 @@ import { ImportFlows } from '/both/api/import-flows/import-flows.js';
 import { acFormat } from '/both/lib/ac-format.js';
 import { $ } from 'meteor/jquery';
 
-import { _ } from 'meteor/stevezhu:lodash';
+import _ from 'lodash';
 
 import subsManager from '/client/lib/subs-manager';
 import * as importFlowTemplates from '/client/lib/import-flow-templates';

@@ -97,3 +97,4 @@ percolate:migrations
 percolate:synced-cron
 mdg:meteor-apm-agent
 meteorhacks:zones
+barbatus:typescript
