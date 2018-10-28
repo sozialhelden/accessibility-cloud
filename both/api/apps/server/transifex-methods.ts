@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { Apps } from '../apps';
-import { makeCollectionTranslatable } from '../../../../server/i18n-new/translatable-collection';
+import makeCollectionTranslatable from '../../../../server/i18n-new/makeCollectionTranslatable';
 import { AttributeDescriptor } from '../../../../server/i18n-new/i18nTypes';
 
 const translatablePropertyNames = [

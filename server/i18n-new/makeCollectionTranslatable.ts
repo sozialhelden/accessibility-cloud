@@ -2,9 +2,9 @@ import { get } from 'lodash';
 import { check, Match } from 'meteor/check';
 import { Mongo } from 'meteor/mongo';
 
-import { addRPCMethodForSyncing } from './rpc-method';
-import { extendCollectionSchema } from './collection-schema';
-import { resourceSlugForCollection } from '../../both/i18n/resource-slug';
+import addRPCMethodForSyncing from './addRPCMethodForSyncing';
+import extendCollectionSchema from './extendCollectionSchema';
+import resourceSlugForCollection from './resourceSlugForCollection';
 import { cacheRegisteredLocales } from '../../both/i18n/locales';
 import { AttributeDescriptor } from './i18nTypes';
 
@@ -43,7 +43,7 @@ export const defaultLocale = 'en_US';
 //   return a key string where the string will be found in the MongoDB document. Example:
 //   `attributeName => locale => \`translations.${attributeName}.${locale}\``
 
-export function makeCollectionTranslatable(
+export default function makeCollectionTranslatable(
   collection, // The collection with documents whose attributes should be made translatable
   attributeDescriptors: AttributeDescriptor[], // The attribute to be made translatable
 ) {

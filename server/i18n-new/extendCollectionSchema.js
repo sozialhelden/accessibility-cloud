@@ -4,7 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 // Add a helper function to the collection's document, e.g. getLocalizedName if the attribute
 // is called 'name'
-export function extendCollectionSchema(collection, attributeName) {
+export default function extendCollectionSchema(collection, attributeName) {
   check(collection, Mongo.Collection);
   check(attributeName, String);
 
