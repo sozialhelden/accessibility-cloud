@@ -5,16 +5,20 @@ import { HTTP } from 'meteor/http';
 import { dasherize, tableize } from 'inflection';
 
 import { projectSlug, auth } from './meteorSettings';
+import { POFile } from './i18nTypes';
 
 
-export default function exportToTransifex({ resourceSlug, poFile, asSourceFile, isNewResource }) {
-  check(resourceSlug, String);
-  check(poFile, Object);
-  check(asSourceFile, Boolean);
-  check(isNewResource, Boolean);
+export default function exportToTransifex({ resourceSlug, poFile, asSourceFile, isNewResource }: {
+  resourceSlug: string,
+  poFile: POFile,
+  asSourceFile: boolean,
+  isNewResource: boolean,
+}) {
   const locale = poFile.headers.language;
   const poFileString = gettextParser.po.compile(poFile).toString();
+
   let response;
+
   if (isNewResource) {
     const url = `https://www.transifex.com/api/2/project/${projectSlug}/resources/`;
     const uploadJSON = {

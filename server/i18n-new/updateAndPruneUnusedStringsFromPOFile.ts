@@ -1,41 +1,42 @@
 import { humanize } from 'inflection';
 import { cloneDeep, without, difference } from 'lodash';
-import { TranslationDescriptor } from './i18nTypes';
-import databaseLayer from './databaseLayer';
+import { GetLocalTranslationFn, SetLocalTranslationFn, MsgidsToTranslationDescriptors } from './i18nTypes';
 import { POFile } from './i18nTypes';
 
 
 // - Write new translations from transifex into local docs
 // - clone given PO file, remove translations from clone that are not in local docs anymore
 // - return the modified PO file copy
-export default function updateAndPruneUnusedStringsFromPOFile({ msgidsToDocs, context, poFile, collection, }: {
-  msgidsToDocs: {
-    [msgid: string]: {
-      translationDescriptor: TranslationDescriptor;
-      doc: object;
-    };
-  };
+export default function updateAndPruneUnusedStringsFromPOFile({
+  context,
+  getLocalTranslation,
+  msgidsToTranslationDescriptors,
+  poFile,
+  setLocalTranslation,
+}: {
   context: string;
+  getLocalTranslation: GetLocalTranslationFn,
+  msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors,
   poFile: POFile;
-  collection: any;
+  setLocalTranslation: SetLocalTranslationFn,
 }) {
   const locale = poFile.headers.language;
   const newPOFile = cloneDeep(poFile);
   newPOFile.translations[context] = newPOFile.translations[context] || {};
   const newPOFileTranslations = newPOFile.translations[context];
-  const msgids = Object.keys(msgidsToDocs);
+  const msgids = Object.keys(msgidsToTranslationDescriptors);
   let updatedLocalStringsCount = 0;
   msgids.forEach(msgid => {
     const poFileTranslation = newPOFileTranslations[msgid];
-    const { translationDescriptor, doc } = msgidsToDocs[msgid];
-    const existingTranslation = databaseLayer.getLocalTranslation({ translationDescriptor, doc, locale });
+    const { translationDescriptor, doc } = msgidsToTranslationDescriptors[msgid];
+    const existingTranslation = getLocalTranslation({ translationDescriptor, doc, locale });
     if (poFileTranslation) {
       // overwrite existing local translation with data from PO file if necessary
       const msgstr = poFileTranslation.msgstr[0];
       if (msgstr && existingTranslation !== msgstr) {
         console.log(`Updating local string ‘${msgstr}’...`);
         updatedLocalStringsCount++;
-        databaseLayer.setLocalTranslation({ doc, locale, msgstr, translationDescriptor, collection });
+        setLocalTranslation({ doc, locale, msgstr, translationDescriptor });
       }
     }
     else {
