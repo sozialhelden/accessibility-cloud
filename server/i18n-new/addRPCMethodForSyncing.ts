@@ -1,16 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { isAdmin } from '../../both/lib/is-admin';
-import { AttributeDescriptor } from './i18nTypes';
+import { TranslationDescriptor } from './i18nTypes';
 import syncCollectionWithTransifex from "./syncCollectionWithTransifex";
 
 
 export default function addRPCMethodForSyncing(
   {
-    attributeDescriptors,
+    translationDescriptors,
     collection,
     defaultLocale,
   }: {
-    attributeDescriptors: AttributeDescriptor[],
+    translationDescriptors: TranslationDescriptor[],
     collection: any,
     defaultLocale: string,
   },
@@ -26,7 +26,7 @@ export default function addRPCMethodForSyncing(
       //   throw new Meteor.Error(403, 'You are not authorized to import categories.');
       // }
       syncCollectionWithTransifex({
-        attributeDescriptors,
+        translationDescriptors,
         collection,
         defaultLocale,
       });

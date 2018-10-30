@@ -1,6 +1,6 @@
 import { registerLocale, cacheRegisteredLocales } from '../../both/i18n/locales';
 import { get } from 'lodash';
-import { AttributeDescriptor, MsgidsToDocs } from './i18nTypes';
+import { TranslationDescriptor, MsgidsToTranslationDescriptors } from './i18nTypes';
 import displayStats from "./displayStats";
 import exportToTransifex from "./exportToTransifex";
 import importFromTransifex from './importFromTransifex';
@@ -18,7 +18,7 @@ import databaseLayer from './databaseLayer';
 // memory on transifex). Strings from given documents that are not found in transifex yet are
 // uploaded to transifex to be translated.
 export default function syncCollectionWithTransifex({
-  attributeDescriptors,
+  translationDescriptors,
   // PO files support the same msgid key string to appear in different contexts.
   context = '',
   collection,
@@ -27,7 +27,7 @@ export default function syncCollectionWithTransifex({
 }: {
     context?: string;
     defaultLocale?: string;
-    attributeDescriptors: AttributeDescriptor[];
+    translationDescriptors: TranslationDescriptor[];
     collection: any;
   }) {
   // slug name of the transifex resource that should be used for syncing
@@ -35,19 +35,19 @@ export default function syncCollectionWithTransifex({
   console.log('Starting transifex synchronization for', resourceSlug, `(Context: '${context}')`);
 
   // msgids / key strings to documents that contain the translations
-  const msgidsToDocs: MsgidsToDocs = {};
+  const msgidsToDocs: MsgidsToTranslationDescriptors = {};
   collection.find().fetch()
     .forEach((doc: object) => {
-      console.log('Looking at doc', get(doc, '_id'), '...');
-      attributeDescriptors.forEach(attributeDescriptor => {
-        const msgid = attributeDescriptor.msgidFn(attributeDescriptor.attributeName)(doc);
-        if (!databaseLayer.getTranslatedString({ doc, locale: defaultLocale, attributeDescriptor })) {
+      translationDescriptors.forEach(translationDescriptor => {
+        const msgid = translationDescriptor.msgidFn(translationDescriptor.propertyName)(doc);
+        if (!databaseLayer.getLocalTranslation({ doc, locale: defaultLocale, translationDescriptor })) {
           return;
         }
-        console.log('Looking at msgid', msgid);
-        msgidsToDocs[msgid] = { attributeDescriptor, doc };
+        msgidsToDocs[msgid] = { translationDescriptor, doc };
       });
     });
+
+  console.log('msgids to translate:', Object.keys(msgidsToDocs));
 
 
   try {
@@ -66,7 +66,7 @@ export default function syncCollectionWithTransifex({
         collection,
       });
       if (locale === defaultLocale) {
-        console.log('Syncing PO file for', locale, 'language', attributeDescriptors);
+        console.log('Syncing PO file for', locale, 'language...');
         // Source files can't have translations on transifex, so strip them.
         exportToTransifex({
           resourceSlug,

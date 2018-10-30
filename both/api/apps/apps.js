@@ -10,6 +10,10 @@ const linkSchema = new SimpleSchema({
   url: { type: String, regEx: SimpleSchema.RegEx.Url },
 });
 
+const LocalizableString = new SimpleSchema({
+  $: { type: String },
+});
+
 const clientSideConfiguration = new SimpleSchema({
   logoURL: {
     label: 'Logo URL',
@@ -39,22 +43,22 @@ const clientSideConfiguration = new SimpleSchema({
   'meta.googleAnalytics.siteVerificationToken': { type: String, optional: true },
   textContent: { type: Object },
   'textContent.product': { type: Object },
-  'textContent.product.name': { type: String },
-  'textContent.product.claim': { type: String },
-  'textContent.product.description': { type: String },
+  'textContent.product.name': { type: LocalizableString },
+  'textContent.product.claim': { type: LocalizableString },
+  'textContent.product.description': { type: LocalizableString },
   'textContent.onboarding': { type: Object },
-  'textContent.onboarding.headerMarkdown': { type: String },
+  'textContent.onboarding.headerMarkdown': { type: LocalizableString },
   'textContent.accessibilityNames': { type: Object, optional: true },
   'textContent.accessibilityNames.long': { type: Object },
-  'textContent.accessibilityNames.long.unknown': { type: String },
-  'textContent.accessibilityNames.long.yes': { type: String },
-  'textContent.accessibilityNames.long.limited': { type: String },
-  'textContent.accessibilityNames.long.no': { type: String },
+  'textContent.accessibilityNames.long.unknown': { type: LocalizableString },
+  'textContent.accessibilityNames.long.yes': { type: LocalizableString },
+  'textContent.accessibilityNames.long.limited': { type: LocalizableString },
+  'textContent.accessibilityNames.long.no': { type: LocalizableString },
   'textContent.accessibilityNames.short': { type: Object },
-  'textContent.accessibilityNames.short.unknown': { type: String },
-  'textContent.accessibilityNames.short.yes': { type: String },
-  'textContent.accessibilityNames.short.limited': { type: String },
-  'textContent.accessibilityNames.short.no': { type: String },
+  'textContent.accessibilityNames.short.unknown': { type: LocalizableString },
+  'textContent.accessibilityNames.short.yes': { type: LocalizableString },
+  'textContent.accessibilityNames.short.limited': { type: LocalizableString },
+  'textContent.accessibilityNames.short.no': { type: LocalizableString },
   customMainMenuLinks: { type: Array },
   'customMainMenuLinks.$': { type: linkSchema },
   addPlaceURL: { type: String, regEx: SimpleSchema.RegEx.Url },

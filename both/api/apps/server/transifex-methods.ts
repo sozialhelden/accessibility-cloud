@@ -1,30 +1,30 @@
 import { get } from 'lodash';
 import { Apps } from '../apps';
-import makeCollectionTranslatable from '../../../../server/i18n-new/makeCollectionTranslatable';
-import { AttributeDescriptor } from '../../../../server/i18n-new/i18nTypes';
+import makeCollectionTranslatable, { defaultLocale } from '../../../../server/i18n-new/makeCollectionTranslatable';
+import { TranslationDescriptor } from '../../../../server/i18n-new/i18nTypes';
 
 const translatablePropertyNames = [
-  'clientSideConfiguration.textContent.product.name',
-  'clientSideConfiguration.textContent.product.claim',
-  'clientSideConfiguration.textContent.product.description',
-  'clientSideConfiguration.textContent.onboarding.headerMarkdown',
-  'clientSideConfiguration.textContent.accessibilityNames.long.unknown',
-  'clientSideConfiguration.textContent.accessibilityNames.long.yes',
-  'clientSideConfiguration.textContent.accessibilityNames.long.limited',
-  'clientSideConfiguration.textContent.accessibilityNames.long.no',
-  'clientSideConfiguration.textContent.accessibilityNames.short.unknown',
-  'clientSideConfiguration.textContent.accessibilityNames.short.yes',
-  'clientSideConfiguration.textContent.accessibilityNames.short.limited',
-  'clientSideConfiguration.textContent.accessibilityNames.short.no',
+  'product.name',
+  'product.claim',
+  'product.description',
+  'onboarding.headerMarkdown',
+  'accessibilityNames.long.unknown',
+  'accessibilityNames.long.yes',
+  'accessibilityNames.long.limited',
+  'accessibilityNames.long.no',
+  'accessibilityNames.short.unknown',
+  'accessibilityNames.short.yes',
+  'accessibilityNames.short.limited',
+  'accessibilityNames.short.no',
 ];
 
-const createAttributeDescriptor = (name) => ({
-  attributeName: name,
-  attributePathFn: () => () => name,
-  msgidFn: () => (doc) => `${get(doc, '_id')}.${name}`,
+const createTranslationDescriptor = (name) => ({
+  propertyName: name,
+  propertyPathFn: () => (locale) => `clientSideConfiguration.textContent.${name}.${locale}`,
+  msgidFn: () => (doc) => `${get(doc, '_id')} ${name}`,
 });
 
-const attributeDescriptors: AttributeDescriptor[] = translatablePropertyNames
-  .map(createAttributeDescriptor);
+const translationDescriptors: TranslationDescriptor[] = translatablePropertyNames
+  .map(createTranslationDescriptor);
 
-makeCollectionTranslatable(Apps, attributeDescriptors);
+makeCollectionTranslatable(Apps, translationDescriptors);

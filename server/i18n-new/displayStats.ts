@@ -1,11 +1,11 @@
-import { AttributeDescriptor, MsgidsToDocs } from './i18nTypes';
+import { TranslationDescriptor, MsgidsToTranslationDescriptors } from './i18nTypes';
 import databaseLayer from './databaseLayer';
 import { POFile } from './i18nTypes';
 import { inspect } from 'util';
 
 export default function displayStats({ poFile, msgidsToDocs, context, resourceSlug, locale }: {
   poFile: POFile;
-  msgidsToDocs: MsgidsToDocs,
+  msgidsToDocs: MsgidsToTranslationDescriptors,
   context: string;
   resourceSlug: string;
   locale: string;
@@ -26,7 +26,7 @@ export default function displayStats({ poFile, msgidsToDocs, context, resourceSl
     //   Meteor._debug(x);
     //   return x;
     // })
-    .map(({ doc, attributeDescriptor }) => databaseLayer.getTranslatedString({ doc, attributeDescriptor, locale }))
+    .map(({ doc, translationDescriptor }) => databaseLayer.getLocalTranslation({ doc, translationDescriptor, locale }))
     .filter(translation => !translation)
     .length;
   console.log(`(${localEmptyCount} missing)`);
