@@ -1,32 +1,34 @@
-export type MsgidFn = (attributeName: string) => (doc: object | string) => string;
+// Defines the msgid to use in the .po file for a given attribute name and document.
+// The function is curried so you can cache the outer function if it's more complex.
+export type MsgidFn = (propertyName: string) => (doc: object | string) => string;
 
-export type AttributePathFn = (attributeName: string) => (locale: string) => string;
+// Defines the path to a translatable property in a document in dot notation for lodash's `get`.
+// The function is curried so you can cache the outer function if it's more complex.
+export type PropertyPathFn = (propertyName: string) => (locale: string) => string;
 
-export type TranslationFn = (locale, doc: object | string) => string;
-
-export type AttributeDescriptor = {
-  attributeName: string;
-  attributePathFn: AttributePathFn;
+export type TranslationDescriptor = {
+  propertyName: string;
+  propertyPathFn: PropertyPathFn;
   msgidFn: MsgidFn;
 };
 
-export type GetterOptions = {
+export type GetLocalTranslationOptions = {
   doc: object,
   locale: string,
-  attributeDescriptor: AttributeDescriptor,
+  translationDescriptor: TranslationDescriptor,
 }
 
-export type SetterOptions = {
+export type SetLocalTranslationOptions = {
   doc: object,
   locale: string,
-  attributeDescriptor: AttributeDescriptor,
+  translationDescriptor: TranslationDescriptor,
   msgstr: string,
   collection: any,
 };
 
-export type MsgidsToDocs = {
+export type MsgidsToTranslationDescriptors = {
   [msgid: string]: {
-    attributeDescriptor: AttributeDescriptor,
+    translationDescriptor: TranslationDescriptor,
     doc: object,
   }
 };
@@ -46,6 +48,3 @@ export type POFile = {
     }
   },
 }
-
-
-

@@ -1,6 +1,6 @@
 import { humanize } from 'inflection';
 import { cloneDeep, without, difference } from 'lodash';
-import { AttributeDescriptor } from './i18nTypes';
+import { TranslationDescriptor } from './i18nTypes';
 import databaseLayer from './databaseLayer';
 import { POFile } from './i18nTypes';
 
@@ -11,7 +11,7 @@ import { POFile } from './i18nTypes';
 export default function updateAndPruneUnusedStringsFromPOFile({ msgidsToDocs, context, poFile, collection, }: {
   msgidsToDocs: {
     [msgid: string]: {
-      attributeDescriptor: AttributeDescriptor;
+      translationDescriptor: TranslationDescriptor;
       doc: object;
     };
   };
@@ -27,15 +27,15 @@ export default function updateAndPruneUnusedStringsFromPOFile({ msgidsToDocs, co
   let updatedLocalStringsCount = 0;
   msgids.forEach(msgid => {
     const poFileTranslation = newPOFileTranslations[msgid];
-    const { attributeDescriptor, doc } = msgidsToDocs[msgid];
-    const existingTranslation = databaseLayer.getTranslatedString({ attributeDescriptor, doc, locale });
+    const { translationDescriptor, doc } = msgidsToDocs[msgid];
+    const existingTranslation = databaseLayer.getLocalTranslation({ translationDescriptor, doc, locale });
     if (poFileTranslation) {
       // overwrite existing local translation with data from PO file if necessary
       const msgstr = poFileTranslation.msgstr[0];
       if (msgstr && existingTranslation !== msgstr) {
         console.log(`Updating local string ‘${msgstr}’...`);
         updatedLocalStringsCount++;
-        databaseLayer.setter({ doc, locale, msgstr, attributeDescriptor, collection });
+        databaseLayer.setLocalTranslation({ doc, locale, msgstr, translationDescriptor, collection });
       }
     }
     else {
