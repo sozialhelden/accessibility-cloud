@@ -1,12 +1,7 @@
-import { get } from 'lodash';
-import { check, Match } from 'meteor/check';
-import { Mongo } from 'meteor/mongo';
-
-import addRPCMethodForSyncing from './addRPCMethodForSyncing';
-import extendCollectionSchema from './extendCollectionSchema';
-import resourceSlugForCollection from './resourceSlugForCollection';
 import { cacheRegisteredLocales } from '../../both/i18n/locales';
-import { TranslationDescriptor } from './i18nTypes';
+import resourceSlugForCollection from './resourceSlugForCollection';
+import syncCollectionWithTransifex from './syncCollectionWithTransifex';
+import { TranslationDescriptor, SetLocalTranslationFn, GetLocalTranslationFn, MsgidsToTranslationDescriptors } from './i18nTypes';
 
 export const defaultLocale = 'en_US';
 
@@ -16,55 +11,54 @@ export const defaultLocale = 'en_US';
 // like this:
 //
 //     {
-//       name: 'A very good book',          // the translatable property
-//       translations: {                    // automatically added property
-//         name: {
-//           en_US: 'A very good book',     // translations fetched from transifex
-//           de_DE: 'Ein sehr gutes Buch',
-//         },
+//       name: {
+//         en_US: 'A very good book',     // translations fetched from transifex
+//         de_DE: 'Ein sehr gutes Buch',
 //       },
-//       getLocalizedName(locale),         // automatically added helper method on documents
 //     }
 //
-// The method extends the collection's schema and adds a helper method that is automatically named
-// after the property name. Note that only locales in the form 'de_DE' are imported from transifex.
+// The method adds a RPC method to sync these strings with transifex. Note that only locales in the
+// form 'de_DE' are imported from transifex.
 //
-// Additionally, a Meteor RPC method is registered.
-//
-// For each translated property, you have to supply a descriptor object with these properties:
-//
-// - `propertyName`: Key path to the property in the document
-// - `msgidFn`: A msgid is the translation key on transifex. Having a function for this allows to
-//   generate the msgid from a document's content. The generated msgid is uploaded to transifex in
-//   the translation template. This function takes a document as first parameter and must return a
-//   string (the msgid). An example that would just use the string itself as msgid would be
-//   `propertyName => doc => doc[propertyName]`
-// - `propertyPathFn`: This function takes a locale as only parameter (e.g. `en_US`) and must
-//   return a key string where the string will be found in the MongoDB document. Example:
-//   `propertyName => locale => \`translations.${propertyName}.${locale}\``
+// For each translated property, you have to supply an object that describes where to find the
+// local strings.
 
 export default function makeCollectionTranslatable(
-  collection, // The collection with documents whose propertys should be made translatable
-  translationDescriptors: TranslationDescriptor[], // The property to be made translatable
+  {
+    collection, // The collection with documents whose propertys should be made translatable
+    getLocalTranslation,
+    setLocalTranslation,
+    getMsgidsToTranslationDescriptors,
+  }: {
+    collection: any,
+    getLocalTranslation: GetLocalTranslationFn,
+    setLocalTranslation: SetLocalTranslationFn,
+    getMsgidsToTranslationDescriptors: () => MsgidsToTranslationDescriptors, // The properties to be made translatable
+  }
 ) {
-  check(collection, Mongo.Collection);
-  check(translationDescriptors, [
-    Match.ObjectIncluding({
-      propertyName: String,
-      propertyPathFn: Function,
-      msgidFn: Function,
-    }),
-  ]);
+  // Add RPC method for syncing
 
-  addRPCMethodForSyncing({ collection, translationDescriptors, defaultLocale });
-  translationDescriptors.forEach(({ propertyName }) => {
-    extendCollectionSchema(collection, propertyName);
+  const methodName = `${collection._name}.syncWithTransifex`;
+
+  Meteor.methods({
+    [methodName]() {
+      // if (!this.userId) {
+      //   throw new Meteor.Error(401, 'Please log in first.');
+      // }
+      // if (!isAdmin(this.userId)) {
+      //   throw new Meteor.Error(403, 'You are not authorized to import categories.');
+      // }
+      syncCollectionWithTransifex({
+        defaultLocale,
+        getLocalTranslation,
+        setLocalTranslation,
+        msgidsToTranslationDescriptors: getMsgidsToTranslationDescriptors(),
+        resourceSlug: resourceSlugForCollection(collection),
+      });
+    },
   });
+
+  console.log(`Registered \`${methodName}\` method.`);
 
   cacheRegisteredLocales(resourceSlugForCollection(collection));
 }
-
-export const defaultPropertyPathFn =
-  propertyName => locale => `translations.${propertyName}.${locale}`;
-
-export const defaultMsgidFn = propertyName => doc => get(doc, propertyName);

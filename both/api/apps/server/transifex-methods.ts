@@ -1,30 +1,11 @@
-import { get } from 'lodash';
 import { Apps } from '../apps';
-import makeCollectionTranslatable, { defaultLocale } from '../../../../server/i18n-new/makeCollectionTranslatable';
-import { TranslationDescriptor } from '../../../../server/i18n-new/i18nTypes';
+import { getLocalTranslation, setLocalTranslation, getMsgidsToTranslationDescriptors } from './localTranslationAccessors';
+import makeCollectionTranslatable from '../../../../server/i18n-new/makeCollectionTranslatable';
 
-const translatablePropertyNames = [
-  'product.name',
-  'product.claim',
-  'product.description',
-  'onboarding.headerMarkdown',
-  'accessibilityNames.long.unknown',
-  'accessibilityNames.long.yes',
-  'accessibilityNames.long.limited',
-  'accessibilityNames.long.no',
-  'accessibilityNames.short.unknown',
-  'accessibilityNames.short.yes',
-  'accessibilityNames.short.limited',
-  'accessibilityNames.short.no',
-];
 
-const createTranslationDescriptor = (name) => ({
-  propertyName: name,
-  propertyPathFn: () => (locale) => `clientSideConfiguration.textContent.${name}.${locale}`,
-  msgidFn: () => (doc) => `${get(doc, '_id')} ${name}`,
+makeCollectionTranslatable({
+  getLocalTranslation,
+  setLocalTranslation,
+  getMsgidsToTranslationDescriptors,
+  collection: Apps,
 });
-
-const translationDescriptors: TranslationDescriptor[] = translatablePropertyNames
-  .map(createTranslationDescriptor);
-
-makeCollectionTranslatable(Apps, translationDescriptors);

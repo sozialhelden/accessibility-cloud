@@ -1,15 +1,13 @@
-// Defines the msgid to use in the .po file for a given attribute name and document.
-// The function is curried so you can cache the outer function if it's more complex.
 export type MsgidFn = (propertyName: string) => (doc: object | string) => string;
 
-// Defines the path to a translatable property in a document in dot notation for lodash's `get`.
-// The function is curried so you can cache the outer function if it's more complex.
 export type PropertyPathFn = (propertyName: string) => (locale: string) => string;
 
 export type TranslationDescriptor = {
+  // Name of the property to translate. Used to identify a string in a document.
   propertyName: string;
+  // Defines the path to a translatable property in a document in dot notation for lodash's `get`.
+  // The function is curried so you can cache the outer function if it's more complex.
   propertyPathFn: PropertyPathFn;
-  msgidFn: MsgidFn;
 };
 
 export type GetLocalTranslationOptions = {
@@ -18,13 +16,20 @@ export type GetLocalTranslationOptions = {
   translationDescriptor: TranslationDescriptor,
 }
 
+// This function takes a locale (e.g. `en_US`), a MongoDB document and a translation descriptor and
+// must return a the local translated string.
+export type GetLocalTranslationFn = (options: GetLocalTranslationOptions) => string;
+
+
 export type SetLocalTranslationOptions = {
   doc: object,
   locale: string,
   translationDescriptor: TranslationDescriptor,
   msgstr: string,
-  collection: any,
 };
+
+// Sets a local translation to a new string value.
+export type SetLocalTranslationFn = (options: SetLocalTranslationOptions) => void;
 
 export type MsgidsToTranslationDescriptors = {
   [msgid: string]: {
