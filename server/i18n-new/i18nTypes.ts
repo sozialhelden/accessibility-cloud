@@ -13,7 +13,7 @@ export type TranslationDescriptor = {
 export type GetLocalTranslationOptions = {
   doc: object,
   locale: string,
-  translationDescriptor: TranslationDescriptor,
+  propertyName: string,
 }
 
 // This function takes a locale (e.g. `en_US`), a MongoDB document and a translation descriptor and
@@ -24,7 +24,7 @@ export type GetLocalTranslationFn = (options: GetLocalTranslationOptions) => str
 export type SetLocalTranslationOptions = {
   doc: object,
   locale: string,
-  translationDescriptor: TranslationDescriptor,
+  propertyName: string,
   msgstr: string,
 };
 
@@ -33,10 +33,12 @@ export type SetLocalTranslationFn = (options: SetLocalTranslationOptions) => voi
 
 export type MsgidsToTranslationDescriptors = {
   [msgid: string]: {
-    translationDescriptor: TranslationDescriptor,
+    propertyName: string,
     doc: object,
   }
 };
+
+export type MsgidsToTranslationDescriptorsFn = (() => MsgidsToTranslationDescriptors);
 
 export type POFile = {
   headers: {
@@ -52,4 +54,13 @@ export type POFile = {
       },
     }
   },
+}
+
+
+// Defines how to find or change strings when syncing with transifex.
+
+export interface TranslationStrategy {
+  getLocalTranslation: GetLocalTranslationFn,
+  setLocalTranslation: SetLocalTranslationFn,
+  getMsgidsToTranslationDescriptors: MsgidsToTranslationDescriptorsFn,
 }

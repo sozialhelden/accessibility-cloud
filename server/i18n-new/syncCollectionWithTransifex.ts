@@ -1,5 +1,5 @@
 import { registerLocale, cacheRegisteredLocales } from '../../both/i18n/locales';
-import { TranslationDescriptor, MsgidsToTranslationDescriptors, GetLocalTranslationFn, SetLocalTranslationFn } from './i18nTypes';
+import { TranslationDescriptor, MsgidsToTranslationDescriptors, GetLocalTranslationFn, SetLocalTranslationFn, TranslationStrategy } from './i18nTypes';
 import displayStats from "./displayStats";
 import exportToTransifex from "./exportToTransifex";
 import importFromTransifex from './importFromTransifex';
@@ -20,21 +20,17 @@ export default function syncCollectionWithTransifex({
   context = '',
   // language of the source strings to be translated
   defaultLocale = 'en_US',
-  // Function that returns a local existing translated string
-  getLocalTranslation,
   // slug name of the transifex resource that should be used for syncing
   resourceSlug,
-  // Functoin that sets a local translation to a new string
-  setLocalTranslation,
-  msgidsToTranslationDescriptors,
+  translationStrategy,
 }: {
     context?: string;
     defaultLocale?: string;
-    getLocalTranslation: GetLocalTranslationFn,
-    setLocalTranslation: SetLocalTranslationFn,
+    translationStrategy: TranslationStrategy,
     resourceSlug: string,
-    msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors,
   }) {
+  const msgidsToTranslationDescriptors = translationStrategy.getMsgidsToTranslationDescriptors();
+  const { getLocalTranslation, setLocalTranslation } = translationStrategy;
   console.log('Starting transifex synchronization for', resourceSlug, `(Context: '${context}')`);
   console.log('msgids to translate:', Object.keys(msgidsToTranslationDescriptors));
 
