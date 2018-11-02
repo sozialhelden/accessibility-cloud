@@ -4,7 +4,7 @@ import { HTTP } from 'meteor/http';
 
 import { projectSlug, auth } from './meteorSettings';
 
-export default function getLocales(resourceSlug) {
+export default function getLocales(resourceSlug: string) {
   check(resourceSlug, String);
   console.log('Getting remote locales for', resourceSlug, '...');
   const response = HTTP.get(`https://www.transifex.com/api/2/project/${projectSlug}/resource/${resourceSlug}/stats`, { auth });

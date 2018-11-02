@@ -1,6 +1,7 @@
 import { _ } from 'meteor/underscore';
 import { dasherize, tableize } from 'inflection';
 import { Apps } from '/both/api/apps/apps';
+import { AppLinks } from '/both/api/app-links/app-links';
 import { Languages } from '/both/api/languages/languages';
 import { Licenses } from '/both/api/licenses/licenses';
 import { Organizations } from '/both/api/organizations/organizations';
@@ -18,6 +19,7 @@ import { Images } from '/both/api/images/images';
 
 const collections = [
   Apps,
+  AppLinks,
   Languages,
   Licenses,
   Organizations,

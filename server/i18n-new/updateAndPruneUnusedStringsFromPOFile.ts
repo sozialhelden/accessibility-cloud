@@ -28,15 +28,15 @@ export default function updateAndPruneUnusedStringsFromPOFile({
   let updatedLocalStringsCount = 0;
   msgids.forEach(msgid => {
     const poFileTranslation = newPOFileTranslations[msgid];
-    const { translationDescriptor, doc } = msgidsToTranslationDescriptors[msgid];
-    const existingTranslation = getLocalTranslation({ translationDescriptor, doc, locale });
+    const { propertyName, doc } = msgidsToTranslationDescriptors[msgid];
+    const existingTranslation = getLocalTranslation({ propertyName, doc, locale });
     if (poFileTranslation) {
       // overwrite existing local translation with data from PO file if necessary
       const msgstr = poFileTranslation.msgstr[0];
       if (msgstr && existingTranslation !== msgstr) {
         console.log(`Updating local string ‘${msgstr}’...`);
         updatedLocalStringsCount++;
-        setLocalTranslation({ doc, locale, msgstr, translationDescriptor });
+        setLocalTranslation({ doc, locale, msgstr, propertyName });
       }
     }
     else {

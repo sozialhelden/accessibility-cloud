@@ -29,7 +29,7 @@ export default function displayStats({
   console.log(`${localCount} local translations`);
   const localEmptyCount = Object.keys(msgidsToTranslationDescriptors)
     .map(msgid => msgidsToTranslationDescriptors[msgid])
-    .map(({ doc, translationDescriptor }) => getLocalTranslation({ doc, translationDescriptor, locale }))
+    .map(({ doc, propertyName }) => getLocalTranslation({ doc, propertyName, locale }))
     .filter(translation => !translation)
     .length;
   console.log(`(${localEmptyCount} missing)`);

@@ -2,17 +2,12 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations';
+import { AppLinks } from '/both/api/app-links/app-links';
+import localizedStringSchema from '../shared/localizedStringSchema';
+
 
 export const Apps = new Mongo.Collection('Apps');
 
-const linkSchema = new SimpleSchema({
-  label: { type: String },
-  url: { type: String, regEx: SimpleSchema.RegEx.Url },
-});
-
-const LocalizableString = new SimpleSchema({
-  $: { type: String },
-});
 
 const clientSideConfiguration = new SimpleSchema({
   logoURL: {
@@ -43,25 +38,23 @@ const clientSideConfiguration = new SimpleSchema({
   'meta.googleAnalytics.siteVerificationToken': { type: String, optional: true },
   textContent: { type: Object },
   'textContent.product': { type: Object },
-  'textContent.product.name': { type: LocalizableString },
-  'textContent.product.claim': { type: LocalizableString },
-  'textContent.product.description': { type: LocalizableString },
+  'textContent.product.name': localizedStringSchema,
+  'textContent.product.claim': localizedStringSchema,
+  'textContent.product.description': localizedStringSchema,
   'textContent.onboarding': { type: Object },
-  'textContent.onboarding.headerMarkdown': { type: LocalizableString },
+  'textContent.onboarding.headerMarkdown': localizedStringSchema,
   'textContent.accessibilityNames': { type: Object, optional: true },
   'textContent.accessibilityNames.long': { type: Object },
-  'textContent.accessibilityNames.long.unknown': { type: LocalizableString },
-  'textContent.accessibilityNames.long.yes': { type: LocalizableString },
-  'textContent.accessibilityNames.long.limited': { type: LocalizableString },
-  'textContent.accessibilityNames.long.no': { type: LocalizableString },
+  'textContent.accessibilityNames.long.unknown': localizedStringSchema,
+  'textContent.accessibilityNames.long.yes': localizedStringSchema,
+  'textContent.accessibilityNames.long.limited': localizedStringSchema,
+  'textContent.accessibilityNames.long.no': localizedStringSchema,
   'textContent.accessibilityNames.short': { type: Object },
-  'textContent.accessibilityNames.short.unknown': { type: LocalizableString },
-  'textContent.accessibilityNames.short.yes': { type: LocalizableString },
-  'textContent.accessibilityNames.short.limited': { type: LocalizableString },
-  'textContent.accessibilityNames.short.no': { type: LocalizableString },
-  customMainMenuLinks: { type: Array },
-  'customMainMenuLinks.$': { type: linkSchema },
-  addPlaceURL: { type: String, regEx: SimpleSchema.RegEx.Url },
+  'textContent.accessibilityNames.short.unknown': localizedStringSchema,
+  'textContent.accessibilityNames.short.yes': localizedStringSchema,
+  'textContent.accessibilityNames.short.limited': localizedStringSchema,
+  'textContent.accessibilityNames.short.no': localizedStringSchema,
+  addPlaceURL: { type: String, regEx: SimpleSchema.RegEx.Url, optional: true },
 });
 
 
@@ -131,6 +124,15 @@ Apps.helpers({
 });
 
 Apps.apiParameterizedSelector = selector => selector;
+
+Apps.relationships = {
+  hasMany: {
+    appLinks: {
+      foreignCollection: AppLinks,
+      foreignKey: 'appId',
+    },
+  },
+};
 
 if (Meteor.isClient) {
   window.Apps = Apps;
