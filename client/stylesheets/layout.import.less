@@ -17,6 +17,7 @@
     }
   }
 
+
   .sidebar {
       width:@sidebar-width;
       flex-grow:0;
@@ -27,23 +28,27 @@
   }
 }
 
-
-// -------- FIX ME, obsolete ? ---------------
-
 .page.content.block {
-  // width: 100%;
+  section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
 
-  // &:last-child {
-  //   border-bottom: none;
-  // }
+  .section-white {
+    background-color: white;
+    padding: 2rem;
+  }
 
-  // .centered-content {
-  //   width: 100%;
-  //   max-width: @max-page-width;
-  //   margin-left: auto;
-  //   margin-right: auto;
-  //   padding: @page-padding-top @page-horizontal-padding;
-  // }
+  .flex-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    > * {
+      margin-right: 2rem;
+      margin-bottom: 2rem;
+    }
+  }
 }
 
 .page.content.block.dashboard {

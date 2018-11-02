@@ -14,7 +14,58 @@
 
       {{> afQuickField name='organizationId' value=organization._id type='hidden'}}
 
+      {{#if app.clientSideConfiguration}}
+        <section class="section-white">
+          <h2>Whitelabel configuration</h2>
+
+          <section class="flex-wrap">
+            <section>
+              <h3>Text Content</h3>
+
+              <p>This text content is translatable via transifex.</p>
+
+              {{> afQuickField name='clientSideConfiguration.textContent.product.name.en_US' label='Product name' placeholder='Example: ‘My Accessibility App’'}}
+              {{> afQuickField name='clientSideConfiguration.textContent.product.claim.en_US' label='Product claim' placeholder='Example: ‘Mark and find accessible places.’'}}
+              {{> afQuickField name='clientSideConfiguration.textContent.product.description.en_US' label='Description inside the app'}}
+              {{> afQuickField name='clientSideConfiguration.textContent.onboarding.headerMarkdown.en_US' label='Onboarding app summary (Markdown)' placeholder='First visible text that describes the app to an end user' rows=6}}
+            </section>
+
+            <section>
+              <h3>Whitelabel app: General URLs</h3>
+
+              {{> afQuickField name='clientSideConfiguration.logoURL' label='Logo URL used in the main menu' placeholder='https://…'}}
+              {{> afQuickField name='clientSideConfiguration.iconURL' label='App Icon URL' placeholder='https://…'}}
+              {{> afQuickField name='clientSideConfiguration.addPlaceURL' label='Survey URL for adding new places' placeholder='https://…'}}
+            </section>
+
+            <section>
+              <h3>Twitter Sharing</h3>
+
+              {{> afQuickField name='clientSideConfiguration.meta.twitter.siteHandle' label='Site handle' placeholder='@siteName'}}
+              {{> afQuickField name='clientSideConfiguration.meta.twitter.creatorHandle' label='Creator handle' placeholder='@creatorName'}}
+              {{> afQuickField name='clientSideConfiguration.meta.twitter.imageURL' label='Image URL used as logo for sharing' placeholder='https://…'}}
+            </section>
+
+            <section>
+              <h3>Facebook Sharing</h3>
+
+              {{> afQuickField name='clientSideConfiguration.meta.facebook.appId' label='Facebook App ID' placeholder='0123456789'}}
+              {{> afQuickField name='clientSideConfiguration.meta.facebook.admins' label='Facebook Admin IDs (comma separated)' placeholder='123,456,789'}}
+              {{> afQuickField name='clientSideConfiguration.meta.facebook.imageURL' label='Image URL used as logo for sharing' placeholder='https://…'}}
+            </section>
+
+            <section>
+              <h3>Google Analytics</h3>
+
+              {{> afQuickField name='clientSideConfiguration.meta.googleAnalytics.trackingId' label='Tracking ID' placeholder='GA-12356'}}
+              {{> afQuickField name='clientSideConfiguration.meta.googleAnalytics.siteVerificationToken' label='Site Verification Token' placeholder='ASDOOoDHDUEE34u-dfksfkdjhg'}}
+            </section>
+          </section>
+        </section>
+      {{/if}}
+
       <button type="submit" class="btn btn-primary">Save</button>
     {{/autoForm}}
+
   </div>
 </template>
