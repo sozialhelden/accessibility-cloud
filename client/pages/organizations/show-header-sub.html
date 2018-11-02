@@ -4,7 +4,7 @@
       <a href='{{pathFor "organizations.show" _id=organization._id}}' class='{{activeIfRouteNameIs "organizations.show"}}'>{{_"Data Sources"}}</a>
       <a href='{{pathFor "organizations.show.members" _id=organization._id}}' class='{{activeIfRouteNameIs "organizations.show.members"}}'>{{_"Members"}}</a>
       <a href='{{pathFor "organizations.show.licenses" _id=organization._id}}' class='{{activeIfRouteNameMatches "licenses"}}'>{{_"Licenses"}}</a>
-      <a href='{{pathFor "organizations.show.apps" _id=organization._id}}' class='{{activeIfRouteNameMatches "apps"}}'>{{_ "API Clients"}}</a>
+      <a href='{{pathFor "organizations.show.apps" _id=organization._id}}' class='{{activeIfRouteNameMatches "apps"}}'>{{_ "Apps"}}</a>
       <a href='{{pathFor "organizations.show.settings" _id=organization._id}}' class='{{activeIfRouteNameIs "organizations.show.settings"}}'>{{_"Settings"}}</a>
     {{/if}}
   </div>

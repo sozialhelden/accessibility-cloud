@@ -6,6 +6,8 @@ import { Apps } from '/both/api/apps/apps.js';
 
 import subsManager from '/client/lib/subs-manager';
 
+SimpleSchema.debug = true;
+
 Template.apps_edit_page.onCreated(() => {
   window.Apps = Apps;
 

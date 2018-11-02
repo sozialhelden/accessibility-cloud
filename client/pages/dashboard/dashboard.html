@@ -42,9 +42,9 @@
 
       {{#if getApps}}
         <h3 class='group-header'>
-          {{_"API Clients"}}
+          {{_"Apps"}}
           <a class='action-for-group' href='{{pathFor "organizations.apps.create" _id=_id}}'>
-            {{_"Add API Client"}}
+            {{_"Add an App"}}
           </a>
         </h3>
         <ul class='with-blocks'>
@@ -60,9 +60,9 @@
         </ul>
       {{else}}
         <h3 class='group-header'>
-          {{_"Add API clients to access data"}}
+          {{_"Add Apps to access data"}}
           <a href='.' class='action-for-group'>
-            {{_"Add API Client"}}
+            {{_"Add Apps"}}
           </a>
         </h3>
       {{/if}}
