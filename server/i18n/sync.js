@@ -111,7 +111,7 @@ function displayStats(
   console.log(`${localCount} local translations (${localEmptyCount} missing)`);
 }
 
-function returnNullIf404(fn) {
+function returnNullIfFunctionThrows404(fn) {
   return (...args) => {
     try {
       return fn(...args);
@@ -125,7 +125,7 @@ function returnNullIf404(fn) {
 }
 
 function getSupportedLocales(resourceSlug, defaultLocale) {
-  const remoteLocales = returnNullIf404(getLocales)(resourceSlug) || [];
+  const remoteLocales = returnNullIfFunctionThrows404(getLocales)(resourceSlug) || [];
   if (!remoteLocales.length) {
     console.log('Resource not existing on transifex yet, no remote locales found.');
   }
@@ -165,7 +165,7 @@ export function syncWithTransifex({
   try {
     getSupportedLocales(resourceSlug, defaultLocale).forEach((locale) => {
       registerLocale(resourceSlug, locale);
-      const remotePoFile = returnNullIf404(importFromTransifex)(resourceSlug, locale);
+      const remotePoFile = returnNullIfFunctionThrows404(importFromTransifex)(resourceSlug, locale);
       if (!remotePoFile) {
         console.log('Remote language', locale, 'not existing yet.');
       }
