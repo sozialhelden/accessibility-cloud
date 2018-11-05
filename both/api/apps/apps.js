@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Organizations } from '/both/api/organizations/organizations';
 import { AppLinks } from '/both/api/app-links/app-links';
-import localizedStringSchema from '../shared/localizedStringSchema';
+import LocalizedStringSchema from '../shared/LocalizedStringSchema';
 
 
 export const Apps = new Mongo.Collection('Apps');
@@ -38,22 +38,22 @@ const clientSideConfiguration = new SimpleSchema({
   'meta.googleAnalytics.siteVerificationToken': { type: String, optional: true },
   textContent: { type: Object },
   'textContent.product': { type: Object },
-  'textContent.product.name': localizedStringSchema,
-  'textContent.product.claim': localizedStringSchema,
-  'textContent.product.description': localizedStringSchema,
+  'textContent.product.name': LocalizedStringSchema,
+  'textContent.product.claim': LocalizedStringSchema,
+  'textContent.product.description': LocalizedStringSchema,
   'textContent.onboarding': { type: Object },
-  'textContent.onboarding.headerMarkdown': localizedStringSchema,
+  'textContent.onboarding.headerMarkdown': LocalizedStringSchema,
   'textContent.accessibilityNames': { type: Object, optional: true },
   'textContent.accessibilityNames.long': { type: Object },
-  'textContent.accessibilityNames.long.unknown': localizedStringSchema,
-  'textContent.accessibilityNames.long.yes': localizedStringSchema,
-  'textContent.accessibilityNames.long.limited': localizedStringSchema,
-  'textContent.accessibilityNames.long.no': localizedStringSchema,
+  'textContent.accessibilityNames.long.unknown': LocalizedStringSchema,
+  'textContent.accessibilityNames.long.yes': LocalizedStringSchema,
+  'textContent.accessibilityNames.long.limited': LocalizedStringSchema,
+  'textContent.accessibilityNames.long.no': LocalizedStringSchema,
   'textContent.accessibilityNames.short': { type: Object },
-  'textContent.accessibilityNames.short.unknown': localizedStringSchema,
-  'textContent.accessibilityNames.short.yes': localizedStringSchema,
-  'textContent.accessibilityNames.short.limited': localizedStringSchema,
-  'textContent.accessibilityNames.short.no': localizedStringSchema,
+  'textContent.accessibilityNames.short.unknown': LocalizedStringSchema,
+  'textContent.accessibilityNames.short.yes': LocalizedStringSchema,
+  'textContent.accessibilityNames.short.limited': LocalizedStringSchema,
+  'textContent.accessibilityNames.short.no': LocalizedStringSchema,
   addPlaceURL: { type: String, regEx: SimpleSchema.RegEx.Url, optional: true },
 });
 
