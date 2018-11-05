@@ -1,4 +1,4 @@
-import { _ } from 'meteor/stevezhu:lodash';
+import { capitalize } from 'lodash';
 import { check } from 'meteor/check';
 import { Mongo } from 'meteor/mongo';
 import { resourceSlugForCollection } from './resource-slug';
@@ -52,7 +52,7 @@ export function addTranslationHelper(
 
   const resourceSlug = resourceSlugForCollection(collection);
 
-  const helperName = `getLocalized${_.capitalize(attributeName.replace(/^_/, ''))}`;
+  const helperName = `getLocalized${capitalize(attributeName.replace(/^_/, ''))}`;
   const helper = createTranslationHelper({
     resourceSlug,
     defaultLocale,

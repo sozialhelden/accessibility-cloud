@@ -1,6 +1,11 @@
 import { check, Match } from 'meteor/check';
 import { s } from 'meteor/underscorestring:underscore.string';
-import { _ } from 'meteor/stevezhu:lodash';
+import {
+  cloneDeep,
+  difference,
+  without,
+  union,
+} from 'lodash';
 import { getLocales, importFromTransifex, exportToTransifex } from './transifex-api';
 import { registerLocale, cacheRegisteredLocales } from '../../both/i18n/locales';
 
@@ -30,13 +35,13 @@ export function syncStringsWithPOFile({
   check(Object.values(msgidsToDocs), [Match.Any]);
 
   const locale = poFile.headers.language;
-  const newPOFile = _.cloneDeep(poFile);
+  const newPOFile = cloneDeep(poFile);
   newPOFile.translations[context] = newPOFile.translations[context] || {};
   const poFileTranslations = newPOFile.translations[context];
 
   const msgids = Object.keys(msgidsToDocs);
   let updatedLocalStringsCount = 0;
-  msgids.forEach(msgid => {
+  msgids.forEach((msgid) => {
     const poFileTranslation = poFileTranslations[msgid];
     const doc = msgidsToDocs[msgid];
     if (poFileTranslation) {
@@ -45,7 +50,7 @@ export function syncStringsWithPOFile({
       const existingTranslation = getTranslationForDocFn(doc, locale);
       if (msgstr && existingTranslation !== msgstr) {
         // console.log(`Updating local string ‘${msgstr}’...`);
-        updatedLocalStringsCount++;
+        updatedLocalStringsCount += 1;
         updateLocalDocumentFn({ doc, locale, msgstr });
       }
     } else {
@@ -63,8 +68,8 @@ export function syncStringsWithPOFile({
   console.log(`Updated ${updatedLocalStringsCount} local strings.`);
 
   const translatedMsgids = Object.keys(poFileTranslations);
-  const msgidsToDelete = _.without(_.difference(translatedMsgids, msgids), '');
-  msgidsToDelete.forEach(msgid => {
+  const msgidsToDelete = without(difference(translatedMsgids, msgids), '');
+  msgidsToDelete.forEach((msgid) => {
     delete poFileTranslations[msgid];
   });
   console.log('Deleted msgids from synced PO file:', msgidsToDelete);
@@ -80,15 +85,15 @@ function stripTranslations(poFile, context = '') {
   check(context, String);
   check(poFile, Object);
 
-  const newPOFile = _.cloneDeep(poFile);
-  Object.values(newPOFile.translations[context]).forEach(translation => {
+  const newPOFile = cloneDeep(poFile);
+  Object.values(newPOFile.translations[context]).forEach((translation) => {
     translation.msgstr = ['']; // eslint-disable-line no-param-reassign
   });
   return newPOFile;
 }
 
 function displayStats(
-  { poFile, msgidsToDocs, context, resourceSlug, locale, getTranslationForDocFn }
+  { poFile, msgidsToDocs, context, resourceSlug, locale, getTranslationForDocFn },
 ) {
   const remoteTranslations = poFile.translations[context] || {};
   console.log('Syncing', resourceSlug, 'translations for locale', locale, '...');
@@ -124,7 +129,7 @@ function getSupportedLocales(resourceSlug, defaultLocale) {
   if (!remoteLocales.length) {
     console.log('Resource not existing on transifex yet, no remote locales found.');
   }
-  return _.union([defaultLocale], remoteLocales);
+  return union([defaultLocale], remoteLocales);
 }
 
 // Imports strings from transifex, writes new translations into the given documents and removes
@@ -158,7 +163,7 @@ export function syncWithTransifex({
   console.log('Starting transifex synchronization for', resourceSlug, `(Context: '${context}')`);
 
   try {
-    getSupportedLocales(resourceSlug, defaultLocale).forEach(locale => {
+    getSupportedLocales(resourceSlug, defaultLocale).forEach((locale) => {
       registerLocale(resourceSlug, locale);
       const remotePoFile = returnNullIf404(importFromTransifex)(resourceSlug, locale);
       if (!remotePoFile) {

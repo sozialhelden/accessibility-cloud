@@ -1,4 +1,4 @@
-import { _ } from 'meteor/stevezhu:lodash';
+import { cloneDeep, set } from 'lodash';
 import {
   pathsInObject,
   getTranslationForAccessibilityAttributeName,
@@ -16,10 +16,10 @@ const i18nHelpers = {
     return category.getLocalizedId(locale);
   },
   getLocalizedAccessibility(locale) {
-    const result = _.cloneDeep(this.properties.accessibility);
+    const result = cloneDeep(this.properties.accessibility);
     const paths = pathsInObject(result);
     paths.forEach((path) => {
-      _.set(result, `${path}Localized`, getTranslationForAccessibilityAttributeName(path, locale));
+      set(result, `${path}Localized`, getTranslationForAccessibilityAttributeName(path, locale));
     });
     return result;
   },
