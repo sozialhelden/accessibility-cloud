@@ -1,5 +1,5 @@
-import getDefaultTranslationStrategy from '../../../../server/i18n-new/getDefaultTranslationStrategy';
-import makeCollectionTranslatable from '../../../../server/i18n-new/makeCollectionTranslatable';
+import getDefaultTranslationStrategy from '../../../../server/i18n/getDefaultTranslationStrategy';
+import makeCollectionTranslatable from '../../../../server/i18n/makeCollectionTranslatable';
 import { AppLinks } from '../app-links';
 
 const translatablePropertyNames = [
