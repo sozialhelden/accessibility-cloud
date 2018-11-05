@@ -12,7 +12,7 @@ export default function getLocales(resourceSlug: string) {
     const message = 'Error while determining locales on transifex.';
     console.error(message);
     console.error(response);
-    throw new Meteor.Error(response.statusCode, message);
+    return null;
   }
   const json = response.data;
   return Object.keys(json).filter(locale => locale.match(/[a-z][a-z]_[A-Z][A-Z]/));

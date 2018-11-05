@@ -11,6 +11,7 @@ export default function importFromTransifex(resourceSlug, locale) {
   const response = HTTP.get(`https://www.transifex.com/api/2/project/${projectSlug}/resource/${resourceSlug}/translation/${locale}`, { auth });
 
   if (response.statusCode === 404) {
+    // This is not an error.
     return null;
   }
 
@@ -18,7 +19,7 @@ export default function importFromTransifex(resourceSlug, locale) {
     const message = `Error while downloading ${locale} from transifex.`;
     console.error(message);
     console.error(response);
-    throw new Meteor.Error(response.statusCode, message);
+    return null;
   }
 
   const json = response.data;

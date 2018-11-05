@@ -6,7 +6,6 @@ import importFromTransifex from './importFromTransifex';
 import generateEmptyPoFile from "./generateEmptyPoFile";
 import getSupportedLocales from "./getSupportedLocales";
 import resourceSlugForCollection from './resourceSlugForCollection';
-import returnNullIfFunctionThrows404 from "./returnNullIfFunctionThrows404";
 import stripTranslations from "./stripTranslations";
 import updateAndPruneUnusedStringsFromPOFile from "./updateAndPruneUnusedStringsFromPOFile";
 
@@ -37,7 +36,7 @@ export default function syncCollectionWithTransifex({
   try {
     getSupportedLocales(resourceSlug, defaultLocale).forEach(locale => {
       registerLocale(resourceSlug, locale);
-      const remotePoFile = returnNullIfFunctionThrows404(importFromTransifex)(resourceSlug, locale);
+      const remotePoFile = importFromTransifex(resourceSlug, locale);
       if (!remotePoFile) {
         console.log('Remote language', locale, 'not existing yet.');
       }
