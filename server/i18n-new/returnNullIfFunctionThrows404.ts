@@ -1,4 +1,4 @@
-export default function returnNullIf404(fn: Function) {
+export default function returnNullIfFunctionThrows404(fn: Function) {
   return (...args) => {
     try {
       return fn(...args);
