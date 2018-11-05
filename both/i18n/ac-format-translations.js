@@ -1,4 +1,4 @@
-import { _ } from 'meteor/stevezhu:lodash';
+import { flatten, map, isObject } from 'lodash';
 import { createTranslationHelper } from './translation-helper';
 
 export const msgidsToDocs = {};
@@ -26,9 +26,9 @@ export function getTranslationForAccessibilityAttributeName(path, locale) {
 
 
 export function pathsInObjectWithRootPath(currentPath, object) {
-  return _.flatten(_.map(object, (value, key) => {
+  return flatten(map(object, (value, key) => {
     const path = currentPath ? `${currentPath || ''}.${key}` : key;
-    return _.isObject(value) ? [path].concat(pathsInObjectWithRootPath(path, value)) : path;
+    return isObject(value) ? [path].concat(pathsInObjectWithRootPath(path, value)) : path;
   }));
 }
 

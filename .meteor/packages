@@ -84,7 +84,6 @@ factory
 underscorestring:underscore.string
 momentjs:moment
 browser-policy@1.1.0
-stevezhu:lodash
 markdown@1.0.12
 shell-server@0.2.3
 jparker:crypto-md5
