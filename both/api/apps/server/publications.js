@@ -9,12 +9,12 @@ publishPrivateFieldsForMembers('apps', Apps);
 
 // Additionally publish app tokens for organization managers
 
-Meteor.publish('apps.private.withToken', function publish() {
+Meteor.publish('apps.private', function publish() {
   const organizationIds = getAccessibleOrganizationIdsForRoles(
-    this.userId, ['manager', 'developer', 'founder']
+    this.userId, ['manager', 'developer', 'founder'],
   );
   const selector = { organizationId: { $in: organizationIds } };
   const options = { fields: { tokenString: 1 } };
-  console.log('Publishing apps.private.withToken for user', this.userId, selector, options);
+  console.log('Publishing apps.private for user', this.userId, selector, options);
   return Apps.find(selector, options);
 });
