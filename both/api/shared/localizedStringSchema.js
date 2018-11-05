@@ -1,8 +1,8 @@
 // import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-const localizedStringSchema = {
+const LocalizedStringSchema = {
   type: Object,
   blackbox: true,
 };
 
-export default localizedStringSchema;
+export default LocalizedStringSchema;
