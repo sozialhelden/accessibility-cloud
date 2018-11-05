@@ -1,5 +1,5 @@
 import { union } from 'lodash';
-import getLocales from "./getLocales";
+import getLocales from './getLocales';
 
 export default function getSupportedLocales(resourceSlug: string, defaultLocale: string) {
   const remoteLocales = getLocales(resourceSlug) || [];

@@ -1,11 +1,10 @@
 import { registerLocale, cacheRegisteredLocales } from '../../both/i18n/locales';
-import { TranslationDescriptor, MsgidsToTranslationDescriptors, GetLocalTranslationFn, SetLocalTranslationFn, TranslationStrategy } from './i18nTypes';
+import { TranslationStrategy } from './i18nTypes';
 import displayStats from "./displayStats";
 import exportToTransifex from "./exportToTransifex";
 import importFromTransifex from './importFromTransifex';
 import generateEmptyPoFile from "./generateEmptyPoFile";
 import getSupportedLocales from "./getSupportedLocales";
-import resourceSlugForCollection from './resourceSlugForCollection';
 import stripTranslations from "./stripTranslations";
 import updateAndPruneUnusedStringsFromPOFile from "./updateAndPruneUnusedStringsFromPOFile";
 
