@@ -12,7 +12,7 @@ function findLocaleWithCountry(resourceSlug, localeWithoutCountry) {
 }
 
 export function createTranslationHelper(
-  { resourceSlug, defaultLocale, getTranslationFn, msgidFn = (d) => d }
+  { resourceSlug, defaultLocale, getTranslationFn, msgidFn = d => d },
 ) {
   return (requestedLocale, docOrMsgId) => {
     const sanitizedRequestedLocale = (requestedLocale || defaultLocale).replace('_', '-');
@@ -42,7 +42,7 @@ export function createTranslationHelper(
 
 
 export function addTranslationHelper(
-  { attributeName, attributePathFn, collection, defaultLocale, msgidFn }
+  { attributeName, attributePathFn, collection, defaultLocale, msgidFn },
 ) {
   check(attributeName, String);
   check(attributePathFn, Function);
