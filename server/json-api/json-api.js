@@ -113,10 +113,6 @@ function handleFilteredJSONRequests(req, res, next) {
     return handle();
   }
 
-  if (req.url.match(/categories\.json/)) {
-    console.log('Loading categories.json, debug info:', req.body, req.headers);
-  }
-
   const acceptedFormats = (req.headers.accept || '')
     .split(';')
     .map(format => format.trim());
