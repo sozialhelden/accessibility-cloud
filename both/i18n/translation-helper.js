@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash';
+import { capitalize, get } from 'lodash';
 import { check } from 'meteor/check';
 import { Mongo } from 'meteor/mongo';
 import { resourceSlugForCollection } from './resource-slug';
@@ -59,7 +59,7 @@ export function addTranslationHelper(
     attributePathFn,
     msgidFn,
     getTranslationFn(locale, doc) {
-      return _.get(doc, attributePathFn(locale));
+      return get(doc, attributePathFn(locale));
     },
   });
 
