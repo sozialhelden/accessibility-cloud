@@ -1,6 +1,5 @@
-import { TranslationDescriptor, MsgidsToTranslationDescriptors, GetLocalTranslationFn } from './i18nTypes';
+import {  MsgidsToTranslationDescriptors, GetLocalTranslationFn } from './i18nTypes';
 import { POFile } from './i18nTypes';
-import { inspect } from 'util';
 
 export default function displayStats({
   context,

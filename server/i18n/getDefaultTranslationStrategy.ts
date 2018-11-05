@@ -3,13 +3,19 @@ import { SetLocalTranslationOptions, GetLocalTranslationOptions, MsgidsToTransla
 import { defaultLocale } from './makeCollectionTranslatable';
 
 
-export const propertyPathFn = (name, locale) => `${name}.${locale}`;
+export const propertyPathFn = (name: string, locale: string) => `${name}.${locale}`;
 
 
 // This creates functions that access strings from a local MongoDB collection for
 // syncing translations with transifex.
 
-export default function getDefaultTranslationStrategy({ collection, translatablePropertyNames }): TranslationStrategy {
+export default function getDefaultTranslationStrategy({
+  collection,
+  translatablePropertyNames,
+}: {
+  collection: any,
+  translatablePropertyNames: string[],
+}): TranslationStrategy {
   const setLocalTranslation = ({ doc, locale, msgstr, propertyName }: SetLocalTranslationOptions) => {
     console.log('Setting local translation', { doc, locale, msgstr, propertyName });
     const attributePath = propertyPathFn(propertyName, locale);

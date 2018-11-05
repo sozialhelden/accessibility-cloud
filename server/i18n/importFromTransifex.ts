@@ -3,7 +3,7 @@ import { check } from 'meteor/check';
 import { HTTP } from 'meteor/http';
 import { projectSlug, auth } from './meteorSettings';
 
-export default function importFromTransifex(resourceSlug, locale) {
+export default function importFromTransifex(resourceSlug: string, locale: string) {
   check(resourceSlug, String);
   check(locale, String);
 

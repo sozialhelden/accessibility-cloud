@@ -1,6 +1,5 @@
 import * as gettextParser from 'gettext-parser';
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
 import { HTTP } from 'meteor/http';
 import { dasherize, tableize } from 'inflection';
 
@@ -39,7 +38,7 @@ export default function exportToTransifex({ resourceSlug, poFile, asSourceFile, 
     response = HTTP.put(url, { auth, data });
   }
 
-  if (response && response.statusCode > 299) {
+  if (response && response.statusCode && response.statusCode > 299) {
     const message = 'Error while uploading to transifex.';
     console.error(message);
     console.error(response);
