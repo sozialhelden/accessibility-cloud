@@ -14,5 +14,5 @@ export default function getLocales(resourceSlug: string) {
     return null;
   }
   const json = response.data;
-  return Object.keys(json).filter(locale => locale.match(/[a-z][a-z]_[A-Z][A-Z]/));
+  return Object.keys(json).filter(locale => locale.match(/[a-z]{2}(_[A-Z]{2})?/));
 }
