@@ -26,7 +26,7 @@ Template.admin_page.helpers(helpers);
 Template.admin_page.helpers({
   isUserMemberOfOrganizationWithId,
   organizations() {
-    return Organizations.find({});
+    return Organizations.find({}, { sort: { name: 1 }});
   },
   sources() {
     return Sources.find({});
@@ -61,5 +61,9 @@ Template.admin_page.events({
     Meteor.call('Categories.syncWithTransifex');
     Meteor.call('Sources.syncWithTransifex');
     Meteor.call('acFormat.syncWithTransifex');
+  },
+  'click .js-sync-app-translations'() {
+    Meteor.call('Apps.syncWithTransifex');
+    Meteor.call('AppLinks.syncWithTransifex');
   },
 });
