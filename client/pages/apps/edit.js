@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { AutoForm } from 'meteor/aldeed:autoform';
@@ -15,6 +16,28 @@ Template.apps_edit_page.onCreated(() => {
 Template.apps_edit_page.helpers({
   app() {
     return Apps.findOne({ _id: FlowRouter.getParam('_id') });
+  },
+});
+
+Template.apps_edit_page.events({
+  'click .js-set-app-hostname'(event, templateInstance) {
+    const input = templateInstance.find('.js-app-hostname');
+    const hostname = input.value.toLowerCase();
+    event.preventDefault();
+    if (!hostname) {
+      alert('Please set an app hostname first.');
+      return;
+    }
+
+    const _id = FlowRouter.getParam('_id');
+
+    Meteor.call('setAccessibilityAppHostname', _id, hostname, (error) => {
+      if (error) {
+        alert(`Could not set hostname: ${error}`);
+        return;
+      }
+      FlowRouter.go(`/apps/${hostname}/edit`);
+    });
   },
 });
 

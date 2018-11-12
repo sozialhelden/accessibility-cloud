@@ -5,8 +5,8 @@
 
   <div class='page content block'>
     <h2>{{_ "Edit App"}}</h2>
-    {{#autoForm collection='Apps' docId=app._id doc=app id="updateAppForm" type="update"}}
 
+    {{#autoForm collection='Apps' docId=app._id doc=app id="updateAppForm" type="update"}}
       {{> afQuickField name='name'}}
       {{> afQuickField name='description'}}
       {{> afQuickField name='websiteURL'}}
@@ -16,7 +16,7 @@
 
       {{#if app.clientSideConfiguration}}
         <section class="section-white">
-          <h2>Whitelabel configuration</h2>
+          <h2>Accessibility app configuration</h2>
 
           <section class="flex-wrap">
             <section>
@@ -67,5 +67,20 @@
       <button type="submit" class="btn btn-primary">Save</button>
     {{/autoForm}}
 
+    {{#if isAdmin}}
+      <form>
+        <div class="form-group">
+          <input type="text" name="hostname" class="js-app-hostname" value={{#if app.clientSideConfiguration}}{{_id}}{{/if}} placeholder="MyAppHostname.com" />
+          <button class="js-set-app-hostname btn btn-primary">
+            {{#if app.clientSideConfiguration}}
+              Set app hostname
+            {{else}}
+              Create a11y app
+            {{/if}}
+          </button>
+          <span class="help-block"></span>
+        </div>
+      </form>
+    {{/if}}
   </div>
 </template>
