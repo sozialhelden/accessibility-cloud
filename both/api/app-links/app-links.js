@@ -13,6 +13,8 @@ AppLinks.schema = new SimpleSchema({
   label: LocalizedStringSchema,
   url: LocalizedStringSchema,
   order: { type: Number },
+  tags: { type: Array, optional: true },
+  'tags.$': { type: String },
 });
 
 AppLinks.attachSchema(AppLinks.schema);
