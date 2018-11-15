@@ -22,12 +22,33 @@
             <section>
               <h3>Text Content</h3>
 
-              <p>This text content is translatable via transifex.</p>
+              <p>This text content is translatable via <a href="https://www.transifex.com/sozialhelden/accessibility-cloud/translate/#en_US/apps">transifex</a>.</p>
 
-              {{> afQuickField name='clientSideConfiguration.textContent.product.name.en_US' label='Product name' placeholder='Example: ‘My Accessibility App’'}}
-              {{> afQuickField name='clientSideConfiguration.textContent.product.claim.en_US' label='Product claim' placeholder='Example: ‘Mark and find accessible places.’'}}
-              {{> afQuickField name='clientSideConfiguration.textContent.product.description.en_US' label='Description inside the app'}}
-              {{> afQuickField name='clientSideConfiguration.textContent.onboarding.headerMarkdown.en_US' label='Onboarding app summary (Markdown)' placeholder='First visible text that describes the app to an end user' rows=6}}
+              <button class='btn btn-primary js-sync-app-translations'>Sync app translations</button>
+              <p class='subtle'>Click this button to sync accessibility app custom text content, main menu link labels and link URLs.</p>
+
+              {{#with app.clientSideConfiguration.textContent.product}}
+                <div class="form-group">
+                  <label class="control-label">Product name</label>
+                  <div class="subtle">{{name.en_US}}</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Product claim</label>
+                  <div class="subtle">{{claim.en_US}}</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Description inside the app</label>
+                  <div class="subtle">{{description.en_US}}</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Onboarding app summary (Markdown)</label>
+                  <p class="subtle">
+                    {{#markdown}}
+                      {{clientSideConfiguration.textContent.onboarding.headerMarkdown.en_US}}
+                    {{/markdown}}
+                  </p>
+                </div>
+              {{/with}}
             </section>
 
             <section>
