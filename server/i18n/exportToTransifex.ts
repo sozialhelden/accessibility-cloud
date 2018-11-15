@@ -6,12 +6,16 @@ import { dasherize, tableize } from 'inflection';
 import { projectSlug, auth } from './meteorSettings';
 import { POFile } from './i18nTypes';
 
-
-export default function exportToTransifex({ resourceSlug, poFile, asSourceFile, isNewResource }: {
-  resourceSlug: string,
-  poFile: POFile,
-  asSourceFile: boolean,
-  isNewResource: boolean,
+export default function exportToTransifex({
+  resourceSlug,
+  poFile,
+  asSourceFile,
+  isNewResource,
+}: {
+  resourceSlug: string;
+  poFile: POFile;
+  asSourceFile: boolean;
+  isNewResource: boolean;
 }) {
   const locale = poFile.headers.language;
   const poFileString = gettextParser.po.compile(poFile).toString();
@@ -29,12 +33,29 @@ export default function exportToTransifex({ resourceSlug, poFile, asSourceFile, 
       priority: 0,
       content: poFileString,
     };
-    console.log('Creating new resource', projectSlug, '/', resourceSlug, 'with', locale, 'translations on transifex...');
+    console.log(
+      'Creating new resource',
+      projectSlug,
+      '/',
+      resourceSlug,
+      'with',
+      locale,
+      'translations on transifex...',
+    );
     response = HTTP.post(url, { auth, data });
   } else {
-    const url = `https://www.transifex.com/api/2/project/${projectSlug}/resource/${resourceSlug}/${asSourceFile ? 'content' : `translation/${locale}`}/`;
+    const url = `https://www.transifex.com/api/2/project/${projectSlug}/resource/${resourceSlug}/${
+      asSourceFile ? 'content' : `translation/${locale}`
+    }/`;
     const data = { content: poFileString };
-    console.log('Uploading', locale, 'translations to transifex resource', projectSlug, '/', resourceSlug);
+    console.log(
+      'Uploading',
+      locale,
+      'translations to transifex resource',
+      projectSlug,
+      '/',
+      resourceSlug,
+    );
     response = HTTP.put(url, { auth, data });
   }
 
