@@ -10,7 +10,7 @@ export function getLocales(resourceSlug) {
 
 export function registerLocale(resourceSlug, locale) {
   AvailableLocales.upsert({ resourceSlug, locale }, { resourceSlug, locale });
-  console.log('Registered locale', locale, 'for', resourceSlug, 'now', getLocales(resourceSlug));
+  console.log('Registered locale', locale, 'for', resourceSlug, '.');
 }
 
 export function cacheRegisteredLocales(resourceSlug) {
