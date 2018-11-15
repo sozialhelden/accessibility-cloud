@@ -39,6 +39,11 @@ Template.apps_edit_page.events({
       FlowRouter.go(`/apps/${hostname}/edit`);
     });
   },
+  'click .js-sync-app-translations'(event) {
+    Meteor.call('Apps.syncWithTransifex');
+    Meteor.call('AppLinks.syncWithTransifex');
+    event.preventDefault();
+  },
 });
 
 AutoForm.addHooks('updateAppForm', {
