@@ -18,4 +18,10 @@ const translatablePropertyNames = [
 ];
 
 const collection = Apps;
-makeCollectionTranslatable({ collection, translationStrategy: getDefaultTranslationStrategy({ collection, translatablePropertyNames })})
+makeCollectionTranslatable({
+  collection,
+  translationStrategy: getDefaultTranslationStrategy({
+    collection,
+    translatablePropertyNames,
+  }),
+});

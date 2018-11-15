@@ -1,8 +1,11 @@
 import { humanize } from 'inflection';
 import { cloneDeep, without, difference } from 'lodash';
-import { GetLocalTranslationFn, SetLocalTranslationFn, MsgidsToTranslationDescriptors } from './i18nTypes';
+import {
+  GetLocalTranslationFn,
+  SetLocalTranslationFn,
+  MsgidsToTranslationDescriptors,
+} from './i18nTypes';
 import { POFile } from './i18nTypes';
-
 
 // - Write new translations from transifex into local docs
 // - clone given PO file, remove translations from clone that are not in local docs anymore
@@ -15,10 +18,10 @@ export default function updateAndPruneUnusedStringsFromPOFile({
   setLocalTranslation,
 }: {
   context: string;
-  getLocalTranslation: GetLocalTranslationFn,
-  msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors,
+  getLocalTranslation: GetLocalTranslationFn;
+  msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors;
   poFile: POFile;
-  setLocalTranslation: SetLocalTranslationFn,
+  setLocalTranslation: SetLocalTranslationFn;
 }) {
   const locale = poFile.headers.language;
   const newPOFile = cloneDeep(poFile);
@@ -29,7 +32,11 @@ export default function updateAndPruneUnusedStringsFromPOFile({
   msgids.forEach(msgid => {
     const poFileTranslation = newPOFileTranslations[msgid];
     const { propertyName, doc } = msgidsToTranslationDescriptors[msgid];
-    const existingTranslation = getLocalTranslation({ propertyName, doc, locale });
+    const existingTranslation = getLocalTranslation({
+      propertyName,
+      doc,
+      locale,
+    });
     if (poFileTranslation) {
       // overwrite existing local translation with data from PO file if necessary
       const msgstr = poFileTranslation.msgstr[0];
@@ -38,13 +45,14 @@ export default function updateAndPruneUnusedStringsFromPOFile({
         updatedLocalStringsCount++;
         setLocalTranslation({ doc, locale, msgstr, propertyName });
       }
-    }
-    else {
+    } else {
       // add existing local translation to PO file
       const isDefaultLocale = locale === 'en_US';
       newPOFileTranslations[msgid] = {
         msgid,
-        msgstr: [existingTranslation || (isDefaultLocale ? humanize(msgid) : '')],
+        msgstr: [
+          existingTranslation || (isDefaultLocale ? humanize(msgid) : ''),
+        ],
       };
     }
   });

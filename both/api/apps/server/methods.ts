@@ -30,7 +30,7 @@ Meteor.methods({
     check(hostname, String);
     const app = getAppAndEnsureAccess(this.userId, previousAppId);
     const clientSideConfiguration = {};
-    Apps.insert({ clientSideConfiguration, ...app, _id: hostname }, (error) => {
+    Apps.insert({ clientSideConfiguration, ...app, _id: hostname }, error => {
       if (error) {
         throw error;
       }
