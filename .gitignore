@@ -4,3 +4,4 @@ settings/*
 !settings/*-example.json
 .DS_Store
 .meteor/local/
+npm-debug.log
