@@ -22,6 +22,7 @@ export default function getSupportedLocales(
   const json = response.data;
   const remoteLocales = Object.keys(json)
     .filter(locale => locale.match(/[a-z]{2}(_[A-Z]{2})?/))
+    .filter(locale => locale !== 'en') // 'en' is the source language on transifex.
     .sort();
   if (!remoteLocales.length) {
     console.log(
