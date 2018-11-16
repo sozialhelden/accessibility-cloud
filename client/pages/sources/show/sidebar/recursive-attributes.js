@@ -25,13 +25,20 @@ Template.sources_show_page_recursive_attributes.helpers({
   isArray() {
     return _.isArray(this.properties);
   },
+  isObject() {
+    return _.isObject(this.properties);
+  },
   needsHistogram() {
     if (this.properties && this.properties.value) return false;
-    const lastPathSegment = this.attributeName.match(/[^\.]+$/)[0];
+    const matchedSegment = this.attributeName.match(/[^.]+$/);
+    if (!matchedSegment) {
+      return false;
+    }
+    const lastPathSegment = matchedSegment[0];
     return histogramAttributesMatchers.find(m => lastPathSegment.match(m));
   },
   isBoolean() {
-    const keys = Object.keys(this.properties)
+    const keys = Object.keys(this.properties);
     if (keys.filter(k => !['undefined', 'true', 'false'].includes(k)).length) {
       return false;
     }

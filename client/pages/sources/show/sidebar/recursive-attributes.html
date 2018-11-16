@@ -34,21 +34,23 @@
           </ol>
         </dd>
       {{else}}
-        <dt class='attribute-name attributes'>{{#if key}}<code>.{{key}}</code>{{/if}}</dt>
-        <dd class='attributes'>
-          <dl class='attributes'>
-            {{#each keyValues properties}}
-              {{#unless attributeIsHidden (joinPath ../attributeName key)}}
-                {{> sources_show_page_recursive_attributes
-                  key=key
-                  attributeName=(joinPath ../attributeName key)
-                  documentCount=../documentCount
-                  properties=value
-                  attributeDistribution=../attributeDistribution}}
-              {{/unless}}
-            {{/each}}
-          </dl>
-        </dd>
+        {{#if isObject}}
+          <dt class='attribute-name attributes'>{{#if key}}<code>.{{key}}</code>{{/if}}</dt>
+          <dd class='attributes'>
+            <dl class='attributes'>
+              {{#each keyValues properties}}
+                {{#unless attributeIsHidden (joinPath ../attributeName key)}}
+                  {{> sources_show_page_recursive_attributes
+                    key=key
+                    attributeName=(joinPath ../attributeName key)
+                    documentCount=../documentCount
+                    properties=value
+                    attributeDistribution=../attributeDistribution}}
+                {{/unless}}
+              {{/each}}
+            </dl>
+          </dd>
+        {{/if}}
       {{/if}}
     {{/if}}
   {{/if}}
