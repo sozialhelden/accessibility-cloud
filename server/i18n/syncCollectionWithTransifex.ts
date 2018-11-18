@@ -18,17 +18,15 @@ import updateAndPruneUnusedStringsFromPOFile from './updateAndPruneUnusedStrings
 export default function syncCollectionWithTransifex({
   // PO files support the same msgid key string to appear in different contexts.
   context = '',
-  // language of the source strings to be translated
-  defaultLocale = 'en_US',
   // slug name of the transifex resource that should be used for syncing
   resourceSlug,
   translationStrategy,
 }: {
   context?: string;
-  defaultLocale?: string;
   translationStrategy: TranslationStrategy;
   resourceSlug: string;
 }) {
+  const sourceLocale = 'en';
   const msgidsToTranslationDescriptors = translationStrategy.getMsgidsToTranslationDescriptors();
   const { getLocalTranslation, setLocalTranslation } = translationStrategy;
   console.log(
@@ -42,12 +40,15 @@ export default function syncCollectionWithTransifex({
   );
 
   try {
-    const locales = getSupportedLocales(resourceSlug, defaultLocale);
+    const locales = getSupportedLocales(resourceSlug, sourceLocale);
+
     if (!locales) {
       return;
     }
 
     locales.forEach((locale) => {
+      console.log(`--- Syncing transifex locale ${locale}`);
+
       registerLocale(resourceSlug, locale);
       const remotePoFile = importFromTransifex(resourceSlug, locale);
       if (!remotePoFile) {
@@ -65,26 +66,32 @@ export default function syncCollectionWithTransifex({
       const mergedTranslations = updateAndPruneUnusedStringsFromPOFile({
         context,
         getLocalTranslation,
+        locale,
         msgidsToTranslationDescriptors,
         poFile,
         setLocalTranslation,
       });
-      if (locale === defaultLocale) {
-        console.log('Syncing PO file for', locale, 'language...');
+
+      if (locale === sourceLocale) {
+        console.log('Uploading source strings to transifex...');
         // Source files can't have translations on transifex, so strip them.
         exportToTransifex({
+          locale,
+          resourceSlug,
           asSourceFile: true,
           isNewResource: !remotePoFile,
           poFile: stripTranslations(mergedTranslations),
+        });
+      } else {
+        console.log('Uploading merged translations to transifex...');
+        exportToTransifex({
+          locale,
           resourceSlug,
+          asSourceFile: false,
+          isNewResource: false,
+          poFile: mergedTranslations,
         });
       }
-      exportToTransifex({
-        asSourceFile: false,
-        isNewResource: false,
-        poFile: mergedTranslations,
-        resourceSlug,
-      });
     });
     cacheRegisteredLocales(resourceSlug);
   } catch (error) {

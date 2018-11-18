@@ -1,5 +1,8 @@
-import {  MsgidsToTranslationDescriptors, GetLocalTranslationFn } from './i18nTypes';
-import { POFile } from './i18nTypes';
+import {
+  MsgidsToTranslationDescriptors,
+  GetLocalTranslationFn,
+  POFile,
+} from './i18nTypes';
 
 export default function displayStats({
   context,
@@ -10,26 +13,35 @@ export default function displayStats({
   resourceSlug,
 }: {
   context: string;
-  getLocalTranslation: GetLocalTranslationFn,
+  getLocalTranslation: GetLocalTranslationFn;
   locale: string;
-  msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors,
+  msgidsToTranslationDescriptors: MsgidsToTranslationDescriptors;
   resourceSlug: string;
   poFile: POFile;
 }) {
   const remoteTranslations = poFile.translations[context] || {};
-  console.log('Syncing', resourceSlug, 'translations for locale', locale, '...');
-  const remoteMsgids = Object.keys(remoteTranslations).filter(msgid => msgid !== '');
+  console.log(
+    'Syncing',
+    resourceSlug,
+    'translations for locale',
+    locale,
+    '...',
+  );
+  const remoteMsgids = Object.keys(remoteTranslations).filter(
+    msgid => msgid !== '',
+  );
   const remoteCount = remoteMsgids.length;
-  const remoteEmptyCount = remoteMsgids
-    .filter(msgid => !remoteTranslations[msgid].msgstr.filter(str => str.length).length)
-    .length;
-  console.log(`${remoteCount} remote translations (${remoteEmptyCount} missing)`);
+  const remoteEmptyCount = remoteMsgids.filter(
+    msgid => !remoteTranslations[msgid].msgstr.filter(str => str.length).length,
+  )
+  .length;
+  console.log(`${remoteCount} remote translations (${remoteEmptyCount} empty msgstrs)`);
   const localCount = Object.keys(msgidsToTranslationDescriptors).length;
-  console.log(`${localCount} local translations`);
   const localEmptyCount = Object.keys(msgidsToTranslationDescriptors)
     .map(msgid => msgidsToTranslationDescriptors[msgid])
-    .map(({ doc, propertyName }) => getLocalTranslation({ doc, propertyName, locale }))
-    .filter(translation => !translation)
+    .filter(({ doc, propertyName }) =>
+      !getLocalTranslation({ doc, propertyName, locale }),
+    )
     .length;
-  console.log(`(${localEmptyCount} missing)`);
+  console.log(`${localCount} local translations (${localEmptyCount} empty msgstrs)`);
 }

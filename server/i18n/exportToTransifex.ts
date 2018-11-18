@@ -8,16 +8,17 @@ import { POFile } from './i18nTypes';
 
 export default function exportToTransifex({
   resourceSlug,
+  locale,
   poFile,
   asSourceFile,
   isNewResource,
 }: {
   resourceSlug: string;
+  locale: string;
   poFile: POFile;
   asSourceFile: boolean;
   isNewResource: boolean;
 }) {
-  const locale = poFile.headers.language;
   const poFileString = gettextParser.po.compile(poFile).toString();
 
   let response;

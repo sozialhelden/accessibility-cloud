@@ -53,7 +53,8 @@ export default function getDefaultTranslationStrategy({
     propertyName,
   }: GetLocalTranslationOptions) => {
     const path = propertyPathFn(propertyName, locale);
-    return get(doc, path);
+    const result = get(doc, path);
+    return result;
   };
 
   const getMsgidsToTranslationDescriptors = (): MsgidsToTranslationDescriptors => {
@@ -62,11 +63,14 @@ export default function getDefaultTranslationStrategy({
       .find()
       .fetch()
       .forEach((doc: object) => {
-        translatablePropertyNames.forEach(propertyName => {
+        translatablePropertyNames.forEach((propertyName) => {
           const msgid = `${get(doc, '_id')} ${propertyName}`;
-          if (
-            !getLocalTranslation({ doc, locale: defaultLocale, propertyName })
-          ) {
+          const localTranslation = getLocalTranslation({
+            doc,
+            propertyName,
+            locale: defaultLocale,
+          });
+          if (!localTranslation) {
             return;
           }
           result[msgid] = { propertyName, doc };
