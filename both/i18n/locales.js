@@ -5,7 +5,7 @@ const cachedSlugsToLocales = {};
 
 export function getLocales(resourceSlug) {
   return cachedSlugsToLocales[resourceSlug] ||
-    AvailableLocales.find({ resourceSlug }).fetch().map(doc => doc.locale);
+    AvailableLocales.find({ resourceSlug }).fetch().map(doc => doc.locale).sort();
 }
 
 export function registerLocale(resourceSlug, locale) {
@@ -15,5 +15,5 @@ export function registerLocale(resourceSlug, locale) {
 
 export function cacheRegisteredLocales(resourceSlug) {
   cachedSlugsToLocales[resourceSlug] = getLocales(resourceSlug);
-  console.log('Cached available locales', cachedSlugsToLocales[resourceSlug], 'for', resourceSlug);
+  console.log('Cached available locales', JSON.stringify(cachedSlugsToLocales[resourceSlug]), 'for', resourceSlug);
 }
