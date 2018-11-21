@@ -20,7 +20,7 @@ export function startObservingObjectProgress(stream, onProgress) {
     speed: 0,
   };
 
-  const timeInterval = 1000;
+  const timeInterval = 10000;
 
   const sendProgress = () => {
     const p = progress;
