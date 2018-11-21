@@ -22,12 +22,6 @@
         </span>
 
         <div class='details'>
-          {{#with this.getLastSuccessfulImport}}
-            Updated {{agoStartTimestamp}}
-          {{else}}
-            {{_"No updates yet"}}
-          {{/with}}
-
           {{#if getLicense}}
             <span class='on-right' title={{_ "License of this source"}}>
               {{#with getLicense}}
