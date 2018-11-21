@@ -14,7 +14,6 @@ const selectorFn = (userId, sourceId) => {
   return { sourceId };
 };
 
-publishPublicFields('sourceImports.last', SourceImports, selectorFn, { limit: 1, sort: { startTimestamp: -1 } });
 publishPublicFields('sourceImports', SourceImports, selectorFn, { limit: 50, sort: { startTimestamp: -1 } });
 publishPrivateFieldsForMembers('sourceImports', SourceImports, selectorFn, { limit: 50, sort: { startTimestamp: -1 } });
 
