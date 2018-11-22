@@ -73,7 +73,7 @@ function handleJSONRequest(req, res, next) {
 
     const result = handler(options);
 
-    let maximalCacheTimeInSeconds = 30;
+    let maximalCacheTimeInSeconds = 120;
     if (typeof collection.maximalCacheTimeInSeconds !== 'undefined') {
       maximalCacheTimeInSeconds = collection.maximalCacheTimeInSeconds;
     }
