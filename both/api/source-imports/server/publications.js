@@ -20,24 +20,22 @@ publishPrivateFieldsForMembers('sourceImports', SourceImports, selectorFn, { lim
 
 Meteor.publish('sourceImports.stats.public', function publish(sourceId) {
   check(sourceId, String);
-  this.autorun(() => {
-    const source = Sources.findOne(sourceId);
-    if (!source) {
-      return [];
-    }
+  const source = Sources.findOne(sourceId);
+  if (!source) {
+    return [];
+  }
 
-    const visibleSelector = SourceImports.visibleSelectorForUserId(this.userId);
+  const visibleSelector = SourceImports.visibleSelectorForUserId(this.userId);
 
-    let selector;
-    if (source.isFreelyAccessible && !source.isDraft) {
-      selector = { sourceId };
-    } else {
-      selector = { $and: [visibleSelector, { sourceId }] };
-    }
+  let selector;
+  if (source.isFreelyAccessible && !source.isDraft) {
+    selector = { sourceId };
+  } else {
+    selector = { $and: [visibleSelector, { sourceId }] };
+  }
 
-    return SourceImports.find(
-      selector,
-      { fields: SourceImports.statsFields },
-    );
-  });
+  return SourceImports.find(
+    selector,
+    { fields: SourceImports.statsFields },
+  );
 });
