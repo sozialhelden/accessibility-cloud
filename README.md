@@ -7,7 +7,7 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 ## How to contribute data sources
 
 - [Importing Data](docs/importing-data.md) - a guide on how to import new data
-- [Exchange format](docs/exchange-format.md) - an extensive discussion / description of the AC meta-format
+- [Exchange format](https://github.com/sozialhelden/ac-format) - an extensive discussion / description of the AC meta-format
 - [Categories](docs/categories.md) - discussing the topology for PoI categories
 
 ## How to use the provided data for your own project
