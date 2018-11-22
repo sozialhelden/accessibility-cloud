@@ -23,7 +23,7 @@ Template.sources_show_page_activity_chart.onCreated(() => {
   if (source._id) {
     subsManager.subscribe('sourceImports.public', source._id);
     subsManager.subscribe('sourceImports.private', source._id);
-    subsManager.subscribe('sourceImports.stats.public', source._id);
+    // subsManager.subscribe('sourceImports.stats.public', source._id);
   }
 });
 
