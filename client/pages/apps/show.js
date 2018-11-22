@@ -8,6 +8,7 @@ import subsManager from '/client/lib/subs-manager';
 Template.apps_show_page.onCreated(() => {
   subsManager.subscribe('apps.public');
   subsManager.subscribe('apps.private');
+  subsManager.subscribe('apps.token.private');
   subsManager.subscribe('organizations.public');
   subsManager.subscribe('sources.public');
 });
