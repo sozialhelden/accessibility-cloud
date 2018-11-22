@@ -25,7 +25,6 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 ## Contributing code
 
 - [Walk through script](docs/walk-through.md) – a walkthrough of the planned features for Q4 2016
-- [Data base structure](docs/db-structure.md) - a (probably outdated) schema
 - [Development guide](docs/development.md) - a short introduction on how to get the code running locally
 
 ### Documentation for external data sources
