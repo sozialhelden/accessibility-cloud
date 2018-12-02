@@ -291,7 +291,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v https://accessibility-cloud.freetls.fastly.net/place-infos.json\?appToken\=YOUR_APP_TOKEN_HERE&latitude\=48.2435\&longitude\=16.3974\&accuracy\=1000\&includeSourceIds\=QGf3sjbSxSpkeNHFm&includeRelated=source | jq .
+curl -v 'https://accessibility-cloud.freetls.fastly.net/place-infos.json?appToken=YOUR_APP_TOKEN_HERE&latitude=48.2435&longitude=16.3974&accuracy=1000&includeSourceIds=QGf3sjbSxSpkeNHFm&includeRelated=source' | jq .
 ```
 
 #### Example response
@@ -408,7 +408,7 @@ Returns all categories known to accessibility.cloud, together with their transla
 #### Example request
 
 ```bash
-curl https://accessibility-cloud.freetls.fastly.net/categories.json\?appToken\=YOUR_APP_TOKEN_HERE\&locale\=en | jq
+curl 'https://accessibility-cloud.freetls.fastly.net/categories.json?appToken=YOUR_APP_TOKEN_HERE&locale=en' | jq
 ```
 
 #### Example response
@@ -475,7 +475,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v https://accessibility-cloud.freetls.fastly.net/disruptions.json\?appToken\=YOUR TOKEN HERE\&includeRelated\=equipmentInfo\&limit\=1 |
+curl -v 'https://accessibility-cloud.freetls.fastly.net/disruptions.json?appToken=YOUR TOKEN HERE&includeRelated=equipmentInfo&limit=1' |
 ```
 
 #### Example response
@@ -588,7 +588,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v https://accessibility-cloud.freetls.fastly.net/equipment-infos.json\?appToken\=YOUR_TOKEN_HERE\&includeRelated\=disruptions\&limit\=1 | jq .
+curl -v 'https://accessibility-cloud.freetls.fastly.net/equipment-infos.json?appToken=YOUR_TOKEN_HERE&includeRelated=disruptions&limit=1' | jq .
 ```
 
 #### Example response
@@ -666,7 +666,7 @@ This API endpoint returns the time series that accessibility.cloud calculates ev
 This requests only one value with the latest known number of elevators that are out-of-service. Note that you need to specify that the backend should sort the returned data.
 
 ```bash
-curl https://accessibility-cloud.freetls.fastly.net/global-stats.json?name=EquipmentInfos.withoutDrafts.onlyBrokenElevators.count&appToken=YOUR_TOKEN_HERE&sort=date&descending=1&limit=1 | jq
+curl 'https://accessibility-cloud.freetls.fastly.net/global-stats.json?name=EquipmentInfos.withoutDrafts.onlyBrokenElevators.count&appToken=YOUR_TOKEN_HERE&sort=date&descending=1&limit=1' | jq
 ```
 
 #### Example response
