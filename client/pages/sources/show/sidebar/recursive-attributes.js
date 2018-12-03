@@ -13,6 +13,7 @@ const histogramAttributesMatchers = [
   /^distanceTo/i,
   /value$/i,
   /unit$/i,
+  /histogram/i,
 ];
 
 Template.sources_show_page_recursive_attributes.helpers({
