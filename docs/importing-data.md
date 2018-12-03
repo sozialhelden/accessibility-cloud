@@ -154,6 +154,7 @@ Reads one single JSON string as a stream, scraping all JSON objects or values ma
 #### Parameters
 
 - `path`: Path of the resulting objects given in [JSONPath format](http://goessner.net/articles/JsonPath/), for instance `features.*.properties`. To parse the JSON, we use the [JSONStream library](https://github.com/dominictarr/JSONStream#jsonstreamparsepath).
+- `lengthPath`: Path to a `Number` value that determines the expected number of stream objects for showing progress in accessibility.cloud’s IDE.
 
 ### `Skip`
 
