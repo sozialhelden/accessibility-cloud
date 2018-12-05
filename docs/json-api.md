@@ -199,7 +199,7 @@ You can request POIs around a specific map location. For this, you have to suppl
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
 
-#### Location-based search by X/Y/Z tile coordinates
+#### Getting all places inside a X/Y/Z tile
 
 The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 
