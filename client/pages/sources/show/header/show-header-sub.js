@@ -20,9 +20,9 @@ Template.sources_show_header_sub.helpers({
     const subtitle = currentRoute.options.title || currentRoute.name || '';
     const sourceName = source ? source.name : 'Source';
     if (currentRoute && currentRoute.name === 'sources.show') {
-      SEO.set({ title: `${sourceName} – Accessibility Cloud` });
+      SEO.set({ title: `${sourceName} – accessibility.cloud` });
     } else {
-      SEO.set({ title: `${sourceName} – ${subtitle} – Accessibility Cloud` });
+      SEO.set({ title: `${sourceName} – ${subtitle} – accessibility.cloud` });
     }
 
     return source;
