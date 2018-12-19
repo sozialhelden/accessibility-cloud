@@ -2,7 +2,31 @@
 
 This document should give you a general idea how to import data like places, equipment/facility infos and disruptions into the accessibility.cloud format.
 
-If you know how to import data already and need a reference of the whole exchange format's schema, [go here](./exchange-format.md).
+If you know how to import data already and need a reference of the whole exchange format's schema, [go here](https://sozialhelden.github.io/ac-format).
+
+<!-- TOC depthFrom:2 depthTo:3 -->
+
+- [Getting started](#getting-started)
+- [Stream processing units](#stream-processing-units)
+  - [`ConvertArrayToStream`](#convertarraytostream)
+  - [`ConvertToUTF8`](#converttoutf8)
+  - [`DebugLog`](#debuglog)
+  - [`HTTPDownload`](#httpdownload)
+  - [`Limit`](#limit)
+  - [`MultiHTTPDownload`](#multihttpdownload)
+  - [`ParseCSVStream`](#parsecsvstream)
+  - [`ParseJSONChunks`](#parsejsonchunks)
+  - [`ParseJSONStream`](#parsejsonstream)
+  - [`Skip`](#skip)
+  - [`Split`](#split)
+  - [`TransformData`](#transformdata)
+  - [`TransformScript`](#transformscript)
+  - [`UpsertPlace`](#upsertplace)
+  - [`UpsertEquipment`](#upsertequipment)
+  - [`UpsertDisruption`](#upsertdisruption)
+- [Convenience functions and libraries](#convenience-functions-and-libraries)
+
+<!-- /TOC -->
 
 ## Getting started
 
@@ -220,7 +244,6 @@ Inserts an object into the database as place. Upserting will link the place with
 
 `UpsertPlace` is usually the last unit in the stream chain, but it outputs status data for each processed chunk that you can use for debugging.
 
-
 ### `UpsertEquipment`
 
 Inserts a record into the database that describes an equipment or facility of a place, for example an elevator or escalator.
@@ -235,7 +258,6 @@ This works like `UpsertPlace`, but using it marks the source as a data source fo
 - For this to work, `properties.placeSourceId` must refer to the ID of a place data source on accessibility.cloud that belongs to the same organization.
 - accessibility.cloud will show the imported equipment/facilities on the overview page of associated place data source.
 - The accessibility.cloud `/placeInfos` API will include equipment/facility data as `properties.equipmentInfos` property.
-
 
 ### `UpsertDisruption`
 

@@ -1,10 +1,10 @@
-# Accessibility Cloud API
+# accessibility.cloud API
 
-Accessibility Cloud allows you to request accessibility data via HTTP in JSON format.
+accessibility.cloud allows you to request accessibility data via HTTP in JSON format.
 
 <!-- TOC -->
 
-- [Accessibility Cloud API](#accessibility-cloud-api)
+- [accessibility.cloud API](#accessibilitycloud-api)
   - [Features](#features)
   - [Getting started](#getting-started)
   - [Authentication](#authentication)
@@ -55,8 +55,19 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
     - [GET /source-imports](#get-source-imports)
     - [GET /sources](#get-sources)
     - [GET /captcha](#get-captcha)
+      - [Example request](#example-request-5)
+      - [Example response](#example-response-5)
     - [GET /images](#get-images)
-    - [POST /upload-image](#upload-images)
+      - [Context](#context)
+      - [Object ID](#object-id)
+      - [Example request](#example-request-6)
+      - [Example response](#example-response-6)
+    - [POST /image-upload](#post-image-upload)
+      - [Place ID](#place-id)
+      - [Captcha](#captcha)
+      - [Potential Errors:](#potential-errors)
+      - [Example request](#example-request-7)
+      - [Example response](#example-response-7)
 
 <!-- /TOC -->
 
@@ -66,14 +77,12 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 - Allow your users to find places by location, category, or other metadata
 - Augment your own data with accessibility information
 - Requests over HTTP(S)
-- GeoJSON-compatible output format
+- [GeoJSON-compatible output format](https://sozialhelden.github.io/ac-format/)
 - Get data about places, elevators, escalators, and facility disruptions
-
-
 
 ## Getting started
 
-- Sign up for Accessibility Cloud
+- Sign up for accessibility.cloud
 - Create an organization on the web page
 - Add an app for your organization
   - The created app comes with a free API token that allows you to make HTTP requests to our API.
@@ -83,10 +92,9 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
   `jq` can be installed using your favorite package manager (e.g. with `apt-get install jq` on
   Debian-based Linux or `brew install jq` on Macs).
 
-
 ## Authentication
 
-For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token) or supply the token as URL query parameter, e.g. `appToken=12345`.
+For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, supply the token as URL query parameter, e.g. `appToken=12345`.
 
 Your API token allows you to access the following data:
 
@@ -194,12 +202,16 @@ If you want to include places without set accessibility, add a `includePlacesWit
 
 #### Location-based search by center/radius
 
+**Use this for single end-user-facing searches around their current location.**
+
 You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
 
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
 
 #### Getting all places inside a X/Y/Z tile
+
+**Use this for tiled GeoJSON responses for map libraries like Leaflet.**
 
 The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 
