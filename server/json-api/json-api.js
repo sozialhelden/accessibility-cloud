@@ -80,7 +80,7 @@ function handleJSONRequest(req, res, next) {
     res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=30, stale-if-error=3600`); // Interpreted by the CDN
     res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
     res.setHeader('Surrogate-Key', uniq(surrogateKeys).join(' '));
-    res.setHeader('Vary', 'x-app-token, x-user-token');
+    res.setHeader('Vary', 'x-app-token, x-user-token, x-token');
 
     responseBody = EJSON.stringify(result);
   } catch (error) {
