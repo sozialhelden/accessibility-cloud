@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "predeploy": "echo 'moving sharp vendor files to the side' && mv node_modules/sharp/vendor node_modules/sharp/vendor.backup",
     "deploy": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://www.accessibility.cloud --settings settings/production.json",
+    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://acloud.eu.meteorapp.com --settings settings/staging.json",
     "postdeploy": "echo 'moving sharp vendor files back' && mv node_modules/sharp/vendor.backup node_modules/sharp/vendor"
   },
   "dependencies": {
