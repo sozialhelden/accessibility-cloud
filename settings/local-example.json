@@ -3,29 +3,35 @@
       "aws": {
         "region": "eu-central-1",
         "s3": {
-          "bucket": "accessibility-cloud-uploads",
-          "bucketEndpoint": null
+          "bucket": "S3 bucket name goes here"
         }
       },
-      "mapbox": ""
+      "mapbox": "Mapbox Token goes here"
     },
     "aws": {
-      "accessKeyId": "…",
-      "secretAccessKey": "…"
-    },
-    "kadira": {
-        "appId": "",
-        "appSecret": ""
+      "accessKeyId": "AWS key ID goes here",
+      "secretAccessKey": "AWS access key secret goes here"
     },
     "transifex": {
+      "skipSyncingOnStart": true,
       "projectSlug": "accessibility-cloud",
-      "username": "…",
-      "password": "…"
+      "username": "Transifex username goes here (not necessary for local development)",
+      "password": "Transifex password goes here (not necessary for local development)"
     },
     "scripts": {
       "timeoutMs": 10000
     },
+    "stats": {
+      "minimalTimeBetweenStatsCalculations": 5000,
+      "maximalTimeBetweenStatsCalculations": 10000
+    },
+    "fastly": {
+      "serviceId": "1YLYKBKXWxfrG7eYKy7vq7",
+      "fastlyKey": "725d1ece9aedb17d70701e4880acc064"
+    },
     "dataStorage": {
-      "ipSalt": "…"
-    }
-}
+      "ipSalt": "Insert a random string here"
+    },
+    "ddpClientToken": "Insert a random string here to allow other apps to connect to this app's DDP server.",
+    "enableAutomaticImports": false
+  }
