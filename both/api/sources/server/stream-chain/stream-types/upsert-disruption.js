@@ -148,26 +148,11 @@ export default class UpsertDisruption extends Upsert {
       }
     }
 
-    const updateStatsIfNecessary = () => {
-      if (equipmentSourceId) {
-        const source = Sources.findOne(equipmentSourceId);
-        if (!source) {
-          throw new Meteor.Error(404, 'Source not found.');
-        }
-        console.log('Updating equipment source stats...');
-        const sourceImport = Sources.findOne(equipmentSourceId).getLastSuccessfulImport();
-        if (sourceImport) {
-          sourceImport.generateAndSaveStats();
-        }
-        callback();
-      }
-    };
-
-    if (!this.options.setUnreferencedEquipmentToWorking) { updateStatsIfNecessary(callback); return; }
-    this.setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, (error) => {
-      if (error) { callback(error); return; }
-      updateStatsIfNecessary(callback);
-    });
+    if (!this.options.setUnreferencedEquipmentToWorking) {
+      callback();
+      return;
+    }
+    this.setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, callback);
   }
 }
 
