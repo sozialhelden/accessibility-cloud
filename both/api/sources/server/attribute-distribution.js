@@ -69,6 +69,9 @@ export default function exploreAttributesTree(
     distribution = {};
     set(attributeDistribution, rootKey, distribution);
   }
+  if (Object.keys(distribution).length > 100) {
+    return;
+  }
   const value = valueOrAttributes;
   distribution[value] = (distribution[value] || 0) + 1;
 }
