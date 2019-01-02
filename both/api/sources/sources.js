@@ -153,6 +153,26 @@ Sources.schema = new SimpleSchema({
     optional: true,
     blackbox: true,
   },
+  lastImportId: {
+    type: String,
+    optional: true,
+    regEx: SimpleSchema.RegEx.Id,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  lastSuccessfulImportId: {
+    type: String,
+    optional: true,
+    regEx: SimpleSchema.RegEx.Id,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
@@ -197,18 +217,10 @@ Sources.helpers({
     return Licenses.findOne(this.licenseId);
   },
   getLastSuccessfulImport() {
-    return SourceImports
-      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
-      .fetch()
-      .find(i => (!i.hasError() && !i.isAborted()));
+    return SourceImports.findOne(this.lastSuccessfulImportId);
   },
   getLastSourceImport() {
-    const sourceId = this._id;
-    const latestImport = SourceImports.findOne({ sourceId }, { sort: { startTimestamp: -1 } });
-    if (latestImport) {
-      return latestImport;
-    }
-    return null;
+    return SourceImports.findOne(this.lastImportId);
   },
   getImportFlows() {
     return ImportFlows.find(
@@ -229,21 +241,14 @@ Sources.helpers({
   },
   getLastImportWithStats() {
     return SourceImports
-      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 } })
+      .find({ sourceId: this._id, isFinished: true }, { sort: { startTimestamp: -1 }, limit: 2 })
       .fetch()
       .find(i => Boolean(i.attributeDistribution));
   },
   getType() {
     const lastImport = this.getLastSuccessfulImport();
     if (!lastImport) return 'placeInfos';
-    const upsertStream = lastImport.upsertStream();
-    if (!upsertStream) return null;
-    switch (upsertStream.type) {
-      case 'UpsertEquipment': return 'equipmentInfos';
-      case 'UpsertPlace': return 'placeInfos';
-      case 'UpsertDisruption': return 'disruptions';
-      default: return null;
-    }
+    return lastImport.getType();
   },
   isPlaceInfoSource() {
     return this.getType() === 'placeInfos';
