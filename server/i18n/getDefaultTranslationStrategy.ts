@@ -70,9 +70,9 @@ export default function getDefaultTranslationStrategy({
             propertyName,
             locale: defaultLocale,
           });
-          // if (!localTranslation) {
-          //   return;
-          // }
+          if (!localTranslation) {
+            return;
+          }
           result[msgid] = { propertyName, doc };
         });
       });
