@@ -23,6 +23,7 @@ AppLinks.publicFields = {
   label: 1,
   url: 1,
   order: 1,
+  tags: 1,
 };
 
 AppLinks.privateFields = {};
