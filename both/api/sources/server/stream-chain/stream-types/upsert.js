@@ -2,9 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import _ from 'lodash';
+import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
-import { flatten } from 'mongo-dot-notation';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -21,10 +21,11 @@ function getSourceIdsOfSameOrganization(sourceId) {
   if (!organizationId) throw new Error('Source needs an organization id before proceeding');
   const organization = Organizations.findOne(organizationId, { transform: null });
   const organizationName = organization.name;
+  const sourceName = source.name;
   const selector = { organizationId };
   const options = { transform: null, fields: { _id: true } };
   const organizationSourceIds = Sources.find(selector, options).map(s => s._id);
-  return { organizationSourceIds, organizationName };
+  return { organizationSourceIds, organizationName, sourceName };
 }
 
 export default class Upsert {
@@ -52,7 +53,11 @@ export default class Upsert {
     const streamClass = this.constructor;
     const streamObject = this;
 
-    const { organizationSourceIds, organizationName } = getSourceIdsOfSameOrganization(sourceId);
+    const {
+      organizationSourceIds,
+      organizationName,
+      sourceName,
+    } = getSourceIdsOfSameOrganization(sourceId);
 
     this.stream = new Transform({
       writableObjectMode: true,
@@ -89,11 +94,15 @@ export default class Upsert {
         Object.assign(doc.properties, {
           sourceId,
           sourceImportId,
+          sourceName,
+          organizationName,
         });
 
-
         try {
-          const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
+          const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, {
+            organizationSourceIds,
+            organizationName,
+          });
 
           // Using flatten here to deep-merge new properties into existing
           streamClass.collection.upsert({
@@ -170,6 +179,7 @@ export default class Upsert {
         'properties.sourceId': sourceId,
         'properties.sourceImportId': { $ne: sourceImportId },
       };
+      // eslint-disable-next-line no-underscore-dangle
       console.log('Removing from ', streamClass.collection._name, selector);
       streamClass.collection.remove(selector, (error, count) => {
         removedDocumentCount = count;
@@ -185,7 +195,8 @@ export default class Upsert {
   }
 
   // override this in your stream subclass for postprocessing after upsert
-  afterUpsert({ doc, organizationSourceIds }, callback) { // eslint-disable-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
+  afterUpsert({ doc, organizationSourceIds }, callback) {
     callback();
   }
 
