@@ -29,7 +29,34 @@ Meteor.methods({
     check(previousAppId, String);
     check(hostname, String);
     const app = getAppAndEnsureAccess(this.userId, previousAppId);
-    const clientSideConfiguration = {};
+    const clientSideConfiguration = {
+      textContent: {
+        product: {
+          name: { en_US: 'ExampleApp' },
+          claim: { en_US: 'Find and mark accessible places.' },
+          description: { en_US: 'ExampleApp helps you find and mark accessible places.' },
+        },
+        onboarding: {
+          headerMarkdown: {
+            en_US: '**Find and mark accessible places!** It’s easy with our traffic light system:',
+          },
+        },
+        accessibilityNames: {
+          long: {
+            unknown: { en_US: 'Unknown status' },
+            yes: { en_US: 'Accessible' },
+            limited: { en_US: 'Partly accessible' },
+            no: { en_US: 'Not accessible' },
+          },
+          short: {
+            unknown: { en_US: 'Unknown' },
+            yes: { en_US: 'Yes' },
+            limited: { en_US: 'Partly' },
+            no: { en_US: 'No' },
+          },
+        },
+      },
+    };
     Apps.insert({ clientSideConfiguration, ...app, _id: hostname }, error => {
       if (error) {
         throw error;
