@@ -4,11 +4,12 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { GlobalStats } from '../global-stats';
-import { PlaceInfos } from '/both/api/place-infos/place-infos';
-import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
-import { Disruptions } from '/both/api/disruptions/disruptions';
-import { Sources } from '/both/api/sources/sources';
-import { Organizations } from '/both/api/organizations/organizations';
+import { PlaceInfos } from '../../place-infos/place-infos';
+import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
+import { Disruptions } from '../../disruptions/disruptions';
+import { Sources } from '../../sources/sources';
+import { Organizations } from '../../organizations/organizations';
+import { Images } from '../../images/images';
 
 
 const MinimalTimeBetweenStatsCalculations = get(Meteor.settings, 'stats.minimalTimeBetweenStatsCalculations') || 60000;
@@ -33,6 +34,7 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
     { collection: PlaceInfos },
     { collection: Sources },
     { collection: Organizations },
+    { collection: Images },
     {
       collection: Sources,
       countName: 'withPlaceInfos',
@@ -52,6 +54,11 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
       collection: PlaceInfos,
       countName: 'withoutDrafts',
       selector: { 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
+    },
+    {
+      collection: PlaceInfos,
+      countName: 'withoutDrafts.withAccessibility',
+      selector: { 'properties.accessibility': { $exists: true }, 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
     },
     {
       collection: EquipmentInfos,
