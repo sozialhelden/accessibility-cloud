@@ -254,11 +254,13 @@ export function createStreamChain({
   }));
 
   Meteor.setTimeout(() => {
-    result.forEach(observer => {
-      if (observer.stream.uncork) {
+    result.forEach((observer) => {
+      if (observer && observer.stream && observer.stream.uncork) {
         observer.stream.uncork();
       }
-      observer.stream.resume();
+      if (observer && observer.stream && observer.stream.resume) {
+        observer.stream.resume();
+      }
     });
   }, 1000);
 
