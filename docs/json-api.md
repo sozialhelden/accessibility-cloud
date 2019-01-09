@@ -7,8 +7,8 @@ accessibility.cloud allows you to request accessibility data via HTTP in JSON fo
 - [accessibility.cloud API](#accessibilitycloud-api)
   - [Features](#features)
   - [Getting started](#getting-started)
-  - [Authentication](#authentication)
   - [Cached vs. non-cached base URLs](#cached-vs-non-cached-base-urls)
+  - [Authentication](#authentication)
   - [Features for all endpoints](#features-for-all-endpoints)
     - [Retrieving single documents by their `_id`](#retrieving-single-documents-by-their-_id)
     - [Licensing](#licensing)
@@ -92,6 +92,13 @@ accessibility.cloud allows you to request accessibility data via HTTP in JSON fo
   `jq` can be installed using your favorite package manager (e.g. with `apt-get install jq` on
   Debian-based Linux or `brew install jq` on Macs).
 
+## Cached vs. non-cached base URLs
+
+accessibility.cloud's API is available via two base URLs:
+
+1. **Cached:** https://accessibility-cloud.freetls.fastly.net – This is the **recommended base URL for most use cases**. It caches responses up to 5 minutes using a CDN, so data included in the responses can lag behind the database content. Depending on the complexity of your request, a response to a URL not requested before in the last 5 minutes can take up to several seconds. After that, the server should respond to following requests with the same URL within less than 100ms. If you have a use case that needs <100ms for all requests, [write us an email](mailto:support@accessibility.cloud) so we can figure out a cache warm-up strategy. In case of a backend downtime, the cache can deliver stale data.
+2. **Not cached:** https://www.accessibility.cloud - Use this base URL if you need real-time data directly after an import or a data push process, for example for health monitoring, or to request data directly after an edit. Do not use this base URL for end-user-facing web pages or apps except necessary.
+
 ## Authentication
 
 For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, supply the token as URL query parameter, e.g. `appToken=12345`.
@@ -103,13 +110,6 @@ Your API token allows you to access the following data:
 - Content of other organizations' data sources, if the source
   - is not in draft mode
   - is accessible for your organization (or publicly available)
-
-## Cached vs. non-cached base URLs
-
-accessibility.cloud's API is available via two base URLs:
-
-1. Cached: https://accessibility-cloud.freetls.fastly.net – This is the recommended base URL for most use cases. It caches responses up to 5 minutes using a CDN, so data included in the responses can lag behind the database content. Depending on the complexity of your request, a response to a URL not requested before in the last 5 minutes can take up to several seconds. After that, the server should respond to following requests with the same URL within less than 100ms. If you have a use case that needs <100ms for all requests, [write us an email](mailto:support@accessibility.cloud) so we can figure out a cache warm-up strategy. In case of a backend downtime, the cache can deliver stale data.
-2. Not cached: https://www.accessibility.cloud - Use this base URL if you need real-time data directly after an import or a data push process, for example for health monitoring. Do not use this base URL for end-user-facing web pages or apps except necessary.
 
 ## Features for all endpoints
 
