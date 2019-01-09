@@ -23,7 +23,7 @@ export function saveCount({ collection, countName, selector = {} }) {
   console.log(`${value} ${collection._name} (${countName}) in total.`);
 }
 
-export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
+export const calculateGlobalStatsNow = Meteor.bindEnvironment(() => {
   const sourceIdsWithoutDrafts = Sources
     .find({ isDraft: false }, { fields: { _id: 1 } })
     .fetch()
@@ -116,4 +116,10 @@ export const calculateGlobalStats = debounce(Meteor.bindEnvironment(() => {
       selector: { isDraft: false },
     },
   ].forEach(saveCount);
-}), MinimalTimeBetweenStatsCalculations, { maxWait: MaximalTimeBetweenStatsCalculations });
+});
+
+export const calculateGlobalStats = debounce(
+  calculateGlobalStatsNow,
+  MinimalTimeBetweenStatsCalculations,
+  { maxWait: MaximalTimeBetweenStatsCalculations },
+);
