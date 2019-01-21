@@ -152,6 +152,7 @@ export default class UpsertDisruption extends Upsert {
       callback();
       return;
     }
+    this.purgeImportedDocsOnFastly();
     this.setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, callback);
   }
 }

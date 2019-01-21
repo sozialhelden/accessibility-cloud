@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { EquipmentInfos } from '../equipment-infos';
+import ensureTileCoordinatesIndexOnCollection
+  from '../../shared/tile-indexing/ensureTileCoordinatesIndexOnCollection';
 
 Meteor.startup(() => {
   EquipmentInfos._ensureIndex({ 'properties.sourceId': 1 });
@@ -15,4 +17,5 @@ Meteor.startup(() => {
   
   console.log('Ensuring geospatial index for EquipmentInfos...');
   EquipmentInfos._ensureIndex({ geometry: '2dsphere' });
+  ensureTileCoordinatesIndexOnCollection(EquipmentInfos);
 });

@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
+import generateTileCoordinatesForFeature from '../../../../shared/tile-indexing/generateTileCoordinatesForFeature';
+import purgeOnFastly from '../../../../../../server/purgeOnFastly';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -96,6 +98,10 @@ export default class Upsert {
           sourceImportId,
           sourceName,
           organizationName,
+        });
+
+        Object.assign(doc, {
+          tileCoordinates: generateTileCoordinatesForFeature(doc),
         });
 
         try {
@@ -202,7 +208,31 @@ export default class Upsert {
 
   // override this in your stream subclass for postprocessing after the import is done
   afterFlush({ organizationSourceIds }, callback) {  // eslint-disable-line class-methods-use-this
+    this.purgeImportedDocsOnFastly();
     callback();
+  }
+
+  purgeImportedDocsOnFastly() {
+    console.log(`Purging keys on fastly for import ${this.options.sourceImportId}…`);
+    const selector = {
+      'properties.sourceImportId': this.options.sourceImportId,
+    };
+    let idBatch = [];
+    const purge = () => {
+      if (idBatch.length) {
+        purgeOnFastly(idBatch);
+        idBatch = [];
+      }
+    };
+    this.constructor.collection
+      .find(selector, { fields: { _id: 1 } })
+      .forEach((doc) => {
+        idBatch.push(doc._id);
+        if (idBatch.length === 128) {
+          purge();
+        }
+      });
+    purge();
   }
 
   dispose() {

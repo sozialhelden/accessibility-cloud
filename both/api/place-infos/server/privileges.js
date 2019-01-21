@@ -1,3 +1,4 @@
+import Cache from 'ttl';
 import { isAdmin } from '/both/lib/is-admin';
 import { check } from 'meteor/check';
 import { PlaceInfos } from '../place-infos';
@@ -56,16 +57,32 @@ function placeInfoSelectorForSourceSelector(sourceSelector) {
   return { 'properties.sourceId': { $in: sourceIds } };
 }
 
+const userIdCache = new Cache({ ttl: 60 * 1000, capacity: 100000 });
+
 PlaceInfos.visibleSelectorForUserId = (userId) => {
   if (!userId) {
     return null;
   }
-
   check(userId, String);
-  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
+  const cachedResult = userIdCache.get(userId);
+  if (cachedResult) {
+    return cachedResult;
+  }
+  const result = placeInfoSelectorForSourceSelector(Sources.visibleSelectorForUserId(userId));
+  userIdCache.put(userId, result);
+  return result;
 };
+
+
+const appIdCache = new Cache({ ttl: 60 * 1000, capacity: 100000 });
 
 PlaceInfos.visibleSelectorForAppId = (appId) => {
   check(appId, String);
-  return placeInfoSelectorForSourceSelector(Sources.visibleSelectorForAppId(appId));
+  const cachedResult = appIdCache.get(appId);
+  if (cachedResult) {
+    return cachedResult;
+  }
+  const result = placeInfoSelectorForSourceSelector(Sources.visibleSelectorForAppId(appId));
+  appIdCache.put(appId, result);
+  return result;
 };

@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Disruptions } from '../disruptions';
+import ensureTileCoordinatesIndexOnCollection
+  from '../../shared/tile-indexing/ensureTileCoordinatesIndexOnCollection';
 
 Meteor.startup(() => {
   Disruptions._ensureIndex({ 'properties.sourceId': 1 });
@@ -18,4 +20,5 @@ Meteor.startup(() => {
 
   console.log('Ensuring geospatial index for Disruptions...');
   Disruptions._ensureIndex({ geometry: '2dsphere' });
+  ensureTileCoordinatesIndexOnCollection(Disruptions);
 });
