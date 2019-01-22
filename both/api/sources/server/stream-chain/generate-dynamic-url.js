@@ -6,6 +6,14 @@ export function generateDynamicUrl({ lastSuccessfulImport, sourceUrl }) {
     check(lastSuccessfulImport.startTimestamp, Number);
   }
   check(sourceUrl, String);
-  const date = lastSuccessfulImport ? new Date(lastSuccessfulImport.startTimestamp) : new Date(0);
-  return sourceUrl.replace(/{{lastImportDate}}/, moment(date).format('YYYY-MM-DD'));
+
+  const importMoment = moment(
+    lastSuccessfulImport ? new Date(lastSuccessfulImport.startTimestamp) : new Date(0));
+
+  // last import date in YYYY-MM-DD format
+  let replacedUrl = sourceUrl.replace(/{{lastImportDate}}/g, importMoment.format('YYYY-MM-DD'));
+  // last import date in ISO_8601 format
+  replacedUrl = sourceUrl.replace(/{{lastImportISODate}}/g, importMoment.format());
+
+  return replacedUrl;
 }
