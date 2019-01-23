@@ -1,8 +1,11 @@
 // @flow
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
 import { HTTP } from 'meteor/http';
 import { check } from 'meteor/check';
+import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { isAdmin } from '../both/lib/is-admin';
+
 
 export default function purgeOnFastly(surrogateKeys: string[]): ?HTTP.HTTPResponse {
   if (!surrogateKeys) return null;
@@ -55,5 +58,45 @@ Meteor.methods({
     check(keys, [String]);
 
     return purgeOnFastly(keys);
+  },
+});
+
+const FastlyKeysToPurge = Mongo.Collection('FastlyKeysToPurge');
+
+export function addKeysToFastlyPurgingQueue(keys) {
+  const keyDocs = keys.map(_id => ({ _id }));
+  FastlyKeysToPurge.rawCollection.insertMany(keyDocs, { ordered: false });
+}
+
+function purgeImportedDocsOnFastly() {
+  console.log('Purging keys on fastly…');
+  let idBatch = [];
+  const purge = () => {
+    if (idBatch.length) {
+      purgeOnFastly(idBatch);
+      idBatch.forEach(_id => FastlyKeysToPurge.remove(_id));
+      idBatch = [];
+    }
+  };
+  FastlyKeysToPurge
+    .find()
+    .forEach((doc) => {
+      idBatch.push(doc._id);
+      if (idBatch.length === 128) {
+        purge();
+      }
+    });
+  purge();
+}
+
+SyncedCron.add({
+  name: 'FastlyPurge',
+
+  schedule(parser) {
+    return parser.recur().every(1).minute();
+  },
+
+  job() {
+    purgeImportedDocsOnFastly();
   },
 });

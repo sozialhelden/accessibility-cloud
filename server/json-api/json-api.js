@@ -55,7 +55,7 @@ function handleJSONRequest(req, res, next) {
     appId = app && app._id;
     userId = user && user._id;
 
-    const surrogateKeys = [collectionName, appId, _id];
+    const surrogateKeys = [collectionName, appId, userId, _id];
     const options = { req, res, collectionName, collection, _id, appId, app, user, userId, surrogateKeys };
     const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
     const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
@@ -82,7 +82,7 @@ function handleJSONRequest(req, res, next) {
     }
     res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=120, stale-if-error=3600`); // Interpreted by the CDN
     res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
-    res.setHeader('Surrogate-Key', uniq(surrogateKeys).join(' '));
+    res.setHeader('Surrogate-Key', uniq(surrogateKeys.filter(Boolean)).join(' '));
     res.setHeader('Vary', 'x-app-token, x-user-token, x-token');
 
     responseBody = EJSON.stringify(result);

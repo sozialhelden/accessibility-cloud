@@ -5,9 +5,7 @@ import { Organizations } from '/both/api/organizations/organizations';
 import { AppLinks } from '/both/api/app-links/app-links';
 import LocalizedStringSchema from '../shared/LocalizedStringSchema';
 
-
 export const Apps = new Mongo.Collection('Apps');
-
 
 const clientSideConfiguration = new SimpleSchema({
   logoURL: {
