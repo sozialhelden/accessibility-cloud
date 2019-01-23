@@ -16,20 +16,22 @@ const getLibsContent = () =>
     .map(fileName => Assets.getText(`transform-libs/${fileName}`))
     .join(';\n');
 
+
+// prefetch the static content to not load on each new vm creation
+const helpersContent = getHelpersContent();
+const libContent = getLibsContent();
+
 export default function getVMContext() {
   const globalObject = Object.freeze({});
-  const helpersContent = getHelpersContent();
   const categoriesJSON = JSON.stringify(getCategories());
   const helpersSetupScript = `
     'use strict';
-
-    ${getLibsContent()};
+    ${libContent};
     var categoryIdForSynonyms = ${categoriesJSON};
     var helpers = ${helpersContent};
   `;
+
   const context = vm.createContext(globalObject);
-
   vm.runInContext(helpersSetupScript, context);
-
   return context;
 }
