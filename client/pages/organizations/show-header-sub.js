@@ -44,7 +44,7 @@ Template.organizations_show_header_sub.helpers({
     const currentRoute = FlowRouter.current().route;
     const subtitle = currentRoute.options.title || currentRoute.name || '';
     const orgName = organization ? organization.name : 'Organization';
-    SEO.set({ title: `${subtitle} – ${orgName} – Accessibility Cloud` });
+    SEO.set({ title: `${subtitle} – ${orgName} – accessibility.cloud` });
 
     return organization;
   },

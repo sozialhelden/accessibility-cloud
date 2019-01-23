@@ -110,6 +110,6 @@ export function onCreated() {
   });
 
   const currentRoute = FlowRouter.current().route;
-  const title = currentRoute.options.title || 'Accessibility Cloud';
+  const title = currentRoute.options.title || 'accessibility.cloud';
   SEO.set({ title });
 }

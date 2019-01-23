@@ -7,4 +7,4 @@ Disruptions.surrogateKeysForDocument = placeInfo =>
     get(placeInfo, ['properties', 'sourceImportId']),
   ].filter(Boolean);
 
-Disruptions.maximalCacheTimeInSeconds = 600;
+Disruptions.maximalCacheTimeInSeconds = 60 * 60 * 24 * 7;

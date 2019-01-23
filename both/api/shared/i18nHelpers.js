@@ -10,7 +10,7 @@ const i18nHelpers = {
     if (!this.properties) return '';
     const category = Categories.findOne(this.properties.category);
     if (!category) {
-      console.log(`Category ${this.properties.category} not found.`);
+      // console.log(`Category ${this.properties.category} not found.`);
       return '';
     }
     return category.getLocalizedId(locale);

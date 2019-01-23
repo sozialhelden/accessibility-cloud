@@ -51,15 +51,19 @@ function findRelatedDocuments({ req, collection, documents, fieldName, appId, us
 
   const options = { transform: null, fields: foreignCollection.publicFields };
 
+  const startTimestamp = Date.now();
   const cursor = foreignCollection.find(selector, options);
   const count = cursor.count();
+  const foreignDocuments = cursor.fetch();
+  const endTimestamp = Date.now();
+  const duration = (endTimestamp - startTimestamp) / 1000;
 
   console.log(
-    `Including ${collection._name} → ${fieldName} (${foreignCollection._name}, ${count} documents)`, JSON.stringify(selector), JSON.stringify(options),
+    `Included ${collection._name} → ${fieldName} (${foreignCollection._name}, ${count} documents, ${duration}s)`,
   );
 
   return {
-    foreignDocuments: cursor.fetch(),
+    foreignDocuments,
     foreignCollectionName: `${foreignCollection._name.slice(0, 1).toLowerCase()}${foreignCollection._name.slice(1)}`,
     foreignCollection,
   };

@@ -1,10 +1,13 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
+import { Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Disruptions } from '../disruptions/disruptions';
 import { Sources } from '../sources/sources';
 import helpers from './helpers';
 import i18nHelpers from '../shared/i18nHelpers';
+import tileCoordinatesSchema from '../shared/tile-indexing/tileCoordinatesSchema';
+import LocationSchema from '../../lib/location-schema';
 
 export const EquipmentInfos = new Mongo.Collection('EquipmentInfos');
 
@@ -22,29 +25,10 @@ const LengthSchema = new SimpleSchema({
   },
 });
 
-EquipmentInfos.schema = new SimpleSchema({
+EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema, {
   statusReportToken: {
     type: String,
     optional: true,
-  },
-  geometry: {
-    type: {},
-    optional: true,
-  },
-  'geometry.type': {
-    type: String,
-    allowedValues: ['Point'],
-  },
-  'geometry.coordinates': {
-    type: Array,
-    minCount: 2,
-    maxCount: 2
-  },
-  'geometry.coordinates.$': {
-    type: Number,
-    min: -180,
-    max: 180,
-    decimal: true,
   },
   'properties.originalId': {
     type: String,
@@ -176,7 +160,7 @@ EquipmentInfos.schema = new SimpleSchema({
     optional: true,
     blackbox: true,
   },
-});
+}]);
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
 

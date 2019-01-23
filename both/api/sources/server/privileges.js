@@ -34,6 +34,8 @@ Sources.publicFields = {
   lastImportType: 1,
   attributeDistribution: 1,
   additionalAccessibilityInformation: 1,
+  lastSuccessfulImportId: 1,
+  lastImportId: 1,
   'translations.additionalAccessibilityInformation': 1,
 };
 

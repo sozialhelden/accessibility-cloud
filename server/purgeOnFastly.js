@@ -8,7 +8,7 @@ export default function purgeOnFastly(surrogateKeys: string[]): ?HTTP.HTTPRespon
   if (!surrogateKeys) return null;
   if (!surrogateKeys.length) return null;
 
-  const { fastlyKey, serviceId } = Meteor.settings.fastly;
+  const { fastlyKey, serviceId } = Meteor.settings.fastly || {};
 
   if (!fastlyKey) {
     console.log('Did not purge', surrogateKeys, 'on Fastly because no `fastlyKey` is set.');
@@ -31,7 +31,7 @@ export default function purgeOnFastly(surrogateKeys: string[]): ?HTTP.HTTPRespon
 
   const result = HTTP.post(url, options);
   if (result.statusCode === 200) {
-    console.log('Purged', surrogateKeys, 'on Fastly.');
+    console.log(`Purged ${surrogateKeys.length} keys on Fastly.`);
   } else {
     console.log('Error while processing purge request for', surrogateKeys, 'on Fastly, result:', result);
   }

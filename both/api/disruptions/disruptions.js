@@ -1,8 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import LocationSchema from '../../lib/LocationSchema';
 import helpers from './helpers';
+import LocationSchema from '../../lib/location-schema';
+import tileCoordinatesSchema from '../shared/tile-indexing/tileCoordinatesSchema';
 
 export const Disruptions = new Mongo.Collection('Disruptions');
 
@@ -82,40 +83,11 @@ Disruptions.propertiesSchema = new SimpleSchema({
   },
 });
 
-Disruptions.schema = new SimpleSchema({
-  geometry: {
-    type: {},
-    optional: true,
-  },
-  'geometry.type': {
-    type: String,
-    allowedValues: ['Point'],
-  },
-  'geometry.coordinates': {
-    type: Array,
-    minCount: 2,
-    maxCount: 2
-  },
-  'geometry.coordinates.$': {
-    type: Number,
-    min: -180,
-    max: 180,
-    decimal: true,
-  },
-  'coordinates.$': {
-    type: Number,
-    decimal: true,
-    custom() {
-      if (Math.abs(this.value[0]) > 90) return 'outOfRange';
-      if (Math.abs(this.value[1]) > 180) return 'outOfRange';
-      return undefined;
-    },
-  },
+Disruptions.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema, {
   properties: {
     type: Disruptions.propertiesSchema,
   },
-});
-
+}]);
 Disruptions.attachSchema(Disruptions.schema);
 Disruptions.helpers(helpers);
 

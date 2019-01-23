@@ -114,6 +114,9 @@ export function createStreamChain({
 
   let previousStream = null;
 
+  const source = Sources.findOne(sourceId);
+  const lastSuccessfulImport = source.getLastSuccessfulImport();
+
   const result = streamChainConfig.map(({ type, parameters = {}, skip = false }, index) => {
     if (!type) {
       throw new Meteor.Error(422, `Stream chain element at index ${index} must have a type.`);
@@ -130,8 +133,6 @@ export function createStreamChain({
 
     // console.log('Creating', type, 'stream...');
 
-    const source = Sources.findOne(sourceId);
-    const lastSuccessfulImport = source.getLastSuccessfulImport();
     const streamChainElementKey = `streamChain.${index}`;
     const debugInfoKey = `${streamChainElementKey}.debugInfo`;
     const progressKey = `${streamChainElementKey}.progress`;
@@ -237,7 +238,11 @@ export function createStreamChain({
     } else {
       console.log('Import ended without error.');
       const lastImportType = Sources.findOne(sourceId).getType();
-      Sources.update(sourceId, { $set: { hasRunningImport: false, lastImportType } });
+      Sources.update(sourceId, { $set: {
+        hasRunningImport: false,
+        lastSuccessfulImportId: sourceImportId,
+        lastImportType,
+      } });
       SourceImports.update(sourceImportId, { $set: { isFinished: true } });
     }
     Meteor.setTimeout(() => {
@@ -249,11 +254,13 @@ export function createStreamChain({
   }));
 
   Meteor.setTimeout(() => {
-    result.forEach(observer => {
-      if (observer.stream.uncork) {
+    result.forEach((observer) => {
+      if (observer && observer.stream && observer.stream.uncork) {
         observer.stream.uncork();
       }
-      observer.stream.resume();
+      if (observer && observer.stream && observer.stream.resume) {
+        observer.stream.resume();
+      }
     });
   }, 1000);
 

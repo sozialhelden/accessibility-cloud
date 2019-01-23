@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "predeploy": "echo 'moving sharp vendor files to the side' && mv node_modules/sharp/vendor node_modules/sharp/vendor.backup",
     "deploy": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://www.accessibility.cloud --settings settings/production.json",
+    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://acloud.eu.meteorapp.com --settings settings/staging.json",
     "postdeploy": "echo 'moving sharp vendor files back' && mv node_modules/sharp/vendor.backup node_modules/sharp/vendor"
   },
   "dependencies": {
@@ -56,6 +57,7 @@
     "stream-throttle": "^0.1.3",
     "svg-captcha": "^1.3.11",
     "tslint": "^5.11.0",
+    "ttl": "^1.3.1",
     "typescript": "^3.1.3",
     "vstream": "^0.1.0",
     "xpath-stream": "0.0.9",

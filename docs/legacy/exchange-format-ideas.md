@@ -1,4 +1,4 @@
-# Accessibility Cloud Exchange Format (Beta)
+# accessibility.cloud Exchange Format (Beta)
 
 ## Considerations
 

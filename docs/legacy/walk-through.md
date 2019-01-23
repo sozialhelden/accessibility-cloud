@@ -1,6 +1,6 @@
 # Accessibility Walk through
 
-The follwoing document discribes a primary journey through Accessibility Cloud. In that is can be the basis for a small ScreenCast. The following list is quiet extensive and includes features that still await implementation. Features that should be working already are marked with a checkmark.
+The following document discribes a primary journey through accessibility.cloud. In that is can be the basis for a small ScreenCast. The following list is quiet extensive and includes features that still await implementation. Features that should be working already are marked with a checkmark.
 
 ## Browsing
 
@@ -69,7 +69,7 @@ The follwoing document discribes a primary journey through Accessibility Cloud. 
 - [ ] You clone the repository.
 - [x] You open the example in the browser.
 - [ ] You learn that the API tokens are missing.
-- [x] You can copy the API-tokens from Accessibility cloud and quickly find where to insert them into the javascript code
+- [x] You can copy the API-tokens from accessibility.cloud and quickly find where to insert them into the javascript code
 - [x] You see that the javascript-code ist very small, easy to read and well documented.
 - [ ] You can quickly integrate it into your existing application.
 - [ ] It's easy to adjust the minimal CSS-definitions to integrate the the widget seamlessly into your app

@@ -35,14 +35,14 @@ Template.sources_show_page_recursive_attributes.helpers({
       return false;
     }
     const lastPathSegment = matchedSegment[0];
-    return histogramAttributesMatchers.find(m => lastPathSegment.match(m));
+    return histogramAttributesMatchers.find(m => lastPathSegment.match(m)) || this.attributeName.match(/debug\./);
   },
   isBoolean() {
     const keys = Object.keys(this.properties);
-    if (keys.filter(k => !['undefined', 'true', 'false'].includes(k)).length) {
+    if (keys.filter(k => !['undefined', 'true', 'false', '0', '1'].includes(k)).length) {
       return false;
     }
-    return _.has(this.properties, 'false') || _.has(this.properties, 'true');
+    return _.has(this.properties, 'false') || _.has(this.properties, 'true') || _.has(this.properties, '1') || _.has(this.properties, '0');
   },
   joinPath(attributeName, key) {
     return attributeName ? `${attributeName}.${key}` : key;

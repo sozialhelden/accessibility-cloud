@@ -55,6 +55,7 @@ function startImportStreaming(source, importFlow) {
     insertedDocumentCount: 0,
     updatedDocumentCount: 0,
   });
+  Sources.update(sourceId, { $set: { lastImportId: sourceImportId } });
   // console.log('Creating stream chain for source import', sourceImportId, '…');
 
   try {

@@ -1,14 +1,14 @@
-# Accessibility Cloud API
+# accessibility.cloud API
 
-Accessibility Cloud allows you to request accessibility data via HTTP in JSON format.
+accessibility.cloud allows you to request accessibility data via HTTP in JSON format.
 
 <!-- TOC -->
 
-- [Accessibility Cloud API](#accessibility-cloud-api)
+- [accessibility.cloud API](#accessibilitycloud-api)
   - [Features](#features)
   - [Getting started](#getting-started)
-  - [Authentication](#authentication)
   - [Cached vs. non-cached base URLs](#cached-vs-non-cached-base-urls)
+  - [Authentication](#authentication)
   - [Features for all endpoints](#features-for-all-endpoints)
     - [Retrieving single documents by their `_id`](#retrieving-single-documents-by-their-_id)
     - [Licensing](#licensing)
@@ -55,8 +55,19 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
     - [GET /source-imports](#get-source-imports)
     - [GET /sources](#get-sources)
     - [GET /captcha](#get-captcha)
+      - [Example request](#example-request-5)
+      - [Example response](#example-response-5)
     - [GET /images](#get-images)
-    - [POST /upload-image](#upload-images)
+      - [Context](#context)
+      - [Object ID](#object-id)
+      - [Example request](#example-request-6)
+      - [Example response](#example-response-6)
+    - [POST /image-upload](#post-image-upload)
+      - [Place ID](#place-id)
+      - [Captcha](#captcha)
+      - [Potential Errors:](#potential-errors)
+      - [Example request](#example-request-7)
+      - [Example response](#example-response-7)
 
 <!-- /TOC -->
 
@@ -66,14 +77,12 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
 - Allow your users to find places by location, category, or other metadata
 - Augment your own data with accessibility information
 - Requests over HTTP(S)
-- GeoJSON-compatible output format
+- [GeoJSON-compatible output format](https://sozialhelden.github.io/ac-format/)
 - Get data about places, elevators, escalators, and facility disruptions
-
-
 
 ## Getting started
 
-- Sign up for Accessibility Cloud
+- Sign up for accessibility.cloud
 - Create an organization on the web page
 - Add an app for your organization
   - The created app comes with a free API token that allows you to make HTTP requests to our API.
@@ -83,10 +92,16 @@ Accessibility Cloud allows you to request accessibility data via HTTP in JSON fo
   `jq` can be installed using your favorite package manager (e.g. with `apt-get install jq` on
   Debian-based Linux or `brew install jq` on Macs).
 
+## Cached vs. non-cached base URLs
+
+accessibility.cloud's API is available via two base URLs:
+
+1. **Cached:** https://accessibility-cloud.freetls.fastly.net – This is the **recommended base URL for most use cases**. It caches responses up to 5 minutes using a CDN, so data included in the responses can lag behind the database content. Depending on the complexity of your request, a response to a URL not requested before in the last 5 minutes can take up to several seconds. After that, the server should respond to following requests with the same URL within less than 100ms. If you have a use case that needs <100ms for all requests, [write us an email](mailto:support@accessibility.cloud) so we can figure out a cache warm-up strategy. In case of a backend downtime, the cache can deliver stale data.
+2. **Not cached:** https://www.accessibility.cloud - Use this base URL if you need real-time data directly after an import or a data push process, for example for health monitoring, or to request data directly after an edit. Do not use this base URL for end-user-facing web pages or apps except necessary.
 
 ## Authentication
 
-For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, you have to supply a HTTP header `X-App-Token: 12345` (replace `12345` with your own app token) or supply the token as URL query parameter, e.g. `appToken=12345`.
+For every app you create, you get an authentication token. This token allows you to use the JSON API. To authenticate a single request, supply the token as URL query parameter, e.g. `appToken=12345`.
 
 Your API token allows you to access the following data:
 
@@ -95,13 +110,6 @@ Your API token allows you to access the following data:
 - Content of other organizations' data sources, if the source
   - is not in draft mode
   - is accessible for your organization (or publicly available)
-
-## Cached vs. non-cached base URLs
-
-accessibility.cloud's API is available via two base URLs:
-
-1. Cached: https://accessibility-cloud.freetls.fastly.net – This is the recommended base URL for most use cases. It caches responses up to 5 minutes using a CDN, so data included in the responses can lag behind the database content. Depending on the complexity of your request, a response to a URL not requested before in the last 5 minutes can take up to several seconds. After that, the server should respond to following requests with the same URL within less than 100ms. If you have a use case that needs <100ms for all requests, [write us an email](mailto:support@accessibility.cloud) so we can figure out a cache warm-up strategy. In case of a backend downtime, the cache can deliver stale data.
-2. Not cached: https://www.accessibility.cloud - Use this base URL if you need real-time data directly after an import or a data push process, for example for health monitoring. Do not use this base URL for end-user-facing web pages or apps except necessary.
 
 ## Features for all endpoints
 
@@ -194,12 +202,16 @@ If you want to include places without set accessibility, add a `includePlacesWit
 
 #### Location-based search by center/radius
 
+**Use this for single end-user-facing searches around their current location.**
+
 You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
 
 - `latitude`, `longitude`: WGS84 geo-coordinates (as floating point strings). When supplied, these coordinates are used as center for a location-based place search.
 - `accuracy`: Search radius for location-based place search, in meters (floating point). Maximal allowed value is `10000`.
 
-#### Location-based search by X/Y/Z tile coordinates
+#### Getting all places inside a X/Y/Z tile
+
+**Use this for tiled GeoJSON responses for map libraries like Leaflet.**
 
 The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 

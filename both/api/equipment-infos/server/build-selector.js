@@ -1,7 +1,7 @@
 import { EquipmentInfos } from '../equipment-infos';
 
 import distanceSearchSelector from '../../shared/server/distance-search';
-import mapTileSelector from '../../shared/server/map-tile';
+import mapTileSelector from '../../shared/tile-indexing/mapTileSelector';
 import sourceFilterSelector from '../../shared/server/source-filter';
 import filterPresetSelector from '../../shared/server/filter-preset';
 import originalIdSelector from '../../shared/server/original-id';

@@ -7,7 +7,7 @@ import { ImportFlows } from '../import-flows';
 import { Sources } from '../../sources/sources';
 import { startImportIfPossible, abortImport } from '../../sources/server/stream-chain/control-import';
 
-function jobName(importFlowId) {
+function jobNameForId(importFlowId) {
   return `importFlow:${importFlowId}`;
 }
 
@@ -64,7 +64,7 @@ Meteor.startup(() => {
 
 ImportFlows.helpers({
   stopAutomaticImports() {
-    const name = jobName(this._id);
+    const name = jobNameForId(this._id);
     console.log('Removing job', name);
     SyncedCron.remove(name);
     ImportFlows.update(this._id, {
@@ -77,7 +77,7 @@ ImportFlows.helpers({
 
   scheduleAutomaticImport(userId, schedule) {
     const importFlowId = this._id;
-    const name = jobName(importFlowId);
+    const name = jobNameForId(importFlowId);
 
     console.log('Adding job', name, 'with schedule', schedule, '…');
 
@@ -105,9 +105,16 @@ ImportFlows.helpers({
       job() {
         const flow = ImportFlows.findOne(importFlowId);
 
+        const jobName = jobNameForId(importFlowId);
         if (!flow) {
-          console.log('Removed job because import flow with id', importFlowId, 'does not exist');
-          SyncedCron.remove(jobName(importFlowId));
+          console.log(`Removed job ${jobName} because its import flow does not exist.`);
+          SyncedCron.remove(jobName);
+          return;
+        }
+
+        if (!flow.schedule) {
+          console.log(`Removed job ${jobName} because it appears to have been stopped.`);
+          SyncedCron.remove(jobName);
           return;
         }
 

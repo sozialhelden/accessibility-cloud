@@ -12,10 +12,13 @@ import { collectionWithName } from './collections';
 import { getAppAndUserFromRequest } from './authenticate-request';
 import { setAccessControlHeaders } from './set-access-control-headers';
 import { getDisplayedNameForUser } from '/both/lib/user-name';
+import { Random } from 'meteor/random';
 
 function handleJSONRequest(req, res, next) {
+  const startTimestamp = Date.now();
   const { pathname } = url.parse(req.url);
   const [collectionName, _id] = pathname.replace(/^\//, '').replace(/.json($|\?)/, '').split('/');
+  const requestId = Random.id(5);
 
   let appId = null;
   let app = null;
@@ -56,9 +59,9 @@ function handleJSONRequest(req, res, next) {
     const options = { req, res, collectionName, collection, _id, appId, app, user, userId, surrogateKeys };
     const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
     const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
-
     console.log(
       'Request',
+      requestId,
       _.compact([viaAppString, asUserString]).join(' '),
       req.method,
       req.url,
@@ -77,10 +80,10 @@ function handleJSONRequest(req, res, next) {
     if (typeof collection.maximalCacheTimeInSeconds !== 'undefined') {
       maximalCacheTimeInSeconds = collection.maximalCacheTimeInSeconds;
     }
-    res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=30, stale-if-error=3600`); // Interpreted by the CDN
+    res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=120, stale-if-error=3600`); // Interpreted by the CDN
     res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
     res.setHeader('Surrogate-Key', uniq(surrogateKeys).join(' '));
-    res.setHeader('Vary', 'x-app-token, x-user-token');
+    res.setHeader('Vary', 'x-app-token, x-user-token, x-token');
 
     responseBody = EJSON.stringify(result);
   } catch (error) {
@@ -96,7 +99,10 @@ function handleJSONRequest(req, res, next) {
     responseData.error.reason = responseData.error.reason || 'Internal server error';
     responseBody = JSON.stringify(responseData);
   }
+  const endTimestamp = Date.now();
+  const duration = (endTimestamp - startTimestamp) / 1000;
 
+  console.log(`Request ${requestId} needed ${duration}s`);
   return res.end(responseBody);
 }
 

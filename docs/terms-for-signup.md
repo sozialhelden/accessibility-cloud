@@ -1,8 +1,8 @@
-# Accessibility Cloud - Nutzungsbedingungen und Datenschutzerklärung
+# accessibility.cloud - Nutzungsbedingungen und Datenschutzerklärung
 
 ## Nutzungsbedingungen
 
-Accessibility Cloud ("AC") ist eine von SOZIALHELDEN e.V. ("Betreiber", "wir") betriebene Online-Anwendung, mittels derer Nutzer Informationen zur Barrierefreiheit von öffentlich zugänglichen Orten bereitstellen und abrufen können. Die Weitergabe der Daten unter den Nutzern soll es ermöglichen, Informationen zur Barrierefreiheit möglichst weit zu verbreiten.
+accessibility.cloud ("AC") ist eine von SOZIALHELDEN e.V. ("Betreiber", "wir") betriebene Online-Anwendung, mittels derer Nutzer Informationen zur Barrierefreiheit von öffentlich zugänglichen Orten bereitstellen und abrufen können. Die Weitergabe der Daten unter den Nutzern soll es ermöglichen, Informationen zur Barrierefreiheit möglichst weit zu verbreiten.
 
 Der Betreiber ist ein gemeinnütziger Verein mit Sitz in Berlin. Wir betreiben die AC aus gemeinnützigen Gründen und ohne Gewinnerzielungsabsicht. Als Betreiber stellen wir den Nutzern mit der AC lediglich die technische Infrastruktur für den Datenaustausch untereinander zur Verfügung, ohne selbst Daten zu erheben, zu validieren und den Nutzern als eigene Inhalte anzubieten.
 

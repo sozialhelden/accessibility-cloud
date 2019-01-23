@@ -15,11 +15,12 @@ export default function makeCollectionTranslatable(
   }: {
     collection: any,
     translationStrategy: TranslationStrategy,
-  }
+  },
 ) {
   const methodName = `${collection._name}.syncWithTransifex`;
 
   Meteor.methods({
+    // tslint:disable-next-line:function-name
     [methodName]() {
       // if (!this.userId) {
       //   throw new Meteor.Error(401, 'Please log in first.');
@@ -28,7 +29,6 @@ export default function makeCollectionTranslatable(
       //   throw new Meteor.Error(403, 'You are not authorized to import categories.');
       // }
       syncCollectionWithTransifex({
-        defaultLocale,
         translationStrategy,
         resourceSlug: resourceSlugForCollection(collection),
       });

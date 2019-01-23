@@ -54,4 +54,14 @@ SourceImports.helpers({
     }
     return this.streamChain.find(stream => stream && stream.type.match(/^Upsert/));
   },
+  getType() {
+    const upsertStream = this.upsertStream();
+    if (!upsertStream) return null;
+    switch (upsertStream.type) {
+      case 'UpsertEquipment': return 'equipmentInfos';
+      case 'UpsertPlace': return 'placeInfos';
+      case 'UpsertDisruption': return 'disruptions';
+      default: return null;
+    }
+  }
 });
