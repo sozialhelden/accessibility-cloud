@@ -1,5 +1,6 @@
 import { set, entries, pickBy } from 'lodash';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { evaluateWheelChairA11y } from './ac-ruleset';
   
 const { Transform } = Npm.require('zstreams');
 
@@ -130,7 +131,21 @@ const parse = (data: KoboResult) => {
     }
   }
 
-  // TODO apply a11y ratings
+  // rate place a11y
+  const a11y = evaluateWheelChairA11y(result);
+
+  if (a11y === 'yes') {
+    set(result, 'properties.accessibility.accessibleWith.wheelchair', true);
+    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', true);
+  } else if (a11y === 'partial') {
+    set(result, 'properties.accessibility.accessibleWith.wheelchair', false);
+    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', true);
+  } else if (a11y === 'no') {
+    set(result, 'properties.accessibility.accessibleWith.wheelchair', false);
+    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', false);
+  }
+
+  console.log('evaluateWheelChairA11y', mapping['properties.name'], a11y);
 
   // TODO retrieve attachments
 
