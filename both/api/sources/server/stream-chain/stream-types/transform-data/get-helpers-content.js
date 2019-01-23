@@ -17,6 +17,8 @@ const AVAILABLE_HELPERS = {
     fetchCategoryFromTags: 'fetch-category-from-tags.js',
   },
 
+  kobo: 'kobo/parse-values.js',
+
   extractNumber: 'extract-number.js',
   convertOSGB36ToWGS84Point: 'convert-osgb36-to-wgs84-point.js',
   convert3LetterLanguageCode: 'convert-3-letter-language-code.js',

@@ -47,13 +47,18 @@ describe('getHelpersContent', () => {
       'AXSMaps.guessGeoPoint',
       'OSM.fetchNameFromTags',
       'OSM.fetchCategoryFromTags',
+      'kobo.parseValue',
+      'kobo.parseYesNo',
+      'kobo.parseHasSubObject',
+      'kobo.parseFloatUnit',
+      'kobo.parseIntUnit',
       'extractNumber',
       'md5',
       'convertOSGB36ToWGS84Point',
       'convert3LetterCountryCode',
     ];
 
-    EXPECTED_METHOD_PATHS.forEach(methodPath => {
+    EXPECTED_METHOD_PATHS.forEach((methodPath) => {
       it(`has a ${methodPath} method`, () => {
         assert.isFunction(_.get(helpersObj, methodPath));
       });
