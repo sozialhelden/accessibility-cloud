@@ -262,7 +262,7 @@ export default function loadAndRenderMap(map, instance) {
   if (isShowingASinglePlace) {
     const placeInfoId = FlowRouter.getParam('placeInfoId');
     const doc = PlaceInfos.findOne(placeInfoId);
-    const place = doc && PlaceInfos.convertToGeoJSONFeature(doc);
+    const place = doc && PlaceInfos.convertToJSON(doc);
     const featureCollection = buildFeatureCollectionFromArray([place]);
     showPlacesOnMap(instance, map, currentSourceId, featureCollection);
     placesPromise = Promise.resolve();

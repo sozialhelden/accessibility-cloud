@@ -6,7 +6,7 @@ import { PlaceInfos } from '../../place-infos/place-infos';
 import convertToGeoJSONFeature from '../../shared/convertToGeoJSONFeature';
 import wrapCollectionAPIResponseAsGeoJSON from '../../shared/server/wrapCollectionAPIResponseAsGeoJSON';
 
-Disruptions.convertToGeoJSONFeature = convertToGeoJSONFeature;
+Disruptions.convertToJSON = convertToGeoJSONFeature;
 Disruptions.wrapCollectionAPIResponse = wrapCollectionAPIResponseAsGeoJSON;
 
 Disruptions.relationships = {

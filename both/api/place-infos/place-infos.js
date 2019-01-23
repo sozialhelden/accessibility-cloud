@@ -10,7 +10,7 @@ import convertToGeoJSONFeature from '../shared/convertToGeoJSONFeature';
 export const PlaceInfos = new Mongo.Collection('PlaceInfos');
 
 
-PlaceInfos.convertToGeoJSONFeature = (doc, coordinatesForDistance, locale) => {
+PlaceInfos.convertToJSON = (doc, coordinatesForDistance, locale) => {
   const convertedDocument = convertToGeoJSONFeature(doc, coordinatesForDistance, locale);
   return convertedDocument;
 };

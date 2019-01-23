@@ -134,8 +134,8 @@ export function findAllRelatedDocuments({ rootCollection, rootDocuments, req, ap
       if (typeof foreignCollection.surrogateKeysForDocument === 'function') {
         foreignCollection.surrogateKeysForDocument(doc).forEach(key => surrogateKeys.push(key));
       }
-      if (foreignCollection.convertToGeoJSONFeature) {
-        result = foreignCollection.convertToGeoJSONFeature(doc);
+      if (foreignCollection.convertToJSON) {
+        result = foreignCollection.convertToJSON(doc);
       }
 
       results[foreignCollectionName][doc._id] = result;

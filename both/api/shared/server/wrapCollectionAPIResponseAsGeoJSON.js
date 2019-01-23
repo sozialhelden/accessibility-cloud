@@ -14,6 +14,6 @@ export default function wrapCollectionAPIResponseAsGeoJSON({ results, req, relat
     featureCount: results.length,
     totalFeatureCount: resultsCount,
     related,
-    features: results.map(doc => this.convertToGeoJSONFeature(doc, coordinates, locale)),
+    features: results.map(doc => this.convertToJSON(doc, coordinates, locale)),
   };
 }
