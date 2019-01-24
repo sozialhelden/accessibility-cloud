@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Sources } from '../sources';
-import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
+import addKeysToFastlyPurgingQueue from '../../../../server/cdn-purging/addKeysToFastlyPurgingQueue';
 
 // This purges all API responses that include data from a source when specific fields of the
 // source are changed or the source is removed.
@@ -21,11 +21,11 @@ Meteor.startup(() => {
         'accessRestrictedTo',
       ];
       if (fieldsTriggeringPurge.find(fieldName => fields[fieldName])) {
-        sendPurgeRequestToFastly([_id]);
+        addKeysToFastlyPurgingQueue([_id]);
       }
     },
     removed(_id) {
-      sendPurgeRequestToFastly([_id]);
+      addKeysToFastlyPurgingQueue([_id]);
     },
   });
 });
