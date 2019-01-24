@@ -2,7 +2,6 @@ import fastlyPurgeQueue from './fastlyPurgeQueue';
 import sendPurgeRequestToFastly from './sendPurgeRequestToFastly';
 
 export default function flushPurgeQueue() {
-  console.log('Purging keys on fastly…');
   let keyBatch: string[] = [];
   const purge = () => {
     if (keyBatch.length) {

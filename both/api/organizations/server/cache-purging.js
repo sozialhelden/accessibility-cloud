@@ -1,11 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Organizations } from '../organizations';
 import { Sources } from '../../sources/sources';
-import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
+import addKeysToFastlyPurgingQueue from '../../../../server/cdn-purging/addKeysToFastlyPurgingQueue';
 
 function purgeSourcesOfOrganizationId(organizationId) {
   const sources = Sources.find({ organizationId }, { transform: null, fields: { _id: 1 } });
-  sendPurgeRequestToFastly(sources.map(s => s._id));
+  addKeysToFastlyPurgingQueue(sources.map(s => s._id));
 }
 
 // This purges all API responses that include organization info if specific fields of the
@@ -20,12 +20,12 @@ Meteor.startup(() => {
       ];
       // Purge all cached source + PoI information of this organization
       if (fieldsTriggeringPurge.find(fieldName => fields[fieldName])) {
-        sendPurgeRequestToFastly([_id]);
+        addKeysToFastlyPurgingQueue([_id]);
         purgeSourcesOfOrganizationId(_id);
       }
     },
     removed(_id) {
-      sendPurgeRequestToFastly([_id]);
+      addKeysToFastlyPurgingQueue([_id]);
       purgeSourcesOfOrganizationId(_id);
     },
   });

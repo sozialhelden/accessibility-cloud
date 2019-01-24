@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Apps } from '../apps';
-import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
+import addKeysToFastlyPurgingQueue from '../../../../server/cdn-purging/addKeysToFastlyPurgingQueue';
 
 Meteor.startup(() => {
   // This purges all API responses of an app obtained via app-based API tokens from Fastly when
@@ -8,10 +8,10 @@ Meteor.startup(() => {
   
   Apps.find().observeChanges({
     changed(_id) {
-      sendPurgeRequestToFastly([_id]);
+      addKeysToFastlyPurgingQueue([_id]);
     },
     removed(_id) {
-      sendPurgeRequestToFastly([_id]);
+      addKeysToFastlyPurgingQueue([_id]);
     },
   });
 });
