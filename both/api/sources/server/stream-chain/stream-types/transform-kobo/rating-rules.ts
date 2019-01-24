@@ -8,7 +8,10 @@ export interface Quantity {
 
 // rule types
 type Comparable = number | string | Quantity;
+// checks if a property is null or has a value
 type ExistsValue = { $exists: boolean };
+// checks if a property is undefined or has a value (including null)
+type DefinedValue = { $defined: boolean };
 type LessThan = { $lt: Comparable };
 type LessThanEquals = { $lte: Comparable };
 type GreaterThan = { $gt: Comparable };
@@ -16,7 +19,8 @@ type GreaterThanEquals = { $gte: Comparable };
 type Equals = { $eq: Comparable };
 type NotEquals = { $ne: Comparable };
 type MatchValue = string | number | undefined | null | boolean |
-  ExistsValue | LessThan | LessThanEquals | GreaterThan | GreaterThanEquals | Equals | NotEquals;
+  DefinedValue | ExistsValue |
+  LessThan | LessThanEquals | GreaterThan | GreaterThanEquals | Equals | NotEquals;
 type MatchRule = {
   [key: string]: MatchValue,
 };
@@ -27,7 +31,6 @@ export type Rule = OrRule | MatchRule;
 
 // three valued logic for a11y
 export type RuleEvaluationResult = 'true' | 'false' | 'unknown';
-
 
 // combine multiple rules with a three valued or, with the order of true > false > unknown
 // this does not align with Kleene and Priest logics, but knowing that a rule does not apply
@@ -102,21 +105,25 @@ function evaluateMatchRule(data: {}, rule: MatchRule): RuleEvaluationResult  {
     const fieldData = get(data, path);
     const isObjectMatch = matcher !== null && typeof matcher === 'object';
     const isExistsRule = isObjectMatch && matcher.hasOwnProperty('$exists');
+    const isDefinedRule = isObjectMatch && matcher.hasOwnProperty('$defined');
 
-    if (typeof fieldData === 'undefined' && !isExistsRule) {
-      // data is missing, we don't know if anything about this rule
+    if (typeof fieldData === 'undefined' && !isDefinedRule) {
+      // data is missing, we don't know anything about this entry
       return 'unknown';
-    }if (isObjectMatch) {
+    } if (isObjectMatch) {
       let matched = false;
       const foundOperators = intersection(allowedOperators, Object.keys(matcher)) as Operators[];
       if (foundOperators.length === 1) {
         // compare by operator
         matched = compareByOperator(fieldData, matcher[foundOperators[0]], foundOperators[0]);
-      } else if (isExistsRule) {
-        // custom exists check
+      } else if (isDefinedRule) {
+        // custom defined check, unknown check is skipped above
         matched = typeof fieldData !== 'undefined';
+      } else if (isExistsRule) {
+        // custom exists check, unknown is caught before
+        matched = fieldData !== null;
       } else {
-        // match object hierarchy
+        // match whole object
         matched = isMatch(fieldData, matcher as object);
       }
 
