@@ -31,7 +31,6 @@ meteorhacks:subs-manager
 # data
 mongo@1.1.17
 aldeed:simple-schema
-matb33:collection-hooks
 aldeed:collection2
 dburles:collection-helpers
 reywood:publish-composite
