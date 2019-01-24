@@ -1,4 +1,4 @@
-import { set, entries, pickBy, includes } from 'lodash';
+import { set, setWith, entries, pickBy, includes } from 'lodash';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 const { Transform } = Npm.require('zstreams');
@@ -21,6 +21,7 @@ type KoboAttachment = {
 type YesNoResult = 'true' | 'false' | 'undefined';
 
 type KoboResult = {
+  _id: number,
   _uuid: string,
   _geolocation: [number, number],
   _attachments: KoboAttachment[],
@@ -162,7 +163,7 @@ const parse = (data: KoboResult) => {
 
   const mapping = {
     geometry: { coordinates: data._geolocation.reverse(), type: 'Point' },
-    'properties.originalId': data._uuid,
+    'properties.originalId': `${data._id}`,
     'properties.infoPageUrl': null,
     'properties.originalData': JSON.stringify(data),
     // basic place data
@@ -236,15 +237,20 @@ const parse = (data: KoboResult) => {
   };
 
   const result = {};
+  // if there is a null in the history, do not set a value
+  const customizedSetter = (currValue: any) => currValue === null ? null : undefined;
   for (const [key, value] of entries(mapping)) {
     if (typeof value !== 'undefined') {
-      set(result, key, value);
+      setWith(result, key, value, customizedSetter);
     }
   }
 
-  // rate place a11y
-  const a11y = evaluateWheelChairA11y(result);
 
+
+  // rate place a11y
+  const a11y = evaluateWheelmapA11y(result);
+
+  // TODO these fields don't exist in ac format! Clarify & align with wheelmap frontend & ac-format
   if (a11y === 'yes') {
     set(result, 'properties.accessibility.accessibleWith.wheelchair', true);
     set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', true);
@@ -256,10 +262,25 @@ const parse = (data: KoboResult) => {
     set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', false);
   }
 
-  // TODO rate toilet a11y
+  // rate place a11y
+  const toiletA11y = evaluateToiletWheelmapA11y(result);
 
-  console.log('evaluateWheelChairA11y', mapping['properties.name'],
-              JSON.stringify(mapping, null, 2), a11y);
+  // rate toilet a11y
+  // TODO this field doesn't exist in ac format! Clarify & align with wheelmap frontend & ac-format
+  if (toiletA11y === 'yes') {
+    setWith(result,
+            'properties.accessibility.restrooms.0.isAccessibleWithWheelchair',
+            true,
+            customizedSetter);
+  } else if (toiletA11y === 'no') {
+    setWith(result,
+            'properties.accessibility.restrooms.0.isAccessibleWithWheelchair',
+            false,
+            customizedSetter);
+  }
+
+  // tslint:disable-next-line:max-line-length
+  console.log('evaluateWheelChairA11y', { a11y, toiletA11y, name: mapping['properties.name'] }, JSON.stringify(mapping, null, 2));
 
   // TODO retrieve attachments
 
