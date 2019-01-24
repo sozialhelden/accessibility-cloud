@@ -1,6 +1,6 @@
-import { set, entries, pickBy } from 'lodash';
+import { set, entries, pickBy, includes } from 'lodash';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { evaluateWheelChairA11y } from './ac-ruleset';
+import { evaluateWheelChairA11y, flatStepHeight, wheelChairWashBasin } from './ac-ruleset';
   
 const { Transform } = Npm.require('zstreams');
 
@@ -19,6 +19,9 @@ type KoboResult = {
   _uuid: string,
   _geolocation: [number, number],
   _attachments: KoboAttachment[],
+  username: string,
+  'user/user_measuring': 'inch' | 'cm',
+  'user/user_record_type': string,
   'outside/category/category_sub': string,
   'outside/category/category_top': string,
   'outside/entrance/has_automatic_door': YesNoResult,
@@ -26,12 +29,30 @@ type KoboResult = {
   'outside/entrance/has_entrance': YesNoResult,
   'outside/entrance/has_mobile_ramp': YesNoResult,
   'outside/entrance/has_steps': YesNoResult,
+  'outside/entrance/steps_low_height': YesNoResult,
   'outside/entrance/picture': string,
   'outside/entrance/steps_count': string,
   'outside/entrance/steps_height': string,
   'outside/name': string,
-  'user/user_measuring': 'inch' | 'cm',
-  'user/user_record_type': string,
+  'inside/toilet/basin_wheelchair_fits_belows': YesNoResult,
+  'inside/toilet/basin_wheelchair_reachable': YesNoResult,
+  'inside/toilet/door_width': string,
+  'inside/toilet/free_space_front': string,
+  'inside/toilet/free_space_left': string,
+  'inside/toilet/free_space_right': string,
+  'inside/toilet/has_arm_rests': string,
+  'inside/toilet/has_basin': YesNoResult,
+  'inside/toilet/has_toilet': YesNoResult,
+  'inside/toilet/seat_height': string,
+  'inside/toilet/stepless_access': YesNoResult,
+  'inside/toilet/toilet_photo': string,
+  'inquire/are_service_animals_allowed': YesNoResult,
+  'inquire/media/has_audio': YesNoResult,
+  'inquire/media/has_braille': YesNoResult,
+  'inquire/media/has_large_print': YesNoResult,
+  'inquire/staff_can_speak_sign_lang': YesNoResult,
+  'inquire/staff_has_disabled_training': YesNoResult,
+  'inquire/staff_spoken_sign_langs': string,
 };
 
 type FieldTypes = 'yesno' | 'float' | 'int';
@@ -64,8 +85,45 @@ const parseYesNo = (data: KoboResult, field: string) => {
   return parseValue(data, field, 'yesno');
 };
 
-const parseHasWithDefault = (data: KoboResult, field: string, defaultValue: any = {}) => {
-  return parseValue(data, field, 'yesno') === true ? defaultValue : undefined;
+const parseHasWithDefault = (data: KoboResult, field: string,
+                             existsValue: any, doesNotExistValue: any) => {
+  const value = parseValue(data, field, 'yesno');
+
+  if (value === true) {
+    return existsValue;
+  }
+
+  if (value === false) {
+    return doesNotExistValue;
+  }
+
+  return undefined;
+};
+
+const parseHasArray = (data: KoboResult, field: string) => {
+  return parseHasWithDefault(data, field, [], null);
+};
+
+const parseHasEntry = (data: KoboResult, field: string) => {
+  return parseHasWithDefault(data, field, {}, null);
+};
+
+const parseIsAnyOfWithDefault = (data: KoboResult, field: string, list: string[],
+                                 existsValue: any, doesNotExistValue: any) => {
+  const rawValue = data[field];
+  if (rawValue === null || typeof rawValue === 'undefined') {
+    return rawValue;
+  }
+
+  return includes(list, rawValue) ? existsValue : doesNotExistValue;
+};
+
+const parseIsAnyOf = (data: KoboResult, field: string, list: string[]) => {
+  return parseIsAnyOfWithDefault(data, field, list, true, false);
+};
+
+const parseIsAnyOfEntry = (data: KoboResult, field: string, list: string[]) => {
+  return parseIsAnyOfWithDefault(data, field, list, {}, null);
 };
 
 const parseFloatUnit = (
@@ -92,31 +150,84 @@ const parseIntUnit = (
   return (value && !isNaN(value)) ? unitValue : undefined;
 };
 
+
+
 const parse = (data: KoboResult) => {
+  const usedLengthUnit = data['user/user_measuring'] || 'cm';
+
   const mapping = {
     geometry: { coordinates: data._geolocation.reverse(), type: 'Point' },
     'properties.originalId': data._uuid,
     'properties.infoPageUrl': null,
     'properties.originalData': JSON.stringify(data),
+    // basic place data
     'properties.name': data['outside/name'],
     'properties.category':
       data['outside/category/category_top'] || data['outside/category/category_sub'] || 'undefined',
+    // entrances
+    'properties.accessibility.entrances':
+      parseHasArray(data, 'outside/entrance/has_entrance'),
     'properties.accessibility.entrances.0':
-      parseHasWithDefault(data, 'outside/entrance/has_entrance'),
+      parseHasEntry(data, 'outside/entrance/has_entrance'),
+    // stairs
+    'properties.accessibility.entrances.0.stairs':
+      parseHasArray(data, 'outside/entrance/has_steps'),
     'properties.accessibility.entrances.0.stairs.0':
-      parseHasWithDefault(data, 'outside/entrance/has_steps'),
+      parseHasEntry(data, 'outside/entrance/has_steps'),
     'properties.accessibility.entrances.0.stairs.0.count':
       parseValue(data, 'outside/entrance/steps_count', 'int'),
     'properties.accessibility.entrances.0.stairs.0.stepHeight':
-      parseFloatUnit(data, 'outside/entrance/steps_height', data['user/user_measuring']) ||
-      parseHasWithDefault(data, 'outside/entrance/steps_low_height',
-                          { unit: 'cm', value: 7, operator: '<=' }),
+      parseFloatUnit(data, 'outside/entrance/steps_height', usedLengthUnit) ||
+      parseHasWithDefault(data, 'outside/entrance/steps_low_height', flatStepHeight, undefined),
     'properties.accessibility.entrances.0.hasRemovableRamp':
       parseYesNo(data, 'outside/entrance/has_mobile_ramp'),
+    // doors
+    'properties.accessibility.entrances.0.doors':
+      parseHasArray(data, 'outside/entrance/has_door'),
     'properties.accessibility.entrances.0.doors.0':
-      parseYesNo(data, 'outside/entrance/has_door'),
+      parseHasEntry(data, 'outside/entrance/has_door'),
     'properties.accessibility.entrances.0.doors.0.isAutomaticOrAlwaysOpen':
       parseYesNo(data, 'outside/entrance/has_automatic_door'),
+    // restrooms
+    'properties.accessibility.restrooms':
+      parseHasArray(data, 'inside/toilet/has_toilet'),
+    'properties.accessibility.restrooms.0':
+      parseHasEntry(data, 'inside/toilet/has_toilet'),
+    // entrance
+    'properties.accessibility.restrooms.0.entrance.isLevel':
+      parseYesNo(data, 'inside/toilet/stepless_access'),
+    'properties.accessibility.restrooms.0.entrance.door.width':
+      parseFloatUnit(data, 'inside/toilet/door_width', usedLengthUnit),
+    // toilet
+    'properties.accessibility.restrooms.0.toilet':
+      parseHasEntry(data, 'inside/toilet/has_toilet'),
+    'properties.accessibility.restrooms.0.toilet.heightOfBase':
+      parseFloatUnit(data, 'inside/toilet/seat_height', usedLengthUnit),
+    'properties.accessibility.restrooms.0.toilet.spaceOnUsersLeftSide':
+      parseFloatUnit(data, 'inside/toilet/free_space_front', usedLengthUnit),
+    'properties.accessibility.restrooms.0.toilet.spaceOnUsersRightSide':
+      parseFloatUnit(data, 'inside/toilet/free_space_left', usedLengthUnit),
+    'properties.accessibility.restrooms.0.toilet.spaceInFront':
+      parseFloatUnit(data, 'inside/toilet/free_space_right', usedLengthUnit),
+    // handles
+    'properties.accessibility.restrooms.0.toilet.hasFoldingHandles':
+      parseIsAnyOf(data, 'inside/toilet/has_arm_rests', ['left_and_right', 'right', 'left']),
+    'properties.accessibility.restrooms.0.toilet.foldingHandles':
+      parseIsAnyOfEntry(data, 'inside/toilet/has_arm_rests', ['left_and_right', 'right', 'left']),
+    'properties.accessibility.restrooms.0.toilet.foldingHandles.onUsersLeftSide':
+      parseIsAnyOf(data, 'inside/toilet/has_arm_rests', ['left_and_right', 'left']),
+    'properties.accessibility.restrooms.0.toilet.foldingHandles.onUsersRightSide':
+      parseIsAnyOf(data, 'inside/toilet/has_arm_rests', ['left_and_right', 'right']),
+    // washBasin
+    'properties.accessibility.restrooms.0.washBasin':
+      parseHasEntry(data, 'inside/toilet/has_basin'),
+    'properties.accessibility.restrooms.0.washBasin.accessibleWithWheelchair':
+      parseYesNo(data, 'inside/toilet/basin_wheelchair_reachable'),
+    'properties.accessibility.restrooms.0.washBasin.spaceBelow':
+      parseHasWithDefault(data,
+                          'inside/toilet/basin_wheelchair_fits_belows',
+                          wheelChairWashBasin,
+                          null),
   };
 
   const result = {};
@@ -140,7 +251,10 @@ const parse = (data: KoboResult) => {
     set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', false);
   }
 
-  console.log('evaluateWheelChairA11y', mapping['properties.name'], mapping, a11y);
+  // TODO rate toilet a11y
+
+  console.log('evaluateWheelChairA11y', mapping['properties.name'],
+              JSON.stringify(mapping, null, 2), a11y);
 
   // TODO retrieve attachments
 
