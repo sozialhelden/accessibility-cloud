@@ -223,7 +223,7 @@ export default class Upsert {
     // To reduce upsert calls on MongoDB, we don't use the cache purge queue here
     console.log(`Purging keys on fastly for import ${this.options.sourceImportId}…`);
     const selector = { 'properties.sourceImportId': this.options.sourceImportId };
-    const options = { fields: { _id: 1 } };
+    const options = { fields: { _id: 1, geometry: 1 } };
     let idBatch = [];
     const purge = () => {
       if (idBatch.length) {
@@ -234,6 +234,7 @@ export default class Upsert {
     this.constructor.collection
       .find(selector, options)
       .forEach((doc) => {
+        addKeysToFastlyPurgingQueue(tileSurrogateKeysForFeature(doc));
         idBatch.push(doc._id);
         if (idBatch.length === 128) {
           purge();
