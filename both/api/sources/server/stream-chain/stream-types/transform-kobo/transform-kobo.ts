@@ -61,12 +61,19 @@ type KoboResult = {
   'inquire/staff_spoken_sign_langs': string,
 };
 
+// make keys typesafe to prevent typos
+type KoboKey = keyof KoboResult;
+
 type FieldTypes = 'yesno' | 'float' | 'int';
 
-const parseValue = (data: KoboResult, field: string, type: FieldTypes) => {
+const parseValue = (data: KoboResult, field: KoboKey, type: FieldTypes) => {
   const rawValue = data[field];
   if (rawValue === null || typeof rawValue === 'undefined') {
     return rawValue;
+  }
+
+  if (typeof rawValue !== 'string') {
+    return undefined;
   }
 
   if (type === 'yesno') {
@@ -87,11 +94,11 @@ const parseValue = (data: KoboResult, field: string, type: FieldTypes) => {
   return undefined;
 };
 
-const parseYesNo = (data: KoboResult, field: string) => {
+const parseYesNo = (data: KoboResult, field: KoboKey) => {
   return parseValue(data, field, 'yesno');
 };
 
-const parseHasWithDefault = (data: KoboResult, field: string,
+const parseHasWithDefault = (data: KoboResult, field: KoboKey,
                              existsValue: any, doesNotExistValue: any) => {
   const value = parseValue(data, field, 'yesno');
 
@@ -106,15 +113,15 @@ const parseHasWithDefault = (data: KoboResult, field: string,
   return undefined;
 };
 
-const parseHasArray = (data: KoboResult, field: string) => {
+const parseHasArray = (data: KoboResult, field: KoboKey) => {
   return parseHasWithDefault(data, field, [], null);
 };
 
-const parseHasEntry = (data: KoboResult, field: string) => {
+const parseHasEntry = (data: KoboResult, field: KoboKey) => {
   return parseHasWithDefault(data, field, {}, null);
 };
 
-const parseIsAnyOfWithDefault = (data: KoboResult, field: string, list: string[],
+const parseIsAnyOfWithDefault = (data: KoboResult, field: KoboKey, list: string[],
                                  existsValue: any, doesNotExistValue: any) => {
   const rawValue = data[field];
   if (rawValue === null || typeof rawValue === 'undefined') {
@@ -124,17 +131,17 @@ const parseIsAnyOfWithDefault = (data: KoboResult, field: string, list: string[]
   return includes(list, rawValue) ? existsValue : doesNotExistValue;
 };
 
-const parseIsAnyOf = (data: KoboResult, field: string, list: string[]) => {
+const parseIsAnyOf = (data: KoboResult, field: KoboKey, list: string[]) => {
   return parseIsAnyOfWithDefault(data, field, list, true, false);
 };
 
-const parseIsAnyOfEntry = (data: KoboResult, field: string, list: string[]) => {
+const parseIsAnyOfEntry = (data: KoboResult, field: KoboKey, list: string[]) => {
   return parseIsAnyOfWithDefault(data, field, list, {}, null);
 };
 
-const parseFloatUnit = (
-  data: KoboResult, field: string, unit: string, operator?: string) => {
-  const value = parseValue(data, field, 'float');
+const parseFloatUnit = (data: KoboResult, field: KoboKey,
+                        unit: string, operator?: string) => {
+  const value = parseValue(data, field, 'float') as number;
   // remove undefined values
   const unitValue = pickBy({
     operator,
@@ -144,9 +151,9 @@ const parseFloatUnit = (
   return (value && !isNaN(value)) ? unitValue : undefined;
 };
 
-const parseIntUnit = (
-  data: KoboResult, field: string, unit: string, operator?: string) => {
-  const value = parseValue(data, field, 'int');
+const parseIntUnit = (data: KoboResult, field: KoboKey,
+                      unit: string, operator?: string) => {
+  const value = parseValue(data, field, 'int')  as number;
   // remove undefined values
   const unitValue = pickBy({
     operator,
@@ -156,7 +163,17 @@ const parseIntUnit = (
   return (value && !isNaN(value)) ? unitValue : undefined;
 };
 
+const parseMultiSelect = (data: KoboResult, field: KoboKey) => {
+  const rawValue = data[field];
+  if (rawValue === null || typeof rawValue === 'undefined') {
+    return rawValue;
+  }
+  if (typeof rawValue !== 'string') {
+    return undefined;
+  }
 
+  return rawValue.split(' ');
+};
 
 const parse = (data: KoboResult) => {
   const usedLengthUnit = data['user/user_measuring'] || 'cm';
@@ -234,6 +251,20 @@ const parse = (data: KoboResult) => {
                           'inside/toilet/basin_wheelchair_fits_belows',
                           wheelChairWashBasin,
                           null),
+    'properties.accessibility.animalPolicy.allowsAnyAnimals':
+      parseYesNo(data, 'inquire/are_service_animals_allowed'),
+    'properties.accessibility.staff.isTrainedForDisabilities':
+      parseYesNo(data, 'inquire/staff_has_disabled_training'),
+    'properties.accessibility.staff.spokenLanguages':
+      parseMultiSelect(data, 'inquire/staff_spoken_sign_langs'),
+    'properties.accessibility.staff.isTrainedInSigning':
+      parseYesNo(data, 'inquire/staff_can_speak_sign_lang'),
+    'properties.accessibility.media.isLargePrint':
+      parseYesNo(data, 'inquire/media/has_large_print'),
+    'properties.accessibility.media.isAudio':
+      parseYesNo(data, 'inquire/media/has_audio'),
+    'properties.accessibility.media.isBraille':
+      parseYesNo(data, 'inquire/media/has_braille'),
   };
 
   const result = {};
@@ -244,8 +275,6 @@ const parse = (data: KoboResult) => {
       setWith(result, key, value, customizedSetter);
     }
   }
-
-
 
   // rate place a11y
   const a11y = evaluateWheelmapA11y(result);
@@ -330,17 +359,11 @@ export default class TransformKobo {
       }
       delete this.stream;
     }
-    if (this.pipeListener) {
-      delete this.pipeListener;
-    }
     if (this.source) {
       if (this.lengthListener) {
         this.source.removeListener('length', this.lengthListener);
       }
       delete this.source;
-    }
-    if (this.lengthListener) {
-      delete this.lengthListener;
     }
   }
 
