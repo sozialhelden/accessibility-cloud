@@ -47,6 +47,7 @@ export const partialWheelmapA11yRuleSet: Rule = {
   $or: [
     {
       'properties.accessibility.entrances.0.stairs.0.count': 1,
+      // TODO define unit
       'properties.accessibility.entrances.0.stairs.0.stepHeight': { $lte: 7.0 },
     },
   ],
