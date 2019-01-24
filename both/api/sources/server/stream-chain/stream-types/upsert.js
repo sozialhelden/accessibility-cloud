@@ -5,8 +5,14 @@ import _ from 'lodash';
 import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
-import generateTileCoordinatesForFeature from '../../../../shared/tile-indexing/generateTileCoordinatesForFeature';
-import sendPurgeRequestToFastly from '../../../../../../server/cdn-purging/sendPurgeRequestToFastly';
+import generateTileCoordinatesForFeature from
+  '../../../../shared/tile-indexing/generateTileCoordinatesForFeature';
+import sendPurgeRequestToFastly from
+  '../../../../../../server/cdn-purging/sendPurgeRequestToFastly';
+import tileSurrogateKeysForFeature from
+  '../../../../shared/tile-indexing/tileSurrogateKeysForFeature';
+import addKeysToFastlyPurgingQueue from
+  '../../../../../../server/cdn-purging/addKeysToFastlyPurgingQueue';
 
 const { Transform } = Npm.require('zstreams');
 

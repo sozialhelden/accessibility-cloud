@@ -22,12 +22,14 @@ Meteor.startup(() => {
       addKeysToFastlyPurgingQueue([doc.userId]);
     },
     changed(newDoc: OrganizationMember, oldDoc: OrganizationMember) {
-      if (newDoc.role !== oldDoc.role) {
+      if (newDoc.role !== oldDoc.role && newDoc.userId) {
         addKeysToFastlyPurgingQueue([newDoc.userId]);
       }
     },
     removed(oldDoc: OrganizationMember) {
-      addKeysToFastlyPurgingQueue([oldDoc.userId]);
+      if (oldDoc.userId) {
+        addKeysToFastlyPurgingQueue([oldDoc.userId]);
+      }
     },
   });
 
