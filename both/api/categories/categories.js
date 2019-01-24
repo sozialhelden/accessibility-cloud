@@ -55,4 +55,4 @@ Categories.attachSchema(Categories.schema);
 
 Categories.visibleSelectorForUserId = () => ({});
 Categories.visibleSelectorForAppId = () => ({});
-Categories.apiParameterizedSelector = selector => selector;
+Categories.apiParameterizedSelector = ({ selector }) => selector;

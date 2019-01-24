@@ -121,7 +121,7 @@ Apps.helpers({
   },
 });
 
-Apps.apiParameterizedSelector = selector => selector;
+Apps.apiParameterizedSelector = ({ selector }) => selector;
 
 Apps.relationships = {
   hasMany: {

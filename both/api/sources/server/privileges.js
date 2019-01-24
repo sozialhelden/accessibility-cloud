@@ -97,7 +97,7 @@ Sources.visibleSelectorForAppId = (appId) => {
   return { $and: [sourceSelectorForOrganizationIds([organizationId]), { isDraft: false }] };
 };
 
-Sources.apiParameterizedSelector = selector => selector;
+Sources.apiParameterizedSelector = ({ selector }) => selector;
 
 export function checkExistenceAndFullAccessToSourceId(userId, sourceId) {
   check(sourceId, String);

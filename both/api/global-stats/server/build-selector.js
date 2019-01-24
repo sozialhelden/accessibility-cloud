@@ -1,7 +1,7 @@
 import { GlobalStats } from '../global-stats';
 import nameSelector from './name-selector';
 
-GlobalStats.apiParameterizedSelector = (visibleContentSelector, req) =>
+GlobalStats.apiParameterizedSelector = ({ req }) =>
 ({
   $and: [
     nameSelector(req),

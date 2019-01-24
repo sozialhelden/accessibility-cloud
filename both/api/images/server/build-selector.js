@@ -2,7 +2,7 @@
 import { Images } from '../images';
 import objectIdFilterSelector from './object-id-filter';
 
-Images.apiParameterizedSelector = (visibleContentSelector, req) =>
+Images.apiParameterizedSelector = ({ req }) =>
   ({
     $and: [
       objectIdFilterSelector(req),
