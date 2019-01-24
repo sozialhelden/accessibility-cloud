@@ -10,7 +10,7 @@ import originalIdSelector from '../../shared/server/original-id';
 import existingAccessibilitySelector from '../../shared/server/existing-accessibility';
 
 
-PlaceInfos.apiParameterizedSelector = (visibleContentSelector, req, _id) =>
+PlaceInfos.apiParameterizedSelector = ({ visibleContentSelector, req, _id }) =>
   ({
     $and: [
       mapTileSelector(req),

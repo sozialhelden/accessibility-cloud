@@ -7,7 +7,7 @@ import filterPresetSelector from '../../shared/server/filter-preset';
 import originalIdSelector from '../../shared/server/original-id';
 
 
-Disruptions.apiParameterizedSelector = (visibleContentSelector, req) =>
+Disruptions.apiParameterizedSelector = ({ visibleContentSelector, req }) =>
   ({
     $and: [
       sourceFilterSelector(req),

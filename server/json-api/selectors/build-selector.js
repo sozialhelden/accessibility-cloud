@@ -7,7 +7,7 @@ import { _ } from 'meteor/underscore';
 const noContentDefinedMessage = collection =>
   `${collection._name} collection is accessible over API, but no allowed collection content defined for authenticated app / user.`;
 
-export function buildSelectorAndOptions({ req, _id, collection, appId, userId }) {
+export function buildSelectorAndOptions({ req, surrogateKeys, _id, collection, appId, userId }) {
   const selectors = [];
 
   if (!collection.apiParameterizedSelector) {
@@ -31,7 +31,7 @@ export function buildSelectorAndOptions({ req, _id, collection, appId, userId })
 
   const visibleContentSelector = (selectors.length === 1) ? selectors[0] : { $or: selectors };
 
-  let selector = collection.apiParameterizedSelector(visibleContentSelector, req, _id);
+  let selector = collection.apiParameterizedSelector({ visibleContentSelector, req, _id, surrogateKeys });
 
   if (_id) {
     selector = {
