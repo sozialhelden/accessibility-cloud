@@ -10,7 +10,8 @@ export const wheelChairWashBasin = {
 };
 
 // the rules for determining that places are fully accessible
-export const fullWheelchairA11yRuleSet: Rule = {
+// first version only support one entrance / stair
+export const fullWheelmapA11yRuleSet: Rule = {
   // check that there are no stairs
   $or: [
     {
@@ -30,6 +31,7 @@ export const fullWheelchairA11yRuleSet: Rule = {
 };
 
 // the rules for determining that places are at least partially accessible, omitting the full rules
+// first version only support one entrance / stair
 export const partialWheelmapA11yRuleSet: Rule = {
   $or: [
     {
@@ -41,11 +43,22 @@ export const partialWheelmapA11yRuleSet: Rule = {
   // TODO add more rules for door width etc.
 };
 
+// the rules for determining that toilets are fully accessible
+// first version only support one restroom
+export const wheelmapToiletA11yRuleSet: Rule = {
+  'properties.accessibility.restrooms': { $exists: true },
+  'properties.accessibility.restrooms.0': { $exists: true },
+  'properties.accessibility.restrooms.0.toilet': { $exists: true },
+  'properties.accessibility.restrooms.0.entrance.isLevel': true,
+  'properties.accessibility.restrooms.0.washBasin.accessibleWithWheelchair': true,
+  // TODO add more rules for door width etc.
+};
+
 export type A11yRating = 'yes' | 'no' | 'partial' | 'unknown';
 
-// Evaluates the wheelchair accessibility using the predefined ac rulesets
-export function evaluateWheelChairA11y(data: {}): A11yRating {
-  const full = evaluateRule(data, fullWheelchairA11yRuleSet);
+// Evaluates the wheelchair accessibility using the predefined wheelmap rulesets
+export function evaluateWheelmapA11y(data: {}): A11yRating {
+  const full = evaluateRule(data, fullWheelmapA11yRuleSet);
   if (full === 'true') {
     return 'yes';
   }
@@ -56,6 +69,20 @@ export function evaluateWheelChairA11y(data: {}): A11yRating {
   }
 
   if (full === 'false' || partial === 'false') {
+    return 'no';
+  }
+
+  return 'unknown';
+}
+
+// Evaluates the wheelchair accessibility of the toilet using the predefined wheelmap rulesets
+export function evaluateToiletWheelmapA11y(data: {}): A11yRating {
+  const full = evaluateRule(data, wheelmapToiletA11yRuleSet);
+  if (full === 'true') {
+    return 'yes';
+  }
+
+  if (full === 'false') {
     return 'no';
   }
 

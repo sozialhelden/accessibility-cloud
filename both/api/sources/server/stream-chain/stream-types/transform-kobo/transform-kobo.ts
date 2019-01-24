@@ -1,8 +1,13 @@
 import { set, entries, pickBy, includes } from 'lodash';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { evaluateWheelChairA11y, flatStepHeight, wheelChairWashBasin } from './ac-ruleset';
-  
+
 const { Transform } = Npm.require('zstreams');
+
+import {
+  flatStepHeight,
+  wheelChairWashBasin,
+  evaluateWheelmapA11y,
+  evaluateToiletWheelmapA11y } from './wheelmap-a11y-ruleset';
 
 type KoboAttachment = {
   mimetype: string,
