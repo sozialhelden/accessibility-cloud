@@ -308,9 +308,6 @@ const parse = (data: KoboResult) => {
             customizedSetter);
   }
 
-  // tslint:disable-next-line:max-line-length
-  console.log('evaluateWheelChairA11y', { a11y, toiletA11y, name: mapping['properties.name'] }, JSON.stringify(mapping, null, 2));
-
   // TODO retrieve attachments
 
   return result;
