@@ -2,9 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 
 export default function sendPurgeRequestToFastly(surrogateKeys: string[]) {
-  if (!surrogateKeys) {
-    return null;
-  }
   if (!surrogateKeys.length) {
     return null;
   }

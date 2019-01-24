@@ -4,7 +4,10 @@ import { isAdmin } from '../../both/lib/is-admin';
 import sendPurgeRequestToFastly from './sendPurgeRequestToFastly';
 
 Meteor.methods({
-  'fastly.purge'(keys) {
+  // tslint:disable-next-line:function-name
+  'fastly.purge'(this: { userId: string, unblock: (() => void) }, keys: string[]) {
+    check(keys, [String]);
+
     if (!this.userId) {
       throw new Meteor.Error(401, 'Please log in first.');
     }
