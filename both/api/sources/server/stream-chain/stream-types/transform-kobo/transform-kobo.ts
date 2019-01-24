@@ -34,7 +34,7 @@ type KoboResult = {
   'user/user_record_type': string,
 };
 
-type FieldTypes = 'yesno' | 'hasSubObject' | 'float' | 'int';
+type FieldTypes = 'yesno' | 'float' | 'int';
 
 const parseValue = (data: KoboResult, field: string, type: FieldTypes) => {
   const rawValue = data[field];
@@ -47,13 +47,6 @@ const parseValue = (data: KoboResult, field: string, type: FieldTypes) => {
       return true;
     }
     return (rawValue === 'false' ? false : undefined);
-  }
-
-  if (type === 'hasSubObject') {
-    if (rawValue === 'true') {
-      return {};
-    }
-    return undefined;
   }
 
   if (type === 'float') {
@@ -71,8 +64,8 @@ const parseYesNo = (data: KoboResult, field: string) => {
   return parseValue(data, field, 'yesno');
 };
 
-const parseHasSubObject = (data: KoboResult, field: string) => {
-  parseValue(data, field, 'hasSubObject');
+const parseHasWithDefault = (data: KoboResult, field: string, defaultValue: any = {}) => {
+  return parseValue(data, field, 'yesno') === true ? defaultValue : undefined;
 };
 
 const parseFloatUnit = (
@@ -109,13 +102,15 @@ const parse = (data: KoboResult) => {
     'properties.category':
       data['outside/category/category_top'] || data['outside/category/category_sub'] || 'undefined',
     'properties.accessibility.entrances.0':
-      parseHasSubObject(data, 'outside/entrance/has_entrance'),
+      parseHasWithDefault(data, 'outside/entrance/has_entrance'),
     'properties.accessibility.entrances.0.stairs.0':
-      parseHasSubObject(data, 'outside/entrance/has_steps'),
+      parseHasWithDefault(data, 'outside/entrance/has_steps'),
     'properties.accessibility.entrances.0.stairs.0.count':
       parseValue(data, 'outside/entrance/steps_count', 'int'),
     'properties.accessibility.entrances.0.stairs.0.stepHeight':
-      parseFloatUnit(data, 'outside/entrance/steps_height', data['user/user_measuring']),
+      parseFloatUnit(data, 'outside/entrance/steps_height', data['user/user_measuring']) ||
+      parseHasWithDefault(data, 'outside/entrance/steps_low_height',
+                          { unit: 'cm', value: 7, operator: '<=' }),
     'properties.accessibility.entrances.0.hasRemovableRamp':
       parseYesNo(data, 'outside/entrance/has_mobile_ramp'),
     'properties.accessibility.entrances.0.doors.0':
@@ -145,7 +140,7 @@ const parse = (data: KoboResult) => {
     set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', false);
   }
 
-  console.log('evaluateWheelChairA11y', mapping['properties.name'], a11y);
+  console.log('evaluateWheelChairA11y', mapping['properties.name'], mapping, a11y);
 
   // TODO retrieve attachments
 
