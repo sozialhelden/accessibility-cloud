@@ -71,7 +71,6 @@ export default class UpsertEquipmentInfo extends Upsert {
         const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
-        console.log('Associating equipment with place', placeInfo, 'matching', selector);
         if (placeInfo) {
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
