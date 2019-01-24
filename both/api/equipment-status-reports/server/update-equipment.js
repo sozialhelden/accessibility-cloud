@@ -2,7 +2,7 @@ import set from 'lodash/set';
 import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 import { PlaceInfos } from '../../place-infos/place-infos';
 import { EquipmentStatusReports } from '../equipment-status-reports';
-import purgeOnFastly from '../../../../server/purgeOnFastly';
+import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
 import isEmpty from 'lodash/isEmpty';
 
 const MaximalAllowedInactivityInSeconds = 60 * 60;
@@ -53,7 +53,7 @@ export default function updateEquipmentWithStatusReport(report) {
       };
     }
     PlaceInfos.update(placeInfoId, cacheUpdateModifier);
-    purgeOnFastly([placeInfoId, equipmentInfo._id]);
+    sendPurgeRequestToFastly([placeInfoId, equipmentInfo._id]);
   }
 }
 

@@ -6,7 +6,7 @@ import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
 import generateTileCoordinatesForFeature from '../../../../shared/tile-indexing/generateTileCoordinatesForFeature';
-import purgeOnFastly from '../../../../../../server/purgeOnFastly';
+import sendPurgeRequestToFastly from '../../../../../../server/cdn-purging/sendPurgeRequestToFastly';
 
 const { Transform } = Npm.require('zstreams');
 
@@ -213,19 +213,19 @@ export default class Upsert {
   }
 
   purgeImportedDocsOnFastly() {
+    // To reduce upsert calls on MongoDB, we don't use the cache purge queue here
     console.log(`Purging keys on fastly for import ${this.options.sourceImportId}…`);
-    const selector = {
-      'properties.sourceImportId': this.options.sourceImportId,
-    };
+    const selector = { 'properties.sourceImportId': this.options.sourceImportId };
+    const options = { fields: { _id: 1 } };
     let idBatch = [];
     const purge = () => {
       if (idBatch.length) {
-        purgeOnFastly(idBatch);
+        sendPurgeRequestToFastly(idBatch);
         idBatch = [];
       }
     };
     this.constructor.collection
-      .find(selector, { fields: { _id: 1 } })
+      .find(selector, options)
       .forEach((doc) => {
         idBatch.push(doc._id);
         if (idBatch.length === 128) {
