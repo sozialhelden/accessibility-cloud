@@ -1,13 +1,13 @@
 import { latlon2tile } from './latlon2tile';
 
-type Point = {
+type GeoJSONPoint = {
   geometry: {
     type: 'Point',
     coordinates: number[],
   },
 };
 
-export default function tileSurrogateKeysForFeature(feature: Point) {
+export default function tileSurrogateKeysForFeature(feature: GeoJSONPoint) {
   console.log(feature);
 
   if (
@@ -20,7 +20,7 @@ export default function tileSurrogateKeysForFeature(feature: Point) {
   }
   return Array.from({ length: 22 }).map((_, z) => {
     const [lon, lat] = feature.geometry.coordinates;
-    const { x, y } = latlon2tile(lat, lon, z);
+    const { x, y } = latlon2tile({ lat, lon }, z);
     return `z${z}-x${x}-y${y}`;
   });
 }
