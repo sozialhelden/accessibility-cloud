@@ -1,10 +1,16 @@
 import aws from 'aws-sdk';
 import { PassThrough } from 'stream';
+import mime from 'mime-types';
+import FileType from 'stream-file-type';
+import ImageSize from 'image-size-stream';
 
-import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
+import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 
 import { Images } from '../images';
+
+export const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
 
 function configureS3() {
   aws.config.region = Meteor.settings.public.aws.region;
@@ -25,6 +31,88 @@ function configureS3() {
     };
   }
   return new aws.S3();
+}
+
+export function createImageFromStream(imageStream, { mimeType, context, objectId, appToken, originalId, hashedIp }, callback) {
+  let imageId = null;
+  if (originalId) {
+    const foundImage = Images.findOne({ originalId }, { transform: null, fields: { } });
+    if (foundImage && foundImage.s3Error) {
+      // retry download
+      console.log('Retrying broken image upload', originalId);
+      imageId = foundImage._id;
+    } else if (foundImage) {
+      console.log('There is already an image with the originalId', originalId);
+      callback(null, foundImage);
+      return;
+    }
+  }
+
+  const suffix = mime.extension(mimeType);
+  const attributes = {
+    context,
+    objectId,
+    mimeType,
+    appToken,
+    hashedIp,
+    originalId,
+    moderationRequired: true,
+    isUploadedToS3: false,
+    remotePath: `${context}/${objectId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
+    timestamp: new Date(),
+    s3Error: null,
+    dimensions: {
+      width: 1,
+      height: 1,
+    },
+  };
+
+  if (imageId) {
+    console.log('Updating previous image upload', attributes);
+    Images.update({ _id: imageId }, attributes);
+  } else {
+    console.log('Inserting image upload', attributes);
+    imageId = Images.insert(attributes);
+  }
+
+  // get updated image data
+  const image = Images.findOne(imageId);
+  const mimeTypeDetector = new FileType();
+
+  imageStream.pipe(mimeTypeDetector);
+
+  mimeTypeDetector.on('file-type', (fileType) => {
+    const unsupportedFileType =
+        fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
+    if (unsupportedFileType) {
+      callback(new Meteor.Error(415, `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`));
+      imageStream.emit('close');
+      imageStream.destroy();
+    }
+    const mismatchedFileType =
+        mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
+    if (mismatchedFileType) {
+      callback(new Meteor.Error(415, `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`));
+      imageStream.emit('close');
+      imageStream.destroy();
+    }
+  });
+
+  const imageSizeDetector = new ImageSize();
+  imageStream.pipe(imageSizeDetector);
+
+  imageSizeDetector.on('size', Meteor.bindEnvironment((dimensions) => {
+    Images.update({ _id: imageId }, {
+      $set: {
+        dimensions: {
+          width: dimensions.width,
+          height: dimensions.height,
+        },
+      },
+    });
+  }));
+
+  image.saveUploadFromStream(imageStream, callback);
 }
 
 Images.helpers({
