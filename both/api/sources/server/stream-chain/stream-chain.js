@@ -118,6 +118,13 @@ export function createStreamChain({
 
   const source = Sources.findOne(sourceId);
   const lastSuccessfulImport = source.getLastSuccessfulImport();
+  let isAborted = false;
+  const abortFn = () => {
+    if (!isAborted) {
+      isAborted = true;
+      abortImport(sourceId);
+    }
+  };
 
   const result = streamChainConfig.map(({ type, parameters = {}, skip = false }, index) => {
     if (!type) {
@@ -140,14 +147,6 @@ export function createStreamChain({
     const progressKey = `${streamChainElementKey}.progress`;
     const errorKey = `${streamChainElementKey}.error`;
     const skippedKey = `${streamChainElementKey}.isSkipped`;
-
-    let isAborted = false;
-    const abortFn = () => {
-      if (!isAborted) {
-        abortImport(sourceId);
-        isAborted = true;
-      }
-    };
 
     const onProgress = Meteor.bindEnvironment(progress => {
       if (progress.percentage === 100) {
