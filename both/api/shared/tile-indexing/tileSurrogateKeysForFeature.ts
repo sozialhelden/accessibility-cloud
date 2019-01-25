@@ -1,4 +1,5 @@
 import { latlon2tile } from './latlon2tile';
+import { Tile } from './types';
 
 type GeoJSONPoint = {
   geometry: {
@@ -6,6 +7,11 @@ type GeoJSONPoint = {
     coordinates: number[],
   },
 };
+
+export function surrogateKeyForTile(tile: Tile): string {
+  const { x, y, z } = tile;
+  return `z${z}-x${x}-y${y}`;
+}
 
 export default function tileSurrogateKeysForFeature(feature: GeoJSONPoint) {
   console.log(feature);
@@ -20,7 +26,6 @@ export default function tileSurrogateKeysForFeature(feature: GeoJSONPoint) {
   }
   return Array.from({ length: 22 }).map((_, z) => {
     const [lon, lat] = feature.geometry.coordinates;
-    const { x, y } = latlon2tile({ lat, lon }, z);
-    return `z${z}-x${x}-y${y}`;
+    return surrogateKeyForTile(latlon2tile({ lat, lon }, z));
   });
 }
