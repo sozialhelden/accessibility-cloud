@@ -1,13 +1,11 @@
 import Fiber from 'fibers';
 import url from 'url';
-import mime from 'mime-types';
+
 import { Meteor } from 'meteor/meteor';
-import { Random } from 'meteor/random';
 import { WebApp } from 'meteor/webapp';
-import FileType from 'stream-file-type';
-import ImageSize from 'image-size-stream';
 
 import { Images } from '../both/api/images/images';
+import { allowedMimeTypes, createImageFromStream } from '../both/api/images/server/save-upload-from-stream';
 import { PlaceInfos } from '../both/api/place-infos/place-infos';
 import { Captchas, CaptchaLifetime } from '../both/api/captchas/captchas';
 import { shouldThrottleByIp } from './throttle-api';
@@ -26,16 +24,14 @@ function respondWithError(res, code, reason) {
   respond(res, code, { error: { reason } });
 }
 
-const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
 
 const ignoreRelatedObject = { place: true };
+
 
 function createImageUploadHandler({ path, queryParam, context, collection }) {
   function handleUploadRequest(req, res) {
     try {
       setAccessControlHeaders(res, ['OPTIONS', 'POST']);
-      const mimeTypeDetector = new FileType();
-      const imageSizeDetector = new ImageSize();
       const query = url.parse(req.url, true).query;
 
       const isAuthorized = isRequestAuthorized(req);
@@ -100,71 +96,29 @@ function createImageUploadHandler({ path, queryParam, context, collection }) {
 
       const usedCaptcha = captchas[0]._id;
       console.log(`Uploading image for place ${objectId} using captcha ${usedCaptcha}`, req.headers);
-      const suffix = mime.extension(mimeType);
-      const attributes = {
-        hashedIp,
-        objectId,
-        appToken,
-        mimeType,
-        context,
-        moderationRequired: true,
-        isUploadedToS3: false,
-        remotePath: `${context}/${objectId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
-        timestamp: new Date(),
-        dimensions: {
-          width: 1,
-          height: 1,
+
+      createImageFromStream(
+        req,
+        {
+          mimeType,
+          context,
+          objectId,
+          appToken,
+          hashedIp,
         },
-      };
-
-      console.log('Inserting image upload', attributes);
-      const _id = Images.insert(attributes);
-      const image = Images.findOne(_id);
-
-      req.pipe(mimeTypeDetector);
-
-      mimeTypeDetector.on('file-type', (fileType) => {
-        const unsupportedFileType =
-            fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
-        if (unsupportedFileType) {
-          respondWithError(res, 415, `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`);
-          req.emit('close');
-          req.destroy();
-        }
-        const mismatchedFileType =
-            mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
-        if (mismatchedFileType) {
-          respondWithError(res, 415, `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`);
-          req.emit('close');
-          req.destroy();
-        }
-      });
-
-      req.pipe(imageSizeDetector);
-
-      imageSizeDetector.on('size', Meteor.bindEnvironment((dimensions) => {
-        Images.update(_id, {
-          $set: {
-            dimensions: {
-              width: dimensions.width,
-              height: dimensions.height,
-            },
-          },
-        });
-      }));
-
-      image.saveUploadFromStream(req, (error) => {
-        if (!error) {
-          respond(res, 200, { error: null, success: true });
-          return;
-        }
-        if (error instanceof Meteor.Error) {
-          respond(res, 500, error);
-        } else {
-          respondWithError(res, 500, 'Internal server error while streaming.');
-          console.error('Internal error was:', error, error.stack);
-        }
-      });
+        (error) => {
+          if (!error) {
+            respond(res, 200, { error: null, success: true });
+            return;
+          }
+          if (error instanceof Meteor.Error) {
+            respond(res, error.error || 500, error);
+          } else {
+            respondWithError(res, 500, 'Internal server error while uploading image.');
+            console.error('Internal error was:', error, error.stack);
+          }
+        },
+      );
     } catch (error) {
       respondWithError(res, 500, 'Internal server error while handling upload request.');
       console.error('Internal error was:', error, error.stack);
