@@ -9,7 +9,7 @@ import {
   evaluateWheelmapA11y,
   evaluateToiletWheelmapA11y } from './wheelmap-a11y-ruleset';
 
-type KoboAttachment = {
+export type KoboAttachment = {
   mimetype: string,
   download_url: string,
   filename: string,
@@ -20,7 +20,7 @@ type KoboAttachment = {
 
 type YesNoResult = 'true' | 'false' | 'undefined';
 
-type KoboResult = {
+export type KoboResult = {
   _id: number,
   _uuid: string,
   _geolocation: [number, number],
@@ -62,7 +62,7 @@ type KoboResult = {
 };
 
 // make keys typesafe to prevent typos
-type KoboKey = keyof KoboResult;
+export type KoboKey = keyof KoboResult;
 
 type FieldTypes = 'yesno' | 'float' | 'int';
 
@@ -251,14 +251,17 @@ const parse = (data: KoboResult) => {
                           'inside/toilet/basin_wheelchair_fits_belows',
                           wheelChairWashBasin,
                           null),
+    // animal policy
     'properties.accessibility.animalPolicy.allowsAnyAnimals':
       parseYesNo(data, 'inquire/are_service_animals_allowed'),
+    // staff
     'properties.accessibility.staff.isTrainedForDisabilities':
       parseYesNo(data, 'inquire/staff_has_disabled_training'),
     'properties.accessibility.staff.spokenLanguages':
       parseMultiSelect(data, 'inquire/staff_spoken_sign_langs'),
     'properties.accessibility.staff.isTrainedInSigning':
       parseYesNo(data, 'inquire/staff_can_speak_sign_lang'),
+    // media
     'properties.accessibility.media.isLargePrint':
       parseYesNo(data, 'inquire/media/has_large_print'),
     'properties.accessibility.media.isAudio':
