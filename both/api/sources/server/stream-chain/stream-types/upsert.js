@@ -120,9 +120,10 @@ export default class Upsert {
             } else if (result && result.numberAffected) {
               updatedDocumentCount += 1;
             }
+
             streamObject.afterUpsert(
               { doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName },
-              () => callback(upsertError, result),
+              () => callback(upsertError, { doc: postProcessedDoc, result }),
             );
           });
         } catch (caughtError) {
