@@ -7,6 +7,10 @@ import { PlaceInfos } from '../place-infos/place-infos';
 export const Images = new Mongo.Collection('Images');
 
 Images.schema = new SimpleSchema({
+  originalId: {
+    type: String,
+    optional: true,
+  },
   objectId: {
     type: String,
   },
