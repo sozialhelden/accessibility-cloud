@@ -44,6 +44,8 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
     } else if (foundImage) {
       console.log('There is already an image with the originalId', originalId);
       callback(null, foundImage);
+      imageStream.emit('close');
+      imageStream.destroy();
       return;
     }
   }
