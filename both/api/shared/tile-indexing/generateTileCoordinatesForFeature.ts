@@ -9,7 +9,8 @@ export default function generateTileCoordinatesForFeature(feature: any) {
   const result: { [z: number]: { x: number, y: number } } = {};
   const [lon, lat] = feature.geometry.coordinates;
   Array.from({ length: 23 }).forEach((_, z) => {
-    result[z] = latlon2tile(lat, lon, z);
+    const { x, y } = latlon2tile({ lat, lon }, z);
+    result[z] = { x, y };
   });
   return result;
 }
