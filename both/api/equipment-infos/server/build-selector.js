@@ -6,14 +6,14 @@ import sourceFilterSelector from '../../shared/server/source-filter';
 import filterPresetSelector from '../../shared/server/filter-preset';
 import originalIdSelector from '../../shared/server/original-id';
 
-EquipmentInfos.apiParameterizedSelector = ({ visibleContentSelector, req }) =>
+EquipmentInfos.apiParameterizedSelector = ({ visibleContentSelector, req, surrogateKeys }) =>
   ({
     $and: [
       sourceFilterSelector(req),
       visibleContentSelector,
       originalIdSelector(req),
-      distanceSearchSelector(req),
-      mapTileSelector(req),
+      distanceSearchSelector({ req, surrogateKeys }),
+      mapTileSelector({ req, surrogateKeys }),
       filterPresetSelector(req),
     ].filter(s => Object.keys(s).length > 0),
   });

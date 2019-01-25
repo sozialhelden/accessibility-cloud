@@ -10,16 +10,16 @@ import originalIdSelector from '../../shared/server/original-id';
 import existingAccessibilitySelector from '../../shared/server/existing-accessibility';
 
 
-PlaceInfos.apiParameterizedSelector = ({ visibleContentSelector, req, _id }) =>
+PlaceInfos.apiParameterizedSelector = ({ visibleContentSelector, req, _id, surrogateKeys }) =>
   ({
     $and: [
-      mapTileSelector(req),
+      mapTileSelector({ req, surrogateKeys }),
       visibleContentSelector,
       existingAccessibilitySelector(req, _id),
       filterPresetSelector(req),
       sourceFilterSelector(req),
       originalIdSelector(req),
-      distanceSearchSelector(req),
+      distanceSearchSelector({ req, surrogateKeys }),
       categoryFilterSelector(req),
     ].filter(s => Object.keys(s).length > 0),
   });

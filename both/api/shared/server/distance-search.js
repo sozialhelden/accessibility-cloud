@@ -1,10 +1,12 @@
 import { _ } from 'meteor/underscore';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import getMinimalTilesAroundCircle from '../tile-indexing/getMinimalTilesAroundCircle';
+import { surrogateKeyForTile } from '../tile-indexing/tileSurrogateKeysForFeature';
 
 // Return a MongoDB document selector for a search by distance built
 // with query parameters from given request.
 
-export default function distanceSearchSelector(req) {
+export default function distanceSearchSelector({ req, surrogateKeys }) {
   const locationQuery = _.pick(req.query, 'latitude', 'longitude', 'accuracy');
 
   // If no location parameter is given, just return an empty selector
@@ -39,6 +41,13 @@ export default function distanceSearchSelector(req) {
 
   // Throw ValidationError if something is wrong
   schema.validate(locationQuery);
+
+  getMinimalTilesAroundCircle({
+    lat: locationQuery.latitude,
+    lon: locationQuery.longitude,
+    radius: locationQuery.accuracy,
+  })
+    .forEach(tile => surrogateKeys.push(surrogateKeyForTile(tile)));
 
   return {
     geometry: {
