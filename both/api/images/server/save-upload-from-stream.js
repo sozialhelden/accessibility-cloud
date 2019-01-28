@@ -60,7 +60,7 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
     appToken,
     hashedIp,
     originalId,
-    moderationRequired: true,
+    moderationRequired: false,
     isUploadedToS3: false,
     remotePath: `${context}/${objectId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
     timestamp: new Date(),
