@@ -22,7 +22,7 @@ accessibility.cloud allows you to request accessibility data via HTTP in JSON fo
       - [Include places without known accessibility](#include-places-without-known-accessibility)
       - [Data source filtering](#data-source-filtering)
       - [Location-based search by center/radius](#location-based-search-by-centerradius)
-      - [Location-based search by X/Y/Z tile coordinates](#location-based-search-by-xyz-tile-coordinates)
+      - [Getting all places inside a X/Y/Z tile](#getting-all-places-inside-a-xyz-tile)
       - [Filter by metadata](#filter-by-metadata)
       - [Filter by category](#filter-by-category)
     - [Retrieving a PlaceInfo document by its `sourceId` and `originalId`](#retrieving-a-placeinfo-document-by-its-sourceid-and-originalid)
@@ -211,7 +211,7 @@ You can request POIs around a specific map location. For this, you have to suppl
 
 #### Getting all places inside a X/Y/Z tile
 
-**Use this for tiled GeoJSON responses for map libraries like Leaflet.**
+**This is the preferred way for fast response times. Use this for tiled GeoJSON responses for map libraries like Leaflet.**
 
 The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 
@@ -821,7 +821,7 @@ This query parameter is required.
 #### Example request
 
 ```bash
-curl -X POST 'https://accessibility.cloud/image-upload?placeId=5b1667525536dc06e63effdb&captcha=hLb70W' -H 'Accept: application/json' -H 'X-App-Token: YOUR_TOKEN_HERE' -H "Content-Type: image/png" -T example.png
+curl -X POST 'https://accessibility.cloud/image-upload?placeId=5b1667525536dc06e63effdb&captcha=hLb70W&appToken=YOUR_TOKEN_HERE' -H 'Accept: application/json' -H "Content-Type: image/png" -T example.png
 ```
 
 #### Example response

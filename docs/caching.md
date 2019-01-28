@@ -58,20 +58,8 @@ based requests alike, using the same surrogate key scheme.
 Surrogate keys for a tile coordinate at a given zoom level use the popular
 [slippy map](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) tile name scheme.
 
-For circle-based requests, we find the smallest 4 tiles around a requested circle geometry.
+For circle-based requests, we find the smallest 4-6 tiles around a requested circle geometry and use
+their coordinate tags for purging.
 
-The server invalidates _id-based surrogate keys after it updates or removes a document.
-
-
-- The CDN caches list-based content based on simple filtering requests for short times. This means
-  new documents appear a bit later in lists, which is okay for our use case – and these responses
-  are easier to calculate anyway.
-
-### Using the `Vary` header to further optimize lat/lon query responses
-
-Good CDNs provide a way to manipulate the URL and headers programmatically before they look up the
-cache key. This allows us to merge cache responses for requests that are different, but similar
-enough to send the same response. We can use this for point-inside-circle requests that almost have
-the same lat/lon coordinates, which for example happens when a person moves around a place with an
-app that is not optimized and makes a new request even if the lat/lon values did not substantially
-change. We have to ensure that these non-optimized clients do not degrade our response times.
+See [this Observable notebook](https://beta.observablehq.com/@opyh/speed-up-radius-based-geo-queries-over-cdn)
+for a visual explanation of this.
