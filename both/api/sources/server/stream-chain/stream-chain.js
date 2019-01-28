@@ -26,6 +26,7 @@ import ConvertArrayToStream from './stream-types/convert-array-to-stream';
 import ConvertStreamToArray from './stream-types/convert-stream-to-array';
 import TransformData from './stream-types/transform-data';
 import TransformKobo from './stream-types/transform-kobo/transform-kobo';
+import UploadKoboAttachments from './stream-types/transform-kobo/upload-kobo-attachments';
 import TransformScript from './stream-types/transform-script';
 import UpsertPlace from './stream-types/upsert-place';
 import UpsertDisruption from './stream-types/upsert-disruption';
@@ -52,6 +53,7 @@ const StreamTypes = {
   Split,
   TransformData,
   TransformKobo,
+  UploadKoboAttachments,
   UpsertPlace,
   UpsertDisruption,
   UpsertEquipment,
