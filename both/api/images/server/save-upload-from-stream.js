@@ -36,8 +36,8 @@ function configureS3() {
 export function createImageFromStream(imageStream, { mimeType, context, objectId, appToken, originalId, hashedIp }, callback) {
   let imageId = null;
   if (originalId) {
-    const foundImage = Images.findOne({ originalId }, { transform: null, fields: { } });
-    if (foundImage && foundImage.s3Error) {
+    const foundImage = Images.findOne({ originalId }, { transform: null, fields: { s3Error: 1, isUploadedToS3: 1 } });
+    if (foundImage && (foundImage.s3Error || !foundImage.isUploadedToS3)) {
       // retry download
       console.log('Retrying broken image upload', originalId);
       imageId = foundImage._id;
@@ -45,10 +45,12 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
       console.log('There is already an image with the originalId', originalId);
       callback(null, foundImage);
       imageStream.emit('close');
-      imageStream.destroy();
+      if (imageStream.destroy) imageStream.destroy();
       return;
     }
   }
+
+  imageStream.pause();
 
   const suffix = mime.extension(mimeType);
   const attributes = {
@@ -71,7 +73,7 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
 
   if (imageId) {
     console.log('Updating previous image upload', attributes);
-    Images.update({ _id: imageId }, attributes);
+    Images.update({ _id: imageId }, { $set: attributes });
   } else {
     console.log('Inserting image upload', attributes);
     imageId = Images.insert(attributes);
@@ -79,7 +81,9 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
 
   // get updated image data
   const image = Images.findOne(imageId);
+
   const mimeTypeDetector = new FileType();
+  const imageSizeDetector = new ImageSize();
 
   imageStream.pipe(mimeTypeDetector);
 
@@ -88,19 +92,16 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
         fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
     if (unsupportedFileType) {
       callback(new Meteor.Error(415, `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`));
-      imageStream.emit('close');
-      imageStream.destroy();
+      imageStream.emit('error');
     }
     const mismatchedFileType =
         mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
     if (mismatchedFileType) {
       callback(new Meteor.Error(415, `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`));
-      imageStream.emit('close');
-      imageStream.destroy();
+      imageStream.emit('error');
     }
   });
 
-  const imageSizeDetector = new ImageSize();
   imageStream.pipe(imageSizeDetector);
 
   imageSizeDetector.on('size', Meteor.bindEnvironment((dimensions) => {
@@ -112,7 +113,15 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
         },
       },
     });
-  }));
+  })).on('error', (error) => {
+    console.log('imageSizeDetector error occurred', error);
+    imageStream.emit('error');
+  });
+
+  imageStream.on('error', function (error) {
+    console.log('imageStream error occurred', error);
+    imageStream.emit('close');
+  });
 
   image.saveUploadFromStream(imageStream, callback);
 }
@@ -179,10 +188,8 @@ Images.helpers({
       }
     }));
 
-
-    // abort upload if stream closes
-    requestStream.on('close', Meteor.bindEnvironment(() => {
-      console.log('Stream closed');
+    const errorHandler = Meteor.bindEnvironment(() => {
+      console.log('Stream ended', !!upload);
       if (upload) {
         upload.abort();
         upload = null;
@@ -190,10 +197,17 @@ Images.helpers({
           { _id: this._id },
         );
       }
-    }));
+    });
+
+    // abort upload if stream closes
+    requestStream.on('close', errorHandler);
+    requestStream.on('error', errorHandler);
 
     requestStream.pipe(pass);
-    requestStream.resume();
+
+    if (typeof requestStream.resume === 'function') {
+      requestStream.resume();
+    }
 
     // s3 upload will not start reading the stream by itself
     requestStream.on('readable', () => {
