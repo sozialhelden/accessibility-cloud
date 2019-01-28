@@ -40,31 +40,31 @@ function offsetTile(tile: Tile, offsetInTileCoordinates: Point2D): Tile {
  * enclose a circle with a given center in latitude/longitude WGS84 coordinates and a given radius
  * in meters:
  */
-export default function getMinimalTilesAroundCircle(circle: Circle): Tile[] | null {
+export default function getTilesEnclosingCircle(circle: Circle): Tile[] | null {
   // Calculate boundary rectangle of the circle in lat/lon coordinates
-  const topLeft = offsetLatLon(circle, { x: -circle.radius, y: circle.radius });
-  const bottomRight = offsetLatLon(circle, { x: circle.radius, y: -circle.radius });
+  const northWest = offsetLatLon(circle, { x: -circle.radius, y: circle.radius });
+  const southEast = offsetLatLon(circle, { x: circle.radius, y: -circle.radius });
 
   // Go through all zoom levels to find a zoom level where the top left point tile is right next to
   // the bottom right point tile. Search from smallest to biggest tile size
   for (let z = 22; z >= 0; z -= 1) {
-    const topLeftTile = latlon2tile(topLeft, z);
-    const bottomRightTile = latlon2tile(bottomRight, z);
+    const northWestTile = latlon2tile(northWest, z);
+    const southEastTile = latlon2tile(southEast, z);
     // Find if the vertical or horizontal offsets of top/left and bottom/right tile are right next
     // to each other
-    if (topLeftTile.x === bottomRightTile.x - 1 || topLeftTile.y === bottomRightTile.y - 1) {
+    if (northWestTile.x === southEastTile.x - 1 || northWestTile.y === southEastTile.y - 1) {
       // If the circle doesn't fit in 4 tiles, extend them to 6
-      const extendX = topLeftTile.x === bottomRightTile.x - 2;
-      const extendY = topLeftTile.y === bottomRightTile.y - 2;
+      const extendX = northWestTile.x === southEastTile.x - 2;
+      const extendY = northWestTile.y === southEastTile.y - 2;
       return [
-        offsetTile(topLeftTile, { x: 0, y: 0 }),
-        offsetTile(topLeftTile, { x: 1, y: 0 }),
-        extendX && offsetTile(topLeftTile, { x: 2, y: 0 }),
-        offsetTile(topLeftTile, { x: 0, y: 1 }),
-        offsetTile(topLeftTile, { x: 1, y: 1 }),
-        extendX && offsetTile(topLeftTile, { x: 2, y: 1 }),
-        extendY && offsetTile(topLeftTile, { x: 0, y: 2 }),
-        extendY && offsetTile(topLeftTile, { x: 1, y: 2 }),
+        offsetTile(northWestTile, { x: 0, y: 0 }),
+        offsetTile(northWestTile, { x: 1, y: 0 }),
+        extendX && offsetTile(northWestTile, { x: 2, y: 0 }),
+        offsetTile(northWestTile, { x: 0, y: 1 }),
+        offsetTile(northWestTile, { x: 1, y: 1 }),
+        extendX && offsetTile(northWestTile, { x: 2, y: 1 }),
+        extendY && offsetTile(northWestTile, { x: 0, y: 2 }),
+        extendY && offsetTile(northWestTile, { x: 1, y: 2 }),
       ].filter(Boolean);
     }
   }
