@@ -47,7 +47,7 @@ export default function getTilesEnclosingCircle(circle: Circle): Tile[] | null {
 
   // Go through all zoom levels to find a zoom level where the top left point tile is right next to
   // the bottom right point tile. Search from smallest to biggest tile size
-  for (let z = 22; z >= 0; z -= 1) {
+  for (let z = 21; z >= 0; z -= 1) {
     const northWestTile = latlon2tile(northWest, z);
     const southEastTile = latlon2tile(southEast, z);
     // Find if the vertical or horizontal offsets of top/left and bottom/right tile are right next
