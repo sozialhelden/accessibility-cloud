@@ -27,7 +27,22 @@ type MatchRule = {
 type OrRule = {
   $or: ReadonlyArray<Rule>,
 };
-export type Rule = OrRule | MatchRule;
+type AndRule = {
+  $and: ReadonlyArray<Rule>,
+};
+export type Rule = OrRule | AndRule | MatchRule;
+
+function isOrRule(rule: Rule): rule is OrRule {
+  return rule.hasOwnProperty('$or');
+}
+
+function isAndRule(rule: Rule): rule is AndRule {
+  return rule.hasOwnProperty('$and');
+}
+
+function isMatchRule(rule: Rule): rule is MatchRule {
+  return !isAndRule(rule) && !isOrRule(rule);
+}
 
 // three valued logic for a11y
 export type RuleEvaluationResult = 'true' | 'false' | 'unknown';
@@ -50,6 +65,16 @@ function evaluateOrRule(data: {}, orRule: OrRule): RuleEvaluationResult  {
     }
   }
   return finalResult;
+}
+
+function evaluateAndRule(data: {}, andRule: AndRule): RuleEvaluationResult  {
+  for (const rule of andRule.$and) {
+    const result = evaluateRule(data, rule);
+    if (result !== 'true') {
+      return 'false';
+    }
+  }
+  return 'true';
 }
 
 // read the value out of a quantity
@@ -153,11 +178,14 @@ function evaluateMatchRule(data: {}, rule: MatchRule): RuleEvaluationResult  {
 
 // evaluates any kind of rule
 export function evaluateRule(data: {}, rule: Rule): RuleEvaluationResult {
-  if (rule.$or) {
-    return evaluateOrRule(data, rule as OrRule);
+  if (isOrRule(rule)) {
+    return evaluateOrRule(data, rule);
   }
-  if (typeof rule === 'object') {
-    return evaluateMatchRule(data, rule as MatchRule);
+  if (isAndRule(rule)) {
+    return evaluateAndRule(data, rule);
+  }
+  if (isMatchRule(rule)) {
+    return evaluateMatchRule(data, rule);
   }
 
   return 'unknown';
