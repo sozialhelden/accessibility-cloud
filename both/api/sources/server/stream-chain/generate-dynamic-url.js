@@ -11,9 +11,12 @@ export function generateDynamicUrl({ lastSuccessfulImport, sourceUrl }) {
     lastSuccessfulImport ? new Date(lastSuccessfulImport.startTimestamp) : new Date(0));
 
   // last import date in YYYY-MM-DD format
-  let replacedUrl = sourceUrl.replace(/{{lastImportDate}}/g, importMoment.format('YYYY-MM-DD'));
+  let replacedUrl = sourceUrl.replace(/\{\{lastImportDate\}\}/g, importMoment.format('YYYY-MM-DD'));
   // last import date in ISO_8601 format
-  replacedUrl = sourceUrl.replace(/{{lastImportISODate}}/g, importMoment.format());
+  replacedUrl = replacedUrl.replace(/\{\{lastImportISODate\}\}/g, importMoment.format());
+
+  console.log('Source URL:', sourceUrl);
+  console.log('Replaced URL:', replacedUrl);
 
   return replacedUrl;
 }
