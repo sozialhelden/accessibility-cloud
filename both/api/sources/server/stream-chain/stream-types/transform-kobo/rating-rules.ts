@@ -49,7 +49,7 @@ export type RuleEvaluationResult = 'true' | 'false' | 'unknown';
 
 // combine multiple rules with a three valued or, with the order of true > false > unknown
 // this does not align with Kleene and Priest logics, but knowing that a rule does not apply
-// is strong enough reason to determine that the or should be fals
+// is strong enough reason to determine that the or should be false
 function evaluateOrRule(data: {}, orRule: OrRule): RuleEvaluationResult  {
   let finalResult: RuleEvaluationResult = 'unknown';
 
