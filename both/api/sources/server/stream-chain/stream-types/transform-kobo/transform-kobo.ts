@@ -8,6 +8,7 @@ import {
   wheelChairWashBasin,
   evaluateWheelmapA11y,
   evaluateToiletWheelmapA11y } from './wheelmap-a11y-ruleset';
+import { removeNullAndUndefinedFields } from '../removeNullAndUndefinedFields';
 
 export type KoboAttachment = {
   mimetype: string,
@@ -19,6 +20,7 @@ export type KoboAttachment = {
 };
 
 type YesNoResult = 'true' | 'false' | 'undefined';
+type YesNoPartiallyResult = 'true' | 'partially' | 'false' | 'undefined';
 
 export type KoboResult = {
   _id: number,
@@ -30,6 +32,7 @@ export type KoboResult = {
   'user/user_record_type': string,
   'outside/category/category_sub': string,
   'outside/category/category_top': string,
+  'outside/entrance/has_fixed_ramp': YesNoResult,
   'outside/entrance/has_automatic_door': YesNoResult,
   'outside/entrance/has_door': YesNoResult,
   'outside/entrance/has_entrance': YesNoResult,
@@ -40,8 +43,11 @@ export type KoboResult = {
   'outside/entrance/steps_count': string,
   'outside/entrance/steps_height': string,
   'outside/name': string,
+  'inside/is_well_lit': YesNoResult,
+  'inside/is_quiet': YesNoResult,
   'inside/toilet/basin_wheelchair_fits_belows': YesNoResult,
   'inside/toilet/basin_wheelchair_reachable': YesNoResult,
+  'inside/toilet/basin_inside_cabin': YesNoResult,
   'inside/toilet/door_width': string,
   'inside/toilet/free_space_front': string,
   'inside/toilet/free_space_left': string,
@@ -59,6 +65,9 @@ export type KoboResult = {
   'inquire/staff_can_speak_sign_lang': YesNoResult,
   'inquire/staff_has_disabled_training': YesNoResult,
   'inquire/staff_spoken_sign_langs': string,
+  'is_wheelchair_accessible': YesNoPartiallyResult,
+  'wheelchair_comment': string,
+  'phone_number': string,
 };
 
 // make keys typesafe to prevent typos
@@ -185,13 +194,25 @@ const parse = (data: KoboResult) => {
     'properties.originalData': JSON.stringify(data),
     // basic place data
     'properties.name': data['outside/name'],
+    'properties.phoneNumber': data['phone_number'],
     'properties.category':
       data['outside/category/category_top'] || data['outside/category/category_sub'] || 'undefined',
+    'properties.description': data['wheelchair_comment'],
+    'properties.accessibility.accessibleWith.wheelchair':
+      { true: true, false: false }[data['is_wheelchair_accessible']],
+    'properties.accessibility.partiallyAccessibleWith.wheelchair':
+      data['is_wheelchair_accessible'] === 'partially' ? true : undefined,
     // entrances
+    'properties.accessibility.isWellLit':
+      parseYesNo(data, 'inside/is_well_lit'),
+    'properties.accessibility.isQuiet':
+      parseYesNo(data, 'inside/is_quiet'),
     'properties.accessibility.entrances':
       parseHasArray(data, 'outside/entrance/has_entrance'),
     'properties.accessibility.entrances.0':
       parseHasEntry(data, 'outside/entrance/has_entrance'),
+    'properties.accessibility.entrances.0.hasFixedRamp':
+      parseYesNo(data, 'outside/entrance/has_fixed_ramp'),
     // stairs
     'properties.accessibility.entrances.0.stairs':
       parseHasArray(data, 'outside/entrance/has_steps'),
@@ -251,8 +272,10 @@ const parse = (data: KoboResult) => {
                           'inside/toilet/basin_wheelchair_fits_belows',
                           wheelChairWashBasin,
                           null),
+    'properties.accessibility.restrooms.0.washBasin.isLocatedInsideRestroom':
+      parseYesNo(data, 'inside/toilet/basin_inside_cabin'),
     // animal policy
-    'properties.accessibility.animalPolicy.allowsAnyAnimals':
+    'properties.accessibility.animalPolicy.allowsServiceAnimals':
       parseYesNo(data, 'inquire/are_service_animals_allowed'),
     // staff
     'properties.accessibility.staff.isTrainedForDisabilities':
