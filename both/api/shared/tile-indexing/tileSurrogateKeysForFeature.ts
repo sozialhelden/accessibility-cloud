@@ -24,7 +24,7 @@ export default function tileSurrogateKeysForFeature(feature: GeoJSONPoint) {
   ) {
     return [];
   }
-  return Array.from({ length: 22 }).map((_, z) => {
+  return Array.from({ length: 21 }).map((_, z) => {
     const [lon, lat] = feature.geometry.coordinates;
     return surrogateKeyForTile(latlon2tile({ lat, lon }, z));
   });
