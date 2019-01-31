@@ -19,4 +19,4 @@ Licenses.publicFields = {
 
 Licenses.visibleSelectorForUserId = () => ({});
 Licenses.visibleSelectorForAppId = () => ({});
-Licenses.apiParameterizedSelector = ({ selector }) => selector;
+Licenses.apiParameterizedSelector = ({ visibleContentSelector }) => visibleContentSelector;
