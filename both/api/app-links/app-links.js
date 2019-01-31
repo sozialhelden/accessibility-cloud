@@ -26,7 +26,7 @@ AppLinks.helpers({
   },
 });
 
-AppLinks.apiParameterizedSelector = ({ selector }) => selector;
+AppLinks.apiParameterizedSelector = ({ visibleContentSelector }) => visibleContentSelector;
 
 AppLinks.relationships = {
   belongsTo: {
