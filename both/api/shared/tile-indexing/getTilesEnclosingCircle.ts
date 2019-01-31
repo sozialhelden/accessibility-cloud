@@ -12,14 +12,14 @@ import { latlon2tile } from './latlon2tile';
 function offsetLatLon({ lat, lon }: LatLon, offsetInMeters: Point2D): LatLon {
   const earthRadiusInMeters = 6378137;
 
-  const δLat = (offsetInMeters.y / earthRadiusInMeters)
+  const offsetLat = (offsetInMeters.y / earthRadiusInMeters)
     * (180 / Math.PI);
-  const δLon = (offsetInMeters.x / (earthRadiusInMeters * Math.cos(Math.PI * lat / 180)))
+  const offsetLon = (offsetInMeters.x / (earthRadiusInMeters * Math.cos(Math.PI * lat / 180)))
     * (180 / Math.PI);
 
   return {
-    lat: lat + δLat,
-    lon: lon + δLon * 180 / Math.PI,
+    lat: lat + offsetLat,
+    lon: lon + offsetLon * 180 / Math.PI,
   };
 }
 
