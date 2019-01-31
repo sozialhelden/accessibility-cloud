@@ -12,19 +12,30 @@ export const wheelChairWashBasin = {
 // the rules for determining that places are fully accessible
 // first version only support one entrance / stair
 export const fullWheelmapA11yRuleSet: Rule = {
-  // check that there are no stairs
-  $or: [
+  $and: [
+    // survey responder thought the place was fully wheelchair accessible
     {
-      'properties.accessibility.entrances.0.hasRemovableRamp': true,
+      'properties.accessibility.accessibleWith.wheelchair': true,
     },
+    // check that there are no stairs
     {
-      'properties.accessibility.entrances.0.stairs.0.count': 0,
-    },
-    {
-      'properties.accessibility.entrances.0.stairs': null,
-    },
-    {
-      'properties.accessibility.entrances.0.isLevel': true,
+      $or: [
+        {
+          'properties.accessibility.entrances.0.hasFixedRamp': true,
+        },
+        {
+          'properties.accessibility.entrances.0.hasRemovableRamp': true,
+        },
+        {
+          'properties.accessibility.entrances.0.stairs.0.count': 0,
+        },
+        {
+          'properties.accessibility.entrances.0.stairs': null,
+        },
+        {
+          'properties.accessibility.entrances.0.isLevel': true,
+        },
+      ],
     },
   ],
   // TODO add more rules for door width etc.
@@ -33,7 +44,17 @@ export const fullWheelmapA11yRuleSet: Rule = {
 // the rules for determining that places are at least partially accessible, omitting the full rules
 // first version only support one entrance / stair
 export const partialWheelmapA11yRuleSet: Rule = {
-  $or: [
+  $and: [
+    {
+      $or: [
+        {
+          'properties.accessibility.accessibleWith.wheelchair': true,
+        },
+        {
+          'properties.accessibility.partiallyAccessibleWith.wheelchair': true,
+        },
+      ],
+    },
     {
       'properties.accessibility.entrances.0.stairs.0.count': 1,
       'properties.accessibility.entrances.0.stairs.0.stepHeight':
