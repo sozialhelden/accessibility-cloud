@@ -283,15 +283,16 @@ const parse = (data: KoboResult) => {
   const a11y = evaluateWheelmapA11y(result);
 
   // TODO these fields don't exist in ac format! Clarify & align with wheelmap frontend & ac-format
+  // Currently, these fields are exlusive.
   if (a11y === 'yes') {
     set(result, 'properties.accessibility.accessibleWith.wheelchair', true);
-    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', true);
+    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', null);
   } else if (a11y === 'partial') {
     set(result, 'properties.accessibility.accessibleWith.wheelchair', false);
     set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', true);
   } else if (a11y === 'no') {
     set(result, 'properties.accessibility.accessibleWith.wheelchair', false);
-    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', false);
+    set(result, 'properties.accessibility.partiallyAccessibleWith.wheelchair', null);
   }
 
   // rate place a11y
