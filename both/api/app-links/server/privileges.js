@@ -24,6 +24,7 @@ AppLinks.publicFields = {
   url: 1,
   order: 1,
   tags: 1,
+  badgeLabel: 1,
 };
 
 AppLinks.privateFields = {};
