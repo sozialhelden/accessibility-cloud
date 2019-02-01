@@ -15,6 +15,7 @@ AppLinks.schema = new SimpleSchema({
   order: { type: Number },
   tags: { type: Array, optional: true },
   'tags.$': { type: String },
+  badgeLabel: LocalizedStringSchema,
 });
 
 AppLinks.attachSchema(AppLinks.schema);
