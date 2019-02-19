@@ -7,11 +7,11 @@ export default function sendPurgeRequestToFastly(surrogateKeys: string[]) {
   }
   const { fastlyKey = null, serviceId = null } = Meteor.settings.fastly || {};
   if (!fastlyKey) {
-    console.log('Did not purge', surrogateKeys, 'on Fastly because no `fastlyKey` is set.');
+    console.log('Didn\'t purge', surrogateKeys.length, 'keys because no `fastlyKey` is set.');
     return null;
   }
   if (!serviceId) {
-    console.log('Did not purge', surrogateKeys, 'on Fastly because no `serviceId` is set.');
+    console.log('Didn\'t purge', surrogateKeys, 'on Fastly because no `serviceId` is set.');
     return null;
   }
   const url = `https://api.fastly.com/service/${serviceId}/purge`;
