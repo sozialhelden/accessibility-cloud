@@ -305,7 +305,7 @@ export const acFormat = {
 
     lines: [{ name: 'U6', type: 'U-Bahn', iconUrl: 'https://…/U6.svg' }, { name: 'M1', type: 'Metro-Tram', iconUrl: 'https://…/M1.svg' }],
     meansOfTransport: [{ name: 'U6', type: 'U-Bahn', iconUrl: 'https://…/icons/U6.svg' }],
-
+    hasAccessibility: true,
     accessibility: {
       accessibleWith: personalProfile,
       partiallyAccessibleWith: personalProfile,

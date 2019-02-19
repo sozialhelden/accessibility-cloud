@@ -58,7 +58,7 @@ export const calculateGlobalStatsNow = Meteor.bindEnvironment(() => {
     {
       collection: PlaceInfos,
       countName: 'withoutDrafts.withAccessibility',
-      selector: { 'properties.accessibility': { $exists: true }, 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
+      selector: { 'properties.hasAccessibility': true, 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
     },
     {
       collection: EquipmentInfos,

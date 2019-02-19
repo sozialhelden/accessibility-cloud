@@ -91,6 +91,10 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: Boolean,
     optional: true,
   },
+  'properties.hasAccessibility': {
+    type: Boolean,
+    optional: true,
+  },
   'properties.accessibility': {
     type: Object,
     optional: true,

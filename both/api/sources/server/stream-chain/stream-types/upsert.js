@@ -203,7 +203,8 @@ export default class Upsert {
 
   // override this in your stream subclass to add/change properties on the document before
   // it is upserted into the DB
-  postProcessBeforeUpserting(doc) { // eslint-disable-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this,no-unused-vars
+  postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName }) {
     return doc;
   }
 
