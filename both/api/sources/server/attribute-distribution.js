@@ -12,6 +12,7 @@ const attributeBlacklist = {
       editPageUrl: true,
       lastSourceImportId: true,
       sourceId: true,
+      bhfId: true,
       originalId: true,
       originalData: true,
       originalEquipmentInfoId: true,
