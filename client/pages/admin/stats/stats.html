@@ -1,0 +1,21 @@
+<template name='admin_stats_head'>
+  <li>
+    Global Statistics
+  </li>
+</template>
+
+<template name='admin_stats_page'>
+  <div class='dashboard'>
+    <h2>Attribute distributions</h2>
+    <pre>{{stringify getCachedAttributeDistribution}}</pre>
+    {{#if getCachedAttributeDistribution}}
+      <dl>
+        {{> sources_show_page_recursive_attributes
+          attributeName='properties'
+          documentCount=documentCount
+          attributeDistribution=getCachedAttributeDistribution.properties
+          properties=getCachedAttributeDistribution.properties.properties}}
+      </dl>
+    {{/if}}
+  </div>
+</template>

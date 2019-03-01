@@ -26,6 +26,10 @@
         <a href='{{pathFor "admin.categories.list"}}'>{{_'Import Categories'}}</a>
       </section>
       <section>
+        <h2>Global statistics</h2>
+        <a href='{{pathFor "admin.stats"}}'>Display global statistics</a>
+      </section>
+      <section>
         <h2>{{_"Images"}}</h2>
         <a class='moderation-link' href='{{pathFor "admin.images.moderate"}}'>{{_'Moderate images'}} {{#if imageBadge}}<b class='item-count-badge'>{{imageBadge}}</b>{{/if}}</a>
       </section>

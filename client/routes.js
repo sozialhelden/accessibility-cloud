@@ -115,6 +115,18 @@ adminRoutes.route('/images/', {
   },
 });
 
+adminRoutes.route('/stats/', {
+  name: 'admin.stats',
+  title: 'Global Statistics',
+
+  action() {
+    BlazeLayout.render('app_layout_scrollable', {
+      main: 'admin_stats_page',
+      header_navigation_list: 'admin_stats_head',
+    });
+  },
+});
+
 
 // ========= DATA =======================================================
 
