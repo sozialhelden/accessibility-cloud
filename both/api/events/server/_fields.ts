@@ -20,6 +20,7 @@ export const EventsPrivateFields = {
   status: 1,
   openFor: 1,
   statistics: 1,
+  meetingPoint: 1,
 };
 
 export const EventsPublicFields = omit(EventsPrivateFields, 'invitationToken');
