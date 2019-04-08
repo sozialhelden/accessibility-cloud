@@ -46,7 +46,7 @@ export default class UpsertDisruption extends Upsert {
   // Associate the disruption information with a place data source and equipment info, if possible
 
   postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName }) {
-    const result = super.postProcessBeforeUpserting(doc);
+    const result = super.postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName });
     const properties = result.properties;
     if (!properties) return result;
 
