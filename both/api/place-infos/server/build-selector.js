@@ -13,13 +13,13 @@ import existingAccessibilitySelector from '../../shared/server/existing-accessib
 PlaceInfos.apiParameterizedSelector = ({ visibleContentSelector, req, _id, surrogateKeys }) =>
   ({
     $and: [
-      mapTileSelector({ req, surrogateKeys }),
-      visibleContentSelector,
-      existingAccessibilitySelector(req, _id),
       filterPresetSelector(req),
+      existingAccessibilitySelector(req, _id),
       sourceFilterSelector(req),
+      visibleContentSelector,
       originalIdSelector(req),
-      distanceSearchSelector({ req, surrogateKeys }),
       categoryFilterSelector(req),
+      mapTileSelector({ req, surrogateKeys }),
+      distanceSearchSelector({ req, surrogateKeys }),
     ].filter(s => Object.keys(s).length > 0),
   });
