@@ -41,7 +41,8 @@ describe('TransformScript', () => {
       const myReadable = new Readable({
         objectMode: true,
         read() {
-          if (count++ < chunks) {
+          count += 1;
+          if (count <= chunks) {
             this.push({
               data: 'some data',
             });

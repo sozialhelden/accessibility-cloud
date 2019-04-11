@@ -1,15 +1,15 @@
 import { Mongo } from 'meteor/mongo';
 
-import { EventSchema } from './schema';
-import { EventStatusEnum } from './eventStatus';
+import { MappingEventSchema } from './schema';
+import { mappingEventStatusEnum } from './mappingEventStatus';
 import { EventOpenForEnum } from './eventOpenFor';
 
 export type EventRegion = {
   topLeft: { latitude: number; longitude: number };
   bottomRight: { latitude: number; longitude: number };
-};
+};  
 
-export interface IEventStatistics {
+export interface IMappingEventStatistics {
   fullParticipantCount: number;
   invitedParticipantCount: number;
   draftParticipantCount: number;
@@ -17,7 +17,7 @@ export interface IEventStatistics {
   mappedPlacesCount: number;
 }
 
-export interface IEvent {
+export interface IMappingEvent {
   // mongo id
   _id?: string;
   // fields
@@ -25,22 +25,22 @@ export interface IEvent {
   sourceId: Mongo.ObjectID;
   name: string;
   description?: string;
-  regionName?: string;
-  region?: EventRegion;
+  welcomeMessage?: string;
+  meetingPoint?: any;
+  area?: any;
   startTime?: Date;
   endTime?: Date;
   webSiteUrl?: string;
-  photoUrl?: string;
+  photos?: any[];
   invitationToken?: string;
-  verifyGpsPositionsOfEdits?: boolean;
   targets?: {
     mappedPlacesCount?: number;
   };
-  status: EventStatusEnum;
+  status: mappingEventStatusEnum;
   openFor: EventOpenForEnum;
-  statistics: IEventStatistics;
+  statistics: IMappingEventStatistics;
 }
 
-export const Events = new Mongo.Collection('Events');
-Events.schema = EventSchema;
-Events.attachSchema(EventSchema);
+export const MappingEvents = new Mongo.Collection('MappingEvents');
+MappingEvents.schema = MappingEventSchema;
+MappingEvents.attachSchema(MappingEventSchema);

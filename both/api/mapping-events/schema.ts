@@ -1,6 +1,6 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { eventStatusLabels } from './eventStatus';
-import { EventRegion } from './events';
+import { mappingEventStatusLabels } from './mappingEventStatus';
+import { EventRegion } from './mapping-events';
 import { openForValues } from './eventOpenFor';
 
 export const defaultRegion: EventRegion = {
@@ -8,7 +8,7 @@ export const defaultRegion: EventRegion = {
   bottomRight: { latitude: 52.33826, longitude: 13.76116 },
 };
 
-export const EventSchema = new SimpleSchema({
+export const MappingEventSchema = new SimpleSchema({
   organizationId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
@@ -27,14 +27,19 @@ export const EventSchema = new SimpleSchema({
     max: 1000,
     optional: true,
   },
-  regionName: {
+  welcomeMessage: {
     type: String,
-    max: 200,
+    max: 1000,
+    optional: true,
   },
-  region: {
+  area: {
     type: Object,
     optional: true,
-    defaultValue: defaultRegion,
+    blackbox: true,
+  },
+  meetingPoint: {
+    type: Object,
+    optional: true,
     blackbox: true,
   },
   startTime: {
@@ -79,7 +84,7 @@ export const EventSchema = new SimpleSchema({
   },
   status: {
     type: String,
-    allowedValues: eventStatusLabels.map(v => v.value),
+    allowedValues: mappingEventStatusLabels.map(v => v.value),
   },
   openFor: {
     type: String,
