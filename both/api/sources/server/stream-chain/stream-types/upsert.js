@@ -106,15 +106,16 @@ export default class Upsert {
           organizationName,
         });
 
-        Object.assign(doc, {
-          tileCoordinates: generateTileCoordinatesForFeature(doc),
-        });
+        const tileCoordinates = generateTileCoordinatesForFeature(doc);
+        Object.assign(doc, { tileCoordinates });
 
         try {
           const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, {
             organizationSourceIds,
             organizationName,
           });
+
+          console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
 
           // Using flatten here to deep-merge new properties into existing
           streamClass.collection.upsert({
