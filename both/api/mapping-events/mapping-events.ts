@@ -44,3 +44,8 @@ export interface IMappingEvent {
 export const MappingEvents = new Mongo.Collection('MappingEvents');
 MappingEvents.schema = MappingEventSchema;
 MappingEvents.attachSchema(MappingEventSchema);
+
+MappingEvents.surrogateKeysForDocument = mappingEvent => [
+  `mapping-events-of-${mappingEvent.organizationId}`,
+  mappingEvent.appId
+];
