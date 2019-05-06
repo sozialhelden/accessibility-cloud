@@ -6,6 +6,7 @@ import { getAccessibleOrganizationIdsForUserId } from '../../organizations/privi
 
 export const EventsPrivateFields = {
   organizationId: 1,
+  appId: 1,
   name: 1,
   description: 1,
   area: 1,
