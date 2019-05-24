@@ -13,7 +13,12 @@ MappingEvents.visibleSelectorForAppId = (appId) => {
   const app = Apps.findOne(appId, { transform: null });
   if (!app) return null;
   const { organizationId } = app;
-  const selector = { organizationId, status: { $ne: 'draft' } };
+  const selector = {
+    $or: [
+      { organizationId, status: { $ne: 'draft' } },
+      { appId, status: { $ne: 'draft' } }
+    ],
+  };
   return selector;
 };
 
