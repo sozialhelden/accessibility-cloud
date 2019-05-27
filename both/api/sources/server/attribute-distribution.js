@@ -3,6 +3,7 @@ import isObject from 'lodash/isObject';
 import get from 'lodash/get';
 
 const attributeBlacklist = {
+  tileCoordinates: true,
   properties: {
     _id: true,
     equipmentInfos: true,
