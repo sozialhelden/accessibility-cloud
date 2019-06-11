@@ -24,7 +24,7 @@ export function getAppAndUserFromRequest(req) {
   const userId = getUserIdFromToken(userToken);
   const user = userId && Meteor.users.findOne(userId);
 
-  return { app, user };
+  return { app, user, appToken, userToken };
 }
 
 export function isRequestAuthorized(req) {
