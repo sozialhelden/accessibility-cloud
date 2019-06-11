@@ -12,18 +12,24 @@ import { collectionWithName } from './collections';
 import { getAppAndUserFromRequest } from './authenticate-request';
 import { setAccessControlHeaders } from './set-access-control-headers';
 import { getDisplayedNameForUser } from '/both/lib/user-name';
+import { ApiRequests } from '/both/api/api-requests/api-requests';
 import { Random } from 'meteor/random';
+import { hashIp } from '../hash-ip';
 
 function handleJSONRequest(req, res, next) {
   const startTimestamp = Date.now();
   const { pathname } = url.parse(req.url);
-  const [collectionName, _id] = pathname.replace(/^\//, '').replace(/.json($|\?)/, '').split('/');
+  const [collectionName, _id] = pathname.replace(/^\//, '')
+    .replace(/.json($|\?)/, '')
+    .split('/');
   const requestId = Random.id(5);
 
   let appId = null;
   let app = null;
   let user = null;
   let userId = null;
+  let appToken = null;
+  let userToken = null;
   let responseBody = '{}';
 
   setAccessControlHeaders(res);
@@ -52,17 +58,32 @@ function handleJSONRequest(req, res, next) {
     const appAndUser = getAppAndUserFromRequest(req);
     app = appAndUser.app;
     user = appAndUser.user;
+    appToken = appAndUser.appToken;
+    userToken = appAndUser.userToken;
+
     appId = app && app._id;
     userId = user && user._id;
 
     const surrogateKeys = [collectionName, appId, userId, _id];
-    const options = { req, res, collectionName, collection, _id, appId, app, user, userId, surrogateKeys };
+    const options = {
+      req,
+      res,
+      collectionName,
+      collection,
+      _id,
+      appId,
+      app,
+      user,
+      userId,
+      surrogateKeys,
+    };
     const viaAppString = app && `via app ${appId} ${app && app.name} by organization ${app && app.getOrganization().name}`;
     const asUserString = user && `as user ${getDisplayedNameForUser(user, null) || userId}`;
     console.log(
       'Request',
       requestId,
-      _.compact([viaAppString, asUserString]).join(' '),
+      _.compact([viaAppString, asUserString])
+        .join(' '),
       req.method,
       req.url,
       EJSON.stringify(req.body),
@@ -82,7 +103,8 @@ function handleJSONRequest(req, res, next) {
     }
     res.setHeader('Surrogate-Control', `max-age=${maximalCacheTimeInSeconds}, stale-while-revalidate=120, stale-if-error=3600`); // Interpreted by the CDN
     res.setHeader('Cache-Control', `max-age=${maximalCacheTimeInSeconds}`); // Interpreted by the browser
-    res.setHeader('Surrogate-Key', uniq(surrogateKeys.filter(Boolean)).join(' '));
+    res.setHeader('Surrogate-Key', uniq(surrogateKeys.filter(Boolean))
+      .join(' '));
     res.setHeader('Vary', 'x-app-token, x-user-token, x-token');
 
     responseBody = EJSON.stringify(result);
@@ -102,6 +124,21 @@ function handleJSONRequest(req, res, next) {
   const endTimestamp = Date.now();
   const duration = (endTimestamp - startTimestamp) / 1000;
 
+  const hashedIp = hashIp('HEX', req.connection.remoteAddress);
+  ApiRequests.insert({
+    appId,
+    userId,
+    duration,
+    appToken,
+    userToken,
+    hashedIp,
+    organizationId: app ? app.getOrganization()._id : undefined,
+    query: req.query,
+    headers: req.headers,
+    timestamp: startTimestamp,
+    responseSize: responseBody.length,
+    statusCode: res.statusCode,
+  });
   console.log(`Request ${requestId} needed ${duration}s`);
   return res.end(responseBody);
 }
@@ -112,7 +149,8 @@ function acceptsJSON(format) {
 
 function handleFilteredJSONRequests(req, res, next) {
   function handle() {
-    Fiber(() => handleJSONRequest(req, res, next)).run();
+    Fiber(() => handleJSONRequest(req, res, next))
+      .run();
   }
 
   if (req.method === 'OPTIONS') {
@@ -131,5 +169,6 @@ function handleFilteredJSONRequests(req, res, next) {
 }
 
 Meteor.startup(() => {
-  WebApp.connectHandlers.use(bodyParser.json()).use(handleFilteredJSONRequests);
+  WebApp.connectHandlers.use(bodyParser.json())
+    .use(handleFilteredJSONRequests);
 });
