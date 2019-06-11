@@ -1,8 +1,9 @@
-import { flatten, map, isObject } from 'lodash';
+import { flatten, isObject, map } from 'lodash';
+import { Meteor } from 'meteor/meteor';
 import { createTranslationHelper } from './translation-helper';
+import { AccessibilityAttributes } from '../api/accessibility-attributes/accessibility-attributes';
 
 export const msgidsToDocs = {};
-
 
 export function lastPart(path) {
   return path.replace(/(.*)\./, '');
@@ -14,7 +15,7 @@ export const translate = createTranslationHelper({
   resourceSlug,
   defaultLocale,
   getTranslationFn(locale, msgid) {
-    return msgidsToDocs[msgid] && msgidsToDocs[msgid][locale];
+    return msgidsToDocs[msgid] && msgidsToDocs[msgid].label[locale];
   },
 });
 
@@ -35,3 +36,15 @@ export function pathsInObjectWithRootPath(currentPath, object) {
 export function pathsInObject(object) {
   return pathsInObjectWithRootPath(null, object);
 }
+
+export function fillAccessibilityAttributeLocaleCache() {
+  const attributes = AccessibilityAttributes.find({}, { fields: { label: 1 }, transform: null });
+  attributes.forEach((doc) => {
+    msgidsToDocs[doc._id] = doc;
+  });
+}
+
+Meteor.startup(() => {
+  // prewarm cache
+  fillAccessibilityAttributeLocaleCache();
+});
