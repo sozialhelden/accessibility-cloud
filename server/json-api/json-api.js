@@ -30,6 +30,7 @@ function handleJSONRequest(req, res, next) {
   let userId = null;
   let appToken = null;
   let userToken = null;
+  let dbTime = null;
   let responseBody = '{}';
 
   setAccessControlHeaders(res);
@@ -96,6 +97,7 @@ function handleJSONRequest(req, res, next) {
     }
 
     const result = handler(options);
+    dbTime = result.dbDuration;
 
     let maximalCacheTimeInSeconds = 120;
     if (typeof collection.maximalCacheTimeInSeconds !== 'undefined') {
@@ -107,7 +109,7 @@ function handleJSONRequest(req, res, next) {
       .join(' '));
     res.setHeader('Vary', 'x-app-token, x-user-token, x-token');
 
-    responseBody = EJSON.stringify(result);
+    responseBody = EJSON.stringify(result.responseData);
   } catch (error) {
     // eslint-disable-next-line no-param-reassign
     res.statusCode = (error.error === 'validation-error') ? 422 : (error.error || 500);
@@ -128,15 +130,18 @@ function handleJSONRequest(req, res, next) {
   ApiRequests.insert({
     appId,
     userId,
-    duration,
     appToken,
     userToken,
     hashedIp,
+    pathname,
+    dbTime,
+    method: req.method,
+    responseTime: duration,
     organizationId: app ? app.getOrganization()._id : undefined,
     query: req.query,
     headers: req.headers,
     timestamp: startTimestamp,
-    responseSize: responseBody.length,
+    responseSize: responseBody ? responseBody.length : -1,
     statusCode: res.statusCode,
   });
   console.log(`Request ${requestId} needed ${duration}s`);

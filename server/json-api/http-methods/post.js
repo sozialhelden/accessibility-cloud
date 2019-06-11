@@ -22,16 +22,24 @@ export function POST({ req, res, collection, appId, userId }) {
     throw new Meteor.Error(401, 'Not authorized.');
   }
 
+  const dbStartTime = Date.now();
   const _id = collection.insert(doc);
+  const dbEndTime = Date.now();
+  const dbDuration = (dbEndTime - dbStartTime) / 1000;
 
   if (_id) {
     if (typeof collection.afterInsertViaAPI === 'function') {
       collection.afterInsertViaAPI(Object.assign({}, doc, { _id }));
     }
     res.statusCode = 204;
-    return { _id };
+    return {
+      responseData: {
+        _id,
+      },
+      dbDuration,
+    };
   }
 
   res.statusCode = 500;
-  return { error: 'Unknown error. Document was not inserted, but no error was thrown.' };
+  return { responseData: { error: 'Unknown error. Document was not inserted, but no error was thrown.' } };
 }

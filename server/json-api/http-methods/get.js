@@ -12,11 +12,19 @@ export function GET({ req, collection, _id, appId, userId, surrogateKeys }) {
     throw new Meteor.Error(404, 'Collection not found.');
   }
 
-  const { selector, options } = buildSelectorAndOptions({ req, collection, _id, appId, userId, surrogateKeys });
+  const { selector, options } = buildSelectorAndOptions({
+    req,
+    collection,
+    _id,
+    appId,
+    userId,
+    surrogateKeys,
+  });
 
   console.log(EJSON.stringify({ selector, options }));
 
   if (_id) {
+    const dbStartTime = Date.now();
     // Return single document
     const result = collection.findOne(selector, options);
     if (!result) {
@@ -30,19 +38,32 @@ export function GET({ req, collection, _id, appId, userId, surrogateKeys }) {
       rootDocuments: [result],
       surrogateKeys,
     });
+    const dbEndTime = Date.now();
+    const dbDuration = (dbEndTime - dbStartTime) / 1000;
 
     extendSurrogateKeys({ collection, documents: [result], related, surrogateKeys });
 
     if (typeof collection.wrapDocumentAPIResponse === 'function') {
-      return collection.wrapDocumentAPIResponse({ result, req, _id, related, surrogateKeys });
+      return {
+        responseData: collection.wrapDocumentAPIResponse({
+          result,
+          req,
+          _id,
+          related,
+          surrogateKeys,
+        }),
+        dbDuration,
+      };
     }
-    return result;
+    return { responseData: result, dbDuration };
   }
 
+  const dbStartTime = Date.now();
   // Return array of documents
-  const resultsCount = collection.find(selector, omit(options, 'skip', 'limit')).count();
-  const results = collection.find(selector, options).fetch();
-
+  const resultsCount = collection.find(selector, omit(options, 'skip', 'limit'))
+    .count();
+  const results = collection.find(selector, options)
+    .fetch();
   const related = findAllRelatedDocuments({
     req,
     appId,
@@ -51,17 +72,31 @@ export function GET({ req, collection, _id, appId, userId, surrogateKeys }) {
     rootDocuments: results,
     surrogateKeys,
   });
+  const dbEndTime = Date.now();
+  const dbDuration = (dbEndTime - dbStartTime) / 1000;
 
   extendSurrogateKeys({ collection, documents: results, related, surrogateKeys });
 
   if (typeof collection.wrapCollectionAPIResponse === 'function') {
-    return collection.wrapCollectionAPIResponse({ results, req, _id, related, resultsCount });
+    return {
+      responseData: collection.wrapCollectionAPIResponse({
+        results,
+        req,
+        _id,
+        related,
+        resultsCount,
+      }),
+      dbDuration,
+    };
   }
 
   return {
-    count: results.length,
-    totalCount: resultsCount,
-    related,
-    results,
+    responseData: {
+      count: results.length,
+      totalCount: resultsCount,
+      related,
+      results,
+    },
+    dbDuration,
   };
 }
