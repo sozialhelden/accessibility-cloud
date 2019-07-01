@@ -127,23 +127,27 @@ function handleJSONRequest(req, res, next) {
   const duration = (endTimestamp - startTimestamp) / 1000;
 
   const hashedIp = hashIp('HEX', req.connection.remoteAddress);
-  ApiRequests.insert({
-    appId,
-    userId,
-    appToken,
-    userToken,
-    hashedIp,
-    pathname,
-    dbTime,
-    method: req.method,
-    responseTime: duration,
-    organizationId: app ? app.getOrganization()._id : undefined,
-    query: req.query,
-    headers: req.headers,
-    timestamp: startTimestamp,
-    responseSize: responseBody ? responseBody.length : -1,
-    statusCode: res.statusCode,
-  });
+  try {
+    ApiRequests.insert({
+      appId,
+      userId,
+      appToken,
+      userToken,
+      hashedIp,
+      pathname,
+      dbTime,
+      method: req.method,
+      responseTime: duration,
+      organizationId: app ? app.getOrganization()._id : undefined,
+      query: req.query,
+      headers: req.headers,
+      timestamp: startTimestamp,
+      responseSize: responseBody ? responseBody.length : -1,
+      statusCode: res.statusCode,
+    });
+  } catch (error) {
+    console.error('Could not save API request stats:', error);
+  }
   console.log(`Request ${requestId} needed ${duration}s`);
   return res.end(responseBody);
 }
