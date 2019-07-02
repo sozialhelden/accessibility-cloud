@@ -5,6 +5,7 @@ export const ApiRequests = new Mongo.Collection('ApiRequests');
 
 ApiRequests.schema = new SimpleSchema({
   appId: { type: SimpleSchema.RegEx.Id, optional: true },
+  appName: { type: SimpleSchema.RegEx.Id, optional: true },
   userId: { type: SimpleSchema.RegEx.Id, optional: true },
   organizationId: { type: SimpleSchema.RegEx.Id, optional: true },
   appToken: { type: String, optional: true },
