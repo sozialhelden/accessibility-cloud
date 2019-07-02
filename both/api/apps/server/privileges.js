@@ -44,7 +44,7 @@ Apps.visibleSelectorForAppId = () => ({});
 Apps.helpers({
   editableBy(userId) {
     check(userId, String);
-    debugger
+
     return userHasFullAccessToReferencedOrganization(userId, this);
   },
 });
