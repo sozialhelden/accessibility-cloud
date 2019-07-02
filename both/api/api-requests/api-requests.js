@@ -10,6 +10,8 @@ ApiRequests.schema = new SimpleSchema({
   appToken: { type: String, optional: true },
   userToken: { type: String, optional: true },
   pathname: { type: String, optional: true },
+  pathComponents: { type: Array, optional: true },
+  'pathComponents.$': { type: String },
   method: { type: String },
   hashedIp: { type: String },
   timestamp: { type: Date },

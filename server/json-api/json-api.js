@@ -1,3 +1,5 @@
+// @flow
+
 import bodyParser from 'body-parser';
 import url from 'url';
 import Fiber from 'fibers';
@@ -15,6 +17,25 @@ import { getDisplayedNameForUser } from '/both/lib/user-name';
 import { ApiRequests } from '/both/api/api-requests/api-requests';
 import { Random } from 'meteor/random';
 import { hashIp } from '../hash-ip';
+
+function splitPath(path: string, separator: string = '/') {
+  // split by separator…
+  const split = path.split(separator);
+
+  // and recombine into components
+  const components = split.reduce((p: string[], v: string, i: number) => {
+    const prevIndex = p.length - 1;
+    const nextValue = prevIndex >= 0 ? `${p[prevIndex]}${separator}${v}` : v;
+    // no empty prefixes
+    if (nextValue.length > 1) {
+      p.push(nextValue);
+    }
+    return p;
+  }, []);
+
+  return components;
+}
+
 
 function handleJSONRequest(req, res, next) {
   const startTimestamp = Date.now();
@@ -134,8 +155,9 @@ function handleJSONRequest(req, res, next) {
       appToken,
       userToken,
       hashedIp,
-      pathname,
       dbTime,
+      pathname,
+      pathComponents: splitPath(pathname),
       method: req.method,
       responseTime: duration,
       organizationId: app ? app.getOrganization()._id : undefined,
