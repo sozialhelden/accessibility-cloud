@@ -19,8 +19,11 @@ import { Random } from 'meteor/random';
 import { hashIp } from '../hash-ip';
 
 function splitPath(path: string, separator: string = '/') {
+  // remove extension
+  const pathWithoutExtension = path.replace(/\.[^./]+$/, '');
+
   // split by separator…
-  const split = path.split(separator);
+  const split = pathWithoutExtension.split(separator);
 
   // and recombine into components
   const components = split.reduce((p: string[], v: string, i: number) => {
