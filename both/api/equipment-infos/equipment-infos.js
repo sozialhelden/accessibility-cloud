@@ -135,6 +135,18 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: Boolean,
     optional: true,
   },
+  'properties.accessibility.isIndoors': {
+    type: Boolean,
+    optional: true,
+  },
+  'properties.accessibility.manufacturerName': {
+    type: String,
+    optional: true,
+  },
+  'properties.accessibility.manufacturerSerialNumber': {
+    type: String,
+    optional: true,
+  },
   'properties.accessibility.heightOfControls': {
     type: Number,
     optional: true,
