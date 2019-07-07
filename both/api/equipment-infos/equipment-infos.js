@@ -87,6 +87,14 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: String,
     optional: true,
   },
+  'properties.manufacturerName': {
+    type: String,
+    optional: true,
+  },
+  'properties.manufacturerSerialNumber': {
+    type: String,
+    optional: true,
+  },
   'properties.isWorking': {
     type: Boolean,
     optional: true,
@@ -137,14 +145,6 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
   },
   'properties.accessibility.isIndoors': {
     type: Boolean,
-    optional: true,
-  },
-  'properties.accessibility.manufacturerName': {
-    type: String,
-    optional: true,
-  },
-  'properties.accessibility.manufacturerSerialNumber': {
-    type: String,
     optional: true,
   },
   'properties.accessibility.heightOfControls': {
