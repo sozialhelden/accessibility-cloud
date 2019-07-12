@@ -13,6 +13,7 @@ import existingAccessibilitySelector from '../../shared/server/existing-accessib
 PlaceInfos.apiParameterizedSelector = ({ visibleContentSelector, req, _id, surrogateKeys }) =>
   ({
     $and: [
+      { deleted: { $ne: true } },
       filterPresetSelector(req),
       existingAccessibilitySelector(req, _id),
       sourceFilterSelector(req),

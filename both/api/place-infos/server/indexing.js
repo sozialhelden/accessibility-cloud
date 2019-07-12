@@ -12,6 +12,7 @@ Meteor.startup(() => {
   PlaceInfos._ensureIndex({ 'properties.sourceId': 1, 'properties.originalId': 1 });
   PlaceInfos._ensureIndex({ 'properties.sourceName': 1 });
   PlaceInfos._ensureIndex({ 'properties.organizationName': 1 });
+  PlaceInfos._ensureIndex({ 'deleted': 1 });
 
   console.log('Ensuring geospatial index for PlaceInfos...');
   PlaceInfos._ensureIndex({ geometry: '2dsphere' });
