@@ -6,7 +6,7 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 
 ## Contributing data
 
-- [AllyJSON](https://sozialhelden.github.io/ac-format) - everything about AllyJSON, our data exchange format
+- [A11yJSON](https://sozialhelden.github.io/ac-format/attributes.html) - everything about AllyJSON, our data exchange format
 - [Importing Data](docs/importing-data.md) - a guide on how to import new data
 
 ## Using Provided Data
