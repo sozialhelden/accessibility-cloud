@@ -6,18 +6,18 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 
 ## Contributing data
 
-- [A11yJSON](https://sozialhelden.github.io/ac-format/attributes.html) - everything about AllyJSON, our data exchange format
-- [Importing Data](docs/importing-data.md) - a guide on how to import new data
+- [A11yJSON](https://sozialhelden.github.io/ac-format/attributes.html) - everything about AllyJSON, our data exchange standard
+- [Importing Data](docs/importing-data.md) - a guide on how to import and share new data sources on accessibility.cloud
 
-## Using Provided Data
+## Using data
 
-- [JSON-API](docs/json-api.md) - Comprehensive documentation of the official JSON API
+- [JSON-API](docs/json-api.md) - Comprehensive documentation of the official accessibility.cloud API
 - [JavaScript widget code](https://github.com/sozialhelden/accessibility-cloud-js) - a JavaScript sample widget that shows how to integrate the API
 - [JavaScript widget demo](https://sozialhelden.github.io/accessibility-cloud-js/) - shows how the integrated JS widget looks
 
 ## Contributing Code
 
-- [Development guide](docs/development.md) - a short introduction on how to get the code running locally
+- [Development guide](docs/development.md) - a short introduction on how to get the accessibility.cloud backend running locally as a developer
 
 ## Legal Information
 
