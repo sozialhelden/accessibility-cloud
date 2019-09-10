@@ -129,7 +129,7 @@ Responses containing data that is provided under a specific license contain the 
 
 ### Pagination
 
-API result sets are paginated. On one page, maximally 1000 results are returned. To get a specific result page, use the `skip` parameter with the number of results you want to skip, and the `limit` parameter to set the maximal number of results you want the server to return.
+API result sets are paginated. On one page, maximally 1000 results are returned. To get a specific result page, use the `skip` parameter with the number of results you want to skip, and the `limit` parameter to set the maximal number of results you want the server to return. Note that currently, each request creates a DB query in the backend.
 
 ### Filtering returned fields
 
@@ -202,7 +202,7 @@ If you want to include places without set accessibility, add a `includePlacesWit
 
 #### Location-based search by center/radius
 
-**Use this for single end-user-facing searches around their current location.**
+**Only use this for queries where a end user explicitly searches places inside the given radius. Please do NOT use this endpoint for data exports. For bigger geographic ranges, split the area into multiple X/Y/Z-tile based queries instead (see below). This ensures that responses can be efficiently cached.**
 
 You can request POIs around a specific map location. For this, you have to supply all three of the following parameters:
 
@@ -211,7 +211,7 @@ You can request POIs around a specific map location. For this, you have to suppl
 
 #### Getting all places inside a X/Y/Z tile
 
-**This is the preferred way for fast response times. Use this for tiled GeoJSON responses for map libraries like Leaflet.**
+**This is the preferred way for fast response times that can be cached by accessibility.cloud's backend. Use this for tiled GeoJSON responses for map libraries like Leaflet.**
 
 The backend also allows you to request map tile X/Y position and zoom level (Z). The OpenStreetMaps wiki [has an overview about the concept](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 
