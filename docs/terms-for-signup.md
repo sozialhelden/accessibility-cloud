@@ -1,5 +1,8 @@
 # accessibility.cloud - Nutzungsbedingungen und Datenschutzerklärung
 
+*Please find an English translations here:
+https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/terms-for-signup-english.md*
+
 ## Nutzungsbedingungen
 
 accessibility.cloud ("AC") ist eine von SOZIALHELDEN e.V. ("Betreiber", "wir") betriebene Online-Anwendung, mittels derer Nutzer Informationen zur Barrierefreiheit von öffentlich zugänglichen Orten bereitstellen und abrufen können. Die Weitergabe der Daten unter den Nutzern soll es ermöglichen, Informationen zur Barrierefreiheit möglichst weit zu verbreiten.
