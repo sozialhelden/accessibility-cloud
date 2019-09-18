@@ -1,6 +1,6 @@
 # accessibility.cloud - Nutzungsbedingungen und Datenschutzerklärung
 
-*Please find an English translations here:
+*Please find an English translation here:
 https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/terms-for-signup-english.md*
 
 ## Nutzungsbedingungen
