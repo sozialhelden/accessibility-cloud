@@ -32,11 +32,17 @@ function respondWithError(res, code, reason) {
 
 function handleCaptchaRequest(req, res) {
   try {
-    setAccessControlHeaders(res, ['GET']);
+    setAccessControlHeaders(res, ['POST', 'OPTIONS']);
+
+    if (req.method === 'OPTIONS') {
+      res.end();
+      return;
+    }
+
     const query = url.parse(req.url, true).query;
 
     if (req.method !== 'GET') {
-      respondWithError(res, 405, 'This endpoint only accepts GET requests');
+      respondWithError(res, 405, 'This endpoint only accepts GET and OPTIONS requests');
       return;
     }
 
