@@ -107,7 +107,9 @@ export default class Upsert {
         });
 
         const tileCoordinates = generateTileCoordinatesForFeature(doc);
-        Object.assign(doc, { tileCoordinates });
+        if (tileCoordinates) {
+          Object.assign(doc, { tileCoordinates });
+        }
 
         try {
           const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, {
