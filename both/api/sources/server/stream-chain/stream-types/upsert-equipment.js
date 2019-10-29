@@ -1,47 +1,10 @@
 import includes from 'lodash/includes';
-import pick from 'lodash/pick';
 import { Meteor } from 'meteor/meteor';
 
 import { EquipmentInfos } from '../../../../../api/equipment-infos/equipment-infos';
 import { PlaceInfos } from '../../../../../api/place-infos/place-infos';
 
 import Upsert from './upsert';
-
-
-export function cacheEquipmentInPlaceInfo({
-  originalId,
-  placeSourceId,
-  originalPlaceInfoId,
-  organizationSourceIds,
-}) {
-  if (!includes(organizationSourceIds, placeSourceId)) {
-    const message = `Not authorized: placeSourceId ${placeSourceId} does not refer to a data source by the same organization.`;
-    throw new Meteor.Error(401, message);
-  }
-
-  // console.log('Caching equipment info in place info...');
-
-  if (originalPlaceInfoId) {
-    const placeInfoSelector = { 'properties.sourceId': placeSourceId, 'properties.originalId': originalPlaceInfoId };
-    // Re-fetch equipment info from DB without disallowed attributes
-    const completeEquipmentInfo = EquipmentInfos.findOne(
-      { 'properties.originalId': originalId },
-      { transform: null, fields: { statusReportToken: false, 'properties.originalData': false } },
-    );
-    if (completeEquipmentInfo) {
-      const equipmentInfo = pick(completeEquipmentInfo, ['_id'].concat(Object.keys(EquipmentInfos.publicFields)));
-      const placeInfoModifier = {
-        $set: {
-          [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
-        },
-      };
-      // console.log('Caching equipment', equipmentInfo._id, 'for place info', originalPlaceInfoId);
-      // Cache equipment information in PlaceInfo document
-      PlaceInfos.update(placeInfoSelector, placeInfoModifier);
-    }
-  }
-}
-
 
 export default class UpsertEquipmentInfo extends Upsert {
   constructor(options) {
@@ -78,35 +41,6 @@ export default class UpsertEquipmentInfo extends Upsert {
       }
     }
     return result;
-  }
-
-
-  // Associate the equipment information with a place data source, if possible
-  afterUpsert({ doc, organizationSourceIds, organizationName }, callback) {
-    const result = doc;
-
-    const properties = doc.properties;
-    if (!properties) {
-      callback(null, doc);
-      return;
-    }
-
-    const { originalId, placeSourceId, originalPlaceInfoId } = properties;
-
-    if (!placeSourceId) {
-      callback(null, doc);
-      return;
-    }
-
-    cacheEquipmentInPlaceInfo({
-      originalId,
-      placeSourceId,
-      originalPlaceInfoId,
-      organizationSourceIds,
-      organizationName,
-    });
-
-    callback(null, doc);
   }
 }
 

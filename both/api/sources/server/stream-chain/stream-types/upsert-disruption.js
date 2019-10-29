@@ -3,13 +3,11 @@ import omit from 'lodash/omit';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 
-import { Sources } from '../../../../sources/sources';
 import { PlaceInfos } from '../../../../place-infos/place-infos';
 import { EquipmentInfos } from '../../../../equipment-infos/equipment-infos';
 import { Disruptions } from '../../../../disruptions/disruptions';
 
 import Upsert from './upsert';
-import { cacheEquipmentInPlaceInfo } from './upsert-equipment';
 
 
 export default class UpsertDisruption extends Upsert {
@@ -122,16 +120,6 @@ export default class UpsertDisruption extends Upsert {
 
     const result = EquipmentInfos.update(selector, modifier);
     console.log('Updated equipment working status', selector, modifier, result);
-
-    const equipmentInfo = EquipmentInfos.findOne(equipmentInfoId);
-    const { properties } = equipmentInfo;
-    const { originalId, placeSourceId, originalPlaceInfoId } = properties;
-    cacheEquipmentInPlaceInfo({
-      originalId,
-      placeSourceId,
-      originalPlaceInfoId,
-      organizationSourceIds,
-    });
 
     callback(null, doc);
   }
