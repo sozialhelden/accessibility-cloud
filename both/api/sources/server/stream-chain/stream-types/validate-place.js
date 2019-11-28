@@ -1,4 +1,4 @@
-// import { PlaceInfoSchema } from '@sozialhelden/ac-format';
+// import { PlaceInfoSchema } from '@sozialhelden/a11yjson';
 // import { Meteor } from 'meteor/meteor';
 // import { check } from 'meteor/check';
 // import { SimpleSchema } from 'meteor/aldeed:simple-schema';

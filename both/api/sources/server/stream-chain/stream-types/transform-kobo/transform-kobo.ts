@@ -1,7 +1,7 @@
 const { Transform } = Npm.require('zstreams');
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { KoboResult, transformKoboToA11y } from '@sozialhelden/ac-format';
+import { KoboResult, transformKoboToA11y } from '@sozialhelden/a11yjson';
 
 
 // transforms a result from an AC kobo survey to ac format
