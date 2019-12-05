@@ -173,6 +173,15 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  usesCustomAccessibilityTrafficLightSystem: {
+    type: Boolean,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
