@@ -1,6 +1,9 @@
 # accessibility.cloud - Terms of Use and Privacy Policy
 
-*This is an unofficial translation of the German Terms of Use of accessibility.cloud which can be found here: https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/terms-for-signup.md*
+*This is an unofficial translation of the German Terms of Use of accessibility.cloud which can be found here:
+
+**Deutsche Version:**
+https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/terms-for-signup.md*
   
 
 ## Terms of use
