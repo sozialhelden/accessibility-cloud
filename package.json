@@ -15,7 +15,7 @@
     "postdeploy": "echo 'moving sharp vendor files back' && mv node_modules/sharp/vendor.backup node_modules/sharp/vendor"
   },
   "dependencies": {
-    "@sozialhelden/a11yjson": "^8.2.0",
+    "@sozialhelden/a11yjson": "^9.0.1",
     "@types/meteor": "^1.4.22",
     "JSONStream": "^1.3.2",
     "autoprefixer": "^6.3.7",
