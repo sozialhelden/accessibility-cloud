@@ -276,6 +276,7 @@ Note that disruptions have a [specific set of attributes](https://github.com/soz
 
 This works like `UpsertPlace`, but using it marks the source as a data source for disruptions, which enables special features:
 
+- Add a `equipmentSourceId` parameter to this stream to refer to an equipment source that should be watched for status changes.
 - A disruption can belong to a `PlaceInfo` or `EquipmentInfo` from another data source. The same way, a place or equipment/facility can have a list of disruptions in the past, present and future. Depending on the imported data model, its your choice if you want to associate a disruption with a place or equipment/facility.
 - If a transformed imported PoI has `properties.originalPlaceInfoId` and `properties.placeSourceId` properties, importing will associate the disruption with the place.
 - If a transformed imported PoI has `properties.originalEquipmentInfoId` and `properties.equipmentSourceId` properties, importing will associate the disruption with the equipment/facility.

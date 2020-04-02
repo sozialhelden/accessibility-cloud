@@ -8,12 +8,18 @@ import { EquipmentInfos } from '../../../../equipment-infos/equipment-infos';
 import { Disruptions } from '../../../../disruptions/disruptions';
 
 import Upsert from './upsert';
+import takeEquipmentSnapshotForSourceId from '../../../../equipment-status-samples/takeEquipmentSnapshot';
+import recordStatusChanges from '../../../../equipment-status-samples/recordStatusChanges';
 
 
 export default class UpsertDisruption extends Upsert {
   constructor(options) {
     super(options);
     this.stream.unitName = 'disruptions';
+    if (!options.equipmentSourceId) {
+      throw new Error('Please add an `equipmentSourceId` parameter to the `UpsertDisruption` step.');
+    }
+    this.equipmentInfosBeforeImport = takeEquipmentSnapshotForSourceId(options.equipmentSourceId);
   }
 
 
@@ -129,19 +135,36 @@ export default class UpsertDisruption extends Upsert {
     const { equipmentSourceId, equipmentSelectorForImport } = this.options;
 
     check(equipmentSourceId, Match.Optional(String));
-
     if (equipmentSourceId) {
       if (!includes(organizationSourceIds, equipmentSourceId)) {
-        throw new Meteor.Error(401, 'Not authorized to use this equipment data source ID.');
+        throw new Meteor.Error(401, `Can’t use equipment data source ID "${equipmentSourceId}" for purging unreferenced equipment. Data source must come from the same organization. Allowed IDs: ${organizationSourceIds}`);
       }
     }
 
-    if (!this.options.setUnreferencedEquipmentToWorking) {
+    // Compare before / after `isWorking` states and record changes
+    const done = () => {
+      const equipmentInfosAfterImport = takeEquipmentSnapshotForSourceId(equipmentSourceId);
+      recordStatusChanges({
+        equipmentInfosAfterImport,
+        sourceId: this.options.sourceId,
+        organizationId: this.options.source.organizationId,
+        equipmentInfosBeforeImport: this.equipmentInfosBeforeImport,
+      });
+
+      delete this.equipmentInfosBeforeImport;
+      this.purgeImportedDocsOnFastly();
       callback();
+    };
+
+    if (!this.options.setUnreferencedEquipmentToWorking) {
+      done();
       return;
     }
-    this.purgeImportedDocsOnFastly();
-    this.setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, callback);
+
+    this.setUnreferencedEquipmentToWorking(
+      { organizationSourceIds, equipmentSelectorForImport },
+      done,
+    );
   }
 }
 
