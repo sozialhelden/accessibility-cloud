@@ -1,4 +1,5 @@
 import includes from 'lodash/includes';
+import keyBy from 'lodash/keyBy';
 import { Meteor } from 'meteor/meteor';
 
 import { EquipmentInfos } from '../../../../../api/equipment-infos/equipment-infos';
@@ -6,10 +7,14 @@ import { PlaceInfos } from '../../../../../api/place-infos/place-infos';
 
 import Upsert from './upsert';
 
+import takeEquipmentSnapshotForSourceId from '../../../../equipment-status-samples/takeEquipmentSnapshot';
+import recordStatusChanges from '../../../../equipment-status-samples/recordStatusChanges';
+
 export default class UpsertEquipmentInfo extends Upsert {
   constructor(options) {
     super(options);
     this.stream.unitName = 'equipment infos';
+    this.equipmentInfosBeforeImport = takeEquipmentSnapshotForSourceId(options.sourceId);
   }
 
   // Associate the equipment information with a place data source, if possible
@@ -40,7 +45,22 @@ export default class UpsertEquipmentInfo extends Upsert {
         }
       }
     }
+
+    const { originalId } = result.properties;
+
     return result;
+  }
+
+  afterFlush({ organizationSourceIds }, callback) {  // eslint-disable-line class-methods-use-this
+    const equipmentInfosAfterImport = takeEquipmentSnapshotForSourceId(this.options.sourceId);
+    recordStatusChanges({
+      equipmentInfosAfterImport,
+      sourceId: this.options.sourceId,
+      organizationId: this.options.source.organizationId,
+      equipmentInfosBeforeImport: this.equipmentInfosBeforeImport,
+    });
+    delete this.equipmentInfosBeforeImport;
+    super.afterFlush({ organizationSourceIds }, callback);
   }
 }
 

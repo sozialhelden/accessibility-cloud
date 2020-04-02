@@ -1,6 +1,5 @@
 import set from 'lodash/set';
 import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
-import { PlaceInfos } from '../../place-infos/place-infos';
 import { EquipmentStatusReports } from '../equipment-status-reports';
 import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
 import isEmpty from 'lodash/isEmpty';
@@ -37,23 +36,7 @@ export default function updateEquipmentWithStatusReport(report) {
   console.log('Updating equipment', id, modifier);
   if (!isEmpty(modifier)) {
     EquipmentInfos.update(id, modifier);
-    const equipmentInfo = EquipmentInfos.findOne(id, { transform: null, fields: { statusReportToken: false, 'properties.originalData': false } });
-    if (!equipmentInfo) return;
-    if (!equipmentInfo.properties) return;
-    if (!equipmentInfo.properties.placeInfoId) return;
-    const placeInfoId = equipmentInfo.properties.placeInfoId;
-    const cacheUpdateModifier = {
-      $set: {
-        [`properties.equipmentInfos.${equipmentInfo._id}`]: equipmentInfo,
-      },
-    };
-    if (typeof equipmentInfo.properties.isWorking === 'undefined') {
-      cacheUpdateModifier.$unset = {
-        [`properties.equipmentInfos.${equipmentInfo._id}.properties.isWorking`]: true,
-      };
-    }
-    PlaceInfos.update(placeInfoId, cacheUpdateModifier);
-    sendPurgeRequestToFastly([placeInfoId, equipmentInfo._id]);
+    sendPurgeRequestToFastly([id]);
   }
 }
 
