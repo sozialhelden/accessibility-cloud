@@ -117,7 +117,7 @@ export default class Upsert {
             organizationName,
           });
 
-          console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
+          // console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
 
           // Using flatten here to deep-merge new properties into existing
           streamClass.collection.upsert({
