@@ -131,7 +131,7 @@ export default class UpsertDisruption extends Upsert {
   }
 
 
-  afterFlush({ organizationSourceIds }, callback) {
+  afterFlush({ organizationSourceIds, organization, source }, callback) {
     const { equipmentSourceId, equipmentSelectorForImport } = this.options;
 
     check(equipmentSourceId, Match.Optional(String));
@@ -146,8 +146,8 @@ export default class UpsertDisruption extends Upsert {
       const equipmentInfosAfterImport = takeEquipmentSnapshotForSourceId(equipmentSourceId);
       recordStatusChanges({
         equipmentInfosAfterImport,
-        sourceId: this.options.sourceId,
-        organizationId: this.options.source.organizationId,
+        source,
+        organization,
         equipmentInfosBeforeImport: this.equipmentInfosBeforeImport,
       });
 

@@ -33,7 +33,7 @@ function getSourceIdsOfSameOrganization(sourceId) {
   const selector = { organizationId };
   const options = { transform: null, fields: { _id: true } };
   const organizationSourceIds = Sources.find(selector, options).map(s => s._id);
-  return { organizationSourceIds, organizationName, sourceName };
+  return { organizationSourceIds, organization, organizationName, source, sourceName };
 }
 
 export default class Upsert {
@@ -63,7 +63,9 @@ export default class Upsert {
 
     const {
       organizationSourceIds,
+      organization,
       organizationName,
+      source,
       sourceName,
     } = getSourceIdsOfSameOrganization(sourceId);
 
@@ -144,7 +146,7 @@ export default class Upsert {
         if (removeMissingRecords) {
           streamObject.removeMissingRecords(callback);
         }
-        streamObject.afterFlush({ organizationSourceIds }, callback);
+        streamObject.afterFlush({ organizationSourceIds, source, organization }, callback);
       }),
     });
 
@@ -218,7 +220,7 @@ export default class Upsert {
   }
 
   // override this in your stream subclass for postprocessing after the import is done
-  afterFlush({ organizationSourceIds }, callback) {  // eslint-disable-line class-methods-use-this
+  afterFlush({ organizationSourceIds, organization, source }, callback) {  // eslint-disable-line class-methods-use-this
     this.purgeImportedDocsOnFastly();
     callback();
   }

@@ -11,6 +11,9 @@ EquipmentStatusSamples.schema = new SimpleSchema({
   createdAt: {
     type: Date,
   },
+  equipmentInfoId: {
+    type: String,
+  },
   equipmentInfoOriginalId: {
     type: String,
   },

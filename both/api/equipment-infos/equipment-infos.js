@@ -62,6 +62,14 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: String,
     optional: true,
   },
+  'properties.sourceName': {
+    type: String,
+    optional: true,
+  },
+  'properties.organizationName': {
+    type: String,
+    optional: true,
+  },
   'properties.sourceImportId': {
     type: String,
     optional: true,
