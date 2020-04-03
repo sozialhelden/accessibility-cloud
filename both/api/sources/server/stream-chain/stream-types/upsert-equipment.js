@@ -51,12 +51,12 @@ export default class UpsertEquipmentInfo extends Upsert {
     return result;
   }
 
-  afterFlush({ organizationSourceIds }, callback) {  // eslint-disable-line class-methods-use-this
+  afterFlush({ organizationSourceIds, organization, source }, callback) {  // eslint-disable-line class-methods-use-this
     const equipmentInfosAfterImport = takeEquipmentSnapshotForSourceId(this.options.sourceId);
     recordStatusChanges({
       equipmentInfosAfterImport,
-      sourceId: this.options.sourceId,
-      organizationId: this.options.source.organizationId,
+      source,
+      organization,
       equipmentInfosBeforeImport: this.equipmentInfosBeforeImport,
     });
     delete this.equipmentInfosBeforeImport;
