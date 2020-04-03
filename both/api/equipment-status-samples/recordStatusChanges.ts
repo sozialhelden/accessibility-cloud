@@ -34,8 +34,9 @@ export default function recordStatusChanges({
   }
   const ids = changedLightweightEquipmentInfos.map(e => e._id);
   const changedEquipmentInfos = EquipmentInfos.find({ _id: { $in: ids }}).fetch();
+  console.log('Recording new equipment status:')
   changedEquipmentInfos.forEach(e => {
-    console.log(`Recording new equipment status: ${e._id} / ${e.properties.isWorking ? '✅' : '🚧'} / originalId: ${e.properties.originalId} / ‘${e.properties.description || e.properties.shortDescription || e.properties.longDescription}’.`);
+    console.log(`${e.properties.isWorking ? '✅' : '🚧'} ${e._id}   originalId: ${e.properties.originalId}   ‘${e.properties.description || e.properties.shortDescription || e.properties.longDescription}’.`);
     recordEquipmentStatusSample({ equipmentInfo: e, organizationId, sourceId });
   });
 
