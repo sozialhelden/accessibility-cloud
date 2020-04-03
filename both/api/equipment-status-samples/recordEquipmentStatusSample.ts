@@ -16,7 +16,8 @@ export default function recordEquipmentStatusSample({
     createdAt: new Date(),
     equipmentInfoId: equipmentInfo._id,
     equipmentInfoOriginalId: equipmentInfo.properties.originalId,
-    isProcessed: false,
+    isProcessedForNotifications: false,
+    isProcessedForMonitoring: false,
     isWorking: equipmentInfo.properties.isWorking,
   });
 }

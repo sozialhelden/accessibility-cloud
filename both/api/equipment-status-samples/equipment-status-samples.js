@@ -14,7 +14,10 @@ EquipmentStatusSamples.schema = new SimpleSchema({
   equipmentInfoOriginalId: {
     type: String,
   },
-  isProcessed: {
+  isProcessedForNotifications: {
+    type: Boolean,
+  },
+  isProcessedForMonitoring: {
     type: Boolean,
   },
   isWorking: {
