@@ -4,6 +4,7 @@ import { Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Disruptions } from '../disruptions/disruptions';
 import { Sources } from '../sources/sources';
+import { Organizations } from '../organizations/organizations';
 import helpers from './helpers';
 import i18nHelpers from '../shared/i18nHelpers';
 import tileCoordinatesSchema from '../shared/tile-indexing/tileCoordinatesSchema';
@@ -184,6 +185,26 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     optional: true,
     blackbox: true,
   },
+  'properties.allowPublicStatusSubscriptions': {
+    type: Boolean,
+    optional: true,
+  },
+  'properties.ownerId': {
+    type: String,
+    optional: true,
+  },
+  'properties.transitNetworkId': {
+    type: String,
+    optional: true,
+  },
+  'properties.facilityManagementId': {
+    type: String,
+    optional: true,
+  },
+  'properties.sourceOrganizationId': {
+    type: String,
+    optional: true,
+  },
 }]);
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
@@ -200,6 +221,18 @@ EquipmentInfos.relationships = {
     source: {
       foreignCollection: Sources,
       foreignKey: 'properties.sourceId',
+    },
+    transitNetworkOrganization: {
+      foreignCollection: Organizations,
+      foreignKey: 'properties.transitNetworkId',
+    },
+    facilityManagementOrganization: {
+      foreignCollection: Organizations,
+      foreignKey: 'properties.facilityManagementId',
+    },
+    ownerOrganization: {
+      foreignCollection: Organizations,
+      foreignKey: 'properties.ownerId',
     },
   },
 };

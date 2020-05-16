@@ -131,6 +131,56 @@ Organizations.schema = new SimpleSchema({
     },
     allowedValues: [true],
   },
+  isTransitAgency: {
+    type: Boolean,
+    optional: true,
+    label: 'This organization is a transit agency',
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  isTransitNetwork: {
+    type: Boolean,
+    optional: true,
+    label: 'This organization is a transit authority',
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  isPartOfGovernment: {
+    type: Boolean,
+    optional: true,
+    label: 'This organization is a part of a government',
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  partOfTransitNetworkId: {
+    type: String,
+    optional: true,
+    label: 'To which transit authority does this organization belong?',
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  branding: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Organizations.schema.messages({

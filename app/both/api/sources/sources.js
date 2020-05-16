@@ -192,6 +192,10 @@ Sources.relationships = {
       foreignCollection: Licenses,
       foreignKey: 'licenseId',
     },
+    organization: {
+      foreignCollection: Organizations,
+      foreignKey: 'organizationId',
+    },
   },
 };
 

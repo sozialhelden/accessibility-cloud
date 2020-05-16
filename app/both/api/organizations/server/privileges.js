@@ -12,6 +12,7 @@ Organizations.allow({
 
 Organizations.publicFields = {
   name: 1,
+  shortName: 1,
   address: 1,
   addressAdditional: 1,
   zipCode: 1,
@@ -21,6 +22,7 @@ Organizations.publicFields = {
   webSite: 1,
   description: 1,
   tocForOrganizationsAccepted: 1,
+  branding: 1,
 };
 
 Organizations.helpers({
