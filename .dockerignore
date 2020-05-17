@@ -1,2 +1,5 @@
 **/node_modules
 **/.meteor/local
+app/.meteor/local
+app/node_modules
+.git
