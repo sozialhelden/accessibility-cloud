@@ -1,5 +1,5 @@
 /**
- * See the [caching documentation](/docs/caching.md) for information what this code is about.
+ * See the [caching documentation](/app/docs/caching.md) for information what this code is about.
  */
 
 import { LatLon, Point2D, Circle, Tile } from './types';

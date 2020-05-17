@@ -3,7 +3,7 @@
 *This is an unofficial translation of the German Terms of Use of accessibility.cloud which can be found here:
 
 **Deutsche Version:**
-https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/terms-for-signup.md*
+https://github.com/sozialhelden/accessibility-cloud/blob/master/app/docs/terms-for-signup.md*
   
 
 ## Terms of use

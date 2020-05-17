@@ -384,7 +384,7 @@ Template.sources_show_format_page.events({
       });
 
       if (missingPaths.length) {
-        addError(`Invalid mapping paths:<ul><li>${missingPaths.join('</li><li>')}</li> — <a href="https://github.com/sozialhelden/accessibility-cloud/blob/master/docs/exchange-format.md#a-complete-sample-object">see format documentation</a></ul>`);
+        addError(`Invalid mapping paths:<ul><li>${missingPaths.join('</li><li>')}</li> — <a href="https://github.com/sozialhelden/accessibility-cloud/blob/master/app/docs/exchange-format.md#a-complete-sample-object">see format documentation</a></ul>`);
       }
     }
   },
