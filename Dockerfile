@@ -13,7 +13,7 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
 
 
 # Use the specific version of Node expected by your Meteor release, per https://docs.meteor.com/changelog.html; this is expected for Meteor 1.10.2
-FROM node:4.8.1
+FROM node:4.8.1-slim
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
@@ -23,6 +23,7 @@ RUN apt-get -yqq update \
         curl \
         g++ \
         make \
+        python \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy in entrypoint
@@ -36,7 +37,7 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh --build-from-source
 
 # Start another Docker stage, so that the final image doesn’t contain the layer with the build dependencies
 # See previous FROM line; this must match
-FROM node:4.8.1
+FROM node:4.8.1-slim
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
