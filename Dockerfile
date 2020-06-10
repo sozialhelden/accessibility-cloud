@@ -9,6 +9,7 @@ RUN bash $SCRIPTS_FOLDER/build-app-npm-dependencies.sh
 # Copy app source into container
 COPY ./app $APP_SOURCE_FOLDER/
 ENV TOOL_NODE_FLAGS "--max-old-space-size=4096 --optimize_for_size --gc-interval=100"
+ENV METEOR_DISABLE_OPTIMISTIC_CACHING "1"
 RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
 
 
