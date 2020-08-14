@@ -75,7 +75,7 @@ export default class TransformData {
           hadError = true;
           if (onDebugInfo) {
             onDebugInfo({
-              erroneousChunk: chunk,
+              erroneousChunk: JSON.stringify(chunk),
               erroneousFieldName: lastFieldName.replace(/-/g, '.'),
               erroneousMapping: mappings[lastFieldName],
             });
