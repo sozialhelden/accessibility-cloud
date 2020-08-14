@@ -27,6 +27,8 @@ const koboBaseUrl = 'https://kc.humanitarianresponse.info';
 const imageAttachmentFields: KoboKey[] = [
   'inside/toilet/toilet_photo',
   'outside/entrance/picture',
+  'Please take a picture of the entrance.',
+  'Please take a photo of the toilet.'
 ];
 
 // find all attachments for the allow fields
