@@ -30,6 +30,7 @@ const maxImageSize = 1920;
 const imageProcessingHandler = (task: ImageTask, callback: TaskCallback) => {
   // configure resize task
   let resizeTask = sharp()
+      .rotate()
       .resize(task.fitw, task.fith)
       .max()
       .withoutEnlargement()
@@ -38,6 +39,7 @@ const imageProcessingHandler = (task: ImageTask, callback: TaskCallback) => {
 
   // fetch image from remote url
   const fullUrl = buildFullImageUrl({ remotePath: task.imagePath });
+  console.log('Downloading image from', fullUrl);
   const originalImageStream = request(fullUrl);
 
   // handle errors
