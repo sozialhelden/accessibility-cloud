@@ -22,7 +22,7 @@
     "aws-sdk": "^2.337.0",
     "babel-runtime": "^6.26.0",
     "basic-auth-connect": "^1.0.0",
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^2.0.1",
     "better-queue": "^3.8.10",
     "body-parser": "^1.18.3",
     "connect-multiparty": "^2.1.0",
