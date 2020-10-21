@@ -13,7 +13,7 @@
 ## Running locally
 
 - Have [Meteor.js](https://www.meteor.com/install) (>1.4) installed
-- Have Node.js (>6.5) installed.
+- Have Node.js v6.x.x installed.
 - `cd` into the meteor app directory in your terminal
 - Run `meteor npm install` to install necessary dependencies
 - Duplicate the `settings/local-example.json` file as `settings/local.json` and insert all values that you need. Ask another developer for a copy for a faster start!
