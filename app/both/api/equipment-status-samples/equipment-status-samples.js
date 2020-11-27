@@ -32,6 +32,18 @@ EquipmentStatusSamples.schema = new SimpleSchema({
   sourceId: {
     type: String,
   },
+  hardwareSensorId: {
+    type: String,
+    optional: true,
+  },
+  sourceImportId: {
+    type: String,
+    optional: true,
+  },
+  isManualUpdate: {
+    type: Boolean,
+    optional: true,
+  },
 });
 
 EquipmentStatusSamples.attachSchema(EquipmentStatusSamples.schema);

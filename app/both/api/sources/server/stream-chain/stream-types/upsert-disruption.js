@@ -148,6 +148,7 @@ export default class UpsertDisruption extends Upsert {
         equipmentInfosAfterImport,
         source,
         organization,
+        sourceImportId: this.options.sourceImportId,
         equipmentInfosBeforeImport: this.equipmentInfosBeforeImport,
       });
 

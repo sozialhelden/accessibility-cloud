@@ -16,7 +16,7 @@ EquipmentStatusReports.privateFields = {
   equipmentInfoId: 1,
   sourceId: 1,
   originalData: 1,
-  isoDate: 1,
+  createdAt: 1,
   customData: 1,
 };
 

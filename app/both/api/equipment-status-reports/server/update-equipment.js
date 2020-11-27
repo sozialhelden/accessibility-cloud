@@ -3,12 +3,15 @@ import { EquipmentInfos } from '../../equipment-infos/equipment-infos';
 import { EquipmentStatusReports } from '../equipment-status-reports';
 import sendPurgeRequestToFastly from '../../../../server/cdn-purging/sendPurgeRequestToFastly';
 import isEmpty from 'lodash/isEmpty';
+import recordEquipmentStatusSample from '../../equipment-status-samples/recordEquipmentStatusSample';
+import { Sources } from '../../sources/sources';
+import { Organizations } from '../../organizations/organizations';
 
 const MaximalAllowedInactivityInSeconds = 60 * 60;
 
 
 export default function updateEquipmentWithStatusReport(report) {
-  const lastUpdate = new Date().toISOString();
+  const lastUpdate = new Date();
   const modifier = {};
 
   if (typeof report.isWorking === 'boolean') {
@@ -36,6 +39,10 @@ export default function updateEquipmentWithStatusReport(report) {
   console.log('Updating equipment', id, modifier);
   if (!isEmpty(modifier)) {
     EquipmentInfos.update(id, modifier);
+    const equipmentInfo = EquipmentInfos.findOne(id);
+    const source = Sources.findOne(equipmentInfo.properties.sourceId);
+    const organization = source && Organizations.findOne(source.organizationId);
+    recordEquipmentStatusSample({ equipmentInfo, organizationId: organization && organization._id, sourceId: source && source._id });
     sendPurgeRequestToFastly([id]);
   }
 }

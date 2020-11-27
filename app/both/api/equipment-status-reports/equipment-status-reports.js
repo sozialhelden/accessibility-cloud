@@ -15,8 +15,8 @@ EquipmentStatusReports.schema = new SimpleSchema({
   equipmentToken: {
     type: String,
   },
-  isoDate: {
-    type: String,
+  createdAt: {
+    type: Date,
   },
   isWorking: {
     type: Boolean,

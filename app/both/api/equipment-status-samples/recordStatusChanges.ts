@@ -11,11 +11,13 @@ import { PlaceInfos } from '../place-infos/place-infos';
 
 export default function recordStatusChanges({
   source,
+  sourceImportId,
   organization,
   equipmentInfosBeforeImport,
   equipmentInfosAfterImport,
 }: {
   sourceId: string,
+  sourceImportId: string,
   source: any, // TODO: Type this correctly
   organization: any, // TODO: Type this correctly
   organizationId: string,
