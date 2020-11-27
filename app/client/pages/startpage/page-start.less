@@ -6,7 +6,7 @@
 
 .key-visual {
   position:relative;
-  height:420px;
+  height:470px;
 
   .cover-map {
     position: absolute;
@@ -14,7 +14,7 @@
     height:100%;
     left:0;
     top:0;
-    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95) 10%, rgba(255, 255, 255, 0.1));
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95) 30%, rgba(255, 255, 255, 0.1));
     z-index: 900;
   }
 
@@ -29,28 +29,37 @@
       margin-top: 9px;
     }
     .leaflet-div-icon-place-description {
-      display: inline-block;
-      width: 300px;
+      width: 400px;
       height: auto !important;
       max-height: 300px;
       padding: 0 1em 1em 1em;
-      background-color: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+      z-index: 10000000;
+      .mapboxgl-popup-content {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
       h4 {
         margin-top: 0.75em;
         float: left;
         word-wrap: break-word;
       }
+      .ac-marker img {
+        height: 1.5em;
+        margin-right: 0.5em;
+      }
       .category {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        justify-content: flex-start;
         .type-bold;
-        float: right;
-        margin-left: 1em;
-        margin-top: 1em;
+        font-size: 15px;
+        margin-top: 0.5em;
         text-transform: uppercase;
       }
       .json {
         clear: both;
         .type-code;
+        font-size: 15px;
         color: @color-sourcecode;
         white-space: pre;
         overflow: hidden;
@@ -105,7 +114,7 @@
       .claim {
         display: block;
         .type-regular;
-        .font-s2;
+        .font-m1;
         text-transform: uppercase;
         letter-spacing: 1px;
         margin-left: 0.2em;

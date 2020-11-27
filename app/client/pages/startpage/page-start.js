@@ -10,20 +10,33 @@ import createMarkerFromFeature from '/client/lib/create-marker-from-feature';
 
 const PLACE_SWITCH_ANIMATION_DELAY_MS = 5000;
 
-let currentlyShownMarkers = [];
+let currentPopup = undefined;
 let currentPlaceIndex = 0;
 let placeInfosToShow = [];
 
-function createDescriptionMarker(placeInfo, latlng) {
+function createDescriptionPopup(placeInfo, latlng) {
   const html = Blaze.toHTMLWithData(Template.page_start_place_info, placeInfo);
-  return L.marker(latlng, {
-    icon: new L.DivIcon({
-      html,
-      iconSize: new L.Point(300, 200),
-      iconAnchor: new L.Point(150, -20),
-      className: 'leaflet-div-icon-place-description',
-    }),
-  });
+
+  const markerHeight = 50, markerRadius = 10, linearOffset = 25;
+  const popupOffsets = {
+    top: [0, 0],
+    'top-left': [0,0],
+    'top-right': [0,0],
+    bottom: [0, -markerHeight],
+    'bottom-left': [linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+    'bottom-right': [-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+    left: [markerRadius, (markerHeight - markerRadius) * -1],
+    right: [-markerRadius, (markerHeight - markerRadius) * -1]
+  };
+  const popup = new mapboxgl.Popup({
+    offset: popupOffsets,
+    className: 'leaflet-div-icon-place-description',
+    closeButton: false,
+    maxWidth: '300px'
+  })
+    .setLngLat(latlng)
+    .setHTML(html);
+  return popup;
 }
 
 function showNextRandomPlaceInfo(map) {
@@ -31,14 +44,13 @@ function showNextRandomPlaceInfo(map) {
   if (!feature) {
     return;
   }
-  const latlng = [].concat(feature.geometry.coordinates).reverse();
-  currentlyShownMarkers.forEach(marker => map.removeLayer(marker));
-  currentlyShownMarkers = [
-    createMarkerFromFeature({ className: 'ac-marker-big ac-place-info', feature, latlng, size: 2 }),
-    createDescriptionMarker(feature, latlng),
-  ];
-  currentlyShownMarkers.forEach(layer => map.addLayer(layer));
-  map.setView(latlng, 10);
+  const latlng = [].concat(feature.geometry.coordinates);
+  if (currentPopup) {
+    currentPopup.remove();
+  }
+  currentPopup = createDescriptionPopup(feature, latlng).addTo(map);
+  map.setCenter(latlng);
+  map.setZoom(10);
   currentPlaceIndex++;
   if (currentPlaceIndex > placeInfosToShow.length - 1) {
     currentPlaceIndex = 0;
@@ -65,13 +77,21 @@ Template.page_start.onCreated(() => {
 
 Template.page_start.onRendered(function pageRendered() {
   const accessToken = Meteor.settings.public.mapbox;
-  const map = L.mapbox.map('mapid', 'mapbox.streets', { accessToken, zoomControl: false });
-  map.scrollWheelZoom.disable();
+  mapboxgl.accessToken = accessToken;
+  const map = new mapboxgl.Map({
+    container: 'mapid', // container id
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [-74.5, 40], // starting position [lng, lat]
+    zoom: 9, // starting zoom
+    zoomControl: false
+  });
+
+  // map.scrollWheelZoom.disable();
   map.fitBounds(
-      [[45, -120],
-      [-10, 120]],
+      [[-120, 45],
+      [120, -10]],
   );
-  this.find('.mapbox-logo').classList.add('mapbox-logo-true');
+  // this.find('.mapbox-logo').classList.add('mapbox-logo-true');
   const setTimeout = (firstTime) => {
     // ensure the timeout is not set again after template destruction
     if (firstTime || this.timeout) {

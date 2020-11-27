@@ -1,5 +1,10 @@
 <template name='page_start_place_info'>
-  <header class='category'>{{humanize properties.category}}</header>
+  <header class='category'>
+    <div class="ac-marker ac-place-info green">
+      <img src="/icons/categories/{{properties.category}}@2x.png">
+    </div>
+    {{humanize properties.category}}
+  </header>
   <h4>{{placeName}}</h4>
   <section class='json'>{{stringify properties.accessibility}}</section>
 </template>
