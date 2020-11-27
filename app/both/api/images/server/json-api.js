@@ -8,7 +8,7 @@ Images.wrapCollectionAPIResponse = ({ results, resultsCount }) => ({
       _id: r._id,
       imagePath: r.remotePath,
       url: buildFullImageUrl(r),
-      isoDate: r.timestamp.toISOString(),
+      date: r.timestamp,
       mimeType: r.mimeType,
       dimensions: r.dimensions || { width: 1, height: 1 },
     }
