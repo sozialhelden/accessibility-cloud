@@ -128,7 +128,7 @@ Stand: 17. Oktober 2018
 
 ## Datenschutzerklärung
 
-Die Internetseiten unter https://www.accessibility.cloud/ (im Folgenden "Webseite") sind ein Angebot der gemeinnützigen Organisation Sozialhelden e.V., c/o Immobilien Scout GmbH, Andreasstr. 10, 10243 Berlin, vertreten durch Raúl Krauthausen und Holger Dieterich (im Folgenden auch "wir", "uns"). 
+Die Internetseiten unter https://www.accessibility.cloud/ (im Folgenden "Webseite") sind ein Angebot der gemeinnützigen Organisation Sozialhelden e.V., c/o Immobilien Scout GmbH, Invalidenstr. 65, 10557 Berlin, vertreten durch Raúl Krauthausen und Holger Dieterich (im Folgenden auch "wir", "uns"). 
 
 Einzelne Funktionen unserer Webseite sind mit der Erhebung, Verarbeitung oder Nutzung von personenbezogenen Daten verbunden. Dabei legen wir großen Wert auf den sorgfältigen, rechtmäßigen und transparenten Umgang mit Ihren Daten. Mit der nachfolgenden Datenschutzerklärung informieren wie Sie darüber, welche Arten von Daten zu welchem Zweck erhoben und verarbeitet werden und wie wir dabei den Datenschutz im Einklang mit den gesetzlichen Vorgaben gewährleisten. Für die Nutzung unserer Webseite gilt jeweils die auf dieser Internetseite veröffentlichte aktuelle Fassung der Datenschutzerklärung. Bitte halten Sie sich über Aktualisierungen der vorliegenden Datenschutzerklärung regelmäßig auf dem Laufenden.
 
