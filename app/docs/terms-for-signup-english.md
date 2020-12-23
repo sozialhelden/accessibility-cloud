@@ -135,7 +135,7 @@ Status: October 17, 2018
 ## Privacy policy
 
 
-The Internet pages at https://www.accessibility.cloud/ (hereinafter "Website") are an offer of the non-profit organisation Sozialhelden e.V., c/o Immobilien Scout GmbH, Andreasstr. 10, 10243 Berlin, represented by Raúl Krauthausen and Holger Dieterich (hereinafter also "we", "us").
+The Internet pages at https://www.accessibility.cloud/ (hereinafter "Website") are an offer of the non-profit organisation Sozialhelden e.V., c/o Immobilien Scout GmbH, Invalidenstr. 65, 10557 Berlin, represented by Raúl Krauthausen and Holger Dieterich (hereinafter also "we", "us").
 
   
 
