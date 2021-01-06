@@ -37,7 +37,7 @@ LinkedIn: https://www.linkedin.com/in/dieterich/
 Twitter: http://www.twitter.com/sozialhelden
 Facebook: http://www.facebook.com/sozialhelden
 
-SOZIALHELDEN e.V., Andreasstr. 10, 10243 Berlin, Germany
+SOZIALHELDEN e.V., Invalidenstr. 65, 10557 Berlin, Germany
 `,
     });
   } catch (error) {
