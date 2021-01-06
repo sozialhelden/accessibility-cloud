@@ -22,3 +22,7 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 ## Legal Information
 
 - [Terms & Conditions](./app/docs/terms-for-signup.md)
+
+
+
+
