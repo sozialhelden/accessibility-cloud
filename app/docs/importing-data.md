@@ -8,22 +8,22 @@ If you know how to import data already and need a reference of the whole exchang
 
 - [Getting started](#getting-started)
 - [Stream processing units](#stream-processing-units)
-  - [`ConvertArrayToStream`](#convertarraytostream)
-  - [`ConvertToUTF8`](#converttoutf8)
-  - [`DebugLog`](#debuglog)
-  - [`HTTPDownload`](#httpdownload)
-  - [`Limit`](#limit)
-  - [`MultiHTTPDownload`](#multihttpdownload)
-  - [`ParseCSVStream`](#parsecsvstream)
-  - [`ParseJSONChunks`](#parsejsonchunks)
-  - [`ParseJSONStream`](#parsejsonstream)
-  - [`Skip`](#skip)
-  - [`Split`](#split)
-  - [`TransformData`](#transformdata)
-  - [`TransformScript`](#transformscript)
-  - [`UpsertPlace`](#upsertplace)
-  - [`UpsertEquipment`](#upsertequipment)
-  - [`UpsertDisruption`](#upsertdisruption)
+    - [`ConvertArrayToStream`](#convertarraytostream)
+    - [`ConvertToUTF8`](#converttoutf8)
+    - [`DebugLog`](#debuglog)
+    - [`HTTPDownload`](#httpdownload)
+    - [`Limit`](#limit)
+    - [`MultiHTTPDownload`](#multihttpdownload)
+    - [`ParseCSVStream`](#parsecsvstream)
+    - [`ParseJSONChunks`](#parsejsonchunks)
+    - [`ParseJSONStream`](#parsejsonstream)
+    - [`Skip`](#skip)
+    - [`Split`](#split)
+    - [`TransformData`](#transformdata)
+    - [`TransformScript`](#transformscript)
+    - [`UpsertPlace`](#upsertplace)
+    - [`UpsertEquipment`](#upsertequipment)
+    - [`UpsertDisruption`](#upsertdisruption)
 - [Convenience functions and libraries](#convenience-functions-and-libraries)
 
 <!-- /TOC -->
@@ -282,7 +282,7 @@ This works like `UpsertPlace`, but using it marks the source as a data source fo
 - If a transformed imported PoI has `properties.originalEquipmentInfoId` and `properties.equipmentSourceId` properties, importing will associate the disruption with the equipment/facility.
 - For this to work, the equipment/facility/place data sources must belong to the same organization. Use the `properties.equipmentSourceId` and `properties.placeSourceId` properties to refer to the respective data sources.
 - If you associate a disruption with equipment, you can use the `isEquipmentWorking` property of the disruption and set the stream unit's `takeOverEquipmentWorkingFlag` parameter to `true`. This will update the equipment's `properties.isWorking` flag on import. If you want to take the date properties of the `Disruption` into account, set the `properties.equipmentIsWorking` flag accordingly in the disruption data source transform stream.
-- If you set `setUnreferencedEquipmentToWorking` to `true`, accessibility.cloud will interpret missing disruption information as working equipment and set all equipment infos not referenced in the last import to `isWorking: true` after import. The server can reset the `isWorking` flag on a specific subset of equipment if you add a `equipmentSelectorForImport` selector that selects the places that should be reset. An example where this is useful is when an equipment source has elevators from different operators, and you want the import to a affect a specific operator’s elevators only.
+- If you set `setUnreferencedEquipmentToWorking` to `true`, accessibility.cloud will interpret missing disruption information as working equipment and set all equipment infos not referenced in the last import to `isWorking: true` after import. The server can reset the `isWorking` flag on a specific subset of equipment if you add a `equipmentSelectorForImport` selector (as escaped JSON string) that selects the places that should be reset. An example where this is useful is when an equipment source has elevators from different operators, and you want the import to a affect a specific operator’s elevators only.
 - accessibility.cloud will show the imported disruptions on the overview page of associated places/equipment/facility data sources.
 - `/placeInfos` API responses will include disruption data if you supply a `includeRelated=equipmentInfos.disruptions` query parameter.
 - `/equipmentInfos` API responses will include disruption data if you supply a `includeRelated=disruptions` query parameter.

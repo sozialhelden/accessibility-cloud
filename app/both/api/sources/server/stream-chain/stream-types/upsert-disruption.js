@@ -30,7 +30,7 @@ export default class UpsertDisruption extends Upsert {
           'properties.sourceId': this.options.equipmentSourceId,
           'properties.disruptionSourceImportId': { $ne: this.options.sourceImportId },
         },
-        equipmentSelectorForImport || {},
+        equipmentSelectorForImport ? JSON.parse(equipmentSelectorForImport) : {},
       ],
     };
 
@@ -78,7 +78,7 @@ export default class UpsertDisruption extends Upsert {
       }
     }
 
-    const equipmentSourceId = properties.equipmentSourceId;
+    const equipmentSourceId = this.options.equipmentSourceId;
     if (equipmentSourceId) {
       if (!includes(organizationSourceIds, equipmentSourceId)) {
         const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
@@ -104,11 +104,16 @@ export default class UpsertDisruption extends Upsert {
   }
 
 
-  afterUpsert({ doc, organizationSourceIds }, callback) {
+  afterUpsert({ doc, organizationSourceIds, organizationName }, callback) {
     if (!this.options.takeOverEquipmentWorkingFlag || !doc) { callback(null); return; }
     const equipmentInfoId = doc.properties.equipmentInfoId;
     if (!equipmentInfoId) { callback(null); return; }
-    const selector = { _id: equipmentInfoId, 'properties.sourceId': { $in: organizationSourceIds } };
+    const equipmentSourceId = this.options.equipmentSourceId;
+    if (!includes(organizationSourceIds, equipmentSourceId)) {
+      const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
+      throw new Meteor.Error(401, message);
+    }
+    const selector = { _id: equipmentInfoId, 'properties.sourceId': equipmentSourceId };
     const omittedDisruptionProperties = [
       'originalData',
       'category',
