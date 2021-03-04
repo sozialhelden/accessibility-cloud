@@ -8,11 +8,7 @@
     "test-app-watch": "meteor test --full-app --driver-package practicalmeteor:mocha --settings settings/local.json --port 8000",
     "test-watch-terminal": "TEST_WATCH=1 meteor test --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
     "test-app-watch-terminal": "TEST_WATCH=1 meteor test --full-app --driver-package dispatch:mocha-phantomjs --settings settings/local.json --port 8000",
-    "lint": "eslint .",
-    "predeploy": "echo 'moving sharp vendor files to the side' && mv node_modules/sharp/vendor node_modules/sharp/vendor.backup",
-    "deploy": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://www.accessibility.cloud --settings settings/production.json",
-    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://acloud.eu.meteorapp.com --settings settings/staging.json",
-    "postdeploy": "echo 'moving sharp vendor files back' && mv node_modules/sharp/vendor.backup node_modules/sharp/vendor"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@sozialhelden/a11yjson": "^9.0.1",
@@ -52,7 +48,6 @@
     "request": "^2.88.2",
     "s3-upload-stream": "^1.0.7",
     "sax": "^1.2.4",
-    "sharp": "^0.20.8",
     "simple-rate-limiter": "^0.2.3",
     "stream-file-type": "^0.1.1",
     "stream-length": "^1.0.2",
