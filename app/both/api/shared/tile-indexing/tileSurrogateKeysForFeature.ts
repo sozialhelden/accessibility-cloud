@@ -14,6 +14,8 @@ export function surrogateKeyForTile(tile: Tile): string {
 }
 
 export default function tileSurrogateKeysForFeature(feature: GeoJSONPoint) {
+  console.log(feature);
+
   if (
     !feature ||
     !feature.geometry ||

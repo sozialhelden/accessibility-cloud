@@ -44,7 +44,6 @@
     "meteor-node-stubs": "^0.2.11",
     "mime-types": "^2.1.18",
     "mongo-dot-notation": "^1.2.0",
-    "probe-image-size": "^6.0.0",
     "progress-stream": "^1.2.0",
     "request": "^2.88.2",
     "s3-upload-stream": "^1.0.7",
