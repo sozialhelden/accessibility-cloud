@@ -1,14 +1,13 @@
 import aws from 'aws-sdk';
-import { PassThrough } from 'stream';
-import mime from 'mime-types';
-import FileType from 'stream-file-type';
-import ImageSize from 'image-size-stream';
-
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
-
+import mime from 'mime-types';
+import { PassThrough } from 'stream';
+import FileType from 'stream-file-type';
 import { Images } from '../images';
+
+const probe = require('probe-image-size');
 
 export const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/tif', 'image/gif'];
 
@@ -82,41 +81,44 @@ export function createImageFromStream(imageStream, { mimeType, context, objectId
   // get updated image data
   const image = Images.findOne(imageId);
 
-  const mimeTypeDetector = new FileType();
-  const imageSizeDetector = new ImageSize();
-
-  imageStream.pipe(mimeTypeDetector);
-
-  mimeTypeDetector.on('file-type', (fileType) => {
-    const unsupportedFileType =
-        fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
-    if (unsupportedFileType) {
-      callback(new Meteor.Error(415, `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`));
-      imageStream.emit('error');
-    }
-    const mismatchedFileType =
-        mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
-    if (mismatchedFileType) {
-      callback(new Meteor.Error(415, `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`));
-      imageStream.emit('error');
-    }
-  });
-
-  imageStream.pipe(imageSizeDetector);
-
-  imageSizeDetector.on('size', Meteor.bindEnvironment((dimensions) => {
-    Images.update({ _id: imageId }, {
-      $set: {
-        dimensions: {
-          width: dimensions.width,
-          height: dimensions.height,
-        },
-      },
+  if (!mimeType) {
+    const mimeTypeDetector = new FileType();
+    imageStream.pipe(mimeTypeDetector);
+    mimeTypeDetector.on('file-type', (fileType) => {
+      const unsupportedFileType =
+          fileType === null || !allowedMimeTypes.includes(fileType.mime.toLowerCase());
+      if (unsupportedFileType) {
+        const message = `Unsupported file-type detected (${fileType ? fileType.mime : 'unknown'}).`;
+        console.log(message);
+        callback(new Meteor.Error(415, message));
+        imageStream.emit('error');
+      }
+      const mismatchedFileType =
+          mimeType && fileType && mimeType.toLowerCase() !== fileType.mime.toLowerCase();
+      if (mismatchedFileType) {
+        const message = `File-type (${fileType.mime}) does not match specified mime-type (${mimeType}).`;
+        console.log(message);
+        callback(new Meteor.Error(415, message));
+        imageStream.emit('error');
+      }
     });
-  })).on('error', (error) => {
-    console.log('imageSizeDetector error occurred', error);
-    imageStream.emit('error');
-  });
+  }
+
+  // Node version is too old for this. Maybe implement this again later.
+
+  // const sizePromise = probe(imageStream);
+
+  // sizePromise.then((result) => {
+  //   console.log('Size of image', imageId, 'is', result);
+  //   Images.update({ _id: imageId }, {
+  //     $set: {
+  //       dimensions: {
+  //         width: result.width,
+  //         height: result.height,
+  //       },
+  //     },
+  //   });
+  // });
 
   imageStream.on('error', function (error) {
     console.log('imageStream error occurred', error);

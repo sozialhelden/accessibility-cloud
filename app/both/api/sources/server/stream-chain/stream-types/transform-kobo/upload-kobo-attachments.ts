@@ -80,6 +80,7 @@ function fetchImages(lastResult: UpsertResult, callback: (error: Error, result?:
     //   see also https://github.com/kobotoolbox/kpi/issues/1542
     //   and the implementation in https://github.com/kobotoolbox/kpi/blob/08f06b1c2ce237eac46d0f15e86d44cfc53388a2/jsapp/js/components/submission.es6#L127
     const downloadUrl = `${koboBaseUrl}/attachment/original?media_file=${fileName}`;
+    console.log('Downloading image from', downloadUrl);
 
     const imageDownloadStream = new stream.PassThrough();
     const requestWithRedirect = {
@@ -178,7 +179,7 @@ export default class UploadKoboAttachments {
     }
     if (this.requests) {
       for (const request of this.requests) {
-        request.abort();
+        request.abort && request.abort();
       }
       delete this.requests;
     }

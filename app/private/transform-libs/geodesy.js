@@ -1715,10 +1715,10 @@ LatLon.areaOf = function(polygon, radius) {
     c.push(c[0]);
     var Σθ = 0;
     for (var v=0; v<n; v++) {
-        console.log(v, (Math.PI-c[v].angleTo(c[v+1])).toDegrees());
+        // console.log(v, (Math.PI-c[v].angleTo(c[v+1])).toDegrees());
         Σθ += Math.PI - c[v].angleTo(c[v+1]); // TODO: always π - α, or sometimes just α?
     }
-    console.log('Σθ', Σθ.toDegrees(), ((n-2)*Math.PI).toDegrees());
+    // console.log('Σθ', Σθ.toDegrees(), ((n-2)*Math.PI).toDegrees());
 
     var E = (Σθ - (n-2)*Math.PI); // spherical excess (in steradians)
     var A = E * R*R;              // area (in units of radius)
