@@ -105,7 +105,7 @@ function fetchImages(lastResult: UpsertResult, callback: (error: Error, result?:
     });
 
     imageDownloadStream.on('abort', () => {
-      requestResult.abort();
+      requestResult.abort && requestResult.abort();
     });
 
     return requestResult;
@@ -157,7 +157,7 @@ export default class UploadKoboAttachments {
   abort() {
     if (this.requests) {
       for (const request of this.requests) {
-        request.abort();
+        request.abort && request.abort();
       }
       delete this.requests;
     }
@@ -178,7 +178,7 @@ export default class UploadKoboAttachments {
     }
     if (this.requests) {
       for (const request of this.requests) {
-        request.abort();
+        request.abort && request.abort();
       }
       delete this.requests;
     }
