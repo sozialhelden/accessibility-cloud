@@ -16,7 +16,7 @@ SyncedCron.add({
     if (imagesAwaitingModeration > 0) {
       Email.send({
         from: 'support@accessibility.cloud',
-        to: 'support@accessibility.cloud',
+        to: 'images@accessibility.cloud',
         subject: `${imagesAwaitingModeration} images awaiting moderation on accessibility.cloud`,
         text: `Hi,
 
