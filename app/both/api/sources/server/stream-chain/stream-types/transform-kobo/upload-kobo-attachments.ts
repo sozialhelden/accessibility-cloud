@@ -12,6 +12,7 @@ type InsertedPlace = {
   properties: {
     originalId: string;
     originalData: string;
+    sourceId: string;
   },
 };
 
@@ -91,6 +92,7 @@ function fetchImages(lastResult: UpsertResult, callback: (error: Error, result?:
 
     const imageAttributes = {
       originalId,
+      sourceId: data.properties.sourceId,
       objectId,
       mimeType: a.mimetype,
       context: 'place',

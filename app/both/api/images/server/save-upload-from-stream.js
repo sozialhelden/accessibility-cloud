@@ -33,10 +33,10 @@ function configureS3() {
   return new aws.S3();
 }
 
-export function createImageFromStream(imageStream, { mimeType, context, objectId, appToken, originalId, hashedIp }, callback) {
+export function createImageFromStream(imageStream, { mimeType, context, objectId, appToken, originalId, sourceId, hashedIp }, callback) {
   let imageId = null;
   if (originalId) {
-    const foundImage = Images.findOne({ originalId }, { transform: null, fields: { s3Error: 1, isUploadedToS3: 1 } });
+    const foundImage = Images.findOne({ originalId, sourceId }, { transform: null, fields: { s3Error: 1, isUploadedToS3: 1 } });
     if (foundImage && (foundImage.s3Error || !foundImage.isUploadedToS3)) {
       // retry download
       console.log('Retrying broken image upload', originalId);
