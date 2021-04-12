@@ -210,6 +210,16 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     optional: true,
     blackbox: true,
   },
+  tileCoordinates: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  'tileCoordinates.$': {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
 }]);
 
 EquipmentInfos.attachSchema(EquipmentInfos.schema);
