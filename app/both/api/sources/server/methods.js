@@ -12,6 +12,8 @@ import {
   checkExistenceAndFullAccessToSourceId,
   checkExistenceAndVisibilityForSourceId,
 } from '/both/api/sources/server/privileges';
+import addKeysToFastlyPurgingQueue from
+  '../../../../server/cdn-purging/addKeysToFastlyPurgingQueue';
 
 Meteor.methods({
   getPlacesForSource(sourceId, limitCount = 1000) {
@@ -54,6 +56,8 @@ Meteor.methods({
     SourceImports.remove({ sourceId });
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
     Sources.remove({ _id: sourceId });
+
+    addKeysToFastlyPurgingQueue([sourceId]);
   },
 
   deleteAllPlacesOfSourceWithId(sourceId) {
@@ -64,6 +68,8 @@ Meteor.methods({
     EquipmentInfos.remove({ 'properties.sourceId': sourceId });
     Disruptions.remove({ 'properties.sourceId': sourceId });
     Sources.update({ _id: sourceId }, { $set: { documentCount: 0 } });
+
+    addKeysToFastlyPurgingQueue([sourceId]);
   },
 });
 
