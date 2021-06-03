@@ -33,7 +33,7 @@ Template.sources_show_settings_page.events({
   },
 
   'click .js-delete-places'() {
-    if (!confirm('Do you really want to delete all imported places for this source?')) {
+    if (!confirm('CAUTION: This will destroy all place IDs permanently, new imports will have places with new IDs and URLs! Do you really want to delete all imported places for this source? If you need a reimport because data is changed, a manual migration of the changes in the DB is a better idea and leaves URLs and IDs permanently reachable.')) {
       return;
     }
     const sourceId = FlowRouter.getParam('_id');
