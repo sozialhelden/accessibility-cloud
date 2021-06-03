@@ -17,7 +17,7 @@ export default function sendPurgeRequestToFastly(surrogateKeys: string[]) {
 
   check(serviceIds, [String]);
 
-  const results = serviceIds.map(serviceId => {
+  const results = serviceIds.map((serviceId: string) => {
     const url = `https://api.fastly.com/service/${serviceId}/purge`;
     const options = {
       headers: {
