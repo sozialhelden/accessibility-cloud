@@ -33,7 +33,7 @@ const imageAttachmentFields: KoboKey[] = [
 ];
 
 // find all attachments for the allow fields
-function findImageAttachments(data: KoboResult): KoboAttachment[] {
+function findImageAttachmentsInKoboResult(data: KoboResult): KoboAttachment[] {
   const attachments = data._attachments;
 
   return imageAttachmentFields.map((field) => {
@@ -69,7 +69,7 @@ function fetchImages(lastResult: UpsertResult, callback: (error: Error, result?:
   }
 
   const koboData: KoboResult = JSON.parse(data.properties.originalData);
-  const attachments = findImageAttachments(koboData);
+  const attachments = findImageAttachmentsInKoboResult(koboData);
 
   let remainingCallbacksCount = attachments.length;
   const streams = attachments.map((a) => {

@@ -27,12 +27,14 @@ import ConvertStreamToArray from './stream-types/convert-stream-to-array';
 import TransformData from './stream-types/transform-data';
 import TransformKobo from './stream-types/transform-kobo/transform-kobo';
 import UploadKoboAttachments from './stream-types/transform-kobo/upload-kobo-attachments';
+import EnrichTrackingEvents from './stream-types/transform-kobo/enrich-tracking-events';
 import TransformScript from './stream-types/transform-script';
 import UpsertPlace from './stream-types/upsert-place';
 import UpsertDisruption from './stream-types/upsert-disruption';
 import UpsertEquipment from './stream-types/upsert-equipment';
 import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
 import ReimportSource from './stream-types/reimport-source';
+
 // import ValidatePlace from './stream-types/validate-place';
 
 const zstreams = Npm.require('zstreams');
@@ -63,6 +65,7 @@ const StreamTypes = {
   ConvertArrayToStream,
   ConvertStreamToArray,
   ReimportSource,
+  EnrichTrackingEvents,
   // ValidatePlace,
 };
 

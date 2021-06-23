@@ -35,14 +35,16 @@ function configureS3() {
 
 export function createImageFromStream(imageStream, { mimeType, context, objectId, appToken, originalId, sourceId, hashedIp }, callback) {
   let imageId = null;
-  if (originalId) {
+  if (!originalId) {
+    console.log('No original ID given');
+  } else {
     const foundImage = Images.findOne({ originalId, sourceId }, { transform: null, fields: { s3Error: 1, isUploadedToS3: 1 } });
     if (foundImage && (foundImage.s3Error || !foundImage.isUploadedToS3)) {
       // retry download
       console.log('Retrying broken image upload', originalId);
       imageId = foundImage._id;
     } else if (foundImage) {
-      console.log('There is already an image with the originalId', originalId);
+      console.log('There is already an image with the originalId, closing stream', originalId);
       callback(null, foundImage);
       imageStream.emit('close');
       if (imageStream.destroy) imageStream.destroy();
