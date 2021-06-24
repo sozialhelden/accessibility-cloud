@@ -39,10 +39,24 @@ function enrichCreationTrackingEvent(upsertResult: UpsertResult, callback: (erro
 
   const koboData: KoboResult = JSON.parse(placeInfo.properties.originalData);
   const { uniqueSurveyId } = koboData;
-  const [longitude, latitude] = placeInfo.geometry.coordinates;
   if (uniqueSurveyId) {
-    console.log(`Adding placeInfoId ${placeInfoId} to 'SurveyCompleted' tracking event with uniqueSurveyId ${uniqueSurveyId}`);
-    TrackingEvents.update({ type: 'SurveyCompleted', uniqueSurveyId, placeInfoId: { $exists: false } }, { $set: { placeInfoId, latitude, longitude }});
+    const [longitude, latitude] = placeInfo.geometry.coordinates;
+    const selector = {
+      type: 'SurveyCompleted',
+      uniqueSurveyId,
+      placeInfoId: { $exists: false }
+    };
+    const modifier = {
+      $set: {
+        placeInfoId,
+        latitude,
+        longitude,
+        geometry: placeInfo.geometry,
+      }
+    };
+    console.log(`Adding placeInfoId ${placeInfoId} to 'SurveyCompleted' tracking event, modifier:`, modifier);
+
+    TrackingEvents.update(selector, modifier);
   }
 }
 

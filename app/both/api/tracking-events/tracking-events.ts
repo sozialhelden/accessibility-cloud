@@ -19,9 +19,20 @@ TrackingEvents.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  userLocation: {
-    type: PointGeometrySchema,
+  geometry: {
+    type: Object,
     optional: true,
+  },
+  'geometry.type': {
+    type: String,
+    allowedValues: ['Point'],
+  },
+  'geometry.coordinates': {
+    type: Array,
+  },
+  'geometry.coordinates.$': {
+    type: Number,
+    decimal: true,
   },
   latitude: {
     type: Number,
