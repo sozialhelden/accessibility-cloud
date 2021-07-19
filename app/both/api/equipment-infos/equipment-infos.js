@@ -85,14 +85,38 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     optional: true,
   },
   'properties.description': {
+    type: Object,
+    optional: true,
+  },
+  'properties.description.de': {
+    type: String,
+    optional: true,
+  },
+  'properties.description.en_US': {
     type: String,
     optional: true,
   },
   'properties.shortDescription': {
+    type: Object,
+    optional: true,
+  },
+  'properties.shortDescription.de': {
+    type: String,
+    optional: true,
+  },
+  'properties.shortDescription.en_US': {
     type: String,
     optional: true,
   },
   'properties.longDescription': {
+    type: Object,
+    optional: true,
+  },
+  'properties.longDescription.de': {
+    type: String,
+    optional: true,
+  },
+  'properties.longDescription.en_US': {
     type: String,
     optional: true,
   },
