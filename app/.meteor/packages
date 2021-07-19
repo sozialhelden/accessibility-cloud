@@ -64,10 +64,6 @@ standard-minifier-js@2.0.0
 ddp-rate-limiter@1.0.7
 app-prod-security
 
-# rest apis
-simple:rest-accounts-password
-simple:rest
-
 # testing
 factory
 # xolvio:cleaner
