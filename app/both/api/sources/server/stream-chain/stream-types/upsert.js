@@ -117,6 +117,7 @@ export default class Upsert {
           const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, {
             organizationSourceIds,
             organizationName,
+            source,
           });
 
           // console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
@@ -209,7 +210,7 @@ export default class Upsert {
   // override this in your stream subclass to add/change properties on the document before
   // it is upserted into the DB
   // eslint-disable-next-line class-methods-use-this,no-unused-vars
-  postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName }) {
+  postProcessBeforeUpserting(doc, { organizationSourceIds, organizationName, source }) {
     return doc;
   }
 

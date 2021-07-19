@@ -30,24 +30,26 @@ export default class UpsertEquipmentInfo extends Upsert {
     const placeSourceId = properties.placeSourceId;
 
     if (placeSourceId) {
-      if (!includes(organizationSourceIds, placeSourceId)) {
-        const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName}`;
-        throw new Meteor.Error(401, message);
-      }
+      // For now, we allow to associate equipment with any place info. Theoretically this could be
+      // prevented with this code:
+      // if (!includes(organizationSourceIds, placeSourceId)) {
+      //   const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName}`;
+      //   throw new Meteor.Error(401, message);
+      // }
       if (properties.originalPlaceInfoId) {
         const originalPlaceInfoIdField = properties.originalPlaceInfoIdField || 'properties.originalId';
         const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
         const options = { transform: null, fields: { _id: true, geometry: true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
         if (placeInfo) {
+          console.log(`Will associate PlaceInfo ${placeInfo._id} for EquipmentInfo ${result}.`);
           result.properties.placeInfoId = placeInfo._id;
           result.geometry = result.geometry || placeInfo.geometry;
+        } else {
+          console.log(`Could not find PlaceInfo ${selector} for EquipmentInfo ${result}...`);
         }
       }
     }
-
-    const { originalId } = result.properties;
-
     return result;
   }
 

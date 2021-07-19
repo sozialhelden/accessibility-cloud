@@ -24,6 +24,7 @@ export default class UpsertDisruption extends Upsert {
 
 
   setUnreferencedEquipmentToWorking({ organizationSourceIds, equipmentSelectorForImport }, callback) {
+    console.log(`Setting missing equipment records to working...`);
     const selector = {
       $and: [
         {
@@ -41,7 +42,7 @@ export default class UpsertDisruption extends Upsert {
     };
 
     EquipmentInfos.update(selector, modifier, { multi: true }, (error, count) => {
-      console.log(`Set ${count} missing equipment records to working `, selector, modifier);
+      console.log(`Set ${count} missing equipment records to working `, JSON.stringify(selector), JSON.stringify(modifier));
       callback(error);
     });
   }
@@ -58,10 +59,13 @@ export default class UpsertDisruption extends Upsert {
 
     const placeSourceId = properties.placeSourceId;
     if (placeSourceId) {
-      if (!includes(organizationSourceIds, placeSourceId)) {
-        const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${placeSourceId})`;
-        throw new Meteor.Error(401, message);
-      }
+      // For now, we allow to associate disruptions with any place info. Theoretically this could be
+      // prevented with this code:
+
+      // if (!includes(organizationSourceIds, placeSourceId)) {
+      //   const message = `Not authorized: placeSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${placeSourceId})`;
+      //   throw new Meteor.Error(401, message);
+      // }
 
       if (properties.originalPlaceInfoId) {
         const originalPlaceInfoIdField = properties.originalPlaceInfoIdField || 'properties.originalId';
@@ -80,10 +84,13 @@ export default class UpsertDisruption extends Upsert {
 
     const equipmentSourceId = this.options.equipmentSourceId;
     if (equipmentSourceId) {
-      if (!includes(organizationSourceIds, equipmentSourceId)) {
-        const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
-        throw new Meteor.Error(401, message);
-      }
+      // For now, we allow to associate disruptions with any equipment. Theoretically this could be
+      // prevented with this code:
+
+      // if (!includes(organizationSourceIds, equipmentSourceId)) {
+      //   const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
+      //   throw new Meteor.Error(401, message);
+      // }
 
       if (properties.originalEquipmentInfoId) {
         const originalEquipmentInfoIdField = properties.originalEquipmentInfoIdField || 'properties.originalId';
@@ -109,10 +116,12 @@ export default class UpsertDisruption extends Upsert {
     const equipmentInfoId = doc.properties.equipmentInfoId;
     if (!equipmentInfoId) { callback(null); return; }
     const equipmentSourceId = this.options.equipmentSourceId;
-    if (!includes(organizationSourceIds, equipmentSourceId)) {
-      const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
-      throw new Meteor.Error(401, message);
-    }
+    // For now, we allow to associate disruptions with any equipment. Theoretically this could be
+    // prevented with this code:
+    // if (!includes(organizationSourceIds, equipmentSourceId)) {
+    //   const message = `Not authorized: equipmentSourceId must refer to a data source by ${organizationName} (Allowed: ${organizationSourceIds}, given: ${equipmentSourceId})`;
+    //   throw new Meteor.Error(401, message);
+    // }
     const selector = { _id: equipmentInfoId, 'properties.sourceId': equipmentSourceId };
     const omittedDisruptionProperties = [
       'originalData',
