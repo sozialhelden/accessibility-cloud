@@ -124,6 +124,10 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: String,
     optional: true,
   },
+  'properties.manufacturerId': {
+    type: String,
+    optional: true,
+  },
   'properties.manufacturerSerialNumber': {
     type: String,
     optional: true,
@@ -222,6 +226,10 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     optional: true,
   },
   'properties.facilityManagementId': {
+    type: String,
+    optional: true,
+  },
+  'properties.statusHardwareSensorId': {
     type: String,
     optional: true,
   },
