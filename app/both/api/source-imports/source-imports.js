@@ -61,6 +61,7 @@ SourceImports.helpers({
       case 'UpsertEquipment': return 'equipmentInfos';
       case 'UpsertPlace': return 'placeInfos';
       case 'UpsertDisruption': return 'disruptions';
+      case 'UpsertImage': return 'images';
       default: return null;
     }
   }

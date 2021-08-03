@@ -26,13 +26,16 @@ import ConvertArrayToStream from './stream-types/convert-array-to-stream';
 import ConvertStreamToArray from './stream-types/convert-stream-to-array';
 import TransformData from './stream-types/transform-data';
 import TransformKobo from './stream-types/transform-kobo/transform-kobo';
+import UploadRemoteFileToS3 from './stream-types/upload-remote-file-to-s3';
 import EnrichTrackingEvents from './stream-types/transform-kobo/enrich-tracking-events';
 import TransformScript from './stream-types/transform-script';
 import UpsertPlace from './stream-types/upsert-place';
 import UpsertDisruption from './stream-types/upsert-disruption';
 import UpsertEquipment from './stream-types/upsert-equipment';
+import UpsertImage from './stream-types/upsert-image';
 import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
 import ReimportSource from './stream-types/reimport-source';
+import ExplodeArray from './stream-types/explode-array';
 
 // import ValidatePlace from './stream-types/validate-place';
 
@@ -57,6 +60,7 @@ const StreamTypes = {
   UpsertPlace,
   UpsertDisruption,
   UpsertEquipment,
+  UpsertImage,
   SimplifyJaccedeFormat,
   Skip,
   Limit,
@@ -64,6 +68,8 @@ const StreamTypes = {
   ConvertStreamToArray,
   ReimportSource,
   EnrichTrackingEvents,
+  ExplodeArray,
+  UploadRemoteFileToS3,
   // ValidatePlace,
 };
 
