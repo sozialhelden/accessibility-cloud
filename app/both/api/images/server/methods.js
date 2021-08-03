@@ -4,6 +4,20 @@ import Future from 'fibers/future';
 
 import { isAdmin } from '../../../lib/is-admin';
 import { Images } from '../images';
+import configureS3 from './configure-s3';
+
+function deleteImageFromS3(image, callback) {
+  console.log('Deleting uploaded image for', image);
+  const awsS3 = configureS3();
+  awsS3.deleteObject({
+    Bucket: Meteor.settings.public.aws.s3.bucket,
+    Key: image.remotePath,
+  }, Meteor.bindEnvironment((error, result) => {
+    console.log('deleteFromS3 result', error, result);
+    callback(error, result);
+  }));
+}
+
 
 Meteor.methods({
   'images.approve'(imageId) {
@@ -43,7 +57,7 @@ Meteor.methods({
 
     if (image.isUploadedToS3 && !image.s3Error) {
       const deleteFuture = new Future();
-      image.deleteFromS3((error, result) => {
+      deleteImageFromS3(image, (error, result) => {
         if (error) {
           deleteFuture.throw(new Meteor.Error(500, 'Failed deleting image on s3'));
         } else {
