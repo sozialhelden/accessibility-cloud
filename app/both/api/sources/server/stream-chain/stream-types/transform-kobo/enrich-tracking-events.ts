@@ -10,7 +10,7 @@ import { PlaceInfo } from '@sozialhelden/a11yjson';
 const { Transform } = Npm.require('zstreams');
 
 type UpsertResult = {
-  doc: Partial<PlaceInfo>,
+  doc: Partial<PlaceInfo> & { _id?: string },
   result: {
     insertedId?: string,
   },
@@ -23,8 +23,8 @@ function enrichCreationTrackingEvent(upsertResult: UpsertResult, callback: (erro
     callback(new Error('No data found'), null);
     return;
   }
-  // we do not get an _id field on the UpsertResult if it was an update, so we need to query again
-  let placeInfoId = result.insertedId;
+  // we do not get an _id field on the UpsertResult if it was an update or it was refetched by the previous stream, so we need to query again
+  let placeInfoId = placeInfo._id || result.insertedId;
   if (!placeInfoId) {
     const foundPlace = PlaceInfos.findOne({ 'properties.originalId': placeInfo.properties.originalId },
                                           { transform: null, fields: { } });
@@ -66,8 +66,6 @@ export default class EnrichTrackingEvents {
 
   lengthListener = (length: number) => this.stream.emit('length', length);
 
-  requests: any[];
-
   pipeListener = (source: any) => {
     this.source = source;
     source.on('length', this.lengthListener);
@@ -94,16 +92,10 @@ export default class EnrichTrackingEvents {
     });
 
     this.stream.on('pipe', this.pipeListener);
-    this.stream.unitName = 'responses';
+    this.stream.unitName = 'potentially updated tracking events';
   }
 
   abort() {
-    if (this.requests) {
-      for (const request of this.requests) {
-        request.abort && request.abort();
-      }
-      delete this.requests;
-    }
   }
 
   dispose() {
@@ -118,12 +110,6 @@ export default class EnrichTrackingEvents {
         this.source.removeListener('length', this.lengthListener);
       }
       delete this.source;
-    }
-    if (this.requests) {
-      for (const request of this.requests) {
-        request.abort && request.abort();
-      }
-      delete this.requests;
     }
   }
 
