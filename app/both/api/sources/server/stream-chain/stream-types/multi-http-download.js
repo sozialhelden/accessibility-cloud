@@ -1,5 +1,6 @@
 import request from 'request';
 import limit from 'simple-rate-limiter';
+import { get } from 'lodash';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { check, Match } from 'meteor/check';
 import { generateDynamicUrl } from '../generate-dynamic-url';
@@ -16,7 +17,6 @@ export default class MultiHTTPDownload {
     includedStatusCodes = [200],
     sourceUrl,
     onDebugInfo,
-    bytesPerSecond,
     lastSuccessfulImport,
     gzip = true,
     body = '',
@@ -25,11 +25,12 @@ export default class MultiHTTPDownload {
     signature,
     through = false,
     throttle,
+    inputDataProperty,
+    timeout,
   }) {
     check(sourceUrl, String);
 
     check(onDebugInfo, Function);
-    check(bytesPerSecond, Match.Optional(Number));
     check(headers, Match.Optional(Match.ObjectIncluding({})));
     check(throttle, Match.Optional(Match.ObjectIncluding({ to: Number, per: Number })));
     check(allowedStatusCodes, [Number]);
@@ -37,6 +38,8 @@ export default class MultiHTTPDownload {
     check(maximalErrorRatio, Number);
     check(maximalConcurrency, Number);
     check(through, Boolean);
+    check(inputDataProperty, Match.Optional(String));
+    check(timeout, Match.Optional(Number));
 
     const extendedHeaders = Object.assign({
       'User-Agent': 'accessibility.cloud Bot/1.0',
@@ -57,14 +60,15 @@ export default class MultiHTTPDownload {
       readableObjectMode: true,
       highWaterMark: Math.max(0, Math.min(maximalConcurrency, 10)),
       transform(chunk, encoding, callback) {
+        const inputData = inputDataProperty ? get(chunk, inputDataProperty) : chunk;
         const url = generateDynamicUrl({
           lastSuccessfulImport,
-          sourceUrl: sourceUrl.replace(/\{\{inputData\}\}/, chunk),
+          sourceUrl: sourceUrl.replace(/\{\{inputData\}\}/, inputData),
         });
 
-        const bodyWithInputData = body.replace(/\{\{inputData\}\}/, chunk);
+        const bodyWithInputData = body.replace(/\{\{inputData\}\}/, inputData);
         Object.keys(extendedHeaders).forEach((k) => {
-          extendedHeaders[k] = extendedHeaders[k].replace(/\{\{inputData\}\}/, chunk);
+          extendedHeaders[k] = extendedHeaders[k].replace(/\{\{inputData\}\}/, inputData);
         });
         if (signature) {
           extendedHeaders[signature.headerName] = generateRequestSignature({
@@ -74,10 +78,12 @@ export default class MultiHTTPDownload {
         }
 
         const options = {
-          url,
+          allowedStatusCodes,
           gzip,
           method,
-          allowedStatusCodes,
+          timeout,
+          url,
+          followAllRedirects: true,
           body: bodyWithInputData,
           headers: extendedHeaders,
         };
