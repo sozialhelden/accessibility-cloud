@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import _ from 'lodash';
+import { isNumber, get, set, isEmpty } from 'lodash';
 import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
@@ -17,7 +17,7 @@ import addKeysToFastlyPurgingQueue from
 const { Transform } = Npm.require('zstreams');
 
 
-const CoordinateMatcher = Match.Where(x => _.isNumber(x) && x !== 0);
+const CoordinateMatcher = Match.Where(x => isNumber(x) && x !== 0);
 const CoordinatesMatcher = [CoordinateMatcher];
 const TwoCoordinatesMatcher = Match.Where(x => Match.test(x, CoordinatesMatcher) && x.length === 2);
 
@@ -44,6 +44,7 @@ export default class Upsert {
       removeMissingRecords = false,
       sourceImportId,
       onDebugInfo,
+      refetchAfterUpsert,
     } = options;
 
     check(sourceId, String);
@@ -60,6 +61,11 @@ export default class Upsert {
     let firstDocumentWithoutOriginalId = null;
     const streamClass = this.constructor;
     const streamObject = this;
+    const originalIdPath = streamClass.originalIdPath || 'properties.originalId';
+    const sourceImportIdPath = streamClass.sourceImportIdPath || 'properties.sourceImportId';
+    const sourceIdPath = streamClass.sourceIdPath || 'properties.sourceId';
+    const sourceNamePath = streamClass.sourceNamePath || 'properties.sourceName';
+    const organizationNamePath = streamClass.organizationNamePath || 'properties.organizationName';
 
     const {
       organizationSourceIds,
@@ -74,7 +80,7 @@ export default class Upsert {
       readableObjectMode: true,
       highWaterMark: 3,
       transform: Meteor.bindEnvironment((doc, encoding, callback) => {
-        const originalId = doc && doc.properties && doc.properties.originalId;
+        const originalId = get(doc, originalIdPath);
 
         let error;
 
@@ -101,12 +107,11 @@ export default class Upsert {
           return;
         }
 
-        Object.assign(doc.properties, {
-          sourceId,
-          sourceImportId,
-          sourceName,
-          organizationName,
-        });
+        set(doc, sourceIdPath, sourceId);
+        set(doc, sourceImportIdPath, sourceImportId);
+        set(doc, sourceNamePath, sourceName);
+        set(doc, organizationNamePath, organizationName);
+
 
         const tileCoordinates = generateTileCoordinatesForFeature(doc);
         if (tileCoordinates) {
@@ -122,22 +127,37 @@ export default class Upsert {
 
           // console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
 
+          const selector = {
+            [sourceIdPath]: sourceId,
+            [originalIdPath]: originalId,
+          };
+
           // Using flatten here to deep-merge new properties into existing
-          streamClass.collection.upsert({
-            'properties.sourceId': sourceId,
-            'properties.originalId': originalId,
-          }, flatten(postProcessedDoc), (upsertError, result) => {
+          const modifier = flatten(postProcessedDoc);
+          const propertiesToSetOnInsert = streamObject.setOnInsert && streamObject.setOnInsert(doc, {
+            organizationSourceIds,
+            organizationName,
+            source,
+          });
+          if (propertiesToSetOnInsert && !isEmpty(propertiesToSetOnInsert)) {
+            modifier.$setOnInsert = propertiesToSetOnInsert;
+          }
+
+          const upsertCallback = (upsertError, result) => {
             if (result && result.insertedId) {
               insertedDocumentCount += 1;
             } else if (result && result.numberAffected) {
               updatedDocumentCount += 1;
             }
 
+            const docAfterUpsert = refetchAfterUpsert ? streamClass.collection.findOne(selector) : Object.assign({}, postProcessedDoc);
             streamObject.afterUpsert(
-              { doc: Object.assign({}, postProcessedDoc), organizationSourceIds, organizationName },
-              () => callback(upsertError, { doc: postProcessedDoc, result }),
+              { doc: docAfterUpsert, organizationSourceIds, organizationName },
+              () => callback(upsertError, { doc: docAfterUpsert, result }),
             );
-          });
+          };
+
+          streamClass.collection.upsert(selector, modifier, upsertCallback);
         } catch (caughtError) {
           callback(caughtError);
         }
@@ -195,8 +215,8 @@ export default class Upsert {
     this.removeMissingRecords = this.bindEnv((callback) => {
       // Remove all MongoDB documents that were not part of this stream's import
       const selector = {
-        'properties.sourceId': sourceId,
-        'properties.sourceImportId': { $ne: sourceImportId },
+        [sourceIdPath]: sourceId,
+        [sourceImportIdPath]: { $ne: sourceImportId },
       };
       // eslint-disable-next-line no-underscore-dangle
       console.log('Removing from ', streamClass.collection._name, selector);
@@ -229,7 +249,7 @@ export default class Upsert {
   purgeImportedDocsOnFastly() {
     // To reduce upsert calls on MongoDB, we don't use the cache purge queue here
     console.log(`Purging keys on fastly for import ${this.options.sourceImportId}…`);
-    const selector = { 'properties.sourceImportId': this.options.sourceImportId };
+    const selector = { [this.constructor.sourceImportIdPath || 'properties.sourceImportId']: this.options.sourceImportId };
     const options = { fields: { _id: 1, geometry: 1 } };
     let idBatch = [];
     const purge = () => {
