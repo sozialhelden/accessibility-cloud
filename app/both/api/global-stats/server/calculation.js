@@ -51,6 +51,11 @@ export const calculateGlobalStatsNow = Meteor.bindEnvironment(() => {
       selector: { lastImportType: 'disruptions' },
     },
     {
+      collection: Sources,
+      countName: 'withImages',
+      selector: { lastImportType: 'images' },
+    },
+    {
       collection: PlaceInfos,
       countName: 'withoutDrafts',
       selector: { 'properties.sourceId': { $in: sourceIdsWithoutDrafts } },
