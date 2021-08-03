@@ -14,6 +14,10 @@ Images.schema = new SimpleSchema({
   objectId: {
     type: String,
   },
+  objectSourceId: {
+    type: String,
+    optional: true,
+  },
   hashedIp: {
     type: String,
   },
@@ -68,6 +72,14 @@ Images.schema = new SimpleSchema({
     label: 'Remote path (without base URL)',
     type: String,
   },
+  remoteUrl: {
+    type: String,
+    optional: true,
+  },
+  remoteEtag: {
+    type: String,
+    optional: true,
+  },
   s3Error: {
     type: Object,
     blackbox: true,
@@ -75,6 +87,26 @@ Images.schema = new SimpleSchema({
   },
   isUploadedToS3: {
     type: Boolean,
+  },
+  originalSourceUrl: {
+    type: String,
+    optional: true,
+  },
+  sourceId: {
+    type: String,
+    optional: true,
+  },
+  sourceImportId: {
+    type: String,
+    optional: true,
+  },
+  sourceName: {
+    type: String,
+    optional: true,
+  },
+  organizationName: {
+    type: String,
+    optional: true,
   },
 });
 
