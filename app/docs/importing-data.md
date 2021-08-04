@@ -11,6 +11,7 @@ If you know how to import data already and need a reference of the whole exchang
     - [`ConvertArrayToStream`](#convertarraytostream)
     - [`ConvertToUTF8`](#converttoutf8)
     - [`DebugLog`](#debuglog)
+    - [`Filter`](#filter)
     - [`HTTPDownload`](#httpdownload)
     - [`Limit`](#limit)
     - [`MultiHTTPDownload`](#multihttpdownload)
@@ -21,6 +22,8 @@ If you know how to import data already and need a reference of the whole exchang
     - [`Split`](#split)
     - [`TransformData`](#transformdata)
     - [`TransformScript`](#transformscript)
+    - [`UploadRemoteFileToS3`](#uploadremotefiletos3)
+    - [`UpsertImage`](#upsertimage)
     - [`UpsertPlace`](#upsertplace)
     - [`UpsertEquipment`](#upsertequipment)
     - [`UpsertDisruption`](#upsertdisruption)
@@ -99,7 +102,11 @@ We support the following stream processing units:
 
 ### `ConvertArrayToStream`
 
-Reads Array objects on the input, takes their elements and outputs them as single objects.
+Gets arrays from the input, takes the array elements and outputs them as single objects.
+
+#### Parameters
+
+- `path` (optional): Set this to a key path to allow processing JavaScript objects that wrap arrays, instead of processing arrays directly. If you use this parameter, you must supply a key path (in dot-notation) where to find the array in each processed object. If you omit this parameter, input chunks must be arrays, otherwise objects.
 
 ### `ConvertToUTF8`
 
@@ -112,6 +119,16 @@ Converts downloaded data into UTF8 (the format of the database). [Input formats]
 ### `DebugLog`
 
 Displays the first and the last chunk read from input in the UI.
+
+### `Filter`
+
+Filters incoming JavaScript objects by truthiness of a property, or by equality of a property to a given value. Outputs matching objects, discards all other objects.
+
+#### Parameters
+
+- `path`: key path of the property in incoming objects to match when filtering, in dot-notation.
+- `negate` (optional): Inverts the filtering: discards matching objects, and outputs only objects that do *not* match the filter.
+- `expectedValue` (optional): If given, the stream compares this value with the property value at the given `path` in each input object. The filter counts the object as a match if both values are equal.
 
 ### `HTTPDownload`
 
@@ -234,15 +251,39 @@ Transforms each input chunk or object into something else, using a JavaScript ex
 
 - `javascript`: JavaScript expression like `Array.from({length: d}, (v, k) => k + 1)`. Supports ES2015. `d` is predefined as the input chunk/object. Evaluates the expression and writes its result as new chunk/object to the output.
 
+### `UploadRemoteFileToS3`
+
+For each given input object, stream a file from a remote URL to our Amazon S3 storage. An admin must enable this feature for the data source before you can use this stream unit.
+
+#### Parameters
+
+- `remotePathProperty`: Key path (in dot-notation) where to find the remote path on our S3 in any given input object.
+- `mimeTypeProperty`: Key path (in dot-notation) where to find the mime type to set on S3 in any given input object.
+- `isUploadedFlagProperty`: Key path (in dot-notation) where to find a flag that the object is already uploaded to S3. If the value of this property is `true`, the server will skip the upload for the input object.
+- `sourceUrlTemplateDataProperty`: Key path (in dot-notation) where to find the property to use as input for string template-based URLs.
+- `sourceUrlProperty`: Key path (in dot-notation) where to find the URL of the source file to stream.
+
+### `UpsertImage`
+
+Inserts an `Image` document into the database. Upserting will link the image with another target document, e.g. a `Place`.
+
+#### Parameters
+
+- `refetchAfterUpsert` (optional): Set this to `true` to output a refetched document after each upsert. This document will contain all properties in the DB, even the ones that you have not included in the upsert modifier.
+
 ### `UpsertPlace`
 
-Inserts an object into the database as place. Upserting will link the place with the source you have created in the accessibility.cloud web UI, and will make it available to API users when…
+Inserts a `PlaceInfo` document into the database. Upserting will link the place with the source you have created in the accessibility.cloud web UI, and will make it available to API users when…
 
 - you have accepted the terms and conditions for the data source's organization
 - your data source is not in draft state anymore (see the source's 'Settings' tab in the web UI)
 - the app token used to query the API belongs to an app by an organization that is allowed to read your source's data (you can either allow everyone or specific organizations to use your data source in the 'Settings' tab).
 
 `UpsertPlace` is usually the last unit in the stream chain, but it outputs status data for each processed chunk that you can use for debugging.
+
+#### Parameters
+
+- `refetchAfterUpsert` (optional): Set this to `true` to output a refetched document after each upsert. This document will contain all properties in the DB, even the ones that you have not included in the upsert modifier.
 
 ### `UpsertEquipment`
 
@@ -258,6 +299,10 @@ This works like `UpsertPlace`, but using it marks the source as a data source fo
 - For this to work, `properties.placeSourceId` must refer to the ID of a place data source on accessibility.cloud that belongs to the same organization.
 - accessibility.cloud will show the imported equipment/facilities on the overview page of associated place data source.
 - The accessibility.cloud `/placeInfos` API will include equipment/facility data as `properties.equipmentInfos` property.
+
+#### Parameters
+
+- `refetchAfterUpsert` (optional): Set this to `true` to output a refetched document after each upsert. This document will contain all properties in the DB, even the ones that you have not included in the upsert modifier.
 
 ### `UpsertDisruption`
 
@@ -286,6 +331,10 @@ This works like `UpsertPlace`, but using it marks the source as a data source fo
 - accessibility.cloud will show the imported disruptions on the overview page of associated places/equipment/facility data sources.
 - `/placeInfos` API responses will include disruption data if you supply a `includeRelated=equipmentInfos.disruptions` query parameter.
 - `/equipmentInfos` API responses will include disruption data if you supply a `includeRelated=disruptions` query parameter.
+
+#### Parameters
+
+- `refetchAfterUpsert` (optional): Set this to `true` to output a refetched document after each upsert. This document will contain all properties in the DB, even the ones that you have not included in the upsert modifier.
 
 ## Convenience functions and libraries
 
