@@ -40,7 +40,16 @@ function enrichCreationTrackingEvent(upsertResult: UpsertResult, callback: (erro
   const koboData: KoboResult = JSON.parse(placeInfo.properties.originalData);
   const { uniqueSurveyId } = koboData;
   if (uniqueSurveyId) {
+    if (!placeInfo.geometry) {
+      console.log(`Warning: Could not update TrackingEvent with invalid geometry from place ${placeInfo}.`);
+      return;
+    }
     const [longitude, latitude] = placeInfo.geometry.coordinates;
+    const coordinates = [longitude, latitude];
+    const geometry = {
+      type: placeInfo.geometry.type,
+      coordinates,
+    }
     const selector = {
       type: 'SurveyCompleted',
       uniqueSurveyId,
@@ -51,12 +60,17 @@ function enrichCreationTrackingEvent(upsertResult: UpsertResult, callback: (erro
         placeInfoId,
         latitude,
         longitude,
-        geometry: placeInfo.geometry,
+        geometry,
       }
     };
     console.log(`Adding placeInfoId ${placeInfoId} to 'SurveyCompleted' tracking event, modifier:`, modifier);
 
-    TrackingEvents.update(selector, modifier);
+    try {
+      TrackingEvents.update(selector, modifier);
+    } catch (e) {
+      console.log('Error while updating TrackingEvent', selector, modifier);
+      throw e;
+    }
   }
 }
 
