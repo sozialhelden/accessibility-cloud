@@ -35,7 +35,6 @@ import UpsertEquipment from './stream-types/upsert-equipment';
 import UpsertImage from './stream-types/upsert-image';
 import SimplifyJaccedeFormat from './stream-types/simplify-jaccede-format';
 import ReimportSource from './stream-types/reimport-source';
-import ExplodeArray from './stream-types/explode-array';
 
 // import ValidatePlace from './stream-types/validate-place';
 
@@ -68,7 +67,6 @@ const StreamTypes = {
   ConvertStreamToArray,
   ReimportSource,
   EnrichTrackingEvents,
-  ExplodeArray,
   UploadRemoteFileToS3,
   // ValidatePlace,
 };
