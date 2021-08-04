@@ -187,18 +187,24 @@ export function createStreamChain({
     });
 
     const StreamType = StreamTypes[type];
+    let runningStreamObserver;
     if (StreamType === undefined) {
-      throw new Meteor.Error(422, `ERROR: "${type}" is not a valid stream type.`);
+      throw new Meteor.Error(422, `"${type}" is not a valid stream type.`);
     }
     if (typeof StreamType !== 'function') {
-      throw new Meteor.Error(422, `ERROR: "${type}" is not a valid stream type function.`);
+      throw new Meteor.Error(422, `"${type}" is not a valid stream type function.`);
     }
-    const runningStreamObserver = new StreamType(parameters);
+    try {
+      runningStreamObserver = new StreamType(parameters);
+    } catch (e) {
+      throw new Meteor.Error(422, `Could not set up ${type} stream at index ${index}: ${e}`);
+    }
 
     // Validate setting up Step with parameters worked
     check(runningStreamObserver.stream, Stream);
 
-    const wrappedStream = runningStreamObserver.stream = zstreams(runningStreamObserver.stream);
+    runningStreamObserver.stream = zstreams(runningStreamObserver.stream)
+    const wrappedStream = runningStreamObserver.stream;
 
 
     setupEventHandlersOnStream({
