@@ -4,6 +4,8 @@ import { TAPi18n } from 'meteor/tap:i18n';
 import { Sources } from '../sources';
 import { Organizations } from '/both/api/organizations/organizations';
 import { Apps } from '/both/api/apps/apps';
+import { isAdmin } from '/both/lib/is-admin';
+
 import {
   getAccessibleOrganizationIdsForUserId,
   userHasFullAccessToReferencedOrganization,
@@ -49,6 +51,9 @@ Sources.helpers({
 
 Sources.deny({
   update(userId, source, fields) {
+    if (fields.includes('allowedImportStreamUnits') && !isAdmin(userId)) {
+      return true;
+    }
     // Don't allow to change this flag on the client
     return fields.includes('hasRunningImport');
   },

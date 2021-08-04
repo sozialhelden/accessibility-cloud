@@ -87,6 +87,10 @@ export default class UploadRemoteFileToS3 {
     check(isUploadedFlagProperty, String);
     check(timeout, Match.Optional(Number));
 
+    if (!source.allowedImportStreamUnits || !source.allowedImportStreamUnits.includes('UploadRemoteFileToS3')) {
+      throw new Meteor.Error(401, `This data source is not authorized to use the \`UploadRemoteFileToS3\` stream unit. Allowed stream units: ${source.allowedImportStreamUnits}`);
+    }
+
     const extendedHeaders = Object.assign(
       {
         'User-Agent': 'accessibility.cloud Bot/1.0',

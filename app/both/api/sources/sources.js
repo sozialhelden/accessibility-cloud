@@ -182,6 +182,24 @@ Sources.schema = new SimpleSchema({
       },
     },
   },
+  allowedImportStreamUnits: {
+    type: Array,
+    optional: true,
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
+  'allowedImportStreamUnits.$': {
+    type: String,
+    allowedValues: ['UploadRemoteFileToS3'],
+    autoform: {
+      afFieldInput: {
+        type: 'hidden',
+      },
+    },
+  },
 });
 
 Sources.attachSchema(Sources.schema);
