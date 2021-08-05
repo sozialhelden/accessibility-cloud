@@ -1,8 +1,10 @@
 # accessibility.cloud
 
-accessibility.cloud is an initiative by [SOZIALHELDEN e.V.](https://www.sozialhelden.de), a non-profit organization based in Germany and creators of Wheelmap.org – a map for wheelchair accessible places.
+accessibility.cloud is an initiative by [SOZIALHELDEN e.V.](https://www.sozialhelden.de), a non-profit organization based in Germany. The organization runs Wheelmap.org – world's largest open online map for wheelchair accessible places.
 
-We believe in an inclusive world and want to make it easy to find accessibility information—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other. As a tool, we suggest accessibility.cloud to share data in a standardized, future-proof, easy-to-use way.
+We believe in an inclusive world and want to make it easy to find accessibility information—wherever people need it. That’s why we want to encourage everybody to share this kind of data with each other.
+
+As a tool, we suggest accessibility.cloud to share data in a standardized, future-proof, easy-to-use way.
 
 ## Contributing data
 
@@ -22,7 +24,3 @@ We believe in an inclusive world and want to make it easy to find accessibility 
 ## Legal Information
 
 - [Terms & Conditions](./app/docs/terms-for-signup.md)
-
-
-
-
