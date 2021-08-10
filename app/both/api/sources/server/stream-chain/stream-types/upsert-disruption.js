@@ -149,11 +149,11 @@ export default class UpsertDisruption extends Upsert {
     const { equipmentSourceId, equipmentSelectorForImport } = this.options;
 
     check(equipmentSourceId, Match.Optional(String));
-    if (equipmentSourceId) {
-      if (!includes(organizationSourceIds, equipmentSourceId)) {
-        throw new Meteor.Error(401, `Can’t use equipment data source ID "${equipmentSourceId}" for purging unreferenced equipment. Data source must come from the same organization. Allowed IDs: ${organizationSourceIds}`);
-      }
-    }
+    // if (equipmentSourceId) {
+    //   if (!includes(organizationSourceIds, equipmentSourceId)) {
+    //     throw new Meteor.Error(401, `Can’t use equipment data source ID "${equipmentSourceId}" for purging unreferenced equipment. Data source must come from the same organization. Allowed IDs: ${organizationSourceIds}`);
+    //   }
+    // }
 
     // Compare before / after `isWorking` states and record changes
     const done = () => {
