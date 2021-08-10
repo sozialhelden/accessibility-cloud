@@ -3,6 +3,7 @@ import { Match, check } from 'meteor/check';
 import Fiber from 'fibers';
 
 import { PlaceInfos } from '/both/api/place-infos/place-infos';
+import { Images } from '/both/api/images/images';
 import { EquipmentInfos } from '/both/api/equipment-infos/equipment-infos';
 import { Disruptions } from '/both/api/disruptions/disruptions';
 import { SourceImports } from '/both/api/source-imports/source-imports';
@@ -67,6 +68,7 @@ Meteor.methods({
     PlaceInfos.remove({ 'properties.sourceId': sourceId });
     EquipmentInfos.remove({ 'properties.sourceId': sourceId });
     Disruptions.remove({ 'properties.sourceId': sourceId });
+    Images.remove({ sourceId });
     Sources.update({ _id: sourceId }, { $set: { documentCount: 0 } });
 
     addKeysToFastlyPurgingQueue([sourceId]);
