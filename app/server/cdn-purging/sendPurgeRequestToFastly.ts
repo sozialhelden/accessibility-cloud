@@ -29,7 +29,7 @@ export default function sendPurgeRequestToFastly(surrogateKeys: string[]) {
 
     const result = HTTP.post(url, options);
     if (result.statusCode === 200) {
-      console.log('Purged', surrogateKeys, 'for service', serviceId, 'on Fastly.');
+      console.log('Purged', surrogateKeys.length, 'keys for service', serviceId, 'on Fastly.');
     } else {
       console.log(
         'Error while processing purge request for',
