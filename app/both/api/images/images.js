@@ -48,12 +48,15 @@ Images.schema = new SimpleSchema({
   },
   dimensions: {
     type: Object,
+    optional: true,
   },
   'dimensions.width': {
     type: Number,
+    optional: true,
   },
   'dimensions.height': {
     type: Number,
+    optional: true,
   },
   appToken: {
     type: String,
