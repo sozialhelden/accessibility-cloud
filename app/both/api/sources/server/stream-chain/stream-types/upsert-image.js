@@ -16,8 +16,8 @@ export default class UpsertImage extends Upsert {
     return {
       hashedIp: 'ACIMPORT',
       appToken: 'ACIMPORT',
-      dimensions: { width: 1, height: 1 },
       timestamp: new Date(),
+      dimensions: { width: 1, height: 1 },
       isUploadedToS3: false,
       remotePath: `${doc.context}/${doc.objectId}/${Random.secret()}${suffix ? `.${suffix}` : ''}`,
     };
@@ -35,14 +35,18 @@ export default class UpsertImage extends Upsert {
       const collection = {
         place: PlaceInfos,
       }[result.context];
+      const objectSelector = {
+        'properties.sourceId': result.objectSourceId || this.options.sourceId,
+        'properties.originalId': result.objectOriginalId,
+      };
       const object = collection.findOne(
-        {
-          'properties.sourceId': result.objectSourceId || this.options.sourceId,
-          'properties.originalId': result.objectOriginalId,
-        },
+        objectSelector,
         { transform: null, fields: { _id: 1 } },
       );
       result.objectId = object._id;
+      if (!object._id) {
+        console.log(`Warning: Could not find associated ${result.context} for`, result, 'with selector', objectSelector);
+      }
     }
 
     return result;
