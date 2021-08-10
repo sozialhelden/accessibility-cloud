@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { isNumber, get, set, isEmpty } from 'lodash';
+import { isNumber, get, set, isEmpty, omit, isArray, isPlainObject } from 'lodash';
 import { flatten } from 'mongo-dot-notation';
 import { Sources } from '../../../sources';
 import { Organizations } from '../../../../../api/organizations/organizations';
@@ -36,6 +36,33 @@ function getSourceIdsOfSameOrganization(sourceId) {
   return { organizationSourceIds, organization, organizationName, source, sourceName };
 }
 
+
+function removeNullAndUndefinedFields(something) {
+  const isDefined = x =>
+    typeof x !== 'undefined' &&
+    x !== null &&
+    !(isArray(x) && x.length === 0) &&
+    !(isPlainObject(x) && Object.keys(x).length === 0);
+  if (isPlainObject(something)) {
+    const result = {};
+    Object.keys(something)
+      .filter(key => isDefined(something[key]))
+      .forEach((key) => {
+        const value = removeNullAndUndefinedFields(something[key]);
+        if (isDefined(value)) {
+          result[key] = value;
+        }
+      });
+    return Object.keys(result).length > 0 ? result : undefined;
+  } else if (isArray(something)) {
+    const result = something
+      .filter(isDefined)
+      .map(removeNullAndUndefinedFields);
+    return result.length ? result : undefined; // filter out empty arrays
+  }
+  return something;
+}
+
 export default class Upsert {
   constructor(options) {
     const {
@@ -45,11 +72,15 @@ export default class Upsert {
       sourceImportId,
       onDebugInfo,
       refetchAfterUpsert,
+      update = false,
+      documentPath,
     } = options;
 
     check(sourceId, String);
     check(sourceImportId, String);
     check(onDebugInfo, Function);
+    check(update, Boolean);
+    check(documentPath, Match.Optional(String));
 
     this.options = options;
 
@@ -79,7 +110,13 @@ export default class Upsert {
       writableObjectMode: true,
       readableObjectMode: true,
       highWaterMark: 3,
-      transform: Meteor.bindEnvironment((doc, encoding, callback) => {
+      transform: Meteor.bindEnvironment((chunk, encoding, callback) => {
+        const doc = documentPath ? get(chunk, documentPath) : chunk;
+        if (documentPath && !isPlainObject(doc)) {
+          onDebugInfo({ chunkWithoutDocumentAtGivenPath: chunk });
+          callback(new Error(`Expected a plain object / document at path \`${documentPath}\`, but could not find one.`));
+          return;
+        }
         const originalId = get(doc, originalIdPath);
 
         let error;
@@ -118,6 +155,8 @@ export default class Upsert {
           Object.assign(doc, { tileCoordinates });
         }
 
+        let selector;
+        let modifier;
         try {
           const postProcessedDoc = streamObject.postProcessBeforeUpserting(doc, {
             organizationSourceIds,
@@ -127,23 +166,30 @@ export default class Upsert {
 
           // console.log('Upserting doc with tile coordinates', doc.tileCoordinates);
 
-          const selector = {
+          selector = {
             [sourceIdPath]: sourceId,
             [originalIdPath]: originalId,
           };
 
           // Using flatten here to deep-merge new properties into existing
-          const modifier = flatten(postProcessedDoc);
-          const propertiesToSetOnInsert = streamObject.setOnInsert && streamObject.setOnInsert(doc, {
+          modifier = flatten(postProcessedDoc);
+          const propertiesToSetOnInsert = streamObject.setOnInsert && !update && streamObject.setOnInsert(doc, {
             organizationSourceIds,
             organizationName,
             source,
           });
           if (propertiesToSetOnInsert && !isEmpty(propertiesToSetOnInsert)) {
-            modifier.$setOnInsert = propertiesToSetOnInsert;
+            console.log('Omitting keys, modifier before:', modifier);
+            modifier.$setOnInsert = removeNullAndUndefinedFields(omit(propertiesToSetOnInsert, Object.keys(modifier.$set)));
+            console.log('Omitting keys, modifier after:', modifier);
           }
 
           const upsertCallback = (upsertError, result) => {
+            if (upsertError) {
+              console.log('Error upserting image', selector, modifier);
+              onDebugInfo({ selector, modifierJSON: JSON.stringify(modifier) });
+              callback(upsertError);
+            }
             if (result && result.insertedId) {
               insertedDocumentCount += 1;
             } else if (result && result.numberAffected) {
@@ -157,8 +203,9 @@ export default class Upsert {
             );
           };
 
-          streamClass.collection.upsert(selector, modifier, upsertCallback);
+          this.upsert(streamClass.collection, selector, modifier, upsertCallback);
         } catch (caughtError) {
+          console.log('Caught error', caughtError, 'while processing doc', selector, modifier);
           callback(caughtError);
         }
       }),
@@ -209,7 +256,7 @@ export default class Upsert {
     });
 
     this.upsert = this.bindEnv((collection, selector, modifier, callback) => {
-      collection.upsert(selector, modifier, callback);
+      collection[update ? 'update' : 'upsert'](selector, modifier, callback);
     });
 
     this.removeMissingRecords = this.bindEnv((callback) => {
