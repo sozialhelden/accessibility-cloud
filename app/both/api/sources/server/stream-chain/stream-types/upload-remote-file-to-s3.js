@@ -38,10 +38,10 @@ export function uploadToS3({ remotePath, mimeType, stream, callback }) {
     CacheControl: 'max-age=31104000',
   };
 
-  console.log('Before starting S3 upload...', s3Params);
+  // console.log('Before starting S3 upload...', s3Params);
   awsS3.upload(s3Params, callback);
-  console.log('Starting S3 upload...');
   stream.pipe(passThrough);
+  console.log('Started S3 upload...', s3Params.Bucket, s3Params.Key);
 }
 
 
