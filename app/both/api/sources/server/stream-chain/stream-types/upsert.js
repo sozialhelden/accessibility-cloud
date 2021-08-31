@@ -187,7 +187,7 @@ export default class Upsert {
           const upsertCallback = (upsertError, result) => {
             if (upsertError) {
               console.log('Error upserting image', selector, modifier);
-              onDebugInfo({ selector, modifierJSON: JSON.stringify(modifier) });
+              onDebugInfo({ selectorJSON: JSON.stringify(selector), modifierJSON: JSON.stringify(modifier) });
               callback(upsertError);
             }
             if (result && result.insertedId) {
