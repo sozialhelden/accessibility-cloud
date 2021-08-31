@@ -193,7 +193,7 @@ Sources.schema = new SimpleSchema({
   },
   'allowedImportStreamUnits.$': {
     type: String,
-    allowedValues: ['UploadRemoteFileToS3'],
+    allowedValues: ['UploadRemoteFileToS3', 'MeasureRemoteImage'],
     autoform: {
       afFieldInput: {
         type: 'hidden',
