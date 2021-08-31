@@ -136,67 +136,59 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: Boolean,
     optional: true,
   },
-  'properties.hasAccessibility': {
+  'properties.hasRaisedText': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility': {
-    type: Object,
-    optional: true,
-  },
-  'properties.accessibility.hasRaisedText': {
+  'properties.hasBrailleText': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.hasBrailleText': {
+  'properties.hasSpeech': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.hasSpeech': {
+  'properties.isHighContrast': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.isHighContrast': {
+  'properties.hasLargePrint': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.hasLargePrint': {
+  'properties.isVoiceActivated': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.isVoiceActivated': {
+  'properties.hasHeadPhoneJack': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.hasHeadPhoneJack': {
+  'properties.isEasyToUnderstand': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.isEasyToUnderstand': {
+  'properties.hasDoorsInBothDirections': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.hasDoorsInBothDirections': {
+  'properties.isIndoors': {
     type: Boolean,
     optional: true,
   },
-  'properties.accessibility.isIndoors': {
-    type: Boolean,
-    optional: true,
-  },
-  'properties.accessibility.heightOfControls': {
+  'properties.heightOfControls': {
     type: Number,
     optional: true,
   },
-  'properties.accessibility.doorWidth': {
+  'properties.doorWidth': {
     type: LengthSchema,
     optional: true,
   },
-  'properties.accessibility.cabinWidth': {
+  'properties.cabinWidth': {
     type: LengthSchema,
     optional: true,
   },
-  'properties.accessibility.cabinLength': {
+  'properties.cabinLength': {
     type: LengthSchema,
     optional: true,
   },
