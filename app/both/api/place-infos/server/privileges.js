@@ -30,6 +30,7 @@ PlaceInfos.publicFields = {
   'properties.accessibility': 1,
   'properties.equipmentInfos': 1,
   'properties.customData': 1,
+  'properties.parentPlaceInfoName': 1,
 
   // Quick fix for source 'a7hEpRxZ9c5AxdtBx' to be removed after 1. April 2018
   'properties.clubType': 1,
