@@ -118,7 +118,7 @@ Your API token allows you to access the following data:
 If you have the `_id` value of a document, you can retrieve it using a URL like this:
 
 ```
-https://accessibility-cloud.freetls.fastly.net/[TYPE]/[ID].json&appToken=[APP_TOKEN]
+https://accessibility-cloud.freetls.fastly.net/[TYPE]/[ID].json?appToken=[APP_TOKEN]
 ```
 
 Replace `[TYPE]` with the type of the requested resource (e.g. `place-infos` – see below for allowed types), `[ID]` with the document's `_id`, and `[APP_TOKEN]` with your app token (see above).
