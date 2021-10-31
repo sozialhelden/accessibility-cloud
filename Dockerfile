@@ -1,5 +1,10 @@
 # The tag here should match the Meteor version of your app, per .meteor/release
-FROM sozialhelden/meteor-base:1.4.4.2
+FROM sozialhelden/meteor-base:1.4.4.2-new-ca-certs
+
+RUN apt-get -yqq update \
+    && DEBIAN_FRONTEND=noninteractive apt-get -yqq install \
+        ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy app package.json and package-lock.json into container
 COPY ./app/package*.json $APP_SOURCE_FOLDER/
@@ -25,6 +30,7 @@ RUN apt-get -yqq update \
         g++ \
         make \
         python \
+        ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy in entrypoint
