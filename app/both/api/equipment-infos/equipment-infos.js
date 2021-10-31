@@ -55,6 +55,10 @@ EquipmentInfos.schema = new SimpleSchema([LocationSchema, tileCoordinatesSchema,
     type: String,
     optional: true,
   },
+  'properties.placeInfoName': {
+    type: String,
+    optional: true,
+  },
   'properties.placeSourceId': {
     type: String,
     optional: true,

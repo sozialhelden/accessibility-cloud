@@ -39,14 +39,17 @@ export default class UpsertEquipmentInfo extends Upsert {
       if (properties.originalPlaceInfoId) {
         const originalPlaceInfoIdField = properties.originalPlaceInfoIdField || 'properties.originalId';
         const selector = { 'properties.sourceId': placeSourceId, [originalPlaceInfoIdField]: properties.originalPlaceInfoId };
-        const options = { transform: null, fields: { _id: true, geometry: true } };
+        const options = { transform: null, fields: { _id: true, geometry: true, 'properties.name': true } };
         const placeInfo = PlaceInfos.findOne(selector, options);
         if (placeInfo) {
-          console.log(`Will associate PlaceInfo ${placeInfo._id} for EquipmentInfo ${result}.`);
+          console.log(`Will associate PlaceInfo ${placeInfo._id} for EquipmentInfo ${result._id}.`);
           result.properties.placeInfoId = placeInfo._id;
+          const localizedPlaceInfoName = placeInfo.properties.name;
+          const placeInfoName = typeof localizedPlaceInfoName === 'string' ? localizedPlaceInfoName : (localizedPlaceInfoName.en || localizedPlaceInfoName[Object.keys(localizedPlaceInfoName)[0]]);
+          result.properties.placeInfoName = placeInfoName;
           result.geometry = result.geometry || placeInfo.geometry;
         } else {
-          console.log(`Could not find PlaceInfo ${selector} for EquipmentInfo ${result}...`);
+          console.log(`Could not find PlaceInfo ${selector} for EquipmentInfo ${result._id}...`);
         }
       }
     }
