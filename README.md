@@ -24,3 +24,4 @@ As a tool, we suggest accessibility.cloud to share data in a standardized, futur
 ## Legal Information
 
 - [Terms & Conditions](./app/docs/terms-for-signup.md)
+

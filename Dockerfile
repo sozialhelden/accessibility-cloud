@@ -15,11 +15,12 @@ RUN bash $SCRIPTS_FOLDER/build-app-npm-dependencies.sh
 COPY ./app $APP_SOURCE_FOLDER/
 ENV TOOL_NODE_FLAGS "--max-old-space-size=4096 --optimize_for_size --gc-interval=100"
 ENV METEOR_DISABLE_OPTIMISTIC_CACHING "1"
+ENV NODE_TLS_REJECT_UNAUTHORIZED "0"
 RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
 
 
 # Use the specific version of Node expected by your Meteor release, per https://docs.meteor.com/changelog.html; this is expected for Meteor 1.10.2
-FROM node:4.8.1-slim
+FROM node:4.8.2-slim
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
@@ -39,16 +40,16 @@ COPY --from=0 $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
 # Copy in app bundle
 COPY --from=0 $APP_BUNDLE_FOLDER/bundle $APP_BUNDLE_FOLDER/bundle/
 
+ENV NODE_TLS_REJECT_UNAUTHORIZED "0"
 RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh --build-from-source
 
 
 # Start another Docker stage, so that the final image doesn’t contain the layer with the build dependencies
 # See previous FROM line; this must match
-FROM node:4.8.1-slim
+FROM node:4.8.2-slim
 
 ENV APP_BUNDLE_FOLDER /opt/bundle
 ENV SCRIPTS_FOLDER /docker
-
 # Install OS runtime dependencies
 RUN apt-get -yqq update \
     && DEBIAN_FRONTEND=noninteractive apt-get -yqq install \
@@ -62,6 +63,8 @@ COPY --from=1 $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
 
 # Copy in app bundle with the built and installed dependencies from the previous image
 COPY --from=1 $APP_BUNDLE_FOLDER/bundle $APP_BUNDLE_FOLDER/bundle/
+
+ENV NODE_TLS_REJECT_UNAUTHORIZED "0"
 
 # Start app
 ENTRYPOINT ["/docker/entrypoint.sh"]
