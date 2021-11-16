@@ -15,6 +15,7 @@ PlaceInfos.publicFields = {
   geometry: 1,
   'properties.ids': 1,
   'properties._id': 1,
+  'properties.sameAs': 1,
   'properties.originalId': 1,
   'properties.sourceId': 1,
   'properties.sourceImportId': 1,
@@ -31,6 +32,9 @@ PlaceInfos.publicFields = {
   'properties.equipmentInfos': 1,
   'properties.customData': 1,
   'properties.parentPlaceInfoName': 1,
+  'properties.parentPlaceInfoId': 1,
+  'properties.parentPlaceSourceId': 1,
+  'properties.originalParentPlaceInfoId': 1,
 
   // Quick fix for source 'a7hEpRxZ9c5AxdtBx' to be removed after 1. April 2018
   'properties.clubType': 1,
