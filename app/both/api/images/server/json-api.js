@@ -11,6 +11,7 @@ Images.wrapCollectionAPIResponse = ({ results, resultsCount }) => ({
       date: r.timestamp,
       mimeType: r.mimeType,
       dimensions: r.dimensions || { width: 1, height: 1 },
+      angle: r.angle,
     }
   )),
 });
