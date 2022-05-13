@@ -36,9 +36,12 @@
           <div><b>Uploaded:</b> {{readableUploadedAt}}</div>
           <div><b>Updated:</b> {{readableUploadedAt}}</div>
           <div><b>Context:</b> {{context}} <a href='http://wheelmap.org/beta/nodes/{{objectId}}'>{{placeName contextObject}}</a></div>
-          <img src='{{fullUrl}}' />
+          <div class="image-container">
+            <img src='{{fullUrl}}' style='transform: rotate({{angle}}deg)' />
+          </div>
           <section class='image-entry-actions'>
             <a class='action button positive js-approve-image'>Approve</a>
+            <a class='action button js-rotate-image'>🔄</a>
             <a class='action button negative js-reject-image'>Reject</a>
           </section>
           {{#each reports}}

@@ -71,4 +71,25 @@ Meteor.methods({
     Images.remove({ _id: imageId });
     return {};
   },
+  'images.rotate'(imageId) {
+    check(imageId, String);
+
+    if (!isAdmin(this.userId)) {
+      throw new Meteor.Error(403, 'You have no rights to rotate images');
+    }
+
+    const image = Images.findOne({ _id: imageId }, { transform: null });
+    if (!image) {
+      throw new Meteor.Error(404, 'Image not found');
+    }
+
+    const modifier = {
+      $set: {
+        angle: ((image.angle || 0) - 90) % 360,
+      },
+    };
+
+    console.log('Modifier', modifier);
+    Images.update(imageId, modifier);
+  },
 });

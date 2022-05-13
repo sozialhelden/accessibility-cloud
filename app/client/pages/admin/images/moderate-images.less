@@ -40,10 +40,19 @@
     width: 250px;
     margin: 5px;
 
+    .image-container {
+      background: #d2d8e3;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
     img {
       max-width: 250px;
       max-height: 250px;
       object-fit: contain;
+      transform-origin: center center;
     }
 
     .image-entry-actions {
@@ -55,13 +64,13 @@
         min-width: unset;
         text-align: center;
         color: white;
+        margin: 0 0 1rem 0;
 
         &.positive {
           background: #0c8c00;
           &:hover {
             color: #ccfdc7;
           }
-          margin-right: 10px;
         }
         &.negative {
           background: #dc011b;

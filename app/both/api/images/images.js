@@ -111,6 +111,10 @@ Images.schema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  angle: {
+    type: Number,
+    optional: true,
+  },
 });
 
 Images.attachSchema(Images.schema);
@@ -140,6 +144,9 @@ Images.helpers({
   },
   fullUrl() {
     return buildFullImageUrl(this);
+  },
+  angle() {
+    return this.angle || 0;
   },
 });
 

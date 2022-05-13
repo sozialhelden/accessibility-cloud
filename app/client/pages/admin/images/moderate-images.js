@@ -174,6 +174,13 @@ Template.images_moderate_page.events({
     });
     event.preventDefault();
   },
+  'click .js-rotate-image'(event) {
+    Meteor.call('images.rotate', this._id, (err, result) => {
+      $('.js-error').html(err ? JSON.stringify(err, true, 2) : '');
+      $('.js-result').html(result || '');
+    });
+    event.preventDefault();
+  },
   'click .js-reject-image'(event) {
     if (confirm('Do you really want to reject this image?')) {
       Meteor.call('images.reject', this._id, (err, result) => {
