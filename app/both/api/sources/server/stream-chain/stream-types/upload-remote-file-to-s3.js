@@ -168,14 +168,14 @@ export default class UploadRemoteFileToS3 {
         try {
           req.pause();
 
-          const uploadCallback = Meteor.bindEnvironment((error, uploadResult) => {
+          const uploadCallback = (error, uploadResult) => {
             const s3Error = error &&
               ((typeof error === 'object') ?
                 pick(error, 'message', 'code') :
                 { message: error });
             console.log('Upload to S3 finished:', error, uploadResult);
             callback(null, { s3Error, inputData: chunk, templateData, sourceUrl, uploadResult, uploadSkipped: false });
-          });
+          };
 
           uploadToS3({ remotePath, mimeType, stream: req, callback: uploadCallback });
 
