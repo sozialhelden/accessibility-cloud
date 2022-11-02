@@ -118,7 +118,7 @@ Your API token allows you to access the following data:
 If you have the `_id` value of a document, you can retrieve it using a URL like this:
 
 ```
-https://accessibility-cloud.freetls.fastly.net/[TYPE]/[ID].json?appToken=[APP_TOKEN]
+https://accessibility-cloud-v2.freetls.fastly.net/[TYPE]/[ID].json?appToken=[APP_TOKEN]
 ```
 
 Replace `[TYPE]` with the type of the requested resource (e.g. `place-infos` – see below for allowed types), `[ID]` with the document's `_id`, and `[APP_TOKEN]` with your app token (see above).
@@ -303,7 +303,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v 'https://accessibility-cloud.freetls.fastly.net/place-infos.json?appToken=YOUR_APP_TOKEN_HERE&latitude=48.2435&longitude=16.3974&accuracy=1000&includeSourceIds=QGf3sjbSxSpkeNHFm&includeRelated=source' | jq .
+curl -v 'https://accessibility-cloud-v2.freetls.fastly.net/place-infos.json?appToken=YOUR_APP_TOKEN_HERE&latitude=48.2435&longitude=16.3974&accuracy=1000&includeSourceIds=QGf3sjbSxSpkeNHFm&includeRelated=source' | jq .
 ```
 
 #### Example response
@@ -420,7 +420,7 @@ Returns all categories known to accessibility.cloud, together with their transla
 #### Example request
 
 ```bash
-curl 'https://accessibility-cloud.freetls.fastly.net/categories.json?appToken=YOUR_APP_TOKEN_HERE&locale=en' | jq
+curl 'https://accessibility-cloud-v2.freetls.fastly.net/categories.json?appToken=YOUR_APP_TOKEN_HERE&locale=en' | jq
 ```
 
 #### Example response
@@ -487,7 +487,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v 'https://accessibility-cloud.freetls.fastly.net/disruptions.json?appToken=YOUR TOKEN HERE&includeRelated=equipmentInfo&limit=1' |
+curl -v 'https://accessibility-cloud-v2.freetls.fastly.net/disruptions.json?appToken=YOUR TOKEN HERE&includeRelated=equipmentInfo&limit=1' |
 ```
 
 #### Example response
@@ -600,7 +600,7 @@ If given, the `includeRelated` parameter has to be a comma-separated list of rel
 #### Example request
 
 ```bash
-curl -v 'https://accessibility-cloud.freetls.fastly.net/equipment-infos.json?appToken=YOUR_TOKEN_HERE&includeRelated=disruptions&limit=1' | jq .
+curl -v 'https://accessibility-cloud-v2.freetls.fastly.net/equipment-infos.json?appToken=YOUR_TOKEN_HERE&includeRelated=disruptions&limit=1' | jq .
 ```
 
 #### Example response
@@ -678,7 +678,7 @@ This API endpoint returns the time series that accessibility.cloud calculates ev
 This requests only one value with the latest known number of elevators that are out-of-service. Note that you need to specify that the backend should sort the returned data.
 
 ```bash
-curl 'https://accessibility-cloud.freetls.fastly.net/global-stats.json?name=EquipmentInfos.withoutDrafts.onlyBrokenElevators.count&appToken=YOUR_TOKEN_HERE&sort=date&descending=1&limit=1' | jq
+curl 'https://accessibility-cloud-v2.freetls.fastly.net/global-stats.json?name=EquipmentInfos.withoutDrafts.onlyBrokenElevators.count&appToken=YOUR_TOKEN_HERE&sort=date&descending=1&limit=1' | jq
 ```
 
 #### Example response
@@ -729,7 +729,7 @@ While not really part of the json apis, the captcha api returns a visual captcha
 #### Example request
 
 ```bash
-curl 'https://accessibility-cloud.freetls.fastly.net/captcha?appToken=YOUR_TOKEN_HERE'
+curl 'https://accessibility-cloud-v2.freetls.fastly.net/captcha?appToken=YOUR_TOKEN_HERE'
 ```
 
 #### Example response
@@ -764,7 +764,7 @@ This query parameter is required.
 #### Example request
 
 ```bash
-curl 'https://accessibility-cloud.freetls.fastly.net/images?context=place&objectId=5b1667525536dc06e63effdb&appToken=YOUR_TOKEN_HERE&locale=en' -H 'Accept: application/json' | jq
+curl 'https://accessibility-cloud-v2.freetls.fastly.net/images?context=place&objectId=5b1667525536dc06e63effdb&appToken=YOUR_TOKEN_HERE&locale=en' -H 'Accept: application/json' | jq
 ```
 
 #### Example response
