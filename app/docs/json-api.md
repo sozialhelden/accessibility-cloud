@@ -73,7 +73,7 @@ accessibility.cloud allows you to request accessibility data via HTTP in JSON fo
 
 ## Features
 
-- Free access
+- Free access (for non-commercial purposes - if you're an NGO or commercial organization, [let's talk](mailto:developers@sozialhelden.de)!)
 - Allow your users to find places by location, category, or other metadata
 - Augment your own data with accessibility information
 - Requests over HTTP(S)
